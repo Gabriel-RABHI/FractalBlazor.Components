@@ -1,0 +1,71 @@
+﻿@namespace  FractalBlazor.Components.Layout
+
+@ChildContent
+
+@code {
+    private bool _periodic = true;
+    private TimeSpan _interval = new TimeSpan(0, 0, 1);
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public bool Periodic
+    {
+        get => _periodic;
+        set
+        {
+            if (_periodic != value)
+            {
+                _periodic = value;
+                if (!_periodic)
+                    Updated = true;
+            }
+        }
+    }
+
+    [Parameter]
+    public bool OneTime { get => !Periodic; set => Periodic = !value; }
+
+    [Parameter]
+    public TimeSpan Interval
+    {
+        get => _interval;
+        set => _interval = value;
+    }
+
+    public void Update()
+    {
+        Updated = false;
+        LastUpdate = DateTime.Now;
+    }
+
+    public void UpdateIn(TimeSpan interval)
+    {
+        _interval = interval;
+        Updated = false;
+        LastUpdate = DateTime.Now;
+    }
+
+    internal DateTime LastUpdate { get; set; } = DateTime.Now;
+
+    internal bool Updated {
+        get;
+        set;
+    } = false;
+
+    public void UpdateState()
+    {
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+    
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+            BackgroundProcess.AddUpdatable(this);
+        base.OnAfterRender(firstRender);
+    }
+}

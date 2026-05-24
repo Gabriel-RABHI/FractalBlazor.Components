@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="FractalBlazor.Components/FractalBlazor.Components.csproj" />
+  <Project Path="FractalBlazor.Components.Layout/FractalBlazor.Components.Layout.csproj" />
+</Solution>

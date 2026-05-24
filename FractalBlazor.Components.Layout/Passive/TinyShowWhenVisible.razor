@@ -1,0 +1,70 @@
+﻿@namespace  FractalBlazor.Components.Layout
+
+@using Microsoft.JSInterop
+@if (!_isVisibile)
+{
+    @if (@WaitContent == null)
+    {
+        <div style="text-align:center;padding:1rem;width:100%;" data-tiny-visibility-id="@(_myId.ToString())" data-no-reset="@(Reset.ToString().ToLower())">
+            <TinyCircularProgress></TinyCircularProgress>
+        </div>
+    } else
+    {
+        @WaitContent
+    }
+}
+else
+{
+    @ChildContent
+}
+
+@code {
+    private static object _locker = new object();
+    private static Dictionary<Guid, TinyShowWhenVisible> _recorded = new Dictionary<Guid, TinyShowWhenVisible>();
+
+    private bool _isVisibile = false;
+    private Guid _myId = Guid.NewGuid();
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+    
+    [Parameter]
+    public RenderFragment WaitContent { get; set; }
+
+    [Parameter]
+    public Action DoWhenVisible { get; set; }
+
+    [Parameter]
+    public bool Reset { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        lock (_locker)
+            _recorded[_myId] = this;
+    }
+
+    public void BecomeVisible()
+    {
+        _isVisibile = true;
+        InvokeAsync(() =>
+        {
+            if (DoWhenVisible != null)
+                DoWhenVisible();
+            StateHasChanged();
+        });
+    }
+
+    [JSInvokable]
+    public static void VisibilityChangedMessageCaller(string cpntId)
+    {
+        var id = Guid.Parse(cpntId);
+        lock (_locker)
+        {
+            if (_recorded.ContainsKey(id))
+            {
+                _recorded[id].BecomeVisible();
+                _recorded.Remove(id);
+            }
+        }
+    }
+}

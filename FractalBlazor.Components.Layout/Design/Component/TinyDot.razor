@@ -1,0 +1,61 @@
+﻿@namespace  FractalBlazor.Components.Layout
+
+<div class="@Classes">
+    @ChildContent
+</div>
+
+@code {
+    private TinyTextSize _size = TinyTextSize.M;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    // -------------- TinyDot Size ------------ //
+    [Parameter]
+    public bool L
+    {
+        get => _size == TinyTextSize.L;
+        set => _size = TinyTextSize.L;
+    }
+
+    [Parameter]
+    public bool M
+    {
+        get => _size == TinyTextSize.M;
+        set => _size = TinyTextSize.M;
+    }
+
+    [Parameter]
+    public bool S
+    {
+        get => _size == TinyTextSize.S;
+        set => _size = TinyTextSize.S;
+    }
+
+    private string DotSizeString
+    {
+        get
+        {
+            string baseClass = "tiny-dot";
+
+            switch (_size)
+            {
+                case TinyTextSize.L:
+                    return $"{baseClass} {baseClass}-l";
+                case TinyTextSize.M:
+                    return $"{baseClass} {baseClass}-m";
+                case TinyTextSize.S:
+                    return $"{baseClass} {baseClass}-s";
+            }
+            return "";
+        }
+    }
+
+    protected string Classes
+    {
+        get
+        {
+            return $"{DotSizeString}"; ;
+        }
+    }
+}

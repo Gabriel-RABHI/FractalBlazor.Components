@@ -1,0 +1,17 @@
+﻿@inherits TinyText
+
+@if (Bold)
+{
+    <div class="@ComputedTextClasses" style="@ComputedBaseStyle"><b>@ChildContent</b></div>
+}
+else
+{
+    <div class="@ComputedTextClasses" style="@ComputedBaseStyle">@ChildContent</div>
+}
+
+@code {
+    public TinyTitle()
+    {
+        base.Scale = TinyTextScale.Title;
+    }
+}

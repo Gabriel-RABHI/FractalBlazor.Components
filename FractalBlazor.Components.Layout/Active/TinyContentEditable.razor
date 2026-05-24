@@ -1,0 +1,147 @@
+﻿@namespace  FractalBlazor.Components.Layout
+
+@using Microsoft.JSInterop
+@inject IJSRuntime JS;
+
+@inherits TinyComponentBase
+
+@if (IsSpan)
+{
+    @if (Editable)
+    {
+        @if (_firstRender)
+        {
+            <span contenteditable="@Editable" id="@_id" style="@ComputedBaseStyle" class="tiny-content-editable-frame @Classes">@Content</span>
+        } else
+        {
+            <span contenteditable="@Editable" id="@_id" style="@ComputedBaseStyle" class="tiny-content-editable-frame @Classes"></span>
+        }
+    } else
+    {
+        <span id="@_id" style="@ComputedBaseStyle" class="@Classes">@Content</span>
+    }
+} else {
+    @if (Editable)
+    {
+        @if (_firstRender)
+        {
+            <div contenteditable="@Editable" id="@_id" style="@ComputedBaseStyle" class="tiny-content-editable-frame @Classes">@Content</div>
+        } else
+        {
+            <div contenteditable="@Editable" id="@_id" style="@ComputedBaseStyle" class="tiny-content-editable-frame @Classes"></div>
+        }
+    } else
+    {
+        <div id="@_id" style="@ComputedBaseStyle" class="@Classes">@Content</div>
+    }
+}
+
+@code {
+    private static object _locker = new object();
+    private static Dictionary<Guid, WeakReference<TinyContentEditable>> _recorded = new Dictionary<Guid, WeakReference<TinyContentEditable>>();
+
+    protected Guid _id = Guid.NewGuid();
+    private bool _editable = true;
+    private bool _reinit = false;
+    private string _value = "-not set-";
+    protected bool _firstRender;
+
+    [Parameter]
+    public Guid Id
+    {
+        get => _id; set
+        {
+            if (_id != value)
+            {
+                _id = value;
+                lock (_locker)
+                    _recorded[_id] = new WeakReference<TinyContentEditable>(this);
+            }
+        }
+    }
+
+    [Parameter]
+    public string Value { get => _value; set => _value = value; }
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    public void Reset(string content)
+    {
+        _value = content;
+        if (_editable)
+        {
+            JS.InvokeVoidAsync("BlazorSetContentEditableContent", _id.ToString(), Value);
+        }
+        ValueChanged.InvokeAsync(content);
+    }
+
+    protected MarkupString Content => (MarkupString)Value;
+
+    [Parameter]
+    public bool Editable
+    {
+        get => _editable;
+        set
+        {
+            if (_editable != value)
+            {
+                _editable = value;
+                if (value)
+                {
+                    _reinit = true;
+                    StateHasChanged();
+                }
+            }
+        }
+    }
+
+    [Parameter]
+    public bool IsSpan { get; set; } = false;
+
+    public void ChangeValue(string content)
+    {
+        _value = content;
+        ValueChanged.InvokeAsync(content);
+        OnValueChanged(content);
+    }
+
+    protected virtual void OnValueChanged(string content)
+    {
+        
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        _firstRender = false;
+        if (firstRender || _reinit)
+        {
+            _reinit = false;
+            await JS.InvokeVoidAsync("BlazorContentEditable", _id.ToString(), Value);
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        lock (_locker)
+            _recorded[_id] = new WeakReference<TinyContentEditable>(this);
+    }
+
+    [JSInvokable]
+    public static void ContentEditableValueChangedCaller(string cpntId, string content)
+    {
+        var id = Guid.Parse(cpntId);
+        lock (_locker)
+        {
+            if (_recorded.TryGetValue(id, out var wr))
+            {
+                if (wr.TryGetTarget(out var target))
+                {
+                    target.ChangeValue(content);
+                } else _recorded.Remove(id);
+            }
+        }
+    }
+}

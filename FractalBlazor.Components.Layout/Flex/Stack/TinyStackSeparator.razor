@@ -1,0 +1,102 @@
+﻿@namespace  FractalBlazor.Components.Layout
+
+@using System.Diagnostics
+
+<div cpnt="stack-separator" style="@($"display: flex; align-self: stretch;" + (Margin != TinyMargin.None ? $"margin-top:{MarginSize}rem;margin-bottom:{MarginSize}rem;" : ""))" class="@ComputedStackSeparatorClasses"></div>
+
+@code {
+    private TinyFrame _frame = TinyFrame.Medium;
+
+    private string MarginSize => ((double)((int)Margin) / 16d).ToString().Replace(",", ".");
+
+    // -------------- TinyStackSeparator Frame ------------ //
+    protected TinyFrame Frame { get => _frame; set => _frame = value; }
+
+    protected string ComputedStackSeparatorClasses
+    {
+        get
+        {
+            return $"{FrameClass}";
+        }
+    }
+
+    // ************************************************************************************************ //
+    // ***************************************    PUBLIC   ******************************************** //
+    // ************************************************************************************************ //
+    [Parameter]
+    public bool WithLightFrame { get => Frame == TinyFrame.Light; set => Frame = TinyFrame.Light; }
+
+    [Parameter]
+    public bool WithMediumFrame { get => Frame == TinyFrame.Medium; set => Frame = TinyFrame.Medium; }
+
+    [Parameter]
+    public bool WithLargeFrame { get => Frame == TinyFrame.Large; set => Frame = TinyFrame.Large; }
+
+    private string FrameClass
+    {
+        get
+        {
+            string baseClasse = "tiny-separator";
+
+            if (_frame is TinyFrame.Light)
+                return $"{baseClasse}-light-frame";
+            else if (_frame is TinyFrame.Medium)
+                return $"{baseClasse}-medium-frame";
+            else if (_frame is TinyFrame.Large)
+                return $"{baseClasse}-large-frame";
+            else
+                return "";
+        }
+    }
+
+    [Parameter]
+    public TinyMargin Margin
+    {
+        get; set; 
+    }
+
+    [Parameter]
+    public bool M0 { get => Margin == TinyMargin.Margin_0; set => Margin = TinyMargin.Margin_0; }
+
+    [Parameter]
+    public bool M1 { get => Margin == TinyMargin.Margin_1; set => Margin = TinyMargin.Margin_1; }
+
+    [Parameter]
+    public bool M2 { get => Margin == TinyMargin.Margin_2; set => Margin = TinyMargin.Margin_2; }
+
+    [Parameter]
+    public bool M3 { get => Margin == TinyMargin.Margin_3; set => Margin = TinyMargin.Margin_3; }
+
+    [Parameter]
+    public bool M4 { get => Margin == TinyMargin.Margin_4; set => Margin = TinyMargin.Margin_4; }
+
+    [Parameter]
+    public bool M8 { get => Margin == TinyMargin.Margin_8; set => Margin = TinyMargin.Margin_8; }
+
+    [Parameter]
+    public bool M12 { get => Margin == TinyMargin.Margin_12; set => Margin = TinyMargin.Margin_12; }
+
+    [Parameter]
+    public bool M16 { get => Margin == TinyMargin.Margin_16; set => Margin = TinyMargin.Margin_16; }
+
+    [Parameter]
+    public bool M24 { get => Margin == TinyMargin.Margin_24; set => Margin = TinyMargin.Margin_24; }
+
+    [Parameter]
+    public bool M32 { get => Margin == TinyMargin.Margin_32; set => Margin = TinyMargin.Margin_32; }
+
+    [Parameter]
+    public bool M40 { get => Margin == TinyMargin.Margin_40; set => Margin = TinyMargin.Margin_40; }
+
+    [Parameter]
+    public bool M48 { get => Margin == TinyMargin.Margin_48; set => Margin = TinyMargin.Margin_48; }
+
+    [Parameter]
+    public bool MS { get => Margin == TinyMargin.Margin_8; set => Margin = TinyMargin.Margin_8; }
+
+    [Parameter]
+    public bool MM { get => Margin == TinyMargin.Margin_12; set => Margin = TinyMargin.Margin_12; }
+
+    [Parameter]
+    public bool ML { get => Margin == TinyMargin.Margin_24; set => Margin = TinyMargin.Margin_24; }
+}

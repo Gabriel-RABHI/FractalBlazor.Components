@@ -1,0 +1,16 @@
+﻿<TinyStack PS MinWidth="100px">
+     <TinyBlazor.Utilities.Design.Typography.TinyLabel>
+         @Label
+     </TinyBlazor.Utilities.Design.Typography.TinyLabel>
+     <TinyStackItem Flex="3">
+         @ChildContent
+     </TinyStackItem>
+ </TinyStack>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string Label { get; set; }
+}

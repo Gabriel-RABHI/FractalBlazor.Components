@@ -1,0 +1,18 @@
+﻿@inherits TinyFlexBoxBase
+
+<div cpnt="column-cntr[@(StoreId)]" style="@Style @ComputedStyle" class="tiny-column-containner @Classes @ResponsiveClassString">
+    @ChildContent
+</div>
+
+@code {
+    private TinyFlexSize _minWithSize = TinyFlexSize.None;
+    private TinyFrame _frame = TinyFrame.None;
+    private TinyFrame _separator = TinyFrame.None;
+    private TinyFrame _grid = TinyFrame.None;
+
+    public TinyColumnContainner()
+    {
+        base.Wrap = TinyFlexWrap.Wrap;
+        AlignItems = TinyFlexAlignItems.Stretch;
+    }
+}

@@ -1,0 +1,250 @@
+﻿@namespace  FractalBlazor.Components.Layout
+
+@inherits TinyFlexBoxBase
+
+@switch (MasterSlaveStatus)
+{
+    case TinyFlexMasterSlave.None:
+        <div cpnt="stack[@(StoreId)]" style=@ComputedStyle class="tiny-stack @ComputedStackClasses" @onclick=@(() => OnClick.InvokeAsync())>
+            @ChildContent
+        </div>
+        break;
+    case TinyFlexMasterSlave.Master:
+        <div cpnt="stack[@(StoreId)]" style=@ComputedStyle class="tiny-stack @ComputedStackClasses" @onclick=@(() => OnClick.InvokeAsync()) data-tiny-width-master-id="@WidthMasterId">
+            @ChildContent
+        </div>
+        break;
+    case TinyFlexMasterSlave.Slave:
+        <div cpnt="stack[@(StoreId)]" style=@ComputedStyle class="tiny-stack @ComputedStackClasses" @onclick=@(() => OnClick.InvokeAsync()) data-tiny-width-slave-id="@WidthSlaveId">
+            @ChildContent
+        </div>
+        break;
+}
+
+@*<div style=@ComputedStyle class="@Classes" @onclick=@(() => OnClick.InvokeAsync()) @ComputedAttributs>
+    @ChildContent
+</div>*@
+
+@code {
+    private TinyFrame _frame = TinyFrame.None;
+    private TinyFrame _separator = TinyFrame.None;
+    private TinyBackground _background = TinyBackground.None;
+
+    protected TinyFrame Frame { get => _frame; set => _frame = value; }
+
+    protected TinyFrame Separator { get => _separator; set => _separator = value; }
+
+    protected TinyBackground Background { get => _background; set => _background = value; }
+
+    public TinyStack()
+    {
+        Direction = TinyFlexDirection.Column;
+        JustifyStretch = true;
+        IsFlex = true;
+        Flex = 1;
+    }
+
+
+    private string FrameClass
+    {
+        get
+        {
+            string baseClasse = "framed-stack";
+
+            if (_frame is TinyFrame.Light)
+                return $"{baseClasse} {baseClasse}-light-frame";
+            else if (_frame is TinyFrame.Medium)
+                return $"{baseClasse} {baseClasse}-medium-frame";
+            else if (_frame is TinyFrame.Large)
+                return $"{baseClasse} {baseClasse}-large-frame";
+            else
+                return "";
+        }
+    }
+
+    private string SeparatorClass
+    {
+        get
+        {
+            string baseClasse = "framed-separator-stack";
+
+            if (_separator is TinyFrame.Light)
+                return $"{baseClasse} {baseClasse}-light-frame";
+            else if (_separator is TinyFrame.Medium)
+                return $"{baseClasse} {baseClasse}-medium-frame";
+            else if (_separator is TinyFrame.Large)
+                return $"{baseClasse} {baseClasse}-large-frame";
+            else
+                return "";
+        }
+    }
+
+    private string ComputedFrameClasses
+    {
+        get
+        {
+            if (FrameClass != "" || SeparatorClass != "")
+                return $"{FrameClass} {SeparatorClass}";
+            return "";
+        }
+    }
+
+    private string RadiusClasses => WithRadius ? "tiny-layout-radius" : "";
+
+    private string BackgroundClasses
+    {
+        get
+        {
+            switch (_background)
+            {
+                case TinyBackground.White:
+                    return "tiny-white-background";
+                case TinyBackground.Header:
+                    return "tiny-header-background";
+                case TinyBackground.Sellect:
+                    return "tiny-sellect-background";
+            }
+            return "";
+        }
+    }
+
+    private string DesignClass
+    {
+        get
+        {
+            if (Design)
+                return "tiny-design";
+            else
+                return "";
+        }
+    }
+
+    protected string ComputedStackClasses
+    {
+        get
+        {
+            return $"{Classes} {ComputedFrameClasses} {DesignClass} {BackgroundClasses} {RadiusClasses} {WrapClassString} {ResponsiveClassString}";
+        }
+    }
+
+    // -------------- TinyFlexAlignContent ------------ //
+    protected bool JustifyColumnsLeft { get => base.AlignContent == TinyFlexAlignContent.Start; set => base.AlignContent = TinyFlexAlignContent.Start; }
+
+    protected bool JustifyColumnsRight { get => base.AlignContent == TinyFlexAlignContent.End; set => base.AlignContent = TinyFlexAlignContent.End; }
+
+    protected bool JustifyColumnsCenter { get => base.AlignContent == TinyFlexAlignContent.Center; set => base.AlignContent = TinyFlexAlignContent.Center; }
+
+    protected bool JustifyColumnsSpaceBetwen { get => base.AlignContent == TinyFlexAlignContent.SpaceBetween; set => base.AlignContent = TinyFlexAlignContent.SpaceBetween; }
+
+    protected bool JustifyColumnsSpaceAround { get => base.AlignContent == TinyFlexAlignContent.SpaceAround; set => base.AlignContent = TinyFlexAlignContent.SpaceAround; }
+
+    protected bool JustifyColumnsStretched { get => base.AlignContent == TinyFlexAlignContent.Stretch; set => base.AlignContent = TinyFlexAlignContent.Stretch; }
+
+    // ************************************************************************************************ //
+    // ***************************************    PUBLIC   ******************************************** //
+    // ************************************************************************************************ //
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    // -------- MISSING --------- //
+    [Parameter]
+    public string MinWidth { get => base.MinWidth; set => base.MinWidth = value; }
+
+    [Parameter]
+    public string MinHeight { get => base.MinHeight; set => base.MinHeight = value; }
+
+    [Parameter]
+    public string MaxHeight { get => base.MaxHeight; set => base.MaxHeight = value; }
+    
+    // -------- MISSING --------- //
+
+    [Parameter]
+    public bool Reverse
+    {
+        get => Direction == TinyFlexDirection.ColumnReverse;
+        set
+        {
+            if (value)
+                Direction = TinyFlexDirection.ColumnReverse;
+            else Direction = TinyFlexDirection.Column;
+        }
+    }
+
+    // -------------- TinyFlexJustify ------------ //
+    [Parameter]
+    public bool ItemsOnTop { get => base.Justify == TinyFlexJustify.Start; set => base.Justify = TinyFlexJustify.Start; }
+
+    [Parameter]
+    public bool ItemsOnBottom { get => base.Justify == TinyFlexJustify.End; set => base.Justify = TinyFlexJustify.End; }
+
+    [Parameter]
+    public bool ItemsOnCenter { get => base.Justify == TinyFlexJustify.Center; set => base.Justify = TinyFlexJustify.Center; }
+
+    [Parameter]
+    public bool ItemsWithSpaceBetwen { get => base.Justify == TinyFlexJustify.SpaceBetween; set => base.Justify = TinyFlexJustify.SpaceBetween; }
+
+    [Parameter]
+    public bool ItemsWithSpaceAround { get => base.Justify == TinyFlexJustify.SpaceAround; set => base.Justify = TinyFlexJustify.SpaceAround; }
+
+    [Parameter]
+    public bool ItemsEvenly { get => base.Justify == TinyFlexJustify.Evenly; set => base.Justify = TinyFlexJustify.Evenly; }
+
+    // -------------- TinyFlexAlignItems ------------ //
+    [Parameter]
+    public bool JustifyLeft { get => base.AlignItems == TinyFlexAlignItems.Start; set => base.AlignItems = TinyFlexAlignItems.Start; }
+
+    [Parameter]
+    public bool JustifyRight { get => base.AlignItems == TinyFlexAlignItems.End; set => base.AlignItems = TinyFlexAlignItems.End; }
+
+    [Parameter]
+    public bool JustifyCenter { get => base.AlignItems == TinyFlexAlignItems.Center; set => base.AlignItems = TinyFlexAlignItems.Center; }
+
+    [Parameter]
+    public bool JustifyStretch { get => base.AlignItems == TinyFlexAlignItems.Stretch; set => base.AlignItems = TinyFlexAlignItems.Stretch; }
+
+    // -------------- TinyDesign ------------ //
+    [Parameter]
+    public bool Design { get; set; }
+
+    // -------------- TinyStack Frame ------------ //
+
+    [Parameter]
+    public bool WithLightFrame { get => Frame == TinyFrame.Light; set => Frame = TinyFrame.Light; }
+
+    [Parameter]
+    public bool WithMediumFrame { get => Frame == TinyFrame.Medium; set => Frame = TinyFrame.Medium; }
+
+    [Parameter]
+    public bool WithLargeFrame { get => Frame == TinyFrame.Large; set => Frame = TinyFrame.Large; }
+
+    [Parameter]
+    public bool WithLightSeparator { get => Separator == TinyFrame.Light; set => Separator = TinyFrame.Light; }
+
+    [Parameter]
+    public bool WithMediumSeparator { get => Separator == TinyFrame.Medium; set => Separator = TinyFrame.Medium; }
+
+    [Parameter]
+    public bool WithLargeSeparator { get => Separator == TinyFrame.Large; set => Separator = TinyFrame.Large; }
+
+    [Parameter]
+    public bool WithLightGrid { get => WithLightFrame && WithLightSeparator; set => WithLightFrame = WithLightSeparator = true; }
+
+    [Parameter]
+    public bool WithMediumGrid { get => WithMediumFrame && WithMediumSeparator; set => WithMediumFrame = WithMediumSeparator = true; }
+
+    [Parameter]
+    public bool WithLargeGrid { get => WithLargeFrame && WithLargeSeparator; set => WithLargeFrame = WithLargeSeparator = true; }
+
+    [Parameter]
+    public bool WithRadius { get; set; }
+
+    [Parameter]
+    public bool WithWhiteBackground { get => _background == TinyBackground.White; set => _background = TinyBackground.White; }
+
+    [Parameter]
+    public bool WithHeaderBackground { get => _background == TinyBackground.Header; set => _background = TinyBackground.Header; }
+
+    [Parameter]
+    public bool WithSellectBackground { get => _background == TinyBackground.Sellect; set => _background = TinyBackground.Sellect; }
+}

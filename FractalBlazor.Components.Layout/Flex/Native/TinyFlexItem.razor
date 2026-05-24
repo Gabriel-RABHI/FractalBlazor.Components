@@ -1,0 +1,77 @@
+﻿@namespace  FractalBlazor.Components.Layout
+
+@inherits TinyComponentBase
+
+<div style="@ComputedStyle" class="@Classes">
+    @ChildContent
+</div>
+
+@code {
+    private TinyFlexVerticalAlign _verticalAlign = TinyFlexVerticalAlign.None;
+
+    public TinyFlexItem()
+    {
+        IsFlex = true;
+    }
+
+    private string VerticalAlignString
+    {
+        get
+        {
+            // auto | flex-start | flex-end | center | baseline | stretch
+            switch (_verticalAlign)
+            {
+                case TinyFlexVerticalAlign.Top:
+                    return "flex-start";
+                case TinyFlexVerticalAlign.Bottom:
+                    return "flex-end";
+                case TinyFlexVerticalAlign.Center:
+                    return "center";
+                case TinyFlexVerticalAlign.Stretch:
+                    return "stretch";
+                case TinyFlexVerticalAlign.Baseline:
+                    return "baseline";
+            }
+            return "";
+        }
+    }
+
+    // ************************************************************************************************ //
+    // ***************************************    PUBLIC   ******************************************** //
+    // ************************************************************************************************ //
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    private string ComputedStyle
+    {
+        get
+        {
+            return  ComputedBaseStyle +
+                    (_verticalAlign != TinyFlexVerticalAlign.None ? $"align-self:{VerticalAlignString};":"");
+        }
+    }
+    
+    [Parameter]
+    public bool Top { get => _verticalAlign == TinyFlexVerticalAlign.Top; set => _verticalAlign = TinyFlexVerticalAlign.Top; }
+
+    [Parameter]
+    public bool Bottom { get => _verticalAlign == TinyFlexVerticalAlign.Bottom; set => _verticalAlign = TinyFlexVerticalAlign.Bottom; }
+    
+    [Parameter]
+    public bool Right { get => _verticalAlign == TinyFlexVerticalAlign.Top; set => _verticalAlign = TinyFlexVerticalAlign.Top; }
+
+    [Parameter]
+    public bool Left { get => _verticalAlign == TinyFlexVerticalAlign.Bottom; set => _verticalAlign = TinyFlexVerticalAlign.Bottom; }
+
+    [Parameter]
+    public bool Center { get => _verticalAlign == TinyFlexVerticalAlign.Center; set => _verticalAlign = TinyFlexVerticalAlign.Center; }
+
+    [Parameter]
+    public bool Stretch { get => _verticalAlign == TinyFlexVerticalAlign.Stretch; set => _verticalAlign = TinyFlexVerticalAlign.Stretch; }
+
+    [Parameter]
+    public bool Baseline { get => _verticalAlign == TinyFlexVerticalAlign.Baseline; set => _verticalAlign = TinyFlexVerticalAlign.Baseline; }
+    
+    [Parameter]
+    public TinyFlexVerticalAlign VerticalAlign { get => _verticalAlign; set => _verticalAlign = value; }
+}

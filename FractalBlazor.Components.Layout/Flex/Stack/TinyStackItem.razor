@@ -1,0 +1,77 @@
+﻿@namespace  FractalBlazor.Components.Layout
+
+@inherits TinyComponentBase
+
+<div cpnt="stack-item[@(StoreId)]" style="@ComputedStyle" class="@($"{Classes} {WrapClassString} {ResponsiveClassString}")" @onclick=@(() => OnClick.InvokeAsync())>
+    @ChildContent
+</div>
+
+@code {
+    private TinyFlexItemSelfAlign _selfAlign = TinyFlexItemSelfAlign.None;
+    private int _flex = 0;
+    private bool _hadFlex = false;
+
+    public TinyStackItem()
+    {
+        IsFlex = true;
+        //Flex = 1;
+    }
+
+    private string VerticalAlignString
+    {
+        get
+        {
+            // auto | flex-start | flex-end | center | baseline | stretch
+            switch (_selfAlign)
+            {
+                case TinyFlexItemSelfAlign.Start:
+                    return "flex-start";
+                case TinyFlexItemSelfAlign.End:
+                    return "flex-end";
+                case TinyFlexItemSelfAlign.Center:
+                    return "center";
+                case TinyFlexItemSelfAlign.Stretch:
+                    return "stretch";
+                case TinyFlexItemSelfAlign.Baseline:
+                    return "baseline";
+            }
+            return "";
+        }
+    }
+
+    private string ComputedStyle
+    {
+        get
+        {
+            return ComputedBaseStyle +
+                    ("flex-wrap: wrap;") +
+                    (_selfAlign != TinyFlexItemSelfAlign.None ? $"align-self:{VerticalAlignString};" : "");
+        }
+    }
+
+    // ************************************************************************************************ //
+    // ***************************************    PUBLIC   ******************************************** //
+    // ************************************************************************************************ //
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+    
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    // -------- In Column
+    [Parameter]
+    public bool SelfJustifyRight { get => _selfAlign == TinyFlexItemSelfAlign.Start; set => _selfAlign = TinyFlexItemSelfAlign.Start; }
+
+    [Parameter]
+    public bool SelfJustifyLeft { get => _selfAlign == TinyFlexItemSelfAlign.End; set => _selfAlign = TinyFlexItemSelfAlign.End; }
+
+    [Parameter]
+    public bool SelfJustifyCenter { get => _selfAlign == TinyFlexItemSelfAlign.Center; set => _selfAlign = TinyFlexItemSelfAlign.Center; }
+
+    [Parameter]
+    public bool SelfJustifyStretch { get => _selfAlign == TinyFlexItemSelfAlign.Stretch; set => _selfAlign = TinyFlexItemSelfAlign.Stretch; }
+
+    [Parameter]
+    public bool SelfJustifyBaseline { get => _selfAlign == TinyFlexItemSelfAlign.Baseline; set => _selfAlign = TinyFlexItemSelfAlign.Baseline; }
+}

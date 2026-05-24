@@ -1,0 +1,491 @@
+﻿@using System.Runtime.InteropServices
+
+@namespace  FractalBlazor.Components.Layout
+
+@inherits TinyComponentBase
+
+<div style=@ComputedStyle class="@Classes">
+    @ChildContent
+</div>
+
+@code {
+    private static object _locker = new object();
+    private static Dictionary<int, string> _cache = new Dictionary<int, string>();
+
+    [StructLayout(LayoutKind.Sequential, Pack = 0)]
+    private unsafe struct TinyFlexBoxBaseState
+    {
+        public TinyFlexBoxBaseState()
+        {
+
+        }
+
+        // -------- Fields
+        public TinyFlexJustify _justify = TinyFlexJustify.SpaceBetween;
+        public TinyFlexDirection _direction = TinyFlexDirection.Row;
+        public TinyFlexWrap _wrap = TinyFlexWrap.NoWrap;
+        public TinyFlexAlignItems _alignItems = TinyFlexAlignItems.Center;
+        public TinyFlexPlaceItems _placeItems = TinyFlexPlaceItems.None;
+        public TinyFlexAlignContent _alignContent = TinyFlexAlignContent.Center;
+        public TinyFlexItemSelfAlign _selfAlign = TinyFlexItemSelfAlign.None;
+        public TinyFlexSize _minWithSize = TinyFlexSize.None;
+        public TinyFlexSize _minHeightSize = TinyFlexSize.None;
+        public TinyFlexSize _maxHeightSize = TinyFlexSize.None;
+
+        public double RowGapRem = 0;
+        public double ColumnGapRem = 0;
+        public bool ColumnDisplay = false;
+
+        public int Order = int.MinValue;
+        public int Grow = int.MinValue;
+        public int Shrink = int.MinValue;
+
+        public bool Scrollable = false;
+    }
+
+    private TinyFlexBoxBaseState _state = new TinyFlexBoxBaseState();
+    private int _hash = 0;
+    private string _style = null;
+
+    public TinyFlexBoxBase()
+    {
+        IsFlex = true;
+    }
+
+    protected double RowGapRem { get => _state.RowGapRem; set => _state.RowGapRem = value; }
+
+    protected double ColumnGapRem { get => _state.ColumnGapRem; set => _state.ColumnGapRem = value; }
+
+    protected bool ColumnDisplay { get => _state.ColumnDisplay; set => _state.ColumnDisplay = value; }
+
+    // -------------- As flex item ------------ //
+    protected int Order { get => _state.Order; set => _state.Order = value; }
+
+    protected int Grow { get => _state.Grow; set => _state.Grow = value; }
+
+    protected int Shrink { get => _state.Shrink; set => _state.Shrink = value; }
+
+    // -------------- TinyFlexDirection ------------ //
+    protected TinyFlexDirection Direction { get => _state._direction; set => _state._direction = value; }
+
+    private string DirectionString
+    {
+        get
+        {
+            switch (_state._direction)
+            {
+                case TinyFlexDirection.Row:
+                    return "row";
+                case TinyFlexDirection.RowReverse:
+                    return "row-reverse";
+                case TinyFlexDirection.Column:
+                    return "column";
+                case TinyFlexDirection.ColumnReverse:
+                    return "column-reverse";
+            }
+            return "";
+        }
+    }
+
+    // -------------- TinyFlexWrap ------------ //
+    protected TinyFlexWrap Wrap { get => _state._wrap; set => _state._wrap = value; }
+
+    private string WrapString
+    {
+        get
+        {
+            switch (_state._wrap)
+            {
+                case TinyFlexWrap.NoWrap:
+                    return "nowrap";
+                case TinyFlexWrap.Wrap:
+                    return "wrap";
+                case TinyFlexWrap.WrapReverse:
+                    return "wrap-reverse";
+            }
+            return "";
+        }
+    }
+
+    // -------------- TinyFlexJustify ------------ //
+    protected TinyFlexJustify Justify { get => _state._justify; set => _state._justify = value; }
+
+    private string JustifyString
+    {
+        get
+        {
+            switch (_state._justify)
+            {
+                case TinyFlexJustify.Start:
+                    return "flex-start";
+                case TinyFlexJustify.End:
+                    return "flex-end";
+                case TinyFlexJustify.Center:
+                    return "center";
+                case TinyFlexJustify.Stretch:
+                    return "stretch";
+                case TinyFlexJustify.SpaceBetween:
+                    return "space-between";
+                case TinyFlexJustify.SpaceAround:
+                    return "space-around";
+                case TinyFlexJustify.Evenly:
+                    return "space-evenly";
+            }
+            return "";
+        }
+    }
+
+    // -------------- TinyFlexAlignItems ------------ //
+    protected TinyFlexAlignItems AlignItems { get => _state._alignItems; set => _state._alignItems = value; }
+
+    private string AlignItemsString
+    {
+        get
+        {
+            switch (_state._alignItems)
+            {
+                case TinyFlexAlignItems.Start:
+                    return "flex-start";
+                case TinyFlexAlignItems.End:
+                    return "flex-end";
+                case TinyFlexAlignItems.Center:
+                    return "center";
+                case TinyFlexAlignItems.Baseline:
+                    return "baseline";
+                case TinyFlexAlignItems.Stretch:
+                    return "stretch";
+            }
+            return "";
+        }
+    }
+
+    // -------------- TinyFlexAlignContent ------------ //
+    protected TinyFlexAlignContent AlignContent { get => _state._alignContent; set => _state._alignContent = value; }
+
+    private string AlignContentString
+    {
+        get
+        {
+            switch (_state._alignContent)
+            {
+                case TinyFlexAlignContent.Start:
+                    return "flex-start";
+                case TinyFlexAlignContent.End:
+                    return "flex-end";
+                case TinyFlexAlignContent.Center:
+                    return "center";
+                case TinyFlexAlignContent.SpaceBetween:
+                    return "space-between";
+                case TinyFlexAlignContent.SpaceAround:
+                    return "space-around";
+                case TinyFlexAlignContent.Stretch:
+                    return "stretch";
+            }
+            return "";
+        }
+    }
+
+    // -------------- TinyFlexPlaceItems ------------ //
+    protected TinyFlexPlaceItems PlaceItems { get => _state._placeItems; set => _state._placeItems = value; }
+
+    private string PlaceItemsString
+    {
+        get
+        {
+            switch (_state._placeItems)
+            {
+                case TinyFlexPlaceItems.Center:
+                    return "center";
+                case TinyFlexPlaceItems.Normal:
+                    return "normal";
+                case TinyFlexPlaceItems.Start:
+                    return "start";
+                case TinyFlexPlaceItems.End:
+                    return "end";
+                case TinyFlexPlaceItems.SelfStart:
+                    return "self-start";
+                case TinyFlexPlaceItems.SelfEnd:
+                    return "self-end";
+                case TinyFlexPlaceItems.FlexStart:
+                    return "flex-start";
+                case TinyFlexPlaceItems.FlexEnd:
+                    return "flex-end";
+                case TinyFlexPlaceItems.Baseline:
+                    return "baseline";
+                case TinyFlexPlaceItems.Stretch:
+                    return "stretch";
+                default:
+                    return "";
+            }
+        }
+    }
+
+    protected TinyFlexMasterSlave MasterSlaveStatus
+    {
+        get
+        {
+            if (!string.IsNullOrWhiteSpace(WidthMasterId))
+                return TinyFlexMasterSlave.Master;
+            if (!string.IsNullOrWhiteSpace(WidthSlaveId))
+                return TinyFlexMasterSlave.Slave;
+            return TinyFlexMasterSlave.None;
+        }
+    }
+
+    protected bool NoSelf { get => _state._selfAlign == TinyFlexItemSelfAlign.None; set => _state._selfAlign = TinyFlexItemSelfAlign.None; }
+
+    // -------- In Row
+    protected bool SelfOnTop { get => _state._selfAlign == TinyFlexItemSelfAlign.Start; set => _state._selfAlign = TinyFlexItemSelfAlign.Start; }
+
+    protected bool SelfOnBottom { get => _state._selfAlign == TinyFlexItemSelfAlign.End; set => _state._selfAlign = TinyFlexItemSelfAlign.End; }
+
+    protected bool SelfOnCenter { get => _state._selfAlign == TinyFlexItemSelfAlign.Center; set => _state._selfAlign = TinyFlexItemSelfAlign.Center; }
+
+    protected bool SelfOnStretch { get => _state._selfAlign == TinyFlexItemSelfAlign.Stretch; set => _state._selfAlign = TinyFlexItemSelfAlign.Stretch; }
+
+    protected bool SelfOnBaseline { get => _state._selfAlign == TinyFlexItemSelfAlign.Baseline; set => _state._selfAlign = TinyFlexItemSelfAlign.Baseline; }
+
+    // -------- In Column
+    protected bool SelfJustifyRight { get => _state._selfAlign == TinyFlexItemSelfAlign.Start; set => _state._selfAlign = TinyFlexItemSelfAlign.Start; }
+
+    protected bool SelfJustifyLeft { get => _state._selfAlign == TinyFlexItemSelfAlign.End; set => _state._selfAlign = TinyFlexItemSelfAlign.End; }
+
+    protected bool SelfJustifyCenter { get => _state._selfAlign == TinyFlexItemSelfAlign.Center; set => _state._selfAlign = TinyFlexItemSelfAlign.Center; }
+
+    protected bool SelfJustifyStretch { get => _state._selfAlign == TinyFlexItemSelfAlign.Stretch; set => _state._selfAlign = TinyFlexItemSelfAlign.Stretch; }
+
+    protected bool SelfJustifyBaseline { get => _state._selfAlign == TinyFlexItemSelfAlign.Baseline; set => _state._selfAlign = TinyFlexItemSelfAlign.Baseline; }
+
+    private string SelfAlignString
+    {
+        get
+        {
+            // auto | flex-start | flex-end | center | baseline | stretch
+            switch (_state._selfAlign)
+            {
+                case TinyFlexItemSelfAlign.Start:
+                    return "flex-start";
+                case TinyFlexItemSelfAlign.End:
+                    return "flex-end";
+                case TinyFlexItemSelfAlign.Center:
+                    return "center";
+                case TinyFlexItemSelfAlign.Stretch:
+                    return "stretch";
+                case TinyFlexItemSelfAlign.Baseline:
+                    return "baseline";
+            }
+            return "";
+        }
+    }
+
+    // -------- Value assignation
+    protected string MinWidth { get; set; }
+
+    protected bool MinWidthMaxContent { get => _state._minWithSize == TinyFlexSize.MaxContent; set => _state._minWithSize = TinyFlexSize.MaxContent; }
+
+    protected bool MinWidthMinContent { get => _state._minWithSize == TinyFlexSize.MinContent; set => _state._minWithSize = TinyFlexSize.MinContent; }
+
+    private string MinWithString
+    {
+        get
+        {
+            if (MinWidth != null)
+                return MinWidth;
+
+            switch (_state._minWithSize)
+            {
+                case TinyFlexSize.MaxContent:
+                    return "max-content";
+                case TinyFlexSize.MinContent:
+                    return "min-content";
+                default:
+                    return "";
+            }
+        }
+    }
+
+    // -------- Value assignation
+    protected string MinHeight { get; set; }
+
+    protected bool MinHeightMaxContent { get => _state._minHeightSize == TinyFlexSize.MaxContent; set => _state._minHeightSize = TinyFlexSize.MaxContent; }
+
+    protected bool MinHeightMinContent { get => _state._minHeightSize == TinyFlexSize.MinContent; set => _state._minHeightSize = TinyFlexSize.MinContent; }
+
+    private string MinHeightString
+    {
+        get
+        {
+            if (MinHeight != null)
+                return MinHeight;
+
+            switch (_state._minHeightSize)
+            {
+                case TinyFlexSize.MaxContent:
+                    return "max-content";
+                case TinyFlexSize.MinContent:
+                    return "min-content";
+                default:
+                    return "";
+            }
+        }
+    }
+
+    // -------- Value assignation
+    protected string MaxHeight { get; set; }
+
+    protected bool MaxHeightMaxContent { get => _state._maxHeightSize == TinyFlexSize.MaxContent; set => _state._maxHeightSize = TinyFlexSize.MaxContent; }
+
+    protected bool MaxHeightMinContent { get => _state._maxHeightSize == TinyFlexSize.MinContent; set => _state._maxHeightSize = TinyFlexSize.MinContent; }
+
+    private string MaxHeightString
+    {
+        get
+        {
+            if (MaxHeight != null)
+                return MaxHeight;
+
+            switch (_state._maxHeightSize)
+            {
+                case TinyFlexSize.MaxContent:
+                    return "max-content";
+                case TinyFlexSize.MinContent:
+                    return "min-content";
+                default:
+                    return "";
+            }
+        }
+    }
+
+    protected unsafe int BoxHash
+    {
+        get
+        {
+            var hash = CpntHash;
+            fixed (TinyFlexBoxBaseState* sptr = &_state)
+            {
+                hash = ComputeHash((byte*)sptr, sizeof(TinyFlexBoxBaseState), hash);
+                if (!string.IsNullOrWhiteSpace(MinWidth))
+                    hash = ComputeHash(MinWidth, hash);
+                if (!string.IsNullOrWhiteSpace(MinHeight))
+                    hash = ComputeHash(MinHeight, hash);
+                if (!string.IsNullOrWhiteSpace(MaxHeight))
+                    hash = ComputeHash(MaxHeight, hash);
+                return hash;
+            }
+        }
+    }
+
+    protected unsafe string ComputedStyle
+    {
+        get
+        {
+            var hash = BoxHash;
+            if (_hash == hash && _style != null)
+                return _style;
+            _hash = hash;
+            lock (_locker)
+            {
+                if (UseCaching && _cache.TryGetValue(hash, out var found))
+                {
+                    _style = found;
+                    return _style;
+                }
+
+                RenderingStatistics.AddFlexBoxBaseStyleComputation();
+
+                var str = $"position: relative;" +
+                        (_state._selfAlign == TinyFlexItemSelfAlign.None ? "" : $"align-self:{SelfAlignString};") +
+                        $"flex-direction: {DirectionString}; flex-wrap: {WrapString}; justify-content: {JustifyString}; align-items: {AlignItemsString}; align-content: {AlignContentString}; " +
+                        (PlaceItemsString != "" ? $"place-items: {PlaceItemsString};" : "") +
+                        (RowGapRem != 0 ? $"row-gap: {(RowGapRem.ToString("F").Replace(",", "."))}rem;" : "") +
+                        (ColumnGapRem != 0 ? $"column-gap: {(ColumnGapRem.ToString("F").Replace(",", "."))}rem;" : "") +
+                        (Grow != int.MinValue ? $"flex-grow:{Grow};" : "") +
+                        (Shrink != int.MinValue ? $"flex-shrink:{Shrink};" : "") +
+                        (Order != int.MinValue ? $"order:{Order};" : "") +
+                        (MinWithString != "" ? $"min-width: {MinWithString};" : "") +
+                        (MinHeightString != "" ? $"min-height: {MinHeightString};" : "") +
+                        (MaxHeightString != "" ? $"max-height: {MaxHeightString};" : "") +
+                        (ColumnDisplay ? "flex-flow : column;" : "") +
+                        (Scrollable ? "overflow : scroll;" : "") +
+                        ComputedBaseStyle;
+                if (UseCaching && !_cache.ContainsKey(hash))
+                    _cache[hash] = str;
+                _style = str;
+                return _style;
+            }
+        }
+    }
+
+    // ************************************************************************************************ //
+    // ***************************************    PUBLIC   ******************************************** //
+    // ************************************************************************************************ //
+    #region PUBLIC PARAMETERS
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string WidthMasterId { get; set; }
+
+    [Parameter]
+    public string WidthSlaveId { get; set; }
+
+    [Parameter]
+    public bool Scrollable { get => _state.Scrollable; set => _state.Scrollable = value; }
+
+    [Parameter]
+    public bool G0 { get => RowGapRem == 0 && ColumnGapRem == 0; set { if (value) { RowGapRem = ColumnGapRem = 0; } } }
+
+    [Parameter]
+    public bool G1 { get => RowGapRem == 1d / 16d && ColumnGapRem == 1d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 1d / 16d; } } }
+
+    [Parameter]
+    public bool G2 { get => RowGapRem == 2d / 16d && ColumnGapRem == 2d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 2d / 16d; } } }
+
+    [Parameter]
+    public bool G3 { get => RowGapRem == 3d / 16d && ColumnGapRem == 3d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 3d / 16d; } } }
+
+    [Parameter]
+    public bool G4 { get => RowGapRem == 4d / 16d && ColumnGapRem == 4 / 16d; set { if (value) { RowGapRem = ColumnGapRem = 4d / 16d; } } }
+
+    [Parameter]
+    public bool G8 { get => RowGapRem == 8d / 16d && ColumnGapRem == 8d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 8d / 16d; } } }
+
+    [Parameter]
+    public bool G12 { get => RowGapRem == 12d / 16d && ColumnGapRem == 12d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 12d / 16d; } } }
+
+    [Parameter]
+    public bool G16 { get => RowGapRem == 16d / 16d && ColumnGapRem == 16d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 16d / 16d; } } }
+
+    [Parameter]
+    public bool G24 { get => RowGapRem == 24d / 16d && ColumnGapRem == 24d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 24d / 16d; } } }
+
+    [Parameter]
+    public bool G32 { get => RowGapRem == 32d / 16d && ColumnGapRem == 32d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 32d / 16d; } } }
+
+    [Parameter]
+    public bool G40 { get => RowGapRem == 40d / 16d && ColumnGapRem == 40d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 40d / 16d; } } }
+
+    [Parameter]
+    public bool G48 { get => RowGapRem == 48d / 16d && ColumnGapRem == 48d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 48d / 16d; } } }
+
+    /// <summary>
+    /// Gutter -> Small
+    /// </summary>
+    [Parameter]
+    public bool GS { get => G8; set => G8 = true; }
+
+    /// <summary>
+    /// Gutter -> Medium
+    /// </summary>
+    [Parameter]
+    public bool GM { get => G12; set => G12 = true; }
+
+    /// <summary>
+    /// Gutter -> Large
+    /// </summary>
+    [Parameter]
+    public bool GL { get => G24; set => G24 = true; }
+
+    #endregion
+}
