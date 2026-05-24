@@ -638,127 +638,127 @@
     /// Padding -> Small
     /// </summary>
     [Parameter]
-    public bool PS { get => P8; set => P8 = true; }
+    public bool PS { get => Padding == FbSpacings.S_Padding; set => Padding = FbSpacings.S_Padding; }
 
     /// <summary>
     /// Padding -> Medium
     /// </summary>
     [Parameter]
-    public bool PM { get => P12; set => P12 = true; }
+    public bool PM { get => Padding == FbSpacings.M_Padding; set => Padding = FbSpacings.M_Padding; }
 
     /// <summary>
     /// Padding -> Large
     /// </summary>
     [Parameter]
-    public bool PL { get => P24; set => P24 = true; }
+    public bool PL { get => Padding == FbSpacings.L_Padding; set => Padding = FbSpacings.L_Padding; }
 
     /// <summary>
     /// Padding -> Vertical -> Small 
     /// </summary>
     [Parameter]
-    public bool PVS { get => PT8 && PB8; set => PT8 = PB8 = true; }
+    public bool PVS { get => PaddingTop == FbSpacings.S_Padding && PaddingBottom == FbSpacings.S_Padding; set { PaddingTop = PaddingBottom = FbSpacings.S_Padding; } }
 
     /// <summary>
     /// Padding -> Vertical -> Medium 
     /// </summary>
     [Parameter]
-    public bool PVM { get => PT12 && PB12; set => PT12 = PB12 = true; }
+    public bool PVM { get => PaddingTop == FbSpacings.M_Padding && PaddingBottom == FbSpacings.M_Padding; set { PaddingTop = PaddingBottom = FbSpacings.M_Padding; } }
 
     /// <summary>
     /// Padding -> Vertical -> Large 
     /// </summary>
     [Parameter]
-    public bool PVL { get => PT24 && PB24; set => PT24 = PB24 = true; }
+    public bool PVL { get => PaddingTop == FbSpacings.L_Padding && PaddingBottom == FbSpacings.L_Padding; set { PaddingTop = PaddingBottom = FbSpacings.L_Padding; } }
 
     /// <summary>
     /// Padding -> Horizontal -> Small 
     /// </summary>
     [Parameter]
-    public bool PHS { get => PL8 && PR8; set => PL8 = PR8 = true; }
+    public bool PHS { get => PaddingLeft == FbSpacings.S_Padding && PaddingRight == FbSpacings.S_Padding; set { PaddingLeft = PaddingRight = FbSpacings.S_Padding; } }
 
     /// <summary>
     /// Padding -> Horizontal -> Medium 
     /// </summary>
     [Parameter]
-    public bool PHM { get => PL12 && PR12; set => PL12 = PR12 = true; }
+    public bool PHM { get => PaddingLeft == FbSpacings.M_Padding && PaddingRight == FbSpacings.M_Padding; set { PaddingLeft = PaddingRight = FbSpacings.M_Padding; } }
 
     /// <summary>
     /// Padding -> Horizontal -> Large 
     /// </summary>
     [Parameter]
-    public bool PHL { get => PL24 && PR24; set => PL24 = PR24 = true; }
+    public bool PHL { get => PaddingLeft == FbSpacings.L_Padding && PaddingRight == FbSpacings.L_Padding; set { PaddingLeft = PaddingRight = FbSpacings.L_Padding; } }
 
     /// <summary>
     /// Padding -> Top -> Small
     /// </summary>
     [Parameter]
-    public bool PTS { get => PT8; set => PT8 = true; }
+    public bool PTS { get => PaddingTop == FbSpacings.S_Padding; set => PaddingTop = FbSpacings.S_Padding; }
 
     /// <summary>
     /// Padding -> Top -> Medium
     /// </summary>
     [Parameter]
-    public bool PTM { get => PT12; set => PT12 = true; }
+    public bool PTM { get => PaddingTop == FbSpacings.M_Padding; set => PaddingTop = FbSpacings.M_Padding; }
 
     /// <summary>
     /// Padding -> Top -> Large
     /// </summary>
     [Parameter]
-    public bool PTL { get => PT24; set => PT24 = true; }
+    public bool PTL { get => PaddingTop == FbSpacings.L_Padding; set => PaddingTop = FbSpacings.L_Padding; }
 
     /// <summary>
     /// Padding -> Bottom -> Small
     /// </summary>
     [Parameter]
-    public bool PBS { get => PB8; set => PB8 = true; }
+    public bool PBS { get => PaddingBottom == FbSpacings.S_Padding; set => PaddingBottom = FbSpacings.S_Padding; }
 
     /// <summary>
     /// Padding -> Bottom -> Medium
     /// </summary>
     [Parameter]
-    public bool PBM { get => PB12; set => PB12 = true; }
+    public bool PBM { get => PaddingBottom == FbSpacings.M_Padding; set => PaddingBottom = FbSpacings.M_Padding; }
 
     /// <summary>
     /// Padding -> Bottom -> Large
     /// </summary>
     [Parameter]
-    public bool PBL { get => PB24; set => PB24 = true; }
+    public bool PBL { get => PaddingBottom == FbSpacings.L_Padding; set => PaddingBottom = FbSpacings.L_Padding; }
 
     /// <summary>
     /// Padding -> Left -> Small
     /// </summary>
     [Parameter]
-    public bool PLS { get => PL8; set => PL8 = true; }
+    public bool PLS { get => PaddingLeft == FbSpacings.S_Padding; set => PaddingLeft = FbSpacings.S_Padding; }
 
     /// <summary>
     /// Padding -> Left -> Medium
     /// </summary>
     [Parameter]
-    public bool PLM { get => PL12; set => PL12 = true; }
+    public bool PLM { get => PaddingLeft == FbSpacings.M_Padding; set => PaddingLeft = FbSpacings.M_Padding; }
 
     /// <summary>
     /// Padding -> Left -> Large
     /// </summary>
     [Parameter]
-    public bool PLL { get => PL24; set => PL24 = true; }
+    public bool PLL { get => PaddingLeft == FbSpacings.L_Padding; set => PaddingLeft = FbSpacings.L_Padding; }
 
     /// <summary>
     /// Padding -> Right -> Small
     /// </summary>
     [Parameter]
-    public bool PRS { get => PR8; set => PR8 = true; }
+    public bool PRS { get => PaddingRight == FbSpacings.S_Padding; set => PaddingRight = FbSpacings.S_Padding; }
 
     /// <summary>
     /// Padding -> Right -> Medium
     /// </summary>
     [Parameter]
-    public bool PRM { get => PR12; set => PR12 = true; }
+    public bool PRM { get => PaddingRight == FbSpacings.M_Padding; set => PaddingRight = FbSpacings.M_Padding; }
 
     /// <summary>
     /// Padding -> Right -> Large
     /// </summary>
     [Parameter]
-    public bool PRL { get => PR24; set => PR24 = true; }
+    public bool PRL { get => PaddingRight == FbSpacings.L_Padding; set => PaddingRight = FbSpacings.L_Padding; }
 
 
     [Parameter]
@@ -1050,55 +1050,55 @@
     /// Margin -> Small
     /// </summary>
     [Parameter]
-    public bool MS { get => M8; set => M8 = true; }
+    public bool MS { get => Margin == FbSpacings.S_Margin; set => Margin = FbSpacings.S_Margin; }
 
     /// <summary>
     /// Margin -> Medium
     /// </summary>
     [Parameter]
-    public bool MM { get => M12; set => M12 = true; }
+    public bool MM { get => Margin == FbSpacings.M_Margin; set => Margin = FbSpacings.M_Margin; }
 
     /// <summary>
     /// Margin -> Large
     /// </summary>
     [Parameter]
-    public bool ML { get => M24; set => M24 = true; }
+    public bool ML { get => Margin == FbSpacings.L_Margin; set => Margin = FbSpacings.L_Margin; }
 
     /// <summary>
     /// Margin -> Vertical -> Small 
     /// </summary>
     [Parameter]
-    public bool MVS { get => MT8 && MB8; set => MT8 = MB8 = true; }
+    public bool MVS { get => MarginTop == FbSpacings.S_Margin && MarginBottom == FbSpacings.S_Margin; set { MarginTop = MarginBottom = FbSpacings.S_Margin; } }
 
     /// <summary>
     /// Margin -> Vertical -> Medium 
     /// </summary>
     [Parameter]
-    public bool MVM { get => MT12 && MB12; set => MT12 = MB12 = true; }
+    public bool MVM { get => MarginTop == FbSpacings.M_Margin && MarginBottom == FbSpacings.M_Margin; set { MarginTop = MarginBottom = FbSpacings.M_Margin; } }
 
     /// <summary>
     /// Margin -> Vertical -> Large 
     /// </summary>
     [Parameter]
-    public bool MVL { get => MT24 && MB24; set => MT24 = MB24 = true; }
+    public bool MVL { get => MarginTop == FbSpacings.L_Margin && MarginBottom == FbSpacings.L_Margin; set { MarginTop = MarginBottom = FbSpacings.L_Margin; } }
 
     /// <summary>
     /// Margin -> Horizontal -> Small 
     /// </summary>
     [Parameter]
-    public bool MHS { get => ML8 && MR8; set => ML8 = MR8 = true; }
+    public bool MHS { get => MarginLeft == FbSpacings.S_Margin && MarginRight == FbSpacings.S_Margin; set { MarginLeft = MarginRight = FbSpacings.S_Margin; } }
 
     /// <summary>
     /// Margin -> Horizontal -> Medium 
     /// </summary>
     [Parameter]
-    public bool MHM { get => ML12 && MR12; set => ML12 = MR12 = true; }
+    public bool MHM { get => MarginLeft == FbSpacings.M_Margin && MarginRight == FbSpacings.M_Margin; set { MarginLeft = MarginRight = FbSpacings.M_Margin; } }
 
     /// <summary>
     /// Margin -> Horizontal -> Large 
     /// </summary>
     [Parameter]
-    public bool MHL { get => ML24 && MR24; set => ML24 = MR24 = true; }
+    public bool MHL { get => MarginLeft == FbSpacings.L_Margin && MarginRight == FbSpacings.L_Margin; set { MarginLeft = MarginRight = FbSpacings.L_Margin; } }
 
 
     ///NEWWWWWWW----------------
@@ -1107,73 +1107,73 @@
     /// Margin -> Top -> Small
     /// </summary>
     [Parameter]
-    public bool MTS { get => MT8; set => MT8 = true; }
+    public bool MTS { get => MarginTop == FbSpacings.S_Margin; set => MarginTop = FbSpacings.S_Margin; }
 
     /// <summary>
     /// Margin -> Top -> Medium
     /// </summary>
     [Parameter]
-    public bool MTM { get => MT12; set => MT12 = true; }
+    public bool MTM { get => MarginTop == FbSpacings.M_Margin; set => MarginTop = FbSpacings.M_Margin; }
 
     /// <summary>
     /// Margin -> Top -> Large
     /// </summary>
     [Parameter]
-    public bool MTL { get => MT24; set => MT24 = true; }
+    public bool MTL { get => MarginTop == FbSpacings.L_Margin; set => MarginTop = FbSpacings.L_Margin; }
 
     /// <summary>
     /// Margin -> Bottom -> Small
     /// </summary>
     [Parameter]
-    public bool MBS { get => MB8; set => MB8 = true; }
+    public bool MBS { get => MarginBottom == FbSpacings.S_Margin; set => MarginBottom = FbSpacings.S_Margin; }
 
     /// <summary>
     /// Margin -> Bottom -> Medium
     /// </summary>
     [Parameter]
-    public bool MBM { get => MB12; set => MB12 = true; }
+    public bool MBM { get => MarginBottom == FbSpacings.M_Margin; set => MarginBottom = FbSpacings.M_Margin; }
 
     /// <summary>
     /// Margin -> Bottom -> Large
     /// </summary>
     [Parameter]
-    public bool MBL { get => MB24; set => MB24 = true; }
+    public bool MBL { get => MarginBottom == FbSpacings.L_Margin; set => MarginBottom = FbSpacings.L_Margin; }
 
     /// <summary>
     /// Margin -> Left -> Small
     /// </summary>
     [Parameter]
-    public bool MLS { get => ML8; set => ML8 = true; }
+    public bool MLS { get => MarginLeft == FbSpacings.S_Margin; set => MarginLeft = FbSpacings.S_Margin; }
 
     /// <summary>
     /// Margin -> Left -> Medium
     /// </summary>
     [Parameter]
-    public bool MLM { get => ML12; set => ML12 = true; }
+    public bool MLM { get => MarginLeft == FbSpacings.M_Margin; set => MarginLeft = FbSpacings.M_Margin; }
 
     /// <summary>
     /// Margin -> Left -> Large
     /// </summary>
     [Parameter]
-    public bool MLL { get => ML24; set => ML24 = true; }
+    public bool MLL { get => MarginLeft == FbSpacings.L_Margin; set => MarginLeft = FbSpacings.L_Margin; }
 
     /// <summary>
     /// Margin -> Right -> Small
     /// </summary>
     [Parameter]
-    public bool MRS { get => MR8; set => MR8 = true; }
+    public bool MRS { get => MarginRight == FbSpacings.S_Margin; set => MarginRight = FbSpacings.S_Margin; }
 
     /// <summary>
     /// Margin -> Right -> Medium
     /// </summary>
     [Parameter]
-    public bool MRM { get => MR12; set => MR12 = true; }
+    public bool MRM { get => MarginRight == FbSpacings.M_Margin; set => MarginRight = FbSpacings.M_Margin; }
 
     /// <summary>
     /// Margin -> Right -> Large
     /// </summary>
     [Parameter]
-    public bool MRL { get => MR24; set => MR24 = true; }
+    public bool MRL { get => MarginRight == FbSpacings.L_Margin; set => MarginRight = FbSpacings.L_Margin; }
 
     [Parameter]
     public string StoreId { get; set; } = "";

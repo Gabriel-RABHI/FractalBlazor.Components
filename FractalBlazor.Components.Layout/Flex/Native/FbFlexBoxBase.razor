@@ -498,19 +498,19 @@
     /// Gutter -> Small
     /// </summary>
     [Parameter]
-    public bool GS { get => G8; set => G8 = true; }
+    public bool GS { get => Gutter == FbSpacings.S_Gutter; set => Gutter = FbSpacings.S_Gutter; }
 
     /// <summary>
     /// Gutter -> Medium
     /// </summary>
     [Parameter]
-    public bool GM { get => G12; set => G12 = true; }
+    public bool GM { get => Gutter == FbSpacings.M_Gutter; set => Gutter = FbSpacings.M_Gutter; }
 
     /// <summary>
     /// Gutter -> Large
     /// </summary>
     [Parameter]
-    public bool GL { get => G24; set => G24 = true; }
+    public bool GL { get => Gutter == FbSpacings.L_Gutter; set => Gutter = FbSpacings.L_Gutter; }
 
     #endregion
 }
