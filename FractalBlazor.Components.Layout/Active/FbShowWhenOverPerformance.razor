@@ -1,0 +1,31 @@
+@namespace  FractalBlazor.Components.Layout
+@using Microsoft.JSInterop
+
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+@code {
+    [Parameter]
+    public int VerificationDelay { get; set; } = 1000;
+
+    [Parameter]
+    public string ScrollParentID { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("runFbShowOnOverPerformance", new object[] { ScrollParentID, VerificationDelay });
+        }
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("stopFbShowOnOverPerformance");
+        }
+        catch (JSDisconnectedException ex)
+        { }
+    }
+}

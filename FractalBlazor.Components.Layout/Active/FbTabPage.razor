@@ -1,0 +1,21 @@
+@namespace  FractalBlazor.Components.Layout
+
+@inherits FbComponentBase
+
+<FbStack StoreId="TabPage-1" Classes="@(Classes + " fb-text-m")" Style="@Style">
+    <FbRow StoreId="TabPage-2" JustifyCenter GM>
+        @ChildContent
+    </FbRow>
+    @if (BottomBorder)
+    {
+        <FbHR Large></FbHR>
+    }
+</FbStack>
+
+ @code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public bool BottomBorder { get; set; } = true;
+}

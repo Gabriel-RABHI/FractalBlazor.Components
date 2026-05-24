@@ -1,0 +1,53 @@
+@inherits FbFlexBoxBase
+
+<div cpnt="column[@(StoreId)]" style="@ComputedStyle" class="fb-column @ComputedColumnClasses">
+    @ChildContent
+</div>
+
+@code {
+    public FbColumn()
+    {
+        ColumnDisplay = true;
+        AlignItems = FbFlexAlignItems.Stretch;
+        Flex = 1;
+    }
+
+    protected string ComputedColumnClasses
+    {
+        get
+        {
+            return $"{Classes} {DesignClass} {WrapClassString} {ResponsiveClassString}";
+        }
+    }
+
+    private string DesignClass
+    {
+        get
+        {
+            if (Design)
+                return "fb-design";
+            else
+                return "";
+        }
+    }
+
+    // ************************************************************************************************ //
+    // ***************************************    PUBLIC   ******************************************** //
+    // ************************************************************************************************ //
+
+    // -------- MISSING --------- //
+    [Parameter]
+    public string MinWidth { get => base.MinWidth; set => base.MinWidth = value; }
+
+    [Parameter]
+    public string MinHeight { get => base.MinHeight; set => base.MinHeight = value; }
+
+    [Parameter]
+    public string MaxHeight { get => base.MaxHeight; set => base.MaxHeight = value; }
+
+    [Parameter]
+    public bool Design { get; set; }
+
+    // -------- MISSING --------- //
+}
+

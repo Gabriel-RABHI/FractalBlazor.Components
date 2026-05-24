@@ -1,0 +1,77 @@
+@namespace  FractalBlazor.Components.Layout
+
+@inherits FbComponentBase
+
+<div cpnt="stack-item[@(StoreId)]" style="@ComputedStyle" class="@($"{Classes} {WrapClassString} {ResponsiveClassString}")" @onclick=@(() => OnClick.InvokeAsync())>
+    @ChildContent
+</div>
+
+@code {
+    private FbFlexItemSelfAlign _selfAlign = FbFlexItemSelfAlign.None;
+    private int _flex = 0;
+    private bool _hadFlex = false;
+
+    public FbStackItem()
+    {
+        IsFlex = true;
+        //Flex = 1;
+    }
+
+    private string VerticalAlignString
+    {
+        get
+        {
+            // auto | flex-start | flex-end | center | baseline | stretch
+            switch (_selfAlign)
+            {
+                case FbFlexItemSelfAlign.Start:
+                    return "flex-start";
+                case FbFlexItemSelfAlign.End:
+                    return "flex-end";
+                case FbFlexItemSelfAlign.Center:
+                    return "center";
+                case FbFlexItemSelfAlign.Stretch:
+                    return "stretch";
+                case FbFlexItemSelfAlign.Baseline:
+                    return "baseline";
+            }
+            return "";
+        }
+    }
+
+    private string ComputedStyle
+    {
+        get
+        {
+            return ComputedBaseStyle +
+                    ("flex-wrap: wrap;") +
+                    (_selfAlign != FbFlexItemSelfAlign.None ? $"align-self:{VerticalAlignString};" : "");
+        }
+    }
+
+    // ************************************************************************************************ //
+    // ***************************************    PUBLIC   ******************************************** //
+    // ************************************************************************************************ //
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+    
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    // -------- In Column
+    [Parameter]
+    public bool SelfJustifyRight { get => _selfAlign == FbFlexItemSelfAlign.Start; set => _selfAlign = FbFlexItemSelfAlign.Start; }
+
+    [Parameter]
+    public bool SelfJustifyLeft { get => _selfAlign == FbFlexItemSelfAlign.End; set => _selfAlign = FbFlexItemSelfAlign.End; }
+
+    [Parameter]
+    public bool SelfJustifyCenter { get => _selfAlign == FbFlexItemSelfAlign.Center; set => _selfAlign = FbFlexItemSelfAlign.Center; }
+
+    [Parameter]
+    public bool SelfJustifyStretch { get => _selfAlign == FbFlexItemSelfAlign.Stretch; set => _selfAlign = FbFlexItemSelfAlign.Stretch; }
+
+    [Parameter]
+    public bool SelfJustifyBaseline { get => _selfAlign == FbFlexItemSelfAlign.Baseline; set => _selfAlign = FbFlexItemSelfAlign.Baseline; }
+}

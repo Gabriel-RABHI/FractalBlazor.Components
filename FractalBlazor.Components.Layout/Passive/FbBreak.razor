@@ -1,0 +1,95 @@
+@namespace  FractalBlazor.Components.Layout
+
+@switch (Break) {
+    case FbBreaks.XXS_480px :
+        <span class="hide-under-xxs">
+            @LargeContent
+        </span>
+        <span class="hide-over-xxs">
+            @SmallContent
+        </span>
+        break;
+    case FbBreaks.XS_600px :
+        <span class="hide-under-xs">
+            @LargeContent
+        </span>
+        <span class="hide-over-xs">
+            @SmallContent
+        </span>
+        break;
+    case FbBreaks.S_960px :
+        <span class="hide-under-s">
+            @LargeContent
+        </span>
+        <span class="hide-over-s">
+            @SmallContent
+        </span>
+        break;
+    case FbBreaks.M_1280px :
+        <span class="hide-under-m">
+            @LargeContent
+        </span>
+        <span class="hide-over-m">
+            @SmallContent
+        </span>
+        break;
+    case FbBreaks.L_1600px :
+        <span class="hide-under-l">
+            @LargeContent
+        </span>
+        <span class="hide-over-l">
+            @SmallContent
+        </span>
+        break;
+    case FbBreaks.XL_1960px :
+        <span class="hide-under-xl">
+            @LargeContent
+        </span>
+        <span class="hide-over-xl">
+            @SmallContent
+        </span>
+        break;
+}
+
+@code {
+    [Parameter]
+    public RenderFragment SmallContent { get; set; }
+
+    [Parameter]
+    public RenderFragment LargeContent { get; set; }
+
+    [Parameter]
+    public bool IsInline { get; set; } = false;
+
+    [Parameter]
+    public FbBreaks Break { get; set; } = FbBreaks.XS_600px;
+
+    [Parameter]
+    public bool XXS { get => Break == FbBreaks.XXS_480px; set => Break = FbBreaks.XXS_480px; }
+    
+    [Parameter]
+    public bool XS { get => Break == FbBreaks.XS_600px; set => Break = FbBreaks.XS_600px; }
+    
+    [Parameter]
+    public bool S { get => Break == FbBreaks.S_960px; set => Break = FbBreaks.S_960px; }
+    
+    [Parameter]
+    public bool M { get => Break == FbBreaks.M_1280px; set => Break = FbBreaks.M_1280px; }
+    
+    [Parameter]
+    public bool L { get => Break == FbBreaks.L_1600px; set => Break = FbBreaks.L_1600px; }
+    
+    [Parameter]
+    public bool XL { get => Break == FbBreaks.XL_1960px; set => Break = FbBreaks.XL_1960px; }
+
+    [Parameter]
+    public string Style { get; set; }
+
+    private string ComputedStyle
+    {
+        get
+        {
+            return $" {(string.IsNullOrWhiteSpace(Style) ? "" : Style)}";
+        }
+    }
+}

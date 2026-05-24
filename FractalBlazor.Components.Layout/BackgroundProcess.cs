@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +10,7 @@ namespace  FractalBlazor.Components.Layout
     internal static class BackgroundProcess
     {
         private static object _locker = new object();
-        private static List<WeakReference<TinyUpdatable>> _updatableComponents { get; } = new List<WeakReference<TinyUpdatable>>();
+        private static List<WeakReference<FbUpdatable>> _updatableComponents { get; } = new List<WeakReference<FbUpdatable>>();
 
         private static Timer timer;
 
@@ -19,10 +19,10 @@ namespace  FractalBlazor.Components.Layout
             StartTimer();
         }
 
-        public static void AddUpdatable(TinyUpdatable cpnt)
+        public static void AddUpdatable(FbUpdatable cpnt)
         {
             lock (_locker)
-                _updatableComponents.Add(new WeakReference<TinyUpdatable>(cpnt));
+                _updatableComponents.Add(new WeakReference<FbUpdatable>(cpnt));
         }
 
         private static void StartTimer()
@@ -33,7 +33,7 @@ namespace  FractalBlazor.Components.Layout
                     // -------- Update permanents
                     lock (_locker)
                     {
-                        List<WeakReference<TinyUpdatable>> _toRemove = null;
+                        List<WeakReference<FbUpdatable>> _toRemove = null;
                         foreach (var wr in _updatableComponents)
                         {
                             if (wr.TryGetTarget(out var target))
@@ -47,7 +47,7 @@ namespace  FractalBlazor.Components.Layout
                             } else
                             {
                                 if (_toRemove == null)
-                                    _toRemove = new List<WeakReference<TinyUpdatable>>();
+                                    _toRemove = new List<WeakReference<FbUpdatable>>();
                             }
                         }
                         _toRemove?.ForEach(w => _updatableComponents.Remove(w));

@@ -1,0 +1,970 @@
+@using System.Runtime.InteropServices
+
+
+@code {
+    internal static bool UseCaching { get; set; } = true;
+
+    public static int ComputeHash(string input, int hash = 17)
+    {
+        foreach (char c in input)
+            hash = hash * 31 + c;
+        return hash;
+    }
+
+    public unsafe static int ComputeHash(byte* input, int size, int hash = 17)
+    {
+        for (int i=0;i<size;i++)
+            hash = hash * 31 + input[i];
+        return hash;
+    }
+
+    private static object _locker = new object();
+    private static Dictionary<int, string> _cache = new Dictionary<int, string>();
+    private int _hash = 0;
+    private string _style = null;
+
+    [StructLayout(LayoutKind.Sequential, Pack = 0)]
+    private unsafe struct ComponentBaseState
+    {
+        public ComponentBaseState()
+        {
+
+        }
+
+        // -------- Fields
+        public bool _noWrap = false;
+        public bool _responsiveUnder = false;
+        public BaseDisplayMode DisplayMode = BaseDisplayMode.None;
+        public FbPadding Padding = FbPadding.None;
+        public FbResponsiveBreakpoint ResponsiveBreakpoint = FbResponsiveBreakpoint.None;
+        public FbPadding PaddingTop = FbPadding.None;
+        public FbPadding PaddingBottom = FbPadding.None;
+        public FbPadding PaddingLeft = FbPadding.None;
+        public FbPadding PaddingRight = FbPadding.None;
+        public FbMargin Margin = FbMargin.None;
+        public FbMargin MarginTop = FbMargin.None;
+        public FbMargin MarginBottom = FbMargin.None;
+        public FbMargin MarginLeft = FbMargin.None;
+        public FbMargin MarginRight = FbMargin.None;
+        public int _flex = int.MinValue;
+
+        // -------- Properties
+        public bool IsBlock { get => DisplayMode == BaseDisplayMode.Block; set => DisplayMode = BaseDisplayMode.Block; }
+
+        public bool IsInlineBloc { get => DisplayMode == BaseDisplayMode.InlineBloc; set => DisplayMode = BaseDisplayMode.InlineBloc; }
+
+        public bool IsFlex { get => DisplayMode == BaseDisplayMode.Flex; set => DisplayMode = BaseDisplayMode.Flex; }
+
+        public bool IsInlineFlex { get => DisplayMode == BaseDisplayMode.InlineFlex; set => DisplayMode = BaseDisplayMode.InlineFlex; }
+
+        public string DisplayModeString
+        {
+            get
+            {
+                GetHashCode();
+                switch (DisplayMode)
+                {
+                    case BaseDisplayMode.Block: return "display:block;";
+                    case BaseDisplayMode.InlineBloc: return "display:inline-block;";
+                    case BaseDisplayMode.Flex: return "display:flex;";
+                    case BaseDisplayMode.InlineFlex: return "display:inline-flex;";
+                    case BaseDisplayMode.Table: return "display:table;";
+                    case BaseDisplayMode.TableRow: return "display:table-row;";
+                    case BaseDisplayMode.TableCell: return "display:table-cell;";
+                }
+                return "";
+            }
+        }
+    }
+
+    private ComponentBaseState _state = new ComponentBaseState();
+
+    private string _widthBasis = "";
+
+    protected FbPadding Padding { get => _state.Padding; set => _state.Padding = value; }
+
+    protected FbResponsiveBreakpoint ResponsiveBreakpoint { get => _state.ResponsiveBreakpoint; set => _state.ResponsiveBreakpoint = value; }
+
+    protected FbPadding PaddingTop { get => _state.PaddingTop; set => _state.PaddingTop = value; }
+
+    protected FbPadding PaddingBottom { get => _state.PaddingBottom; set => _state.PaddingBottom = value; }
+
+    protected FbPadding PaddingLeft { get => _state.PaddingLeft; set => _state.PaddingLeft = value; }
+
+    protected FbPadding PaddingRight { get => _state.PaddingRight; set => _state.PaddingRight = value; }
+
+    protected FbMargin Margin { get => _state.Margin; set => _state.Margin = value; }
+
+    protected FbMargin MarginTop { get => _state.MarginTop; set => _state.MarginTop = value; }
+
+    protected FbMargin MarginBottom { get => _state.MarginBottom; set => _state.MarginBottom = value; }
+
+    protected BaseDisplayMode DisplayMode { get => _state.DisplayMode; set => _state.DisplayMode = value; }
+
+    protected FbMargin MarginLeft { get => _state.MarginLeft; set => _state.MarginLeft = value; }
+
+    protected FbMargin MarginRight { get => _state.MarginRight; set => _state.MarginRight = value; }
+
+    protected bool IsBlock { get => _state.IsBlock; set => _state.IsBlock = value; }
+
+    protected bool IsInlineBloc { get => _state.IsInlineBloc; set => _state.IsInlineBloc = value; }
+
+    protected bool IsFlex { get => _state.IsFlex; set => _state.IsFlex = value; }
+
+    protected bool IsInlineFlex { get => _state.IsInlineFlex; set => _state.IsInlineFlex = value; }
+
+    protected unsafe int CpntHash
+    {
+        get
+        {
+            var hash = 0;
+            fixed (ComponentBaseState* sptr = &_state)
+            {
+                hash = ComputeHash((byte*)sptr, sizeof(ComponentBaseState));
+                if (!string.IsNullOrWhiteSpace(WidthBasis))
+                    hash = ComputeHash(WidthBasis, hash);
+                if (!string.IsNullOrWhiteSpace(Style))
+                    hash = ComputeHash(Style, hash);
+                return hash;
+            }
+        }
+    }
+
+    protected unsafe string ComputedBaseStyle
+    {
+        get
+        {
+            var hash = CpntHash;
+            if (_hash == hash && _style != null)
+                return _style;
+            _hash = hash;
+            lock (_locker)
+            {
+                if (UseCaching && _cache.TryGetValue(hash, out var found))
+                {
+                    _style = found;
+                    return _style;
+                }
+
+                RenderingStatistics.AddComponentBaseStyleComputation();
+
+                var str = _state.DisplayModeString +
+                        (Padding != FbPadding.None ? $"padding:{((double)((int)Padding) / 16d).ToString().Replace(",", ".")}rem;" : "") +
+                        (PaddingTop != FbPadding.None ? $"padding-top:{((double)((int)PaddingTop) / 16d).ToString().Replace(",", ".")}rem;" : "") +
+                        (PaddingBottom != FbPadding.None ? $"padding-bottom:{((double)((int)PaddingBottom) / 16d).ToString().Replace(",", ".")}rem;" : "") +
+                        (PaddingLeft != FbPadding.None ? $"padding-left:{((double)((int)PaddingLeft) / 16d).ToString().Replace(",", ".")}rem;" : "") +
+                        (PaddingRight != FbPadding.None ? $"padding-right:{((double)((int)PaddingRight) / 16d).ToString().Replace(",", ".")}rem;" : "") +
+                        (Margin != FbMargin.None ? $"margin:{((double)((int)Margin) / 16d).ToString().Replace(",", ".")}rem;" : "") +
+                        (MarginTop != FbMargin.None ? $"margin-top:{((double)((int)MarginTop) / 16d).ToString().Replace(",", ".")}rem;" : "") +
+                        (MarginBottom != FbMargin.None ? $"margin-bottom:{((double)((int)MarginBottom) / 16d).ToString().Replace(",", ".")}rem;" : "") +
+                        (MarginLeft != FbMargin.None ? $"margin-left:{((double)((int)MarginLeft) / 16d).ToString().Replace(",", ".")}rem;" : "") +
+                        (MarginRight != FbMargin.None ? $"margin-right:{((double)((int)MarginRight) / 16d).ToString().Replace(",", ".")}rem;" : "") +
+                        (_state._flex != int.MinValue ? $"flex:{_state._flex};" : "") +
+                        (Hidden ? "visibility:hidden;" : "");
+                str += (string.IsNullOrWhiteSpace(WidthBasis) ? "" : $"flex-basis:{WidthBasis};") +
+                        (string.IsNullOrWhiteSpace(Style) ? "" : Style + ";");
+                if (UseCaching && !_cache.ContainsKey(hash))
+                    _cache[hash] = str;
+                _style = str;
+                return _style;
+            }
+        }
+    }
+
+    public void UpdateState()
+    {
+        this.InvokeAsync(() => { StateHasChanged(); });
+    }
+
+    // ************************************************************************************************ //
+    // **********************************    PUBLIC PARAMETERS    ************************************* //
+    // ************************************************************************************************ //
+
+    [Parameter]
+    public int Flex
+    {
+        get => _state._flex;
+        set
+        {
+            if (DisplayMode != BaseDisplayMode.Flex && DisplayMode != BaseDisplayMode.InlineFlex)
+                IsFlex = true;
+            _state._flex = value;
+        }
+    }
+
+    [Parameter]
+    public bool NoFlex
+    {
+        get => _state._flex == int.MinValue;
+        set { _state._flex = int.MinValue; }
+    }
+
+    [Parameter]
+    public string WidthBasis
+    {
+        get => _widthBasis;
+        set
+        {
+            _widthBasis = value;
+            if (!string.IsNullOrWhiteSpace(_widthBasis))
+                _state._flex = int.MinValue;
+        }
+    }
+
+    [Parameter]
+    public bool NoTextWrap
+    {
+        get => _state._noWrap;
+        set => _state._noWrap = true;
+    }
+
+    [Parameter]
+    public bool TextWrap
+    {
+        get => !_state._noWrap;
+        set => _state._noWrap = false;
+    }
+
+    protected string WrapClassString
+    {
+        get
+        {
+            if (_state._noWrap)
+                return "fb-text-no-wrap";
+            return "";
+        }
+    }
+
+    [Parameter]
+    public string Style { get; set; } = "";
+
+    [Parameter]
+    public string Classes { get; set; } = "";
+
+    [Parameter]
+    public bool Hidden { get; set; } = false;
+
+    [Parameter]
+    public bool ResponsiveContainer { get; set; }
+
+    /// <summary>
+    /// Show when initialize container width ≥ 1536px
+    /// </summary>
+    [Parameter]
+    public bool ShowOverXXL { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.XXL_1536px && !_state._responsiveUnder; set { ResponsiveBreakpoint = FbResponsiveBreakpoint.XXL_1536px; _state._responsiveUnder = false; } }
+
+    /// <summary>
+    /// Show when initialize container width ≤ 1536px
+    /// </summary>
+    [Parameter]
+    public bool ShowUnderXXL { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.XXL_1536px && _state._responsiveUnder; set { ResponsiveBreakpoint = FbResponsiveBreakpoint.XXL_1536px; _state._responsiveUnder = true; } }
+
+    /// <summary>
+    /// Show when initialize container width ≥ 1280px
+    /// </summary>
+    [Parameter]
+    public bool ShowOverXL { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.XL_1280px && !_state._responsiveUnder; set { ResponsiveBreakpoint = FbResponsiveBreakpoint.XL_1280px; _state._responsiveUnder = false; } }
+
+    /// <summary>
+    /// Show when initialize container width ≤ 1280px
+    /// </summary>
+    [Parameter]
+    public bool ShowUnderXL { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.XL_1280px && _state._responsiveUnder; set { ResponsiveBreakpoint = FbResponsiveBreakpoint.XL_1280px; _state._responsiveUnder = true; } }
+
+    /// <summary>
+    /// Show when initialize container width ≥ 1024px
+    /// </summary>
+    [Parameter]
+    public bool ShowOverL { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.L_1024px && !_state._responsiveUnder; set { ResponsiveBreakpoint = FbResponsiveBreakpoint.L_1024px; _state._responsiveUnder = false; } }
+
+    /// <summary>
+    /// Show when initialize container width ≤ 1024px
+    /// </summary>
+    [Parameter]
+    public bool ShowUnderL { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.L_1024px && _state._responsiveUnder; set { ResponsiveBreakpoint = FbResponsiveBreakpoint.L_1024px; _state._responsiveUnder = true; } }
+
+    /// <summary>
+    /// Show when initialize container width ≥ 768px
+    /// </summary>
+    [Parameter]
+    public bool ShowOverM { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.M_768px && !_state._responsiveUnder; set { ResponsiveBreakpoint = FbResponsiveBreakpoint.M_768px; _state._responsiveUnder = false; } }
+
+    /// <summary>
+    /// Show when initialize container width ≤ 768px
+    /// </summary>
+    [Parameter]
+    public bool ShowUnderM { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.M_768px && _state._responsiveUnder; set { ResponsiveBreakpoint = FbResponsiveBreakpoint.M_768px; _state._responsiveUnder = true; } }
+
+    /// <summary>
+    /// Show when initialize container width ≥ 640px
+    /// </summary>
+    [Parameter]
+    public bool ShowOverS { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.S_640px && !_state._responsiveUnder; set { ResponsiveBreakpoint = FbResponsiveBreakpoint.S_640px; _state._responsiveUnder = false; } }
+
+    /// <summary>
+    /// Show when initialize container width ≤ 640px
+    /// </summary>
+    [Parameter]
+    public bool ShowUnderS { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.S_640px && _state._responsiveUnder; set { ResponsiveBreakpoint = FbResponsiveBreakpoint.S_640px; _state._responsiveUnder = true; } }
+
+    /// <summary>
+    /// Show when initialize container width ≥ 360px
+    /// </summary>
+    [Parameter]
+    public bool ShowOverXS { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.XS_360px && !_state._responsiveUnder; set { ResponsiveBreakpoint = FbResponsiveBreakpoint.XS_360px; _state._responsiveUnder = false; } }
+
+    /// <summary>
+    /// Show when initialize container width ≤ 360px
+    /// </summary>
+    [Parameter]
+    public bool ShowUnderXS { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.XS_360px && _state._responsiveUnder; set { ResponsiveBreakpoint = FbResponsiveBreakpoint.XS_360px; _state._responsiveUnder = true; } }
+
+    protected string ResponsiveClassString
+    {
+        get
+        {
+            if (ResponsiveContainer)
+                return "fb-container-init";
+
+            if(ResponsiveBreakpoint is not FbResponsiveBreakpoint.None)
+            {
+                var responsiveResultClasse = "fb-container";
+                switch (ResponsiveBreakpoint)
+                {
+                    case FbResponsiveBreakpoint.XXL_1536px: responsiveResultClasse = $"{responsiveResultClasse}-xxl"; break;
+                    case FbResponsiveBreakpoint.XL_1280px: responsiveResultClasse = $"{responsiveResultClasse}-xl"; break;
+                    case FbResponsiveBreakpoint.L_1024px: responsiveResultClasse = $"{responsiveResultClasse}-l"; break;
+                    case FbResponsiveBreakpoint.M_768px: responsiveResultClasse = $"{responsiveResultClasse}-m"; break;
+                    case FbResponsiveBreakpoint.S_640px: responsiveResultClasse = $"{responsiveResultClasse}-s"; break;
+                    case FbResponsiveBreakpoint.XS_360px: responsiveResultClasse = $"{responsiveResultClasse}-xs"; break;
+                }
+
+                if (_state._responsiveUnder)
+                    return $"{responsiveResultClasse}-none";
+                else
+                    return $"{responsiveResultClasse}-flex";
+            }
+            
+            return "";
+        }
+    }
+
+    [Parameter]
+    public bool P0 { get => Padding == FbPadding.Padding_0; set => Padding = FbPadding.Padding_0; }
+
+    [Parameter]
+    public bool P1 { get => Padding == FbPadding.Padding_1; set => Padding = FbPadding.Padding_1; }
+
+    [Parameter]
+    public bool P2 { get => Padding == FbPadding.Padding_2; set => Padding = FbPadding.Padding_2; }
+
+    [Parameter]
+    public bool P3 { get => Padding == FbPadding.Padding_3; set => Padding = FbPadding.Padding_3; }
+
+    [Parameter]
+    public bool P4 { get => Padding == FbPadding.Padding_4; set => Padding = FbPadding.Padding_4; }
+
+    [Parameter]
+    public bool P8 { get => Padding == FbPadding.Padding_8; set => Padding = FbPadding.Padding_8; }
+
+    [Parameter]
+    public bool P12 { get => Padding == FbPadding.Padding_12; set => Padding = FbPadding.Padding_12; }
+
+    [Parameter]
+    public bool P16 { get => Padding == FbPadding.Padding_16; set => Padding = FbPadding.Padding_16; }
+
+    [Parameter]
+    public bool P24 { get => Padding == FbPadding.Padding_24; set => Padding = FbPadding.Padding_24; }
+
+    [Parameter]
+    public bool P32 { get => Padding == FbPadding.Padding_32; set => Padding = FbPadding.Padding_32; }
+
+    [Parameter]
+    public bool P40 { get => Padding == FbPadding.Padding_40; set => Padding = FbPadding.Padding_40; }
+
+    [Parameter]
+    public bool P48 { get => Padding == FbPadding.Padding_48; set => Padding = FbPadding.Padding_48; }
+
+    [Parameter]
+    public bool PT0 { get => PaddingTop == FbPadding.Padding_0; set => PaddingTop = FbPadding.Padding_0; }
+
+    [Parameter]
+    public bool PT1 { get => PaddingTop == FbPadding.Padding_1; set => PaddingTop = FbPadding.Padding_1; }
+
+    [Parameter]
+    public bool PT2 { get => PaddingTop == FbPadding.Padding_2; set => PaddingTop = FbPadding.Padding_2; }
+
+    [Parameter]
+    public bool PT3 { get => PaddingTop == FbPadding.Padding_3; set => PaddingTop = FbPadding.Padding_3; }
+
+    [Parameter]
+    public bool PT4 { get => PaddingTop == FbPadding.Padding_4; set => PaddingTop = FbPadding.Padding_4; }
+
+    [Parameter]
+    public bool PT8 { get => PaddingTop == FbPadding.Padding_8; set => PaddingTop = FbPadding.Padding_8; }
+
+    [Parameter]
+    public bool PT12 { get => PaddingTop == FbPadding.Padding_12; set => PaddingTop = FbPadding.Padding_12; }
+
+    [Parameter]
+    public bool PT16 { get => PaddingTop == FbPadding.Padding_16; set => PaddingTop = FbPadding.Padding_16; }
+
+    [Parameter]
+    public bool PT24 { get => PaddingTop == FbPadding.Padding_24; set => PaddingTop = FbPadding.Padding_24; }
+
+    [Parameter]
+    public bool PT32 { get => PaddingTop == FbPadding.Padding_32; set => PaddingTop = FbPadding.Padding_32; }
+
+    [Parameter]
+    public bool PT40 { get => PaddingTop == FbPadding.Padding_40; set => PaddingTop = FbPadding.Padding_40; }
+
+    [Parameter]
+    public bool PT48 { get => PaddingTop == FbPadding.Padding_48; set => PaddingTop = FbPadding.Padding_48; }
+
+    [Parameter]
+    public bool PB0 { get => PaddingBottom == FbPadding.Padding_0; set => PaddingBottom = FbPadding.Padding_0; }
+
+    [Parameter]
+    public bool PB1 { get => PaddingBottom == FbPadding.Padding_1; set => PaddingBottom = FbPadding.Padding_1; }
+
+    [Parameter]
+    public bool PB2 { get => PaddingBottom == FbPadding.Padding_2; set => PaddingBottom = FbPadding.Padding_2; }
+
+    [Parameter]
+    public bool PB3 { get => PaddingBottom == FbPadding.Padding_3; set => PaddingBottom = FbPadding.Padding_3; }
+
+    [Parameter]
+    public bool PB4 { get => PaddingBottom == FbPadding.Padding_4; set => PaddingBottom = FbPadding.Padding_4; }
+
+    [Parameter]
+    public bool PB8 { get => PaddingBottom == FbPadding.Padding_8; set => PaddingBottom = FbPadding.Padding_8; }
+
+    [Parameter]
+    public bool PB12 { get => PaddingBottom == FbPadding.Padding_12; set => PaddingBottom = FbPadding.Padding_12; }
+
+    [Parameter]
+    public bool PB16 { get => PaddingBottom == FbPadding.Padding_16; set => PaddingBottom = FbPadding.Padding_16; }
+
+    [Parameter]
+    public bool PB24 { get => PaddingBottom == FbPadding.Padding_24; set => PaddingBottom = FbPadding.Padding_24; }
+
+    [Parameter]
+    public bool PB32 { get => PaddingBottom == FbPadding.Padding_32; set => PaddingBottom = FbPadding.Padding_32; }
+
+    [Parameter]
+    public bool PB40 { get => PaddingBottom == FbPadding.Padding_40; set => PaddingBottom = FbPadding.Padding_40; }
+
+    [Parameter]
+    public bool PB48 { get => PaddingBottom == FbPadding.Padding_48; set => PaddingBottom = FbPadding.Padding_48; }
+
+    [Parameter]
+    public bool PL0 { get => PaddingLeft == FbPadding.Padding_0; set => PaddingLeft = FbPadding.Padding_0; }
+
+    [Parameter]
+    public bool PL1 { get => PaddingLeft == FbPadding.Padding_1; set => PaddingLeft = FbPadding.Padding_1; }
+
+    [Parameter]
+    public bool PL2 { get => PaddingLeft == FbPadding.Padding_2; set => PaddingLeft = FbPadding.Padding_2; }
+
+    [Parameter]
+    public bool PL3 { get => PaddingLeft == FbPadding.Padding_3; set => PaddingLeft = FbPadding.Padding_3; }
+
+    [Parameter]
+    public bool PL4 { get => PaddingLeft == FbPadding.Padding_4; set => PaddingLeft = FbPadding.Padding_4; }
+
+    [Parameter]
+    public bool PL8 { get => PaddingLeft == FbPadding.Padding_8; set => PaddingLeft = FbPadding.Padding_8; }
+
+    [Parameter]
+    public bool PL12 { get => PaddingLeft == FbPadding.Padding_12; set => PaddingLeft = FbPadding.Padding_12; }
+
+    [Parameter]
+    public bool PL16 { get => PaddingLeft == FbPadding.Padding_16; set => PaddingLeft = FbPadding.Padding_16; }
+
+    [Parameter]
+    public bool PL24 { get => PaddingLeft == FbPadding.Padding_24; set => PaddingLeft = FbPadding.Padding_24; }
+
+    [Parameter]
+    public bool PL32 { get => PaddingLeft == FbPadding.Padding_32; set => PaddingLeft = FbPadding.Padding_32; }
+
+    [Parameter]
+    public bool PL40 { get => PaddingLeft == FbPadding.Padding_40; set => PaddingLeft = FbPadding.Padding_40; }
+
+    [Parameter]
+    public bool PL48 { get => PaddingLeft == FbPadding.Padding_48; set => PaddingLeft = FbPadding.Padding_48; }
+
+    [Parameter]
+    public bool PR0 { get => PaddingRight == FbPadding.Padding_0; set => PaddingRight = FbPadding.Padding_0; }
+
+    [Parameter]
+    public bool PR1 { get => PaddingRight == FbPadding.Padding_1; set => PaddingRight = FbPadding.Padding_1; }
+
+    [Parameter]
+    public bool PR2 { get => PaddingRight == FbPadding.Padding_2; set => PaddingRight = FbPadding.Padding_2; }
+
+    [Parameter]
+    public bool PR3 { get => PaddingRight == FbPadding.Padding_3; set => PaddingRight = FbPadding.Padding_3; }
+
+    [Parameter]
+    public bool PR4 { get => PaddingRight == FbPadding.Padding_4; set => PaddingRight = FbPadding.Padding_4; }
+
+    [Parameter]
+    public bool PR8 { get => PaddingRight == FbPadding.Padding_8; set => PaddingRight = FbPadding.Padding_8; }
+
+    [Parameter]
+    public bool PR12 { get => PaddingRight == FbPadding.Padding_12; set => PaddingRight = FbPadding.Padding_12; }
+
+    [Parameter]
+    public bool PR16 { get => PaddingRight == FbPadding.Padding_16; set => PaddingRight = FbPadding.Padding_16; }
+
+    [Parameter]
+    public bool PR24 { get => PaddingRight == FbPadding.Padding_24; set => PaddingRight = FbPadding.Padding_24; }
+
+    [Parameter]
+    public bool PR32 { get => PaddingRight == FbPadding.Padding_32; set => PaddingRight = FbPadding.Padding_32; }
+
+    [Parameter]
+    public bool PR40 { get => PaddingRight == FbPadding.Padding_40; set => PaddingRight = FbPadding.Padding_40; }
+
+    [Parameter]
+    public bool PR48 { get => PaddingRight == FbPadding.Padding_48; set => PaddingRight = FbPadding.Padding_48; }
+
+    /// <summary>
+    /// Padding -> Small
+    /// </summary>
+    [Parameter]
+    public bool PS { get => P8; set => P8 = true; }
+
+    /// <summary>
+    /// Padding -> Medium
+    /// </summary>
+    [Parameter]
+    public bool PM { get => P12; set => P12 = true; }
+
+    /// <summary>
+    /// Padding -> Large
+    /// </summary>
+    [Parameter]
+    public bool PL { get => P24; set => P24 = true; }
+
+    /// <summary>
+    /// Padding -> Vertical -> Small 
+    /// </summary>
+    [Parameter]
+    public bool PVS { get => PT8 && PB8; set => PT8 = PB8 = true; }
+
+    /// <summary>
+    /// Padding -> Vertical -> Medium 
+    /// </summary>
+    [Parameter]
+    public bool PVM { get => PT12 && PB12; set => PT12 = PB12 = true; }
+
+    /// <summary>
+    /// Padding -> Vertical -> Large 
+    /// </summary>
+    [Parameter]
+    public bool PVL { get => PT24 && PB24; set => PT24 = PB24 = true; }
+
+    /// <summary>
+    /// Padding -> Horizontal -> Small 
+    /// </summary>
+    [Parameter]
+    public bool PHS { get => PL8 && PR8; set => PL8 = PR8 = true; }
+
+    /// <summary>
+    /// Padding -> Horizontal -> Medium 
+    /// </summary>
+    [Parameter]
+    public bool PHM { get => PL12 && PR12; set => PL12 = PR12 = true; }
+
+    /// <summary>
+    /// Padding -> Horizontal -> Large 
+    /// </summary>
+    [Parameter]
+    public bool PHL { get => PL24 && PR24; set => PL24 = PR24 = true; }
+
+    /// <summary>
+    /// Padding -> Top -> Small
+    /// </summary>
+    [Parameter]
+    public bool PTS { get => PT8; set => PT8 = true; }
+
+    /// <summary>
+    /// Padding -> Top -> Medium
+    /// </summary>
+    [Parameter]
+    public bool PTM { get => PT12; set => PT12 = true; }
+
+    /// <summary>
+    /// Padding -> Top -> Large
+    /// </summary>
+    [Parameter]
+    public bool PTL { get => PT24; set => PT24 = true; }
+
+    /// <summary>
+    /// Padding -> Bottom -> Small
+    /// </summary>
+    [Parameter]
+    public bool PBS { get => PB8; set => PB8 = true; }
+
+    /// <summary>
+    /// Padding -> Bottom -> Medium
+    /// </summary>
+    [Parameter]
+    public bool PBM { get => PB12; set => PB12 = true; }
+
+    /// <summary>
+    /// Padding -> Bottom -> Large
+    /// </summary>
+    [Parameter]
+    public bool PBL { get => PB24; set => PB24 = true; }
+
+    /// <summary>
+    /// Padding -> Left -> Small
+    /// </summary>
+    [Parameter]
+    public bool PLS { get => PL8; set => PL8 = true; }
+
+    /// <summary>
+    /// Padding -> Left -> Medium
+    /// </summary>
+    [Parameter]
+    public bool PLM { get => PL12; set => PL12 = true; }
+
+    /// <summary>
+    /// Padding -> Left -> Large
+    /// </summary>
+    [Parameter]
+    public bool PLL { get => PL24; set => PL24 = true; }
+
+    /// <summary>
+    /// Padding -> Right -> Small
+    /// </summary>
+    [Parameter]
+    public bool PRS { get => PR8; set => PR8 = true; }
+
+    /// <summary>
+    /// Padding -> Right -> Medium
+    /// </summary>
+    [Parameter]
+    public bool PRM { get => PR12; set => PR12 = true; }
+
+    /// <summary>
+    /// Padding -> Right -> Large
+    /// </summary>
+    [Parameter]
+    public bool PRL { get => PR24; set => PR24 = true; }
+
+
+    [Parameter]
+    public bool M0 { get => Margin == FbMargin.Margin_0; set => Margin = FbMargin.Margin_0; }
+
+    [Parameter]
+    public bool M1 { get => Margin == FbMargin.Margin_1; set => Margin = FbMargin.Margin_1; }
+
+    [Parameter]
+    public bool M2 { get => Margin == FbMargin.Margin_2; set => Margin = FbMargin.Margin_2; }
+
+    [Parameter]
+    public bool M3 { get => Margin == FbMargin.Margin_3; set => Margin = FbMargin.Margin_3; }
+
+    [Parameter]
+    public bool M4 { get => Margin == FbMargin.Margin_4; set => Margin = FbMargin.Margin_4; }
+
+    [Parameter]
+    public bool M8 { get => Margin == FbMargin.Margin_8; set => Margin = FbMargin.Margin_8; }
+
+    [Parameter]
+    public bool M12 { get => Margin == FbMargin.Margin_12; set => Margin = FbMargin.Margin_12; }
+
+    [Parameter]
+    public bool M16 { get => Margin == FbMargin.Margin_16; set => Margin = FbMargin.Margin_16; }
+
+    [Parameter]
+    public bool M24 { get => Margin == FbMargin.Margin_24; set => Margin = FbMargin.Margin_24; }
+
+    [Parameter]
+    public bool M32 { get => Margin == FbMargin.Margin_32; set => Margin = FbMargin.Margin_32; }
+
+    [Parameter]
+    public bool M40 { get => Margin == FbMargin.Margin_40; set => Margin = FbMargin.Margin_40; }
+
+    [Parameter]
+    public bool M48 { get => Margin == FbMargin.Margin_48; set => Margin = FbMargin.Margin_48; }
+
+    [Parameter]
+    public bool MT0 { get => MarginTop == FbMargin.Margin_0; set => MarginTop = FbMargin.Margin_0; }
+
+    [Parameter]
+    public bool MT1 { get => MarginTop == FbMargin.Margin_1; set => MarginTop = FbMargin.Margin_1; }
+
+    [Parameter]
+    public bool MT2 { get => MarginTop == FbMargin.Margin_2; set => MarginTop = FbMargin.Margin_2; }
+
+    [Parameter]
+    public bool MT3 { get => MarginTop == FbMargin.Margin_3; set => MarginTop = FbMargin.Margin_3; }
+
+    [Parameter]
+    public bool MT4 { get => MarginTop == FbMargin.Margin_4; set => MarginTop = FbMargin.Margin_4; }
+
+    [Parameter]
+    public bool MT8 { get => MarginTop == FbMargin.Margin_8; set => MarginTop = FbMargin.Margin_8; }
+
+    [Parameter]
+    public bool MT12 { get => MarginTop == FbMargin.Margin_12; set => MarginTop = FbMargin.Margin_12; }
+
+    [Parameter]
+    public bool MT16 { get => MarginTop == FbMargin.Margin_16; set => MarginTop = FbMargin.Margin_16; }
+
+    [Parameter]
+    public bool MT24 { get => MarginTop == FbMargin.Margin_24; set => MarginTop = FbMargin.Margin_24; }
+
+    [Parameter]
+    public bool MT32 { get => MarginTop == FbMargin.Margin_32; set => MarginTop = FbMargin.Margin_32; }
+
+    [Parameter]
+    public bool MT40 { get => MarginTop == FbMargin.Margin_40; set => MarginTop = FbMargin.Margin_40; }
+
+    [Parameter]
+    public bool MT48 { get => MarginTop == FbMargin.Margin_48; set => MarginTop = FbMargin.Margin_48; }
+
+    [Parameter]
+    public bool MB0 { get => MarginBottom == FbMargin.Margin_0; set => MarginBottom = FbMargin.Margin_0; }
+
+    [Parameter]
+    public bool MB1 { get => MarginBottom == FbMargin.Margin_1; set => MarginBottom = FbMargin.Margin_1; }
+
+    [Parameter]
+    public bool MB2 { get => MarginBottom == FbMargin.Margin_2; set => MarginBottom = FbMargin.Margin_2; }
+
+    [Parameter]
+    public bool MB3 { get => MarginBottom == FbMargin.Margin_3; set => MarginBottom = FbMargin.Margin_3; }
+
+    [Parameter]
+    public bool MB4 { get => MarginBottom == FbMargin.Margin_4; set => MarginBottom = FbMargin.Margin_4; }
+
+    [Parameter]
+    public bool MB8 { get => MarginBottom == FbMargin.Margin_8; set => MarginBottom = FbMargin.Margin_8; }
+
+    [Parameter]
+    public bool MB12 { get => MarginBottom == FbMargin.Margin_12; set => MarginBottom = FbMargin.Margin_12; }
+
+    [Parameter]
+    public bool MB16 { get => MarginBottom == FbMargin.Margin_16; set => MarginBottom = FbMargin.Margin_16; }
+
+    [Parameter]
+    public bool MB24 { get => MarginBottom == FbMargin.Margin_24; set => MarginBottom = FbMargin.Margin_24; }
+
+    [Parameter]
+    public bool MB32 { get => MarginBottom == FbMargin.Margin_32; set => MarginBottom = FbMargin.Margin_32; }
+
+    [Parameter]
+    public bool MB40 { get => MarginBottom == FbMargin.Margin_40; set => MarginBottom = FbMargin.Margin_40; }
+
+    [Parameter]
+    public bool MB48 { get => MarginBottom == FbMargin.Margin_48; set => MarginBottom = FbMargin.Margin_48; }
+
+    [Parameter]
+    public bool ML0 { get => MarginLeft == FbMargin.Margin_0; set => MarginLeft = FbMargin.Margin_0; }
+
+    [Parameter]
+    public bool ML1 { get => MarginLeft == FbMargin.Margin_1; set => MarginLeft = FbMargin.Margin_1; }
+
+    [Parameter]
+    public bool ML2 { get => MarginLeft == FbMargin.Margin_2; set => MarginLeft = FbMargin.Margin_2; }
+
+    [Parameter]
+    public bool ML3 { get => MarginLeft == FbMargin.Margin_3; set => MarginLeft = FbMargin.Margin_3; }
+
+    [Parameter]
+    public bool ML4 { get => MarginLeft == FbMargin.Margin_4; set => MarginLeft = FbMargin.Margin_4; }
+
+    [Parameter]
+    public bool ML8 { get => MarginLeft == FbMargin.Margin_8; set => MarginLeft = FbMargin.Margin_8; }
+
+    [Parameter]
+    public bool ML12 { get => MarginLeft == FbMargin.Margin_12; set => MarginLeft = FbMargin.Margin_12; }
+
+    [Parameter]
+    public bool ML16 { get => MarginLeft == FbMargin.Margin_16; set => MarginLeft = FbMargin.Margin_16; }
+
+    [Parameter]
+    public bool ML24 { get => MarginLeft == FbMargin.Margin_24; set => MarginLeft = FbMargin.Margin_24; }
+
+    [Parameter]
+    public bool ML32 { get => MarginLeft == FbMargin.Margin_32; set => MarginLeft = FbMargin.Margin_32; }
+
+    [Parameter]
+    public bool ML40 { get => MarginLeft == FbMargin.Margin_40; set => MarginLeft = FbMargin.Margin_40; }
+
+    [Parameter]
+    public bool ML48 { get => MarginLeft == FbMargin.Margin_48; set => MarginLeft = FbMargin.Margin_48; }
+
+    [Parameter]
+    public bool MR0 { get => MarginRight == FbMargin.Margin_0; set => MarginRight = FbMargin.Margin_0; }
+
+    [Parameter]
+    public bool MR1 { get => MarginRight == FbMargin.Margin_1; set => MarginRight = FbMargin.Margin_1; }
+
+    [Parameter]
+    public bool MR2 { get => MarginRight == FbMargin.Margin_2; set => MarginRight = FbMargin.Margin_2; }
+
+    [Parameter]
+    public bool MR3 { get => MarginRight == FbMargin.Margin_3; set => MarginRight = FbMargin.Margin_3; }
+
+    [Parameter]
+    public bool MR4 { get => MarginRight == FbMargin.Margin_4; set => MarginRight = FbMargin.Margin_4; }
+
+    [Parameter]
+    public bool MR8 { get => MarginRight == FbMargin.Margin_8; set => MarginRight = FbMargin.Margin_8; }
+
+    [Parameter]
+    public bool MR12 { get => MarginRight == FbMargin.Margin_12; set => MarginRight = FbMargin.Margin_12; }
+
+    [Parameter]
+    public bool MR16 { get => MarginRight == FbMargin.Margin_16; set => MarginRight = FbMargin.Margin_16; }
+
+    [Parameter]
+    public bool MR24 { get => MarginRight == FbMargin.Margin_24; set => MarginRight = FbMargin.Margin_24; }
+
+    [Parameter]
+    public bool MR32 { get => MarginRight == FbMargin.Margin_32; set => MarginRight = FbMargin.Margin_32; }
+
+    [Parameter]
+    public bool MR40 { get => MarginRight == FbMargin.Margin_40; set => MarginRight = FbMargin.Margin_40; }
+
+    [Parameter]
+    public bool MR48 { get => MarginRight == FbMargin.Margin_48; set => MarginRight = FbMargin.Margin_48; }
+
+    /// <summary>
+    /// Margin -> Small
+    /// </summary>
+    [Parameter]
+    public bool MS { get => M8; set => M8 = true; }
+
+    /// <summary>
+    /// Margin -> Medium
+    /// </summary>
+    [Parameter]
+    public bool MM { get => M12; set => M12 = true; }
+
+    /// <summary>
+    /// Margin -> Large
+    /// </summary>
+    [Parameter]
+    public bool ML { get => M24; set => M24 = true; }
+
+    /// <summary>
+    /// Margin -> Vertical -> Small 
+    /// </summary>
+    [Parameter]
+    public bool MVS { get => MT8 && MB8; set => MT8 = MB8 = true; }
+
+    /// <summary>
+    /// Margin -> Vertical -> Medium 
+    /// </summary>
+    [Parameter]
+    public bool MVM { get => MT12 && MB12; set => MT12 = MB12 = true; }
+
+    /// <summary>
+    /// Margin -> Vertical -> Large 
+    /// </summary>
+    [Parameter]
+    public bool MVL { get => MT24 && MB24; set => MT24 = MB24 = true; }
+
+    /// <summary>
+    /// Margin -> Horizontal -> Small 
+    /// </summary>
+    [Parameter]
+    public bool MHS { get => ML8 && MR8; set => ML8 = MR8 = true; }
+
+    /// <summary>
+    /// Margin -> Horizontal -> Medium 
+    /// </summary>
+    [Parameter]
+    public bool MHM { get => ML12 && MR12; set => ML12 = MR12 = true; }
+
+    /// <summary>
+    /// Margin -> Horizontal -> Large 
+    /// </summary>
+    [Parameter]
+    public bool MHL { get => ML24 && MR24; set => ML24 = MR24 = true; }
+
+
+    ///NEWWWWWWW----------------
+
+    /// <summary>
+    /// Margin -> Top -> Small
+    /// </summary>
+    [Parameter]
+    public bool MTS { get => MT8; set => MT8 = true; }
+
+    /// <summary>
+    /// Margin -> Top -> Medium
+    /// </summary>
+    [Parameter]
+    public bool MTM { get => MT12; set => MT12 = true; }
+
+    /// <summary>
+    /// Margin -> Top -> Large
+    /// </summary>
+    [Parameter]
+    public bool MTL { get => MT24; set => MT24 = true; }
+
+    /// <summary>
+    /// Margin -> Bottom -> Small
+    /// </summary>
+    [Parameter]
+    public bool MBS { get => MB8; set => MB8 = true; }
+
+    /// <summary>
+    /// Margin -> Bottom -> Medium
+    /// </summary>
+    [Parameter]
+    public bool MBM { get => MB12; set => MB12 = true; }
+
+    /// <summary>
+    /// Margin -> Bottom -> Large
+    /// </summary>
+    [Parameter]
+    public bool MBL { get => MB24; set => MB24 = true; }
+
+    /// <summary>
+    /// Margin -> Left -> Small
+    /// </summary>
+    [Parameter]
+    public bool MLS { get => ML8; set => ML8 = true; }
+
+    /// <summary>
+    /// Margin -> Left -> Medium
+    /// </summary>
+    [Parameter]
+    public bool MLM { get => ML12; set => ML12 = true; }
+
+    /// <summary>
+    /// Margin -> Left -> Large
+    /// </summary>
+    [Parameter]
+    public bool MLL { get => ML24; set => ML24 = true; }
+
+    /// <summary>
+    /// Margin -> Right -> Small
+    /// </summary>
+    [Parameter]
+    public bool MRS { get => MR8; set => MR8 = true; }
+
+    /// <summary>
+    /// Margin -> Right -> Medium
+    /// </summary>
+    [Parameter]
+    public bool MRM { get => MR12; set => MR12 = true; }
+
+    /// <summary>
+    /// Margin -> Right -> Large
+    /// </summary>
+    [Parameter]
+    public bool MRL { get => MR24; set => MR24 = true; }
+
+    [Parameter]
+    public string StoreId { get; set; } = "";
+}

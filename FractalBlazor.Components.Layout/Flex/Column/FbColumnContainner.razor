@@ -1,0 +1,18 @@
+@inherits FbFlexBoxBase
+
+<div cpnt="column-cntr[@(StoreId)]" style="@Style @ComputedStyle" class="fb-column-containner @Classes @ResponsiveClassString">
+    @ChildContent
+</div>
+
+@code {
+    private FbFlexSize _minWithSize = FbFlexSize.None;
+    private FbFrame _frame = FbFrame.None;
+    private FbFrame _separator = FbFrame.None;
+    private FbFrame _grid = FbFrame.None;
+
+    public FbColumnContainner()
+    {
+        base.Wrap = FbFlexWrap.Wrap;
+        AlignItems = FbFlexAlignItems.Stretch;
+    }
+}

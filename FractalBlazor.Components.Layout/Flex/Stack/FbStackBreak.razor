@@ -1,0 +1,60 @@
+@namespace  FractalBlazor.Components.Layout
+
+<div cpnt="stack-break" style="width:0px; height:100%;" class="@ClassName"></div>
+
+@code {
+
+    private string ClassName
+    {
+        get
+        {
+            switch (Break)
+            {
+                case FbBreaks.XXS_480px:
+                    return Under ? "column-break-under-xxs" : "column-break-over-xxs";
+                case FbBreaks.XS_600px:
+                    return Under ? "column-break-under-xs" : "column-break-over-xs";
+                case FbBreaks.S_960px:
+                    return Under ? "column-break-under-s" : "column-break-over-s";
+                case FbBreaks.M_1280px:
+                    return Under ? "column-break-under-m" : "column-break-over-m";
+                case FbBreaks.L_1600px:
+                    return Under ? "column-break-under-l" : "column-break-over-l";
+                case FbBreaks.XL_1960px:
+                    return Under ? "column-break-under-xl" : "column-break-over-xl";
+            }
+            return "break-column-under-s";
+        }
+    }
+
+    // ************************************************************************************************ //
+    // ***************************************    PUBLIC   ******************************************** //
+    // ************************************************************************************************ //
+
+    [Parameter]
+    public FbBreaks Break { get; set; } = FbBreaks.S_960px;
+
+    [Parameter]
+    public bool XXS { get => Break == FbBreaks.XXS_480px; set => Break = FbBreaks.XXS_480px; }
+
+    [Parameter]
+    public bool XS { get => Break == FbBreaks.XS_600px; set => Break = FbBreaks.XS_600px; }
+
+    [Parameter]
+    public bool S { get => Break == FbBreaks.S_960px; set => Break = FbBreaks.S_960px; }
+
+    [Parameter]
+    public bool M { get => Break == FbBreaks.M_1280px; set => Break = FbBreaks.M_1280px; }
+
+    [Parameter]
+    public bool L { get => Break == FbBreaks.L_1600px; set => Break = FbBreaks.L_1600px; }
+
+    [Parameter]
+    public bool XL { get => Break == FbBreaks.XL_1960px; set => Break = FbBreaks.XL_1960px; }
+
+    [Parameter]
+    public bool Under { get; set; } = true;
+    
+    [Parameter]
+    public bool Over { get => !Under; set=>Under=!value; }
+}

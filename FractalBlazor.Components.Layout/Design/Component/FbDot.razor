@@ -1,0 +1,61 @@
+@namespace  FractalBlazor.Components.Layout
+
+<div class="@Classes">
+    @ChildContent
+</div>
+
+@code {
+    private FbTextSize _size = FbTextSize.M;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    // -------------- FbDot Size ------------ //
+    [Parameter]
+    public bool L
+    {
+        get => _size == FbTextSize.L;
+        set => _size = FbTextSize.L;
+    }
+
+    [Parameter]
+    public bool M
+    {
+        get => _size == FbTextSize.M;
+        set => _size = FbTextSize.M;
+    }
+
+    [Parameter]
+    public bool S
+    {
+        get => _size == FbTextSize.S;
+        set => _size = FbTextSize.S;
+    }
+
+    private string DotSizeString
+    {
+        get
+        {
+            string baseClass = "fb-dot";
+
+            switch (_size)
+            {
+                case FbTextSize.L:
+                    return $"{baseClass} {baseClass}-l";
+                case FbTextSize.M:
+                    return $"{baseClass} {baseClass}-m";
+                case FbTextSize.S:
+                    return $"{baseClass} {baseClass}-s";
+            }
+            return "";
+        }
+    }
+
+    protected string Classes
+    {
+        get
+        {
+            return $"{DotSizeString}"; ;
+        }
+    }
+}

@@ -1,0 +1,16 @@
+@namespace  FractalBlazor.Components.Layout
+
+@inherits FbComponentBase
+
+<div cpnt="badge[@(StoreId)]" class="@(NoContent ? "fb-badge-small" : "fb-badge") @Classes" style="background:@Color; @ComputedBaseStyle">@ChildContent</div>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public bool NoContent { get; set; } = false;
+
+    [Parameter]
+    public string Color {get;set;} = "#DD1515";
+}

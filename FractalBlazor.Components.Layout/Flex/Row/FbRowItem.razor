@@ -1,0 +1,75 @@
+@namespace  FractalBlazor.Components.Layout
+
+@inherits FbComponentBase
+
+<div cpnt="row-item[@(StoreId)]" style="@ComputedStyle" class="@($"{Classes} {WrapClassString} {ResponsiveClassString}")" @onclick=@(() => OnClick.InvokeAsync())>
+    @ChildContent
+</div>
+
+@code {
+    private FbFlexItemSelfAlign _selfAlign = FbFlexItemSelfAlign.None;
+
+    public FbRowItem()
+    {
+        IsFlex = true;
+        //Flex = 1;
+    }
+
+    private string VerticalAlignString
+    {
+        get
+        {
+            // auto | flex-start | flex-end | center | baseline | stretch
+            switch (_selfAlign)
+            {
+                case FbFlexItemSelfAlign.Start:
+                    return "flex-start";
+                case FbFlexItemSelfAlign.End:
+                    return "flex-end";
+                case FbFlexItemSelfAlign.Center:
+                    return "center";
+                case FbFlexItemSelfAlign.Stretch:
+                    return "stretch";
+                case FbFlexItemSelfAlign.Baseline:
+                    return "baseline";
+            }
+            return "";
+        }
+    }
+
+    // ************************************************************************************************ //
+    // ***************************************    PUBLIC   ******************************************** //
+    // ************************************************************************************************ //
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+    
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    private string ComputedStyle
+    {
+        get
+        {
+            return  ComputedBaseStyle +
+                    ("flex-wrap: wrap;") +
+                    (_selfAlign != FbFlexItemSelfAlign.None ? $"align-self:{VerticalAlignString};":"");
+        }
+    }
+
+    // -------- In Row
+    [Parameter]
+    public bool SelfOnTop { get => _selfAlign == FbFlexItemSelfAlign.Start; set => _selfAlign = FbFlexItemSelfAlign.Start; }
+
+    [Parameter]
+    public bool SelfOnBottom { get => _selfAlign == FbFlexItemSelfAlign.End; set => _selfAlign = FbFlexItemSelfAlign.End; }
+
+    [Parameter]
+    public bool SelfOnCenter { get => _selfAlign == FbFlexItemSelfAlign.Center; set => _selfAlign = FbFlexItemSelfAlign.Center; }
+
+    [Parameter]
+    public bool SelfOnStretch { get => _selfAlign == FbFlexItemSelfAlign.Stretch; set => _selfAlign = FbFlexItemSelfAlign.Stretch; }
+
+    [Parameter]
+    public bool SelfOnBaseline { get => _selfAlign == FbFlexItemSelfAlign.Baseline; set => _selfAlign = FbFlexItemSelfAlign.Baseline; }
+}

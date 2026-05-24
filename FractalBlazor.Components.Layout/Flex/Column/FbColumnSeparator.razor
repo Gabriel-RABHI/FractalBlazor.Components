@@ -1,0 +1,104 @@
+@namespace  FractalBlazor.Components.Layout
+
+@using System.Diagnostics
+
+<div cpnt="column-separator" style="@($"display: flex; align-self: stretch;" + (Margin != FbMargin.None ? $"margin-left:{MarginSize}rem;margin-right:{MarginSize}rem;" : ""))" class="@ComputedColumnSeparatorClasses"></div>
+
+@code {
+    private FbFrame _frame = FbFrame.Medium;
+
+    private string MarginSize => ((double)((int)Margin) / 16d).ToString().Replace(",", ".");
+
+
+    protected string ComputedColumnSeparatorClasses
+    {
+        get
+        {
+            return $"{FrameClass}";
+        }
+    }
+
+    // -------------- FbColumnSeparator Frame ------------ //
+    protected FbFrame Frame { get => _frame; set => _frame = value; }
+
+    // ************************************************************************************************ //
+    // ***************************************    PUBLIC   ******************************************** //
+    // ************************************************************************************************ //
+
+    [Parameter]
+    public bool WithLightFrame { get => Frame == FbFrame.Light; set => Frame = FbFrame.Light; }
+
+    [Parameter]
+    public bool WithMediumFrame { get => Frame == FbFrame.Medium; set => Frame = FbFrame.Medium; }
+
+    [Parameter]
+    public bool WithLargeFrame { get => Frame == FbFrame.Large; set => Frame = FbFrame.Large; }
+
+    private string FrameClass
+    {
+        get
+        {
+            string baseClasse = "fb-separator";
+
+            if (_frame is FbFrame.Light)
+                return $"{baseClasse}-light-frame";
+            else if (_frame is FbFrame.Medium)
+                return $"{baseClasse}-medium-frame";
+            else if (_frame is FbFrame.Large)
+                return $"{baseClasse}-large-frame";
+            else
+                return "";
+        }
+    }
+
+    [Parameter]
+    public FbMargin Margin
+    {
+        get; set; 
+    }
+
+    [Parameter]
+    public bool M0 { get => Margin == FbMargin.Margin_0; set => Margin = FbMargin.Margin_0; }
+
+    [Parameter]
+    public bool M1 { get => Margin == FbMargin.Margin_1; set => Margin = FbMargin.Margin_1; }
+
+    [Parameter]
+    public bool M2 { get => Margin == FbMargin.Margin_2; set => Margin = FbMargin.Margin_2; }
+
+    [Parameter]
+    public bool M3 { get => Margin == FbMargin.Margin_3; set => Margin = FbMargin.Margin_3; }
+
+    [Parameter]
+    public bool M4 { get => Margin == FbMargin.Margin_4; set => Margin = FbMargin.Margin_4; }
+
+    [Parameter]
+    public bool M8 { get => Margin == FbMargin.Margin_8; set => Margin = FbMargin.Margin_8; }
+
+    [Parameter]
+    public bool M12 { get => Margin == FbMargin.Margin_12; set => Margin = FbMargin.Margin_12; }
+
+    [Parameter]
+    public bool M16 { get => Margin == FbMargin.Margin_16; set => Margin = FbMargin.Margin_16; }
+
+    [Parameter]
+    public bool M24 { get => Margin == FbMargin.Margin_24; set => Margin = FbMargin.Margin_24; }
+
+    [Parameter]
+    public bool M32 { get => Margin == FbMargin.Margin_32; set => Margin = FbMargin.Margin_32; }
+
+    [Parameter]
+    public bool M40 { get => Margin == FbMargin.Margin_40; set => Margin = FbMargin.Margin_40; }
+
+    [Parameter]
+    public bool M48 { get => Margin == FbMargin.Margin_48; set => Margin = FbMargin.Margin_48; }
+
+    [Parameter]
+    public bool MS { get => Margin == FbMargin.Margin_8; set => Margin = FbMargin.Margin_8; }
+
+    [Parameter]
+    public bool MM { get => Margin == FbMargin.Margin_12; set => Margin = FbMargin.Margin_12; }
+
+    [Parameter]
+    public bool ML { get => Margin == FbMargin.Margin_24; set => Margin = FbMargin.Margin_24; }
+}

@@ -1,0 +1,19 @@
+@namespace  FractalBlazor.Components.Layout
+
+<FbRow StoreId="TabItem" NoFlex P8 G3 PL16 PR16 JustifyCenter Style="@((Enabled?"":"opacity:.5;") + (Selected?$"margin-bottom:-3px;border-bottom:2px {FbBlazorUtilitiesBaseColors.Highlight} solid; color:{FbBlazorUtilitiesBaseColors.Highlight};":"margin-bottom:-2px;") + "height:2.75rem;")" Classes="fb-hover" OnClick=@OnClick>
+    @ChildContent
+</FbRow>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+    
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    [Parameter]
+    public bool Enabled { get; set; } = true;
+    
+    [Parameter]
+    public bool Selected { get; set; } = false;
+}

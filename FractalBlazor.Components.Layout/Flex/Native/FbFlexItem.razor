@@ -1,0 +1,77 @@
+@namespace  FractalBlazor.Components.Layout
+
+@inherits FbComponentBase
+
+<div style="@ComputedStyle" class="@Classes">
+    @ChildContent
+</div>
+
+@code {
+    private FbFlexVerticalAlign _verticalAlign = FbFlexVerticalAlign.None;
+
+    public FbFlexItem()
+    {
+        IsFlex = true;
+    }
+
+    private string VerticalAlignString
+    {
+        get
+        {
+            // auto | flex-start | flex-end | center | baseline | stretch
+            switch (_verticalAlign)
+            {
+                case FbFlexVerticalAlign.Top:
+                    return "flex-start";
+                case FbFlexVerticalAlign.Bottom:
+                    return "flex-end";
+                case FbFlexVerticalAlign.Center:
+                    return "center";
+                case FbFlexVerticalAlign.Stretch:
+                    return "stretch";
+                case FbFlexVerticalAlign.Baseline:
+                    return "baseline";
+            }
+            return "";
+        }
+    }
+
+    // ************************************************************************************************ //
+    // ***************************************    PUBLIC   ******************************************** //
+    // ************************************************************************************************ //
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    private string ComputedStyle
+    {
+        get
+        {
+            return  ComputedBaseStyle +
+                    (_verticalAlign != FbFlexVerticalAlign.None ? $"align-self:{VerticalAlignString};":"");
+        }
+    }
+    
+    [Parameter]
+    public bool Top { get => _verticalAlign == FbFlexVerticalAlign.Top; set => _verticalAlign = FbFlexVerticalAlign.Top; }
+
+    [Parameter]
+    public bool Bottom { get => _verticalAlign == FbFlexVerticalAlign.Bottom; set => _verticalAlign = FbFlexVerticalAlign.Bottom; }
+    
+    [Parameter]
+    public bool Right { get => _verticalAlign == FbFlexVerticalAlign.Top; set => _verticalAlign = FbFlexVerticalAlign.Top; }
+
+    [Parameter]
+    public bool Left { get => _verticalAlign == FbFlexVerticalAlign.Bottom; set => _verticalAlign = FbFlexVerticalAlign.Bottom; }
+
+    [Parameter]
+    public bool Center { get => _verticalAlign == FbFlexVerticalAlign.Center; set => _verticalAlign = FbFlexVerticalAlign.Center; }
+
+    [Parameter]
+    public bool Stretch { get => _verticalAlign == FbFlexVerticalAlign.Stretch; set => _verticalAlign = FbFlexVerticalAlign.Stretch; }
+
+    [Parameter]
+    public bool Baseline { get => _verticalAlign == FbFlexVerticalAlign.Baseline; set => _verticalAlign = FbFlexVerticalAlign.Baseline; }
+    
+    [Parameter]
+    public FbFlexVerticalAlign VerticalAlign { get => _verticalAlign; set => _verticalAlign = value; }
+}

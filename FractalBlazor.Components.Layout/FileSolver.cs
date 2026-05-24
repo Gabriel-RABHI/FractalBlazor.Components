@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 namespace  FractalBlazor.Components.Layout
 {
@@ -16,14 +16,14 @@ namespace  FractalBlazor.Components.Layout
         {
             lock (_locker)
             {
-                LoadTinyBlazorAssemblies();
+                LoadFbBlazorAssemblies();
                 if (_cache.TryGetValue(filename, out var file))
                 {
                     file.Content.Position = 0;
                     send(file);
                     return true;
                 }
-                foreach (var a in AppDomain.CurrentDomain.GetAssemblies().Where(a => a.GetName().Name.StartsWith("TinyBlazor.")))
+                foreach (var a in AppDomain.CurrentDomain.GetAssemblies().Where(a => a.GetName().Name.StartsWith("FbBlazor.")))
                 {
                     var path = a.GetManifestResourceNames().Where(p => p.Contains(filename)).FirstOrDefault();
                     if (path != null)
@@ -43,12 +43,12 @@ namespace  FractalBlazor.Components.Layout
             return false;
         }
 
-        public static void LoadTinyBlazorAssemblies()
+        public static void LoadFbBlazorAssemblies()
         {
             if (!_assembliesLoaded)
             {
                 var location = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                foreach (var f in Directory.GetFiles(location, "*.dll", SearchOption.TopDirectoryOnly).Where(f => Path.GetFileName(f).Contains("TinyBlazor.")))
+                foreach (var f in Directory.GetFiles(location, "*.dll", SearchOption.TopDirectoryOnly).Where(f => Path.GetFileName(f).Contains("FbBlazor.")))
                     Assembly.LoadFrom(f);
                 _assembliesLoaded = true;
             }
