@@ -32,8 +32,9 @@
         public FbFlexSize _minHeightSize = FbFlexSize.None;
         public FbFlexSize _maxHeightSize = FbFlexSize.None;
 
-        public double RowGapRem = 0;
-        public double ColumnGapRem = 0;
+        public FbGutter Gutter = FbGutter.None;
+        public FbGutter RowGutter = FbGutter.None;
+        public FbGutter ColumnGutter = FbGutter.None;
         public bool ColumnDisplay = false;
 
         public int Order = int.MinValue;
@@ -52,9 +53,11 @@
         IsFlex = true;
     }
 
-    protected double RowGapRem { get => _state.RowGapRem; set => _state.RowGapRem = value; }
+    protected FbGutter Gutter { get => _state.Gutter; set => _state.Gutter = value; }
 
-    protected double ColumnGapRem { get => _state.ColumnGapRem; set => _state.ColumnGapRem = value; }
+    protected FbGutter RowGutter { get => _state.RowGutter; set => _state.RowGutter = value; }
+
+    protected FbGutter ColumnGutter { get => _state.ColumnGutter; set => _state.ColumnGutter = value; }
 
     protected bool ColumnDisplay { get => _state.ColumnDisplay; set => _state.ColumnDisplay = value; }
 
@@ -397,8 +400,9 @@
                         (_state._selfAlign == FbFlexItemSelfAlign.None ? "" : $"align-self:{SelfAlignString};") +
                         $"flex-direction: {DirectionString}; flex-wrap: {WrapString}; justify-content: {JustifyString}; align-items: {AlignItemsString}; align-content: {AlignContentString}; " +
                         (PlaceItemsString != "" ? $"place-items: {PlaceItemsString};" : "") +
-                        (RowGapRem != 0 ? $"row-gap: {(RowGapRem.ToString("F").Replace(",", "."))}rem;" : "") +
-                        (ColumnGapRem != 0 ? $"column-gap: {(ColumnGapRem.ToString("F").Replace(",", "."))}rem;" : "") +
+                        (Gutter != FbGutter.None ? $"gap:{((double)((int)Gutter) / 16d).ToString().Replace(",", ".")}rem;" : "") +
+                        (RowGutter != FbGutter.None ? $"row-gap:{((double)((int)RowGutter) / 16d).ToString().Replace(",", ".")}rem;" : "") +
+                        (ColumnGutter != FbGutter.None ? $"column-gap:{((double)((int)ColumnGutter) / 16d).ToString().Replace(",", ".")}rem;" : "") +
                         (Grow != int.MinValue ? $"flex-grow:{Grow};" : "") +
                         (Shrink != int.MinValue ? $"flex-shrink:{Shrink};" : "") +
                         (Order != int.MinValue ? $"order:{Order};" : "") +
@@ -434,40 +438,61 @@
     public bool Scrollable { get => _state.Scrollable; set => _state.Scrollable = value; }
 
     [Parameter]
-    public bool G0 { get => RowGapRem == 0 && ColumnGapRem == 0; set { if (value) { RowGapRem = ColumnGapRem = 0; } } }
+    public bool G0 { get => Gutter == FbGutter.Gutter_0; set => Gutter = FbGutter.Gutter_0; }
 
     [Parameter]
-    public bool G1 { get => RowGapRem == 1d / 16d && ColumnGapRem == 1d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 1d / 16d; } } }
+    public bool G1 { get => Gutter == FbGutter.Gutter_1; set => Gutter = FbGutter.Gutter_1; }
 
     [Parameter]
-    public bool G2 { get => RowGapRem == 2d / 16d && ColumnGapRem == 2d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 2d / 16d; } } }
+    public bool G2 { get => Gutter == FbGutter.Gutter_2; set => Gutter = FbGutter.Gutter_2; }
 
     [Parameter]
-    public bool G3 { get => RowGapRem == 3d / 16d && ColumnGapRem == 3d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 3d / 16d; } } }
+    public bool G3 { get => Gutter == FbGutter.Gutter_3; set => Gutter = FbGutter.Gutter_3; }
 
     [Parameter]
-    public bool G4 { get => RowGapRem == 4d / 16d && ColumnGapRem == 4 / 16d; set { if (value) { RowGapRem = ColumnGapRem = 4d / 16d; } } }
+    public bool G4 { get => Gutter == FbGutter.Gutter_4; set => Gutter = FbGutter.Gutter_4; }
 
     [Parameter]
-    public bool G8 { get => RowGapRem == 8d / 16d && ColumnGapRem == 8d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 8d / 16d; } } }
+    public bool G6 { get => Gutter == FbGutter.Gutter_6; set => Gutter = FbGutter.Gutter_6; }
 
     [Parameter]
-    public bool G12 { get => RowGapRem == 12d / 16d && ColumnGapRem == 12d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 12d / 16d; } } }
+    public bool G8 { get => Gutter == FbGutter.Gutter_8; set => Gutter = FbGutter.Gutter_8; }
 
     [Parameter]
-    public bool G16 { get => RowGapRem == 16d / 16d && ColumnGapRem == 16d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 16d / 16d; } } }
+    public bool G10 { get => Gutter == FbGutter.Gutter_10; set => Gutter = FbGutter.Gutter_10; }
 
     [Parameter]
-    public bool G24 { get => RowGapRem == 24d / 16d && ColumnGapRem == 24d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 24d / 16d; } } }
+    public bool G12 { get => Gutter == FbGutter.Gutter_12; set => Gutter = FbGutter.Gutter_12; }
 
     [Parameter]
-    public bool G32 { get => RowGapRem == 32d / 16d && ColumnGapRem == 32d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 32d / 16d; } } }
+    public bool G14 { get => Gutter == FbGutter.Gutter_14; set => Gutter = FbGutter.Gutter_14; }
 
     [Parameter]
-    public bool G40 { get => RowGapRem == 40d / 16d && ColumnGapRem == 40d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 40d / 16d; } } }
+    public bool G16 { get => Gutter == FbGutter.Gutter_16; set => Gutter = FbGutter.Gutter_16; }
 
     [Parameter]
-    public bool G48 { get => RowGapRem == 48d / 16d && ColumnGapRem == 48d / 16d; set { if (value) { RowGapRem = ColumnGapRem = 48d / 16d; } } }
+    public bool G20 { get => Gutter == FbGutter.Gutter_20; set => Gutter = FbGutter.Gutter_20; }
+
+    [Parameter]
+    public bool G24 { get => Gutter == FbGutter.Gutter_24; set => Gutter = FbGutter.Gutter_24; }
+
+    [Parameter]
+    public bool G28 { get => Gutter == FbGutter.Gutter_28; set => Gutter = FbGutter.Gutter_28; }
+
+    [Parameter]
+    public bool G32 { get => Gutter == FbGutter.Gutter_32; set => Gutter = FbGutter.Gutter_32; }
+
+    [Parameter]
+    public bool G40 { get => Gutter == FbGutter.Gutter_40; set => Gutter = FbGutter.Gutter_40; }
+
+    [Parameter]
+    public bool G48 { get => Gutter == FbGutter.Gutter_48; set => Gutter = FbGutter.Gutter_48; }
+
+    [Parameter]
+    public bool G56 { get => Gutter == FbGutter.Gutter_56; set => Gutter = FbGutter.Gutter_56; }
+
+    [Parameter]
+    public bool G64 { get => Gutter == FbGutter.Gutter_64; set => Gutter = FbGutter.Gutter_64; }
 
     /// <summary>
     /// Gutter -> Small

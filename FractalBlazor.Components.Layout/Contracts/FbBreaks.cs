@@ -71,4 +71,30 @@ namespace  FractalBlazor.Components.Layout
         Margin_56 = 56,
         Margin_64 = 64
     }
+
+
+    public enum FbGutter : sbyte
+    {
+        [DefaultValue(None)]
+        None = -1,
+        Gutter_0 = 0,
+        Gutter_1 = 1,
+        Gutter_2 = 2,
+        Gutter_3 = 3,
+        Gutter_4 = 4,
+        Gutter_6 = 6,
+        Gutter_8 = 8,
+        Gutter_10 = 10,
+        Gutter_12 = 12,
+        Gutter_14 = 14,
+        Gutter_16 = 16,
+        Gutter_20 = 20,
+        Gutter_24 = 24,
+        Gutter_28 = 28,
+        Gutter_32 = 32,
+        Gutter_40 = 40,
+        Gutter_48 = 48,
+        Gutter_56 = 56,
+        Gutter_64 = 64
+    }
 }
