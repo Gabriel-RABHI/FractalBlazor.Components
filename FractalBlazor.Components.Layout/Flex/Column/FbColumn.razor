@@ -16,18 +16,7 @@
     {
         get
         {
-            return $"{Classes} {DesignClass} {WrapClassString} {ResponsiveClassString}";
-        }
-    }
-
-    private string DesignClass
-    {
-        get
-        {
-            if (Design)
-                return "fb-design";
-            else
-                return "";
+            return $"{Classes} {WrapClassString} {ResponsiveClassString}";
         }
     }
 
@@ -44,9 +33,6 @@
 
     [Parameter]
     public string MaxHeight { get => base.MaxHeight; set => base.MaxHeight = value; }
-
-    [Parameter]
-    public bool Design { get; set; }
 
     // -------- MISSING --------- //
 }
