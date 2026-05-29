@@ -381,7 +381,7 @@
 
 /* COLUMN SIZING */
 
-.framed-column-containner-light-frame {
+.framed-column-containner-small-frame {
     --framed-column-containner-border-size: 0.07rem;
     --framed-column-containner-frame-color: #e2e2e2;
 }
@@ -396,7 +396,7 @@
     --framed-column-containner-frame-color: #e2e2e2;
 }
 
-.framed-separator-column-containner-light-frame {
+.framed-separator-column-containner-small-frame {
     --framed-separator-column-containner-border-size: 0.07rem;
     --framed-separator-column-containner-frame-color: #e2e2e2;
 }
@@ -411,7 +411,7 @@
     --framed-separator-column-containner-frame-color: #e2e2e2;
 }
 
-.framed-grid-column-containner-light-frame {
+.framed-grid-column-containner-small-frame {
     --framed-grid-column-containner-border-size: 0.07rem;
     --framed-grid-column-containner-frame-color: #e2e2e2;
 }
@@ -454,7 +454,7 @@
 
 /* COLUMN SIZING */
 
-.framed-column-light-frame {
+.framed-column-small-frame {
     --framed-column-border-size: 0.07rem;
     --framed-column-frame-color: #e2e2e2;
 }
@@ -469,7 +469,7 @@
     --framed-column-frame-color: #e2e2e2;
 }
 
-.framed-separator-column-light-frame {
+.framed-separator-column-small-frame {
     --framed-separator-column-border-size: 0.07rem;
     --framed-separator-column-frame-color: #e2e2e2;
 }
@@ -484,7 +484,7 @@
     --framed-separator-column-frame-color: #e2e2e2;
 }
 
-.framed-grid-column-light-frame {
+.framed-grid-column-small-frame {
     --framed-grid-column-border-size: 0.07rem;
     --framed-grid-column-frame-color: #e2e2e2;
 }
@@ -524,7 +524,7 @@
 
 /* STACK SIZING */
 
-.framed-stack-light-frame {
+.framed-stack-small-frame {
     --framed-stack-border-size: 0.07rem;
     --framed-stack-frame-color: #e2e2e2;
 }
@@ -539,7 +539,7 @@
     --framed-stack-frame-color: #e2e2e2;
 }
 
-.framed-separator-stack-light-frame {
+.framed-separator-stack-small-frame {
     --framed-separator-stack-border-size: 0.07rem;
     --framed-separator-stack-frame-color: #e2e2e2;
 }
@@ -554,7 +554,7 @@
     --framed-separator-stack-frame-color: #e2e2e2;
 }
 
-.framed-grid-stack-light-frame {
+.framed-grid-stack-small-frame {
     --framed-grid-stack-border-size: 0.07rem;
     --framed-grid-stack-frame-color: #e2e2e2;
 }
@@ -594,7 +594,7 @@
 
 /* ROW SIZING */
 
-.framed-row-light-frame {
+.framed-row-small-frame {
     --framed-row-border-size: 0.07rem;
     --framed-row-frame-color: #e2e2e2;
 }
@@ -609,7 +609,7 @@
     --framed-row-frame-color: #e2e2e2;
 }
 
-.framed-separator-row-light-frame {
+.framed-separator-row-small-frame {
     --framed-separator-row-border-size: 0.07rem;
     --framed-separator-row-frame-color: #e2e2e2;
 }
@@ -624,7 +624,7 @@
     --framed-separator-row-frame-color: #e2e2e2;
 }
 
-.framed-grid-row-light-frame {
+.framed-grid-row-small-frame {
     --framed-grid-row-border-size: 0.07rem;
     --framed-grid-row-frame-color: #e2e2e2;
 }
@@ -642,7 +642,7 @@
 /**********************************************************************************/
 /* SEPARATOR SIZE */
 
-.fb-separator-light-frame {
+.fb-separator-small-frame {
     flex-basis: 0.07rem;
     background: #e2e2e2;
 }
@@ -775,5 +775,58 @@
 @container (min-width: 360px) {
     .fb-container-xs-none {
         display: none !important;
+    }
+}
+
+/**********************************************************************************/
+/* MINI-PROGRESS */
+
+.fb-prog-loader {
+    position: relative;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+}
+
+.fb-prog-circular {
+    animation: rotate 1s linear infinite;
+    height: 24px;
+    position: relative;
+    width: 24px;
+}
+
+.fb-prog-path-back {
+    stroke: #BBB;
+}
+
+.fb-prog-path {
+    stroke-dasharray: 35,200;
+    stroke-dashoffset: 0;
+    stroke: #4989E4;
+    animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+    stroke-linecap: round;
+}
+
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes color {
+    100%, 0% {
+        stroke: #4989E4;
+    }
+
+    40% {
+        stroke: #27A444;
+    }
+
+    66% {
+        stroke: #DC7200;
+    }
+
+    80%, 90% {
+        stroke: #BA8AA4;
     }
 }

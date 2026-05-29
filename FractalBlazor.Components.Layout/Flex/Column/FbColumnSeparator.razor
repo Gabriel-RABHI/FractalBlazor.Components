@@ -26,13 +26,13 @@
     // ************************************************************************************************ //
 
     [Parameter]
-    public bool WithLightFrame { get => Frame == FbFrame.Light; set => Frame = FbFrame.Light; }
+    public bool WSFrame { get => Frame == FbFrame.Small; set => Frame = FbFrame.Small; }
 
     [Parameter]
-    public bool WithMediumFrame { get => Frame == FbFrame.Medium; set => Frame = FbFrame.Medium; }
+    public bool WMFrame { get => Frame == FbFrame.Medium; set => Frame = FbFrame.Medium; }
 
     [Parameter]
-    public bool WithLargeFrame { get => Frame == FbFrame.Large; set => Frame = FbFrame.Large; }
+    public bool WLFrame { get => Frame == FbFrame.Large; set => Frame = FbFrame.Large; }
 
     private string FrameClass
     {
@@ -40,8 +40,8 @@
         {
             string baseClasse = "fb-separator";
 
-            if (_frame is FbFrame.Light)
-                return $"{baseClasse}-light-frame";
+            if (_frame is FbFrame.Small)
+                return $"{baseClasse}-small-frame";
             else if (_frame is FbFrame.Medium)
                 return $"{baseClasse}-medium-frame";
             else if (_frame is FbFrame.Large)

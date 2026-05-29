@@ -37,7 +37,7 @@
     {
         Direction = FbFlexDirection.Row;
         SingleLine = true;
-        JustifyStretch = true;
+        JHSt = true;
         IsFlex = true;
         Flex = 1;
     }
@@ -48,8 +48,8 @@
         {
             string baseClasse = "framed-row";
 
-            if (_frame is FbFrame.Light)
-                return $"{baseClasse} {baseClasse}-light-frame";
+            if (_frame is FbFrame.Small)
+                return $"{baseClasse} {baseClasse}-small-frame";
             else if (_frame is FbFrame.Medium)
                 return $"{baseClasse} {baseClasse}-medium-frame";
             else if (_frame is FbFrame.Large)
@@ -65,8 +65,8 @@
         {
             string baseClasse = "framed-separator-row";
 
-            if (_separator is FbFrame.Light)
-                return $"{baseClasse} {baseClasse}-light-frame";
+            if (_separator is FbFrame.Small)
+                return $"{baseClasse} {baseClasse}-small-frame";
             else if (_separator is FbFrame.Medium)
                 return $"{baseClasse} {baseClasse}-medium-frame";
             else if (_separator is FbFrame.Large)
@@ -86,30 +86,17 @@
         }
     }
 
-    private string DesignClass
-    {
-        get
-        {
-            if (Design)
-                return "fb-design";
-            else
-                return "";
-        }
-    }
-
-    private string RadiusClasses => WithRadius ? "fb-layout-radius" : "";
-
     private string BackgroundClasses
     {
         get
         {
             switch (_background)
             {
-                case FbBackground.White:
+                case FbBackground.Default:
                     return "fb-white-background";
-                case FbBackground.Header:
+                case FbBackground.Accent:
                     return "fb-header-background";
-                case FbBackground.Sellect:
+                case FbBackground.Highlight:
                     return "fb-sellect-background";
             }
             return "";
@@ -120,7 +107,7 @@
     {
         get
         {
-            return $"{Classes} {ComputedFrameClasses} {DesignClass} {BackgroundClasses} {RadiusClasses} {WrapClassString} {ResponsiveClassString}";
+            return $"{Classes} {ComputedFrameClasses} {BackgroundClasses} {WrapClassString} {ResponsiveClassString}";
         }
     }
 
@@ -180,87 +167,104 @@
 
     // -------------- FbFlexJustify ------------ //
     [Parameter]
-    public bool JustifyLeft { get => base.Justify == FbFlexJustify.Start; set => base.Justify = FbFlexJustify.Start; }
+    public bool JS { get => JHS && JVS; set => JHS = JVS = true; }
 
     [Parameter]
-    public bool JustifyRight { get => base.Justify == FbFlexJustify.End; set => base.Justify = FbFlexJustify.End; }
+    public bool JE { get => JHE && JVE; set => JHE = JVE = true; }
 
     [Parameter]
-    public bool JustifyCenter { get => base.Justify == FbFlexJustify.Center; set => base.Justify = FbFlexJustify.Center; }
+    public bool JC { get => JHC && JVC; set => JHC = JVC = true; }
 
     [Parameter]
-    public bool JustifyStretch { get => base.Justify == FbFlexJustify.Stretch; set => base.Justify = FbFlexJustify.Stretch; }
+    public bool JSt { get => JHSt && JVSt; set => JHSt = JVSt = true; }
+
+    // -------------- FbFlexJustify ------------ //
+    [Parameter]
+    public bool JHS { get => base.Justify == FbFlexJustify.Start; set => base.Justify = FbFlexJustify.Start; }
 
     [Parameter]
-    public bool JustifySpaceBetwen { get => base.Justify == FbFlexJustify.SpaceBetween; set => base.Justify = FbFlexJustify.SpaceBetween; }
+    public bool JHE { get => base.Justify == FbFlexJustify.End; set => base.Justify = FbFlexJustify.End; }
+
+    /// <summary>
+    /// Justify Horizontal Center
+    /// </summary>
+    [Parameter]
+    public bool JHC { get => base.Justify == FbFlexJustify.Center; set => base.Justify = FbFlexJustify.Center; }
 
     [Parameter]
-    public bool JustifySpaceAround { get => base.Justify == FbFlexJustify.SpaceAround; set => base.Justify = FbFlexJustify.SpaceAround; }
+    public bool JHSt { get => base.Justify == FbFlexJustify.Stretch; set => base.Justify = FbFlexJustify.Stretch; }
 
     [Parameter]
-    public bool JustifyEvenly { get => base.Justify == FbFlexJustify.Evenly; set => base.Justify = FbFlexJustify.Evenly; }
+    public bool JHSB { get => base.Justify == FbFlexJustify.SpaceBetween; set => base.Justify = FbFlexJustify.SpaceBetween; }
+
+    [Parameter]
+    public bool JHSA { get => base.Justify == FbFlexJustify.SpaceAround; set => base.Justify = FbFlexJustify.SpaceAround; }
+
+    [Parameter]
+    public bool JHEv { get => base.Justify == FbFlexJustify.Evenly; set => base.Justify = FbFlexJustify.Evenly; }
 
     // -------------- FbFlexAlignItems ------------ //
     [Parameter]
-    public bool ItemsOnTop { get => base.AlignItems == FbFlexAlignItems.Start; set => base.AlignItems = FbFlexAlignItems.Start; }
+    public bool JVS { get => base.AlignItems == FbFlexAlignItems.Start; set => base.AlignItems = FbFlexAlignItems.Start; }
 
     [Parameter]
-    public bool ItemsOnBottom { get => base.AlignItems == FbFlexAlignItems.End; set => base.AlignItems = FbFlexAlignItems.End; }
+    public bool JVE { get => base.AlignItems == FbFlexAlignItems.End; set => base.AlignItems = FbFlexAlignItems.End; }
 
     [Parameter]
-    public bool ItemsOnCenter { get => base.AlignItems == FbFlexAlignItems.Center; set => base.AlignItems = FbFlexAlignItems.Center; }
+    public bool JVC { get => base.AlignItems == FbFlexAlignItems.Center; set => base.AlignItems = FbFlexAlignItems.Center; }
 
     [Parameter]
-    public bool ItemsOnBaseline { get => base.AlignItems == FbFlexAlignItems.Baseline; set => base.AlignItems = FbFlexAlignItems.Baseline; }
+    public bool JVBl { get => base.AlignItems == FbFlexAlignItems.Baseline; set => base.AlignItems = FbFlexAlignItems.Baseline; }
 
     [Parameter]
-    public bool ItemsStretched { get => base.AlignItems == FbFlexAlignItems.Stretch; set => base.AlignItems = FbFlexAlignItems.Stretch; }
-
-    // -------------- FbFlexAlignContent ------------ //
-    [Parameter]
-    public bool SelfJustifyLeft { get => base.SelfJustifyLeft; set => base.SelfJustifyLeft = value; }
-
-    // -------------- FbDesign ------------ //
-    [Parameter]
-    public bool Design { get; set; }
+    public bool JVSt { get => base.AlignItems == FbFlexAlignItems.Stretch; set => base.AlignItems = FbFlexAlignItems.Stretch; }
 
     // -------------- FbRow Frame ------------ //
     [Parameter]
-    public bool WithLightFrame { get => Frame == FbFrame.Light; set => Frame = FbFrame.Light; }
+    public bool WSFrame { get => Frame == FbFrame.Small; set => Frame = FbFrame.Small; }
 
     [Parameter]
-    public bool WithMediumFrame { get => Frame == FbFrame.Medium; set => Frame = FbFrame.Medium; }
+    public bool WMFrame { get => Frame == FbFrame.Medium; set => Frame = FbFrame.Medium; }
 
     [Parameter]
-    public bool WithLargeFrame { get => Frame == FbFrame.Large; set => Frame = FbFrame.Large; }
+    public bool WLFrame { get => Frame == FbFrame.Large; set => Frame = FbFrame.Large; }
 
     [Parameter]
-    public bool WithLightSeparator { get => Separator == FbFrame.Light; set => Separator = FbFrame.Light; }
+    public bool WSSeparator { get => Separator == FbFrame.Small; set => Separator = FbFrame.Small; }
 
     [Parameter]
-    public bool WithMediumSeparator { get => Separator == FbFrame.Medium; set => Separator = FbFrame.Medium; }
+    public bool WMSeparator { get => Separator == FbFrame.Medium; set => Separator = FbFrame.Medium; }
 
     [Parameter]
-    public bool WithLargeSeparator { get => Separator == FbFrame.Large; set => Separator = FbFrame.Large; }
+    public bool WLSeparator { get => Separator == FbFrame.Large; set => Separator = FbFrame.Large; }
 
     [Parameter]
-    public bool WithLightGrid { get => WithLightFrame && WithLightSeparator; set => WithLightFrame = WithLightSeparator = true; }
+    public bool WSGrid { get => WSFrame && WSSeparator; set => WSFrame = WSSeparator = true; }
 
     [Parameter]
-    public bool WithMediumGrid { get => WithMediumFrame && WithMediumSeparator; set => WithMediumFrame = WithMediumSeparator = true; }
+    public bool WMGrid { get => WMFrame && WMSeparator; set => WMFrame = WMSeparator = true; }
 
     [Parameter]
-    public bool WithLargeGrid { get => WithLargeFrame && WithLargeSeparator; set => WithLargeFrame = WithLargeSeparator = true; }
+    public bool WLGrid { get => WLFrame && WLSeparator; set => WLFrame = WLSeparator = true; }
 
     [Parameter]
-    public bool WithRadius { get; set; }
+    public bool WSR { get => Radius == FbSpacings.S_Radius; set => Radius = FbSpacings.S_Radius; }
+    
+    [Parameter]
+    public bool WMR { get => Radius == FbSpacings.M_Radius; set => Radius = FbSpacings.M_Radius; }
+    
+    [Parameter]
+    public bool WLR { get => Radius == FbSpacings.L_Radius; set => Radius = FbSpacings.L_Radius; }
+    
+    [Parameter]
+    public bool WXR { get => Radius == FbSpacings.X_Radius; set => Radius = FbSpacings.X_Radius; }
 
     [Parameter]
-    public bool WithWhiteBackground { get => _background == FbBackground.White; set => _background = FbBackground.White; }
+    public bool WDefaultBackground { get => _background == FbBackground.Default; set => _background = FbBackground.Default; }
 
     [Parameter]
-    public bool WithHeaderBackground { get => _background == FbBackground.Header; set => _background = FbBackground.Header; }
+    public bool WAccentBackground { get => _background == FbBackground.Accent; set => _background = FbBackground.Accent; }
 
     [Parameter]
-    public bool WithSellectBackground { get => _background == FbBackground.Sellect; set => _background = FbBackground.Sellect; }
+    public bool WHighlightBackground { get => _background == FbBackground.Highlight; set => _background = FbBackground.Highlight; }
 }

@@ -35,6 +35,9 @@
         public FbGutter Gutter = FbGutter.None;
         public FbGutter RowGutter = FbGutter.None;
         public FbGutter ColumnGutter = FbGutter.None;
+        
+        public FbRadius Radius = FbRadius.None;
+
         public bool ColumnDisplay = false;
 
         public int Order = int.MinValue;
@@ -52,6 +55,9 @@
     {
         IsFlex = true;
     }
+    
+    // -------------- As flex item ------------ //
+    protected FbRadius Radius { get => _state.Radius; set => _state.Radius = value; }
 
     protected FbGutter Gutter { get => _state.Gutter; set => _state.Gutter = value; }
 
@@ -378,6 +384,8 @@
         }
     }
 
+    
+
     protected unsafe string ComputedStyle
     {
         get
@@ -411,6 +419,7 @@
                         (MaxHeightString != "" ? $"max-height: {MaxHeightString};" : "") +
                         (ColumnDisplay ? "flex-flow : column;" : "") +
                         (Scrollable ? "overflow : scroll;" : "") +
+                        (Radius != FbRadius.None ? $"border-radius:{((double)((int)MarginRight) / 16d).ToString().Replace(",", ".")}rem;" : "") +
                         ComputedBaseStyle;
                 if (UseCaching && !_cache.ContainsKey(hash))
                     _cache[hash] = str;
@@ -437,6 +446,7 @@
     [Parameter]
     public bool Scrollable { get => _state.Scrollable; set => _state.Scrollable = value; }
 
+    #region GUTTER
     [Parameter]
     public bool G0 { get => Gutter == FbGutter.Gutter_0; set => Gutter = FbGutter.Gutter_0; }
 
@@ -511,6 +521,13 @@
     /// </summary>
     [Parameter]
     public bool GL { get => Gutter == FbSpacings.L_Gutter; set => Gutter = FbSpacings.L_Gutter; }
+
+    /// <summary>
+    /// Gutter -> Extra Large
+    /// </summary>
+    [Parameter]
+    public bool GX { get => Gutter == FbSpacings.X_Gutter; set => Gutter = FbSpacings.X_Gutter; }
+    #endregion
 
     #endregion
 }

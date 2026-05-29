@@ -158,7 +158,7 @@
                         (MarginTop != FbMargin.None ? $"margin-top:{((double)((int)MarginTop) / 16d).ToString().Replace(",", ".")}rem;" : "") +
                         (MarginBottom != FbMargin.None ? $"margin-bottom:{((double)((int)MarginBottom) / 16d).ToString().Replace(",", ".")}rem;" : "") +
                         (MarginLeft != FbMargin.None ? $"margin-left:{((double)((int)MarginLeft) / 16d).ToString().Replace(",", ".")}rem;" : "") +
-                        (MarginRight != FbMargin.None ? $"margin-right:{((double)((int)MarginRight) / 16d).ToString().Replace(",", ".")}rem;" : "") +
+                        (MarginLeft != FbMargin.None ? $"margin-left:{((double)((int)MarginLeft) / 16d).ToString().Replace(",", ".")}rem;" : "") +
                         (_state._flex != int.MinValue ? $"flex:{_state._flex};" : "") +
                         (Hidden ? "visibility:hidden;" : "");
                 str += (string.IsNullOrWhiteSpace(WidthBasis) ? "" : $"flex-basis:{WidthBasis};") +
@@ -653,6 +653,12 @@
     public bool PL { get => Padding == FbSpacings.L_Padding; set => Padding = FbSpacings.L_Padding; }
 
     /// <summary>
+    /// Padding -> Extra Large
+    /// </summary>
+    [Parameter]
+    public bool PX { get => Padding == FbSpacings.X_Padding; set => Padding = FbSpacings.X_Padding; }
+
+    /// <summary>
     /// Padding -> Vertical -> Small 
     /// </summary>
     [Parameter]
@@ -669,6 +675,12 @@
     /// </summary>
     [Parameter]
     public bool PVL { get => PaddingTop == FbSpacings.L_Padding && PaddingBottom == FbSpacings.L_Padding; set { PaddingTop = PaddingBottom = FbSpacings.L_Padding; } }
+
+    /// <summary>
+    /// Padding -> Vertical -> Extra Large 
+    /// </summary>
+    [Parameter]
+    public bool PVX { get => PaddingTop == FbSpacings.X_Padding && PaddingBottom == FbSpacings.X_Padding; set { PaddingTop = PaddingBottom = FbSpacings.X_Padding; } }
 
     /// <summary>
     /// Padding -> Horizontal -> Small 
@@ -689,6 +701,12 @@
     public bool PHL { get => PaddingLeft == FbSpacings.L_Padding && PaddingRight == FbSpacings.L_Padding; set { PaddingLeft = PaddingRight = FbSpacings.L_Padding; } }
 
     /// <summary>
+    /// Padding -> Horizontal -> Extra Large 
+    /// </summary>
+    [Parameter]
+    public bool PHX { get => PaddingLeft == FbSpacings.X_Padding && PaddingRight == FbSpacings.X_Padding; set { PaddingLeft = PaddingRight = FbSpacings.X_Padding; } }
+
+    /// <summary>
     /// Padding -> Top -> Small
     /// </summary>
     [Parameter]
@@ -705,6 +723,12 @@
     /// </summary>
     [Parameter]
     public bool PTL { get => PaddingTop == FbSpacings.L_Padding; set => PaddingTop = FbSpacings.L_Padding; }
+
+    /// <summary>
+    /// Padding -> Top -> Extra Large
+    /// </summary>
+    [Parameter]
+    public bool PTX { get => PaddingTop == FbSpacings.X_Padding; set => PaddingTop = FbSpacings.X_Padding; }
 
     /// <summary>
     /// Padding -> Bottom -> Small
@@ -725,6 +749,12 @@
     public bool PBL { get => PaddingBottom == FbSpacings.L_Padding; set => PaddingBottom = FbSpacings.L_Padding; }
 
     /// <summary>
+    /// Padding -> Bottom -> Extra Large
+    /// </summary>
+    [Parameter]
+    public bool PBX { get => PaddingBottom == FbSpacings.X_Padding; set => PaddingBottom = FbSpacings.X_Padding; }
+
+    /// <summary>
     /// Padding -> Left -> Small
     /// </summary>
     [Parameter]
@@ -743,6 +773,12 @@
     public bool PLL { get => PaddingLeft == FbSpacings.L_Padding; set => PaddingLeft = FbSpacings.L_Padding; }
 
     /// <summary>
+    /// Padding -> Left -> Extra Large
+    /// </summary>
+    [Parameter]
+    public bool PLX { get => PaddingLeft == FbSpacings.X_Padding; set => PaddingLeft = FbSpacings.X_Padding; }
+
+    /// <summary>
     /// Padding -> Right -> Small
     /// </summary>
     [Parameter]
@@ -759,6 +795,12 @@
     /// </summary>
     [Parameter]
     public bool PRL { get => PaddingRight == FbSpacings.L_Padding; set => PaddingRight = FbSpacings.L_Padding; }
+
+    /// <summary>
+    /// Padding -> Right -> Extra Large
+    /// </summary>
+    [Parameter]
+    public bool PRX { get => PaddingRight == FbSpacings.X_Padding; set => PaddingRight = FbSpacings.X_Padding; }
 
 
     [Parameter]
@@ -1065,6 +1107,12 @@
     public bool ML { get => Margin == FbSpacings.L_Margin; set => Margin = FbSpacings.L_Margin; }
 
     /// <summary>
+    /// Margin -> Extra Large
+    /// </summary>
+    [Parameter]
+    public bool MX { get => Margin == FbSpacings.X_Margin; set => Margin = FbSpacings.X_Margin; }
+
+    /// <summary>
     /// Margin -> Vertical -> Small 
     /// </summary>
     [Parameter]
@@ -1083,6 +1131,12 @@
     public bool MVL { get => MarginTop == FbSpacings.L_Margin && MarginBottom == FbSpacings.L_Margin; set { MarginTop = MarginBottom = FbSpacings.L_Margin; } }
 
     /// <summary>
+    /// Margin -> Vertical -> Extra Large 
+    /// </summary>
+    [Parameter]
+    public bool MVX { get => MarginTop == FbSpacings.X_Margin && MarginBottom == FbSpacings.X_Margin; set { MarginTop = MarginBottom = FbSpacings.X_Margin; } }
+
+    /// <summary>
     /// Margin -> Horizontal -> Small 
     /// </summary>
     [Parameter]
@@ -1099,6 +1153,12 @@
     /// </summary>
     [Parameter]
     public bool MHL { get => MarginLeft == FbSpacings.L_Margin && MarginRight == FbSpacings.L_Margin; set { MarginLeft = MarginRight = FbSpacings.L_Margin; } }
+
+    /// <summary>
+    /// Margin -> Horizontal -> Extra Large 
+    /// </summary>
+    [Parameter]
+    public bool MHX { get => MarginLeft == FbSpacings.X_Margin && MarginRight == FbSpacings.X_Margin; set { MarginLeft = MarginRight = FbSpacings.X_Margin; } }
 
 
     ///NEWWWWWWW----------------
@@ -1122,6 +1182,12 @@
     public bool MTL { get => MarginTop == FbSpacings.L_Margin; set => MarginTop = FbSpacings.L_Margin; }
 
     /// <summary>
+    /// Margin -> Top -> Extra Large
+    /// </summary>
+    [Parameter]
+    public bool MTX { get => MarginTop == FbSpacings.X_Margin; set => MarginTop = FbSpacings.X_Margin; }
+
+    /// <summary>
     /// Margin -> Bottom -> Small
     /// </summary>
     [Parameter]
@@ -1138,6 +1204,12 @@
     /// </summary>
     [Parameter]
     public bool MBL { get => MarginBottom == FbSpacings.L_Margin; set => MarginBottom = FbSpacings.L_Margin; }
+
+    /// <summary>
+    /// Margin -> Bottom -> Extra Large
+    /// </summary>
+    [Parameter]
+    public bool MBX { get => MarginBottom == FbSpacings.X_Margin; set => MarginBottom = FbSpacings.X_Margin; }
 
     /// <summary>
     /// Margin -> Left -> Small
@@ -1158,6 +1230,12 @@
     public bool MLL { get => MarginLeft == FbSpacings.L_Margin; set => MarginLeft = FbSpacings.L_Margin; }
 
     /// <summary>
+    /// Margin -> Left -> Extra Large
+    /// </summary>
+    [Parameter]
+    public bool MLX { get => MarginLeft == FbSpacings.X_Margin; set => MarginLeft = FbSpacings.X_Margin; }
+
+    /// <summary>
     /// Margin -> Right -> Small
     /// </summary>
     [Parameter]
@@ -1174,6 +1252,12 @@
     /// </summary>
     [Parameter]
     public bool MRL { get => MarginRight == FbSpacings.L_Margin; set => MarginRight = FbSpacings.L_Margin; }
+
+    /// <summary>
+    /// Margin -> Right -> Extra Large
+    /// </summary>
+    [Parameter]
+    public bool MRX { get => MarginRight == FbSpacings.X_Margin; set => MarginRight = FbSpacings.X_Margin; }
 
     [Parameter]
     public string StoreId { get; set; } = "";

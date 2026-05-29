@@ -32,15 +32,15 @@ function getAllElementsWithAttribute(attribute) {
 
 window.setInterval(function () {
     // -------- Visibility
-    var allVis = getAllElementsWithAttribute('data-tiny-visibility-id');
+    var allVis = getAllElementsWithAttribute('data-fb-visibility-id');
     for (var i = 0, n = allVis.length; i < n; i++) {
         var el = allVis[i];
         if (isInViewport(el)) {
-            var v = el.getAttribute('data-tiny-visibility-id');
+            var v = el.getAttribute('data-fb-visibility-id');
             UpdateVisibilityMessageCallerJS(v);
             var vreset = el.getAttribute('data-no-reset');
             if (vreset !== "true")
-                el.removeAttribute('data-tiny-visibility-id');
+                el.removeAttribute('data-fb-visibility-id');
         }
     }
     OnWindowsResize();
@@ -48,14 +48,14 @@ window.setInterval(function () {
 
 
 function OnWindowsResize() {
-    var allMaster = getAllElementsWithAttribute('data-tiny-width-master-id');
-    var allSlaves = getAllElementsWithAttribute('data-tiny-width-slave-id');
+    var allMaster = getAllElementsWithAttribute('data-fb-width-master-id');
+    var allSlaves = getAllElementsWithAttribute('data-fb-width-slave-id');
     for (var i = 0, n = allMaster.length; i < n; i++) {
         var m = allMaster[i];
-        var m_id = m.getAttribute('data-tiny-width-master-id');
+        var m_id = m.getAttribute('data-fb-width-master-id');
         for (var j = 0, sn = allSlaves.length; j < sn; j++) {
             var s = allSlaves[j];
-            var s_id = s.getAttribute('data-tiny-width-slave-id');
+            var s_id = s.getAttribute('data-fb-width-slave-id');
             if (m_id == s_id) {
                 var w = m.clientWidth;
                 s.style.width = w + "px";
@@ -68,7 +68,7 @@ window.onresize = OnWindowsResize;
 
 
 function UpdateVisibilityMessageCallerJS(cpntId) {
-    DotNet.invokeMethodAsync('TinyBlazor.Utilities', 'VisibilityChangedMessageCaller', cpntId);
+    DotNet.invokeMethodAsync('FractalBlazor.Components.Layout', 'VisibilityChangedMessageCaller', cpntId);
 }
 
 
@@ -175,27 +175,6 @@ function stopTinyShowOnOverPerformance() {
     document.removeEventListener('mousemove', mouseMoveListener);
     document.removeEventListener('scroll', mouseMoveListener);
     document.removeEventListener('scrollend', mouseMoveListener);
-}
-
-
-window.ContentEditableJsFunctions = {
-    getContent: function (id) {
-        return document.getElementById(id).innerHTML;
-    }
-};
-
-function BlazorContentEditable(id, content) {
-    if (content == null) content = "null";
-    document.getElementById(id).innerHTML = content;
-    document.getElementById(id).addEventListener("input", function () {
-        DotNet.invokeMethodAsync("TinyBlazor.Utilities", "ContentEditableValueChangedCaller", id, document.getElementById(id).innerHTML);
-    });
-
-}
-
-function BlazorSetContentEditableContent(id, content) {
-    if (content == null) content = "null";
-    document.getElementById(id).innerHTML = content;
 }
 
 //------ AdaptativeDivHeight ------//
