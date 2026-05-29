@@ -1,4 +1,4 @@
-﻿@namespace  FractalBlazor.Components.Layout
+@namespace  FractalBlazor.Components.Layout
 
 @ChildContent
 
@@ -6,9 +6,15 @@
     private bool _periodic = true;
     private TimeSpan _interval = new TimeSpan(0, 0, 1);
 
+    /// <summary>
+    /// Child content
+    /// </summary>
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
+    /// <summary>
+    /// Periodic update setting
+    /// </summary>
     [Parameter]
     public bool Periodic
     {
@@ -24,9 +30,15 @@
         }
     }
 
+    /// <summary>
+    /// One time update setting
+    /// </summary>
     [Parameter]
     public bool OneTime { get => !Periodic; set => Periodic = !value; }
 
+    /// <summary>
+    /// Update interval
+    /// </summary>
     [Parameter]
     public TimeSpan Interval
     {

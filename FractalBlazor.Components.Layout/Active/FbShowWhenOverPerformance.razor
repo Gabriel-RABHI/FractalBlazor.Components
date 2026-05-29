@@ -5,9 +5,15 @@
 @implements IAsyncDisposable
 
 @code {
+    /// <summary>
+    /// Verification delay in milliseconds
+    /// </summary>
     [Parameter]
     public int VerificationDelay { get; set; } = 1000;
 
+    /// <summary>
+    /// Scroll parent element ID
+    /// </summary>
     [Parameter]
     public string ScrollParentID { get; set; }
 

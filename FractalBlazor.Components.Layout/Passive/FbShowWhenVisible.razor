@@ -25,15 +25,27 @@ else
     private bool _isVisibile = false;
     private Guid _myId = Guid.NewGuid();
 
+    /// <summary>
+    /// Child content
+    /// </summary>
     [Parameter]
     public RenderFragment ChildContent { get; set; }
     
+    /// <summary>
+    /// Wait content
+    /// </summary>
     [Parameter]
     public RenderFragment WaitContent { get; set; }
 
+    /// <summary>
+    /// Action when element becomes visible
+    /// </summary>
     [Parameter]
     public Action DoWhenVisible { get; set; }
 
+    /// <summary>
+    /// Reset visibility state setting
+    /// </summary>
     [Parameter]
     public bool Reset { get; set; } = false;
 

@@ -5,8 +5,6 @@
         background-color: #0b0e11;
         color: #e6edf3;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-        padding: 24px;
-        border-radius: 16px;
         border: 1px solid #21262d;
         width: 100%;
         max-width: 800px;
@@ -84,17 +82,25 @@
     }
 </style>
 
-<div class="fb-sample-container">
-    <FbStack G20>
+    <FbStack GL PL WRX Classes="fb-sample-container">
         <!-- Top Row Cards -->
-        <FbRow G16>
+        <FbRow GL JVSt>
             <!-- Left Card: Clauses Reviewed -->
-            <div class="fb-sample-card" style="flex: 1; padding: 20px;">
-                <FbStack G16>
-                    <FbRow JHS JVE>
-                        <span style="font-size: 38px; font-weight: 700; color: #ffffff; line-height: 1;">34</span>
-                        <span style="color: #8b949e; font-size: 14px; margin-left: 8px; padding-bottom: 4px;">Clauses reviewed</span>
-                    </FbRow>
+                <FbStack WFrameS PL WRS>
+                    <FbShowWhenOver>
+                        <TopCenterContent>
+                            <FbRow JC JVC>
+                                <span style="font-size: 13px; font-weight: 600;">Critical Issue</span>
+                                <span class="fb-sample-badge-count" style="background-color: #f85149; color: #ffffff;">3</span>
+                            </FbRow>
+                        </TopCenterContent>
+                        <ChildContent>
+                            <FbRow JHS JVE>
+                                <span style="font-size: 38px; font-weight: 700; color: #ffffff; line-height: 1;">34</span>
+                                <span style="color: #8b949e; font-size: 14px; margin-left: 8px; padding-bottom: 4px;">Clauses reviewed</span>
+                            </FbRow>
+                        </ChildContent>
+                    </FbShowWhenOver>
                     <FbRow JHS style="overflow: hidden; padding-top: 4px;">
                         @for (int i = 0; i < 5; i++)
                         {
@@ -110,12 +116,10 @@
                         }
                     </FbRow>
                 </FbStack>
-            </div>
 
             <!-- Right Card: Critical Risks -->
-            <div class="fb-sample-card" style="flex: 1; padding: 20px;">
-                <FbStack G12>
-                    <FbRow JHS JVC G8>
+        <FbStack GL WFrameS PL WRL>
+                    <FbRow JHS JVC GM>
                         <!-- Warning Icon -->
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #f85149; flex-shrink: 0;">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zM8 16A8 8 0 108 0a8 8 0 000 16zM7.25 4v5h1.5V4h-1.5zm0 6.5v1.5h1.5v-1.5h-1.5z" fill="currentColor"/>
@@ -126,7 +130,6 @@
                         These issues must be resolved immediately for GDPR Art. 28 compliance. 25 additional clauses require attention.
                     </span>
                 </FbStack>
-            </div>
         </FbRow>
 
         <!-- Middle Row: Tabs -->
@@ -161,10 +164,10 @@
 
         <!-- Bottom Stack: Assessment Detail Card -->
         <div class="fb-sample-card" style="padding: 24px;">
-            <FbStack G16>
+            <FbStack GL>
                 <!-- Card Header -->
                 <FbRow JHSB JVC>
-                    <FbRow JHS JVC G8>
+                    <FbRow JHS JVC GM>
                         <!-- Small red status dot -->
                         <div style="width: 8px; height: 8px; background-color: #f85149; border-radius: 50%;"></div>
                         <span class="fb-tag-dpa">DPA-26</span>
@@ -180,7 +183,7 @@
                 <div style="height: 1px; background-color: #30363d; width: 100%;"></div>
 
                 <!-- Assessment content -->
-                <FbStack G4>
+                <FbStack GS>
                     <span style="color: #8b949e; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Assessment</span>
                     <span style="color: #e6edf3; font-size: 14px; line-height: 1.6;">
                         The DPA does not designate a contact person for data protection matters at the processor. The only contacts listed pertain to sub-processors in Annex 3, not the processor itself.
@@ -188,14 +191,14 @@
                 </FbStack>
 
                 <!-- Clause Reference content -->
-                <FbStack G4>
+                <FbStack GS>
                     <span style="color: #8b949e; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Clause Reference</span>
                     <span style="color: #8b949e; font-size: 14px; font-style: italic;">Not found</span>
                 </FbStack>
 
                 <!-- Recommendation box -->
                 <div class="fb-sample-recommendation" style="padding: 16px;">
-                    <FbStack G8>
+                    <FbStack GM>
                         <span style="color: #56d364; font-size: 13px; font-weight: 600;">Recommendation</span>
                         <span style="color: #e6edf3; font-size: 13px; line-height: 1.5;">
                             Include a provision designating a reachable data protection contact (name or functional mailbox) with email address, update obligation, and deputy arrangement.
@@ -205,4 +208,3 @@
             </FbStack>
         </div>
     </FbStack>
-</div>

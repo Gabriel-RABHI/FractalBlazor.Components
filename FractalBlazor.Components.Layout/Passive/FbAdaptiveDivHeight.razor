@@ -10,30 +10,57 @@
 </div>
 
 @code {
+    /// <summary>
+    /// Child content
+    /// </summary>
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
+    /// <summary>
+    /// Target element ID
+    /// </summary>
     [Parameter]
     public string TargetId { get; set; }
 
+    /// <summary>
+    /// Gap height
+    /// </summary>
     [Parameter]
     public int Gap { get; set; }
 
+    /// <summary>
+    /// Is in modal setting
+    /// </summary>
     [Parameter]
     public bool InModal { get; set; }
 
+    /// <summary>
+    /// Hide scrollbar setting
+    /// </summary>
     [Parameter]
     public bool HideScrollbar { get; set; }
 
+    /// <summary>
+    /// Bottom padding in Rem
+    /// </summary>
     [Parameter]
     public double PaddingBottomRem { get; set; } = 1.2;
 
+    /// <summary>
+    /// Interval delay in milliseconds
+    /// </summary>
     [Parameter]
     public int IntervalDelay { get; set; } = 1000;
 
+    /// <summary>
+    /// Custom inline CSS style
+    /// </summary>
     [Parameter]
     public string Style { get; set; }
 
+    /// <summary>
+    /// Custom CSS classes
+    /// </summary>
     [Parameter]
     public string Classes { get; set; }
 

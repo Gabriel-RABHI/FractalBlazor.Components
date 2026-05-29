@@ -9,6 +9,7 @@
 </div>
 
 @code {
+    #region HIDDEN
     private static object _locker = new object();
     private static Dictionary<int, string> _cache = new Dictionary<int, string>();
 
@@ -419,7 +420,7 @@
                         (MaxHeightString != "" ? $"max-height: {MaxHeightString};" : "") +
                         (ColumnDisplay ? "flex-flow : column;" : "") +
                         (Scrollable ? "overflow : scroll;" : "") +
-                        (Radius != FbRadius.None ? $"border-radius:{((double)((int)MarginRight) / 16d).ToString().Replace(",", ".")}rem;" : "") +
+                        (Radius != FbRadius.None ? $"border-radius:{((double)((int)Radius) / 16d).ToString().Replace(",", ".")}rem;" : "") +
                         ComputedBaseStyle;
                 if (UseCaching && !_cache.ContainsKey(hash))
                     _cache[hash] = str;
@@ -428,105 +429,66 @@
             }
         }
     }
-
+    #endregion
     // ************************************************************************************************ //
     // ***************************************    PUBLIC   ******************************************** //
     // ************************************************************************************************ //
     #region PUBLIC PARAMETERS
 
+    /// <summary>
+    /// Child content
+    /// </summary>
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
+    /// <summary>
+    /// Width master identifier
+    /// </summary>
     [Parameter]
     public string WidthMasterId { get; set; }
 
+    /// <summary>
+    /// Width slave identifier
+    /// </summary>
     [Parameter]
     public string WidthSlaveId { get; set; }
 
+    /// <summary>
+    /// Scrollable setting
+    /// </summary>
     [Parameter]
     public bool Scrollable { get => _state.Scrollable; set => _state.Scrollable = value; }
 
     #region GUTTER
+    /// <summary>
+    /// Gutter -> 0
+    /// </summary>
     [Parameter]
-    public bool G0 { get => Gutter == FbGutter.Gutter_0; set => Gutter = FbGutter.Gutter_0; }
-
-    [Parameter]
-    public bool G1 { get => Gutter == FbGutter.Gutter_1; set => Gutter = FbGutter.Gutter_1; }
-
-    [Parameter]
-    public bool G2 { get => Gutter == FbGutter.Gutter_2; set => Gutter = FbGutter.Gutter_2; }
-
-    [Parameter]
-    public bool G3 { get => Gutter == FbGutter.Gutter_3; set => Gutter = FbGutter.Gutter_3; }
-
-    [Parameter]
-    public bool G4 { get => Gutter == FbGutter.Gutter_4; set => Gutter = FbGutter.Gutter_4; }
-
-    [Parameter]
-    public bool G6 { get => Gutter == FbGutter.Gutter_6; set => Gutter = FbGutter.Gutter_6; }
-
-    [Parameter]
-    public bool G8 { get => Gutter == FbGutter.Gutter_8; set => Gutter = FbGutter.Gutter_8; }
-
-    [Parameter]
-    public bool G10 { get => Gutter == FbGutter.Gutter_10; set => Gutter = FbGutter.Gutter_10; }
-
-    [Parameter]
-    public bool G12 { get => Gutter == FbGutter.Gutter_12; set => Gutter = FbGutter.Gutter_12; }
-
-    [Parameter]
-    public bool G14 { get => Gutter == FbGutter.Gutter_14; set => Gutter = FbGutter.Gutter_14; }
-
-    [Parameter]
-    public bool G16 { get => Gutter == FbGutter.Gutter_16; set => Gutter = FbGutter.Gutter_16; }
-
-    [Parameter]
-    public bool G20 { get => Gutter == FbGutter.Gutter_20; set => Gutter = FbGutter.Gutter_20; }
-
-    [Parameter]
-    public bool G24 { get => Gutter == FbGutter.Gutter_24; set => Gutter = FbGutter.Gutter_24; }
-
-    [Parameter]
-    public bool G28 { get => Gutter == FbGutter.Gutter_28; set => Gutter = FbGutter.Gutter_28; }
-
-    [Parameter]
-    public bool G32 { get => Gutter == FbGutter.Gutter_32; set => Gutter = FbGutter.Gutter_32; }
-
-    [Parameter]
-    public bool G40 { get => Gutter == FbGutter.Gutter_40; set => Gutter = FbGutter.Gutter_40; }
-
-    [Parameter]
-    public bool G48 { get => Gutter == FbGutter.Gutter_48; set => Gutter = FbGutter.Gutter_48; }
-
-    [Parameter]
-    public bool G56 { get => Gutter == FbGutter.Gutter_56; set => Gutter = FbGutter.Gutter_56; }
-
-    [Parameter]
-    public bool G64 { get => Gutter == FbGutter.Gutter_64; set => Gutter = FbGutter.Gutter_64; }
+    public FbGutter G { get => Gutter; set => Gutter = value; }
 
     /// <summary>
     /// Gutter -> Small
     /// </summary>
     [Parameter]
-    public bool GS { get => Gutter == FbSpacings.S_Gutter; set => Gutter = FbSpacings.S_Gutter; }
+    public bool GS { get => Gutter == FbPresets.S_Gutter; set => Gutter = FbPresets.S_Gutter; }
 
     /// <summary>
     /// Gutter -> Medium
     /// </summary>
     [Parameter]
-    public bool GM { get => Gutter == FbSpacings.M_Gutter; set => Gutter = FbSpacings.M_Gutter; }
+    public bool GM { get => Gutter == FbPresets.M_Gutter; set => Gutter = FbPresets.M_Gutter; }
 
     /// <summary>
     /// Gutter -> Large
     /// </summary>
     [Parameter]
-    public bool GL { get => Gutter == FbSpacings.L_Gutter; set => Gutter = FbSpacings.L_Gutter; }
+    public bool GL { get => Gutter == FbPresets.L_Gutter; set => Gutter = FbPresets.L_Gutter; }
 
     /// <summary>
     /// Gutter -> Extra Large
     /// </summary>
     [Parameter]
-    public bool GX { get => Gutter == FbSpacings.X_Gutter; set => Gutter = FbSpacings.X_Gutter; }
+    public bool GX { get => Gutter == FbPresets.X_Gutter; set => Gutter = FbPresets.X_Gutter; }
     #endregion
 
     #endregion

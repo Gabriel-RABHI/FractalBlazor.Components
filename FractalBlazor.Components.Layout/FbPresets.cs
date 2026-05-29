@@ -1,6 +1,6 @@
 namespace FractalBlazor.Components.Layout;
 
-public static class FbSpacings {
+public static class FbPresets {
     public static FbMargin S_Margin { get; set; } = FbMargin.Margin_4;
 
     public static FbPadding S_Padding { get; set; } = FbPadding.Padding_4;
@@ -64,4 +64,14 @@ public static class FbSpacings {
             X_Margin = value;
         }
     }
+
+    public static int S_Flex { get; set; } = 1;
+
+    public static int M_Flex { get; set; } = 2;
+
+    public static int L_Flex { get; set; } = 4;
+
+    public static int X_Flex { get; set; } = 8;
+
+    public static int XX_Flex { get; set; } = 12;
 }

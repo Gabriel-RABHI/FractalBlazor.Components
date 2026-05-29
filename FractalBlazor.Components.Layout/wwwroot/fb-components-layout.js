@@ -73,7 +73,7 @@ function UpdateVisibilityMessageCallerJS(cpntId) {
 
 
 let mouseX = 0, mouseY = 0;
-const elementsTinyOver = new Set();
+const elementsFbOver = new Set();
 let mouseMoveListener;
 let onScrollListener;
 let onScrollEndListener;
@@ -82,7 +82,7 @@ let didScroll = false;
 let performanceMode = false;
 let lastElementId;
 
-function TinyIsOver(id, automatic) {
+function FbIsOver(id, automatic) {
 
     lastElementId = id;
 
@@ -93,10 +93,10 @@ function TinyIsOver(id, automatic) {
     else if (automatic == "AUTO" && performanceMode && !didScroll) {
         document.getElementById(id).style.visibility = "inherit";
         document.getElementById(id).style.opacity = 1;
-        elementsTinyOver.add(id);
+        elementsFbOver.add(id);
     }
 }
-function TinyIsLeaving(id, automatic) {
+function FbIsLeaving(id, automatic) {
     if (automatic == "AUTO") {
         var element = document.getElementById(id);
         if (!element) return;
@@ -105,7 +105,7 @@ function TinyIsLeaving(id, automatic) {
         element.style.opacity = 0;
 
         if (performanceMode)
-            elementsTinyOver.delete(id);
+            elementsFbOver.delete(id);
     }
 }
 function isMouseOverElement(id) {
@@ -122,18 +122,18 @@ function isMouseOverElement(id) {
 function ClearElementsInExcessOver(verificationDelay) {
     intervalId = setInterval(() => {
         didScroll = false;
-        elementsTinyOver.forEach(id => {
+        elementsFbOver.forEach(id => {
             if (!isMouseOverElement(id)) {
-                TinyIsLeaving(id, "AUTO");
+                FbIsLeaving(id, "AUTO");
             }
         });
     }, verificationDelay);
 }
 
-function runTinyShowOnOverPerformance(parentId, verificationDelay) {
+function runFbShowOnOverPerformance(parentId, verificationDelay) {
 
     performanceMode = true;
-    elementsTinyOver.clear();
+    elementsFbOver.clear();
     mouseMoveListener = function (event) {
         mouseX = event.clientX;
         mouseY = event.clientY;
@@ -146,7 +146,7 @@ function runTinyShowOnOverPerformance(parentId, verificationDelay) {
         if (lastElement) {
             lastElement.style.visibility = "inherit";
             lastElement.style.opacity = 1;
-            elementsTinyOver.add(lastElementId);
+            elementsFbOver.add(lastElementId);
         }
 
         didScroll = false;
@@ -168,9 +168,9 @@ function runTinyShowOnOverPerformance(parentId, verificationDelay) {
     ClearElementsInExcessOver(verificationDelay);
 }
 
-function stopTinyShowOnOverPerformance() {
+function stopFbShowOnOverPerformance() {
     clearInterval(intervalId);
-    elementsTinyOver.clear();
+    elementsFbOver.clear();
     performanceMode = false;
     document.removeEventListener('mousemove', mouseMoveListener);
     document.removeEventListener('scroll', mouseMoveListener);
@@ -179,9 +179,9 @@ function stopTinyShowOnOverPerformance() {
 
 //------ AdaptativeDivHeight ------//
 
-var tinyAdaptativeDivsIntervals = {};
+var fbAdaptativeDivsIntervals = {};
 
-function tinyAdaptDivHeight(targetId, additionalSpace = 0, paddingBottomRem = 0.0, inModal = false) {
+function fbAdaptDivHeight(targetId, additionalSpace = 0, paddingBottomRem = 0.0, inModal = false) {
 
     var element = document.getElementById(targetId);
 
@@ -204,29 +204,29 @@ function tinyAdaptDivHeight(targetId, additionalSpace = 0, paddingBottomRem = 0.
     element.style.height = `calc(-${spaceAboveRem}rem + 100vh)`;
 }
 
-function runTinyAdaptDivHeightInterval(targetId, additionalSpace = 0, paddingBottomRem = 0.0, inModal = false, intervalDelay = 0) {
+function runFbAdaptDivHeightInterval(targetId, additionalSpace = 0, paddingBottomRem = 0.0, inModal = false, intervalDelay = 0) {
 
-    tinyAdaptDivHeight(targetId, additionalSpace, paddingBottomRem, inModal);
+    fbAdaptDivHeight(targetId, additionalSpace, paddingBottomRem, inModal);
 
-    if (!tinyAdaptativeDivsIntervals[targetId]) {
-        tinyAdaptativeDivsIntervals[targetId] = setInterval(() => {
-            tinyAdaptDivHeight(targetId, additionalSpace, paddingBottomRem, inModal);
+    if (!fbAdaptativeDivsIntervals[targetId]) {
+        fbAdaptativeDivsIntervals[targetId] = setInterval(() => {
+            fbAdaptDivHeight(targetId, additionalSpace, paddingBottomRem, inModal);
         }, intervalDelay);
     }
 }
 
-function stopTinyAdaptDivHeightInterval(targetId) {
-    if (tinyAdaptativeDivsIntervals[targetId]) {
-        clearInterval(tinyAdaptativeDivsIntervals[targetId]);
-        delete tinyAdaptativeDivsIntervals[targetId];
+function stopFbAdaptDivHeightInterval(targetId) {
+    if (fbAdaptativeDivsIntervals[targetId]) {
+        clearInterval(fbAdaptativeDivsIntervals[targetId]);
+        delete fbAdaptativeDivsIntervals[targetId];
     }
 }
 
-function killTinyAdaptDivHeightIntervals() {
-    for (var targetId in tinyAdaptativeDivsIntervals) {
-        if (tinyAdaptativeDivsIntervals.hasOwnProperty(targetId)) {
-            clearInterval(tinyAdaptativeDivsIntervals[targetId]);
+function killFbAdaptDivHeightIntervals() {
+    for (var targetId in fbAdaptativeDivsIntervals) {
+        if (fbAdaptativeDivsIntervals.hasOwnProperty(targetId)) {
+            clearInterval(fbAdaptativeDivsIntervals[targetId]);
         }
     }
-    tinyAdaptativeDivsIntervals = {};
+    fbAdaptativeDivsIntervals = {};
 }
