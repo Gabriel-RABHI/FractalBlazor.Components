@@ -338,15 +338,15 @@
 
 /**********************************************************************************/
 /* BACKGROUNDS */
-.fb-white-background {
+.fb-default-background {
     background-color: #FFF;
 }
 
-.fb-header-background {
+.fb-accent-background {
     background-color: #f8f7f7;
 }
 
-.fb-sellect-background {
+.fb-highlight-background {
     background-color: #e8f3ff;
 }
 
