@@ -1,4 +1,4 @@
-﻿/**********************************************************************************/
+/**********************************************************************************/
 /* UTILS */
 .fb-utils-fit-parent {
     position: absolute;
@@ -834,3 +834,37 @@
         stroke: #BA8AA4;
     }
 }
+
+/**********************************************************************************/
+/* DROPDOWN */
+.fb-dropdown-container {
+    display: inline-block;
+    position: relative;
+}
+
+.fb-dropdown-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9998;
+    background: transparent;
+}
+
+.fb-dropdown-content {
+    position: absolute;
+    z-index: 9999;
+    min-width: 100%;
+    box-sizing: border-box;
+}
+
+.fb-dropdown-open-down {
+    top: 100%;
+    bottom: auto;
+}
+
+.fb-dropdown-open-up {
+    bottom: 100%;
+    top: auto;
+}

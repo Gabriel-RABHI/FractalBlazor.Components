@@ -230,3 +230,56 @@ function killFbAdaptDivHeightIntervals() {
     }
     fbAdaptativeDivsIntervals = {};
 }
+
+//------ Dropdown Positioning & Tracking ------//
+
+let activeDropdowns = new Map();
+
+function fbAlignDropdown(containerId, dropdownId) {
+    const container = document.getElementById(containerId);
+    const dropdown = document.getElementById(dropdownId);
+    if (!container || !dropdown) return;
+
+    dropdown.classList.remove('fb-dropdown-open-up');
+    dropdown.classList.add('fb-dropdown-open-down');
+
+    const rect = container.getBoundingClientRect();
+    const dropdownHeight = dropdown.offsetHeight;
+    const viewportHeight = window.innerHeight;
+
+    if (rect.bottom + dropdownHeight > viewportHeight) {
+        if (rect.top > dropdownHeight || rect.top > viewportHeight - rect.bottom) {
+            dropdown.classList.remove('fb-dropdown-open-down');
+            dropdown.classList.add('fb-dropdown-open-up');
+        }
+    }
+}
+
+function fbInitDropdown(containerId, dropdownId) {
+    let ticking = false;
+    const align = () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                fbAlignDropdown(containerId, dropdownId);
+                ticking = false;
+            });
+            ticking = true;
+        }
+    };
+
+    fbAlignDropdown(containerId, dropdownId);
+
+    window.addEventListener('scroll', align, true);
+    window.addEventListener('resize', align);
+
+    activeDropdowns.set(dropdownId, { align, rawAlign: () => fbAlignDropdown(containerId, dropdownId) });
+}
+
+function fbDestroyDropdown(dropdownId) {
+    const data = activeDropdowns.get(dropdownId);
+    if (data) {
+        window.removeEventListener('scroll', data.align, true);
+        window.removeEventListener('resize', data.align);
+        activeDropdowns.delete(dropdownId);
+    }
+}

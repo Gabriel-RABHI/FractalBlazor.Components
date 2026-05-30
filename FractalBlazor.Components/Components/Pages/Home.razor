@@ -1,27 +1,155 @@
 @page "/"
+@rendermode InteractiveServer
 
 @using FractalBlazor.Components
 @using FractalBlazor.Components.Components.Samples.Layouts
+@using FractalBlazor.Components.Layout
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<FbStack Style="max-width: 800px; margin: 2rem auto; padding: 2rem; font-family: 'Outfit', sans-serif; background: #fafafa; box-shadow: 0 8px 24px rgba(0,0,0,0.05);" WRM WFrameS>
+    <h1 style="font-size: 2.2rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem; background: linear-gradient(135deg, #4989E4, #BA8AA4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+        FractalBlazor Components Layout
+    </h1>
+    <p style="color: #666; margin-bottom: 2rem; font-size: 1.1rem;">
+        Demonstrating the new, minimalistic <code>FbDropDown</code> layout component.
+    </p>
 
-Welcome to your new app.
+    <!-- Spacing row using strictly FbRow and FbStack -->
+    <FbRow GL Style="margin-bottom: 3rem; width: 100%;" JVSt>
+        
+        <!-- Demo 1: Button dropdown -->
+        <FbStack Style="flex: 1; padding: 1.5rem; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.02);" WRS WFrameS>
+            <h3 style="margin-top: 0; color: #333; font-weight: 600;">Button Action Menu</h3>
+            <p style="color: #888; font-size: 0.9rem; margin-bottom: 1rem;">Simple click-toggle action menu with backdrop click-away.</p>
+            
+            <FbDropDown @bind-IsOpen="IsOpen1" Style="width: 100%;">
+                <ChildContent>
+                    <button style="width: 100%; padding: 10px 16px; background: #4989E4; color: white; border: none; border-radius: 6px; font-weight: 600; font-family: inherit; transition: background 0.2s; display: flex; justify-content: space-between; align-items: center;">
+                        <span>Actions Menu</span>
+                        <span>@(IsOpen1 ? "▲" : "▼")</span>
+                    </button>
+                </ChildContent>
+                <DropDownContent>
+                    <FbStack Style="background: #ffffff; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); padding: 6px; margin-top: 6px;" WRS WFrameS GS>
+                        <button @onclick='() => SelectOption(1, "Profile")' style="text-align: left; background: none; border: none; width: 100%; padding: 8px 12px; cursor: pointer; border-radius: 6px; font-family: inherit; font-size: 0.95rem; color: #4a5568;" onmouseover="this.style.background='#f7fafc'; this.style.color='#2d3748';" onmouseout="this.style.background='transparent'; this.style.color='#4a5568';">
+                            👤 View Profile
+                        </button>
+                        <button @onclick='() => SelectOption(1, "Settings")' style="text-align: left; background: none; border: none; width: 100%; padding: 8px 12px; cursor: pointer; border-radius: 6px; font-family: inherit; font-size: 0.95rem; color: #4a5568;" onmouseover="this.style.background='#f7fafc'; this.style.color='#2d3748';" onmouseout="this.style.background='transparent'; this.style.color='#4a5568';">
+                            ⚙️ Settings
+                        </button>
+                        <hr style="border: 0; border-top: 1px solid #edf2f7; margin: 4px 0;" />
+                        <button @onclick='() => SelectOption(1, "Logout")' style="text-align: left; background: none; border: none; width: 100%; padding: 8px 12px; cursor: pointer; border-radius: 6px; font-family: inherit; font-size: 0.95rem; color: #e53e3e;" onmouseover="this.style.background='#fff5f5';" onmouseout="this.style.background='transparent';">
+                            🚪 Log Out
+                        </button>
+                    </FbStack>
+                </DropDownContent>
+            </FbDropDown>
+            
+            @if (!string.IsNullOrEmpty(_selectedOption1))
+            {
+                <div style="margin-top: 1rem; font-size: 0.9rem; color: #4989E4;">
+                    Selected: <strong>@_selectedOption1</strong>
+                </div>
+            }
+        </FbStack>
 
-<FbStack WRM WFrameL>
-    <FbRow JHC WRS WFrameL>
-        <span>Left</span>
-        <FbRowSpacer></FbRowSpacer>
-        <span>Right</span>
+        <!-- Demo 2: Autocomplete/Mention select dropdown -->
+        <FbStack Style="flex: 1; padding: 1.5rem; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.02);" WRS WFrameS>
+            <h3 style="margin-top: 0; color: #333; font-weight: 600;">Autocomplete Trigger</h3>
+            <p style="color: #888; font-size: 0.9rem; margin-bottom: 1rem;">Opens dynamically on text input. Flip behavior triggers when scrolled near the viewport bottom.</p>
+            
+            <FbDropDown @bind-IsOpen="_isOpen2" AutoToggle="false" Style="width: 100%;">
+                <ChildContent>
+                    <input type="text" placeholder="Type to search..." 
+                           value="@_searchQuery" 
+                           @oninput="OnSearchInput" 
+                           @onclick="() => _isOpen2 = true"
+                           style="width: 100%; box-sizing: border-box; padding: 10px 14px; border: 1.5px solid #cbd5e0; border-radius: 6px; font-size: 0.95rem; font-family: inherit; outline: none; transition: border-color 0.2s;" 
+                           onfocus="this.style.borderColor='#4989E4'" 
+                           onblur="this.style.borderColor='#cbd5e0'" />
+                </ChildContent>
+                <DropDownContent>
+                    <FbStack Style="background: #ffffff; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); padding: 6px; margin-top: 6px; max-height: 200px; overflow-y: auto;" WRS WFrameS GS>
+                        @foreach (var user in FilteredUsers)
+                        {
+                            <button @onclick="() => SelectOption(2, user)" style="text-align: left; background: none; border: none; width: 100%; padding: 8px 12px; cursor: pointer; border-radius: 6px; font-family: inherit; font-size: 0.95rem; color: #4a5568;" onmouseover="this.style.background='#f7fafc'; this.style.color='#2d3748';" onmouseout="this.style.background='transparent'; this.style.color='#4a5568';">
+                                @user
+                            </button>
+                        }
+                        @if (!FilteredUsers.Any())
+                        {
+                            <div style="padding: 8px 12px; font-size: 0.9rem; color: #a0aec0; font-style: italic;">
+                                No matches found
+                            </div>
+                        }
+                    </FbStack>
+                </DropDownContent>
+            </FbDropDown>
+            
+            @if (!string.IsNullOrEmpty(_selectedOption2))
+            {
+                <div style="margin-top: 1rem; font-size: 0.9rem; color: #4989E4;">
+                    Selected User: <strong>@_selectedOption2</strong>
+                </div>
+            }
+        </FbStack>
+
     </FbRow>
-    <FbRow PL WRS WFrameS>
-        <span>Left</span>
-        <FbRowSpacer></FbRowSpacer>
-        <span>Center</span>
-        <FbRowSpacer></FbRowSpacer>
-        <span>Right</span>
+
+    <!-- Extra scroll spacer to test page scroll tracking and flip behavior -->
+    <FbStack Style="padding: 1.5rem; background: #eef2f7; margin-top: 2rem; border-left: 4px solid #BA8AA4;" WRS>
+        <h4 style="margin: 0 0 0.5rem 0; color: #4a5568;">💡 Scroll / Overflow Flip Test</h4>
+        <p style="margin: 0; color: #718096; font-size: 0.9rem; line-height: 1.4;">
+            Scroll down the page so that the dropdown triggers are close to the bottom edge of your window, and click them. 
+            The dropdown will automatically flip and open <strong>upwards</strong> above the input or button to prevent overflowing!
+        </p>
+    </FbStack>
+
+    <!-- Big spacer to make page scrollable -->
+    <FbRow Style="height: 60vh; color: #a0aec0; border-top: 1px dashed #e2e8f0; margin-top: 3rem; padding-top: 2rem; font-style: italic;" JHC JVE>
+        End of page layout test zone (Scroll back up to test dropdowns)
     </FbRow>
 </FbStack>
 
-<SampleLayout_001></SampleLayout_001>
+@code {
+    private bool _isOpen1;
+    public bool IsOpen1
+    {
+        get => _isOpen1;
+        set => _isOpen1 = value;
+    }
+
+    private bool _isOpen2;
+    private string _selectedOption1 = "";
+    private string _selectedOption2 = "";
+    private string _searchQuery = "";
+
+    private readonly string[] Users = { "Gabriel", "Alice", "Bob", "Charlie", "David", "Emma", "Frank", "Grace" };
+
+    private System.Collections.Generic.IEnumerable<string> FilteredUsers => 
+        string.IsNullOrWhiteSpace(_searchQuery) 
+            ? Users 
+            : System.Linq.Enumerable.Where(Users, u => u.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase));
+
+    private void OnSearchInput(ChangeEventArgs e)
+    {
+        _searchQuery = e.Value?.ToString() ?? "";
+        _isOpen2 = true;
+    }
+
+    private void SelectOption(int dropdownNum, string option)
+    {
+        if (dropdownNum == 1)
+        {
+            _selectedOption1 = option;
+            _isOpen1 = false;
+        }
+        else if (dropdownNum == 2)
+        {
+            _selectedOption2 = option;
+            _searchQuery = option;
+            _isOpen2 = false;
+        }
+    }
+}
