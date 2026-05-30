@@ -1,37 +1,37 @@
 namespace FractalBlazor.Components.Layout;
 
 public static class FbPresets {
-    public static FbMargin S_Margin { get; set; } = FbMargin.Margin_4;
+    public static FbMargin S_Margin { get; set; } = FbMargin._4;
 
-    public static FbPadding S_Padding { get; set; } = FbPadding.Padding_4;
+    public static FbPadding S_Padding { get; set; } = FbPadding._4;
 
-    public static FbGutter S_Gutter { get; set; } = FbGutter.Gutter_4;
+    public static FbGutter S_Gutter { get; set; } = FbGutter._4;
 
-    public static FbRadius S_Radius { get; set; } = FbRadius.Radius_3;
+    public static FbRadius S_Radius { get; set; } = FbRadius._3;
 
-    public static FbMargin M_Margin { get; set; } = FbMargin.Margin_8;
+    public static FbMargin M_Margin { get; set; } = FbMargin._8;
 
-    public static FbPadding M_Padding { get; set; } = FbPadding.Padding_8;
+    public static FbPadding M_Padding { get; set; } = FbPadding._8;
 
-    public static FbGutter M_Gutter { get; set; } = FbGutter.Gutter_8;
+    public static FbGutter M_Gutter { get; set; } = FbGutter._8;
 
-    public static FbRadius M_Radius { get; set; } = FbRadius.Radius_5;
+    public static FbRadius M_Radius { get; set; } = FbRadius._5;
 
-    public static FbMargin L_Margin { get; set; } = FbMargin.Margin_14;
+    public static FbMargin L_Margin { get; set; } = FbMargin._14;
 
-    public static FbPadding L_Padding { get; set; } = FbPadding.Padding_14;
+    public static FbPadding L_Padding { get; set; } = FbPadding._14;
 
-    public static FbGutter L_Gutter { get; set; } = FbGutter.Gutter_14;
+    public static FbGutter L_Gutter { get; set; } = FbGutter._14;
 
-    public static FbRadius L_Radius { get; set; } = FbRadius.Radius_9;
+    public static FbRadius L_Radius { get; set; } = FbRadius._10;
 
-    public static FbMargin X_Margin { get; set; } = FbMargin.Margin_28;
+    public static FbMargin X_Margin { get; set; } = FbMargin._28;
 
-    public static FbPadding X_Padding { get; set; } = FbPadding.Padding_28;
+    public static FbPadding X_Padding { get; set; } = FbPadding._28;
 
-    public static FbGutter X_Gutter { get; set; } = FbGutter.Gutter_28;
+    public static FbGutter X_Gutter { get; set; } = FbGutter._28;
 
-    public static FbRadius X_Radius { get; set; } = FbRadius.Radius_20;
+    public static FbRadius X_Radius { get; set; } = FbRadius._20;
 
     public static FbMargin S {
         set {
