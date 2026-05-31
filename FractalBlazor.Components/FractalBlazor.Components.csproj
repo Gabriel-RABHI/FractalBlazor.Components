@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FractalBlazor.Components.Forms\FractalBlazor.Components.Forms.csproj" />
     <ProjectReference Include="..\FractalBlazor.Components.Layout\FractalBlazor.Components.Layout.csproj" />
   </ItemGroup>
 

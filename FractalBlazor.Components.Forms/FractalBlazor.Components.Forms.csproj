@@ -19,4 +19,12 @@
     <ProjectReference Include="..\FractalBlazor.Components.Layout\FractalBlazor.Components.Layout.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Active\" />
+    <Folder Include="Contracts\" />
+    <Folder Include="Display\" />
+    <Folder Include="Editors\" />
+    <Folder Include="Theming\" />
+  </ItemGroup>
+
 </Project>

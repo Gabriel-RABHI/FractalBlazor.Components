@@ -1,0 +1,25 @@
+/**********************************************************************************/
+/* UTILS */
+@font-face {
+    font-family: 'code-font';
+    src: url('fonts/JetBrainsMono-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'text-font';
+    src: url('fonts/Geist-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+}
+
+html {
+    /* BEST PRACTICE: Added system fallbacks */
+    font-family: 'text-font', system-ui, -apple-system, sans-serif;
+}
+
+/* Optional: Apply your code font universally to pre and code tags */
+pre, code {
+    font-family: 'code-font', monospace;
+}
