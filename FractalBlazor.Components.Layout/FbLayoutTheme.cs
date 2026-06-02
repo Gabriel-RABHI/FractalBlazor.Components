@@ -26,7 +26,7 @@ namespace FractalBlazor.Components.Layout
         /// Border color for small frames.
         /// </summary>
         [Parameter]
-        public string SmallFrameBorderColor { get; set; } = "#e2e2e2";
+        public string SmallFrameBorderColor { get; set; } = "#121212";
 
         /// <summary>
         /// Border size for medium frames.
@@ -38,37 +38,37 @@ namespace FractalBlazor.Components.Layout
         /// Border color for medium frames.
         /// </summary>
         [Parameter]
-        public string MediumFrameBorderColor { get; set; } = "#cecece";
+        public string MediumFrameBorderColor { get; set; } = "#181818";
 
         /// <summary>
         /// Border size for large frames.
         /// </summary>
         [Parameter]
-        public string LargeFrameBorderSize { get; set; } = "0.14rem";
+        public string LargeFrameBorderSize { get; set; } = "0.07rem";
 
         /// <summary>
         /// Border color for large frames.
         /// </summary>
         [Parameter]
-        public string LargeFrameBorderColor { get; set; } = "#e2e2e2";
+        public string LargeFrameBorderColor { get; set; } = "#202020";
 
         /// <summary>
         /// Background color for default background.
         /// </summary>
         [Parameter]
-        public string DefaultBackground { get; set; } = "#FFF";
+        public string DefaultBackground { get; set; } = "#040404";
 
         /// <summary>
         /// Background color for accent background.
         /// </summary>
         [Parameter]
-        public string AccentBackground { get; set; } = "#f8f7f7";
+        public string AccentBackground { get; set; } = "#080808";
 
         /// <summary>
         /// Background color for highlight background.
         /// </summary>
         [Parameter]
-        public string HighlightBackground { get; set; } = "#e8f3ff";
+        public string HighlightBackground { get; set; } = "#0D0D0D";
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {

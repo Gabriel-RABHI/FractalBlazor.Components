@@ -21,10 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Active\" />
-    <Folder Include="Contracts\" />
-    <Folder Include="Display\" />
-    <Folder Include="Editors\" />
-    <Folder Include="Theming\" />
   </ItemGroup>
 
 </Project>

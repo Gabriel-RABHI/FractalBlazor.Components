@@ -18,6 +18,7 @@ namespace FractalBlazor.Components.Layout
 
         public virtual Task SetParametersAsync(ParameterView parameters)
         {
+            OnBeforeParametersSet();
             parameters.SetParameterProperties(this);
 
             if (!_initialized)
@@ -31,8 +32,14 @@ namespace FractalBlazor.Components.Layout
             return Task.CompletedTask;
         }
 
-        protected virtual void OnInitialized() { }
-        protected virtual void OnParametersSet() { }
+        protected virtual void OnInitialized() {
+        }
+
+        protected virtual void OnBeforeParametersSet() {
+        }
+
+        protected virtual void OnParametersSet() {
+        }
 
         protected void Render()
         {
@@ -42,8 +49,7 @@ namespace FractalBlazor.Components.Layout
             }
         }
 
-        protected virtual void BuildRenderTree(RenderTreeBuilder builder)
-        {
+        protected virtual void BuildRenderTree(RenderTreeBuilder builder) {
         }
 
         Task IHandleAfterRender.OnAfterRenderAsync()
@@ -56,9 +62,11 @@ namespace FractalBlazor.Components.Layout
         }
 
         protected virtual void OnAfterRender(bool firstRender) { }
+
         protected virtual Task OnAfterRenderAsync(bool firstRender) => Task.CompletedTask;
 
         protected Task InvokeAsync(Action work) => _renderHandle.Dispatcher.InvokeAsync(work);
+
         protected Task InvokeAsync(Func<Task> work) => _renderHandle.Dispatcher.InvokeAsync(work);
 
         protected void StateHasChanged() => Render();

@@ -17,9 +17,79 @@
 html {
     /* BEST PRACTICE: Added system fallbacks */
     font-family: 'text-font', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
 }
 
 /* Optional: Apply your code font universally to pre and code tags */
 pre, code {
     font-family: 'code-font', monospace;
+}
+
+/**********************************************************************************/
+/* TEXT */
+/* Base text definition */
+.fb-txt {
+    color: var(--color-text); /* Standard contrast */
+    line-height: 1.4;
+}
+
+/* 1. Scale */
+.fb-t-s {
+    font-size: calc(var(--font-size-base) * 0.85);
+}
+/* ~11px */
+.fb-t-m {
+    font-size: var(--font-size-base);
+}
+/* ~13px */
+.fb-t-l {
+    font-size: calc(var(--font-size-base) * 1.25);
+}
+/* ~16px */
+.fb-t-x {
+    font-size: calc(var(--font-size-base) * 1.6);
+}
+/* ~20px */
+
+/* 2. Weight */
+.fb-t-t {
+    font-weight: 300;
+}
+
+.fb-t-b {
+    font-weight: 600;
+}
+
+.fb-t-xb {
+    font-weight: 800;
+}
+/* or 700 depending on font */
+
+/* 3. Intent */
+.fb-t-mute {
+    color: var(--color-text-muted);
+}
+
+.fb-t-acc {
+    color: var(--color-primary);
+}
+
+.fb-t-pri {
+    color: var(--color-primary);
+}
+
+.fb-t-err {
+    color: var(--color-danger);
+}
+
+/* 4. Modifiers */
+.fb-t-nw {
+    white-space: nowrap;
+}
+
+.fb-t-tr {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
 }
