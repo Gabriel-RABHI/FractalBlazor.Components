@@ -33,11 +33,11 @@ namespace FractalBlazor.Components.Layout
             public FbFlexSize _minHeightSize = FbFlexSize.None;
             public FbFlexSize _maxHeightSize = FbFlexSize.None;
 
-            public FbGutter Gutter = FbGutter.None;
-            public FbGutter RowGutter = FbGutter.None;
-            public FbGutter ColumnGutter = FbGutter.None;
+            public FbSpacing Gutter = FbSpacing.None;
+            public FbSpacing RowGutter = FbSpacing.None;
+            public FbSpacing ColumnGutter = FbSpacing.None;
             
-            public FbRadius Radius = FbRadius.None;
+            public FbSpacing Radius = FbSpacing.None;
 
             public bool ColumnDisplay = false;
 
@@ -58,13 +58,13 @@ namespace FractalBlazor.Components.Layout
         }
         
         // -------------- As flex item ------------ //
-        protected FbRadius Radius { get => _state.Radius; set => _state.Radius = value; }
+        protected FbSpacing Radius { get => _state.Radius; set => _state.Radius = value; }
 
-        protected FbGutter Gutter { get => _state.Gutter; set => _state.Gutter = value; }
+        protected FbSpacing Gutter { get => _state.Gutter; set => _state.Gutter = value; }
 
-        protected FbGutter RowGutter { get => _state.RowGutter; set => _state.RowGutter = value; }
+        protected FbSpacing RowGutter { get => _state.RowGutter; set => _state.RowGutter = value; }
 
-        protected FbGutter ColumnGutter { get => _state.ColumnGutter; set => _state.ColumnGutter = value; }
+        protected FbSpacing ColumnGutter { get => _state.ColumnGutter; set => _state.ColumnGutter = value; }
 
         protected bool ColumnDisplay { get => _state.ColumnDisplay; set => _state.ColumnDisplay = value; }
 
@@ -407,9 +407,9 @@ namespace FractalBlazor.Components.Layout
                             (_state._selfAlign == FbFlexItemSelfAlign.None ? "" : $"align-self:{SelfAlignString};") +
                             $"flex-direction: {DirectionString}; flex-wrap: {WrapString}; justify-content: {JustifyString}; align-items: {AlignItemsString}; align-content: {AlignContentString}; " +
                             (PlaceItemsString != "" ? $"place-items: {PlaceItemsString};" : "") +
-                            (Gutter != FbGutter.None ? $"gap:{((double)((int)Gutter) / 16d).ToString().Replace(",", ".")}rem;" : "") +
-                            (RowGutter != FbGutter.None ? $"row-gap:{((double)((int)RowGutter) / 16d).ToString().Replace(",", ".")}rem;" : "") +
-                            (ColumnGutter != FbGutter.None ? $"column-gap:{((double)((int)ColumnGutter) / 16d).ToString().Replace(",", ".")}rem;" : "") +
+                            (Gutter != FbSpacing.None ? $"gap:{FbLayoutPresets.ToRem(Gutter)};" : "") +
+                            (RowGutter != FbSpacing.None ? $"row-gap:{FbLayoutPresets.ToRem(RowGutter)};" : "") +
+                            (ColumnGutter != FbSpacing.None ? $"column-gap:{FbLayoutPresets.ToRem(ColumnGutter)};" : "") +
                             (Grow != int.MinValue ? $"flex-grow:{Grow};" : "") +
                             (Shrink != int.MinValue ? $"flex-shrink:{Shrink};" : "") +
                             (Order != int.MinValue ? $"order:{Order};" : "") +
@@ -418,7 +418,7 @@ namespace FractalBlazor.Components.Layout
                             (MaxHeightString != "" ? $"max-height: {MaxHeightString};" : "") +
                             (ColumnDisplay ? "flex-flow : column;" : "") +
                             (Scrollable ? "overflow : scroll;" : "") +
-                            (Radius != FbRadius.None ? $"border-radius:{((double)((int)Radius) / 16d).ToString().Replace(",", ".")}rem;" : "") +
+                            (Radius != FbSpacing.None ? $"border-radius:{FbLayoutPresets.ToRem(Radius)};" : "") +
                             ComputedBaseStyle;
                     if (UseCaching && !_cache.ContainsKey(hash))
                         _cache[hash] = str;
@@ -463,31 +463,31 @@ namespace FractalBlazor.Components.Layout
         /// Gutter -> 0
         /// </summary>
         [Parameter]
-        public FbGutter G { get => Gutter; set => Gutter = value; }
+        public FbSpacing G { get => Gutter; set => Gutter = value; }
 
         /// <summary>
         /// Gutter -> Small
         /// </summary>
         [Parameter]
-        public bool GS { get => Gutter == FbPresets.S_Gutter; set => Gutter = FbPresets.S_Gutter; }
+        public bool GS { get => Gutter == FbLayoutPresets.S; set => Gutter = FbLayoutPresets.S; }
 
         /// <summary>
         /// Gutter -> Medium
         /// </summary>
         [Parameter]
-        public bool GM { get => Gutter == FbPresets.M_Gutter; set => Gutter = FbPresets.M_Gutter; }
+        public bool GM { get => Gutter == FbLayoutPresets.M; set => Gutter = FbLayoutPresets.M; }
 
         /// <summary>
         /// Gutter -> Large
         /// </summary>
         [Parameter]
-        public bool GL { get => Gutter == FbPresets.L_Gutter; set => Gutter = FbPresets.L_Gutter; }
+        public bool GL { get => Gutter == FbLayoutPresets.L; set => Gutter = FbLayoutPresets.L; }
 
         /// <summary>
         /// Gutter -> Extra Large
         /// </summary>
         [Parameter]
-        public bool GX { get => Gutter == FbPresets.X_Gutter; set => Gutter = FbPresets.X_Gutter; }
+        public bool GX { get => Gutter == FbLayoutPresets.X; set => Gutter = FbLayoutPresets.X; }
         #endregion
 
         #endregion

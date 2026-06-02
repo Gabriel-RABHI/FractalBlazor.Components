@@ -27,6 +27,7 @@ namespace FractalBlazor.Components.Forms.Display
     public enum FbTextIntent : byte
     {
         None,
+        Shadow,
         Mute,
         Accent,
         Primary,
@@ -43,7 +44,7 @@ namespace FractalBlazor.Components.Forms.Display
     {
         private static string[] FbTextSizeClasses = { "", "fb-t-s", "fb-t-m", "fb-t-l", "fb-t-x" };
         private static string[] FbTextWeightClasses = { "", "fb-t-t", "fb-t-b", "fb-t-xb" };
-        private static string[] FbTextIntentClasses = { "", "fb-t-mute", "fb-t-acc", "fb-t-pri", "fb-t-err" };
+        private static string[] FbTextIntentClasses = { "", "fb-t-shadow", "fb-t-mute", "fb-t-acc", "fb-t-pri", "fb-t-err" };
         private static string[] FbTextModifiersClasses = { "", "fb-t-nw", "fb-t-tr" };
 
         private RenderHandle _renderHandle;
@@ -77,6 +78,9 @@ namespace FractalBlazor.Components.Forms.Display
         public bool XB { get => _weight == FbTextWeight.XB; set => _weight = FbTextWeight.XB; }
 
         // -------- Intent
+        [Parameter]
+        public bool Shadow { get => _intent == FbTextIntent.Mute; set => _intent = FbTextIntent.Mute; }
+
         [Parameter]
         public bool Mute { get => _intent == FbTextIntent.Mute; set => _intent = FbTextIntent.Mute; }
 

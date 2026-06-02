@@ -469,8 +469,8 @@
 .framed-row-small-frame,
 .framed-separator-row-small-frame,
 .framed-grid-row-small-frame {
-    --fb-frame-border-size: var(--fb-small-frame-border-size, 0.07rem);
-    --fb-frame-border-color: var(--fb-small-frame-border-color, #e2e2e2);
+    --fb-frame-border-size: var(--fb-s-frame-border-size, 0.07rem);
+    --fb-frame-border-color: var(--fb-s-frame-border-color, #e2e2e2);
 }
 
 /* Medium Frame Classes */
@@ -486,8 +486,8 @@
 .framed-row-medium-frame,
 .framed-separator-row-medium-frame,
 .framed-grid-row-medium-frame {
-    --fb-frame-border-size: var(--fb-medium-frame-border-size, 0.07rem);
-    --fb-frame-border-color: var(--fb-medium-frame-border-color, #cecece);
+    --fb-frame-border-size: var(--fb-m-frame-border-size, 0.07rem);
+    --fb-frame-border-color: var(--fb-m-frame-border-color, #cecece);
 }
 
 /* Large Frame Classes */
@@ -503,26 +503,26 @@
 .framed-row-large-frame,
 .framed-separator-row-large-frame,
 .framed-grid-row-large-frame {
-    --fb-frame-border-size: var(--fb-large-frame-border-size, 0.14rem);
-    --fb-frame-border-color: var(--fb-large-frame-border-color, #e2e2e2);
+    --fb-frame-border-size: var(--fb-l-frame-border-size, 0.14rem);
+    --fb-frame-border-color: var(--fb-l-frame-border-color, #e2e2e2);
 }
 
 /**********************************************************************************/
 /* SEPARATOR SIZE */
 
 .fb-separator-small-frame {
-    flex-basis: var(--fb-small-frame-border-size, 0.07rem);
-    background: var(--fb-small-frame-border-color, #e2e2e2);
+    flex-basis: var(--fb-s-frame-border-size, 0.07rem);
+    background: var(--fb-s-frame-border-color, #e2e2e2);
 }
 
 .fb-separator-medium-frame {
-    flex-basis: var(--fb-medium-frame-border-size, 0.07rem);
-    background: var(--fb-medium-frame-border-color, #cecece);
+    flex-basis: var(--fb-m-frame-border-size, 0.07rem);
+    background: var(--fb-m-frame-border-color, #cecece);
 }
 
 .fb-separator-large-frame {
-    flex-basis: var(--fb-large-frame-border-size, 0.14rem);
-    background: var(--fb-large-frame-border-color, #e2e2e2);
+    flex-basis: var(--fb-l-frame-border-size, 0.14rem);
+    background: var(--fb-l-frame-border-color, #e2e2e2);
 }
 
 

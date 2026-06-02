@@ -41,17 +41,17 @@ namespace FractalBlazor.Components.Layout
             public bool _noWrap = false;
             public bool _responsiveUnder = false;
             public BaseDisplayMode DisplayMode = BaseDisplayMode.None;
-            public FbPadding Padding = FbPadding.None;
+            public FbSpacing Padding = FbSpacing.None;
             public FbResponsiveBreakpoint ResponsiveBreakpoint = FbResponsiveBreakpoint.None;
-            public FbPadding PaddingTop = FbPadding.None;
-            public FbPadding PaddingBottom = FbPadding.None;
-            public FbPadding PaddingLeft = FbPadding.None;
-            public FbPadding PaddingRight = FbPadding.None;
-            public FbMargin Margin = FbMargin.None;
-            public FbMargin MarginTop = FbMargin.None;
-            public FbMargin MarginBottom = FbMargin.None;
-            public FbMargin MarginLeft = FbMargin.None;
-            public FbMargin MarginRight = FbMargin.None;
+            public FbSpacing PaddingTop = FbSpacing.None;
+            public FbSpacing PaddingBottom = FbSpacing.None;
+            public FbSpacing PaddingLeft = FbSpacing.None;
+            public FbSpacing PaddingRight = FbSpacing.None;
+            public FbSpacing Margin = FbSpacing.None;
+            public FbSpacing MarginTop = FbSpacing.None;
+            public FbSpacing MarginBottom = FbSpacing.None;
+            public FbSpacing MarginLeft = FbSpacing.None;
+            public FbSpacing MarginRight = FbSpacing.None;
             public int _flex = int.MinValue;
 
             // -------- Properties
@@ -91,25 +91,25 @@ namespace FractalBlazor.Components.Layout
 
         protected FbResponsiveBreakpoint ResponsiveBreakpoint { get => _state.ResponsiveBreakpoint; set => _state.ResponsiveBreakpoint = value; }
 
-        protected FbPadding Padding { get => _state.Padding; set => _state.Padding = value; }
+        protected FbSpacing Padding { get => _state.Padding; set => _state.Padding = value; }
 
-        protected FbPadding PaddingTop { get => _state.PaddingTop; set => _state.PaddingTop = value; }
+        protected FbSpacing PaddingTop { get => _state.PaddingTop; set => _state.PaddingTop = value; }
 
-        protected FbPadding PaddingBottom { get => _state.PaddingBottom; set => _state.PaddingBottom = value; }
+        protected FbSpacing PaddingBottom { get => _state.PaddingBottom; set => _state.PaddingBottom = value; }
 
-        protected FbPadding PaddingLeft { get => _state.PaddingLeft; set => _state.PaddingLeft = value; }
+        protected FbSpacing PaddingLeft { get => _state.PaddingLeft; set => _state.PaddingLeft = value; }
 
-        protected FbPadding PaddingRight { get => _state.PaddingRight; set => _state.PaddingRight = value; }
+        protected FbSpacing PaddingRight { get => _state.PaddingRight; set => _state.PaddingRight = value; }
 
-        protected FbMargin Margin { get => _state.Margin; set => _state.Margin = value; }
+        protected FbSpacing Margin { get => _state.Margin; set => _state.Margin = value; }
 
-        protected FbMargin MarginTop { get => _state.MarginTop; set => _state.MarginTop = value; }
+        protected FbSpacing MarginTop { get => _state.MarginTop; set => _state.MarginTop = value; }
 
-        protected FbMargin MarginBottom { get => _state.MarginBottom; set => _state.MarginBottom = value; }
+        protected FbSpacing MarginBottom { get => _state.MarginBottom; set => _state.MarginBottom = value; }
 
-        protected FbMargin MarginLeft { get => _state.MarginLeft; set => _state.MarginLeft = value; }
+        protected FbSpacing MarginLeft { get => _state.MarginLeft; set => _state.MarginLeft = value; }
 
-        protected FbMargin MarginRight { get => _state.MarginRight; set => _state.MarginRight = value; }
+        protected FbSpacing MarginRight { get => _state.MarginRight; set => _state.MarginRight = value; }
 
         protected bool IsBlock { get => _state.IsBlock; set => _state.IsBlock = value; }
 
@@ -155,16 +155,16 @@ namespace FractalBlazor.Components.Layout
                     RenderingStatistics.AddComponentBaseStyleComputation();
 
                     var str = _state.DisplayModeString +
-                            (Padding != FbPadding.None ? $"padding:{((double)((int)Padding) / 16d).ToString().Replace(",", ".")}rem;" : "") +
-                            (PaddingTop != FbPadding.None ? $"padding-top:{((double)((int)PaddingTop) / 16d).ToString().Replace(",", ".")}rem;" : "") +
-                            (PaddingBottom != FbPadding.None ? $"padding-bottom:{((double)((int)PaddingBottom) / 16d).ToString().Replace(",", ".")}rem;" : "") +
-                            (PaddingLeft != FbPadding.None ? $"padding-left:{((double)((int)PaddingLeft) / 16d).ToString().Replace(",", ".")}rem;" : "") +
-                            (PaddingRight != FbPadding.None ? $"padding-right:{((double)((int)PaddingRight) / 16d).ToString().Replace(",", ".")}rem;" : "") +
-                            (Margin != FbMargin.None ? $"margin:{((double)((int)Margin) / 16d).ToString().Replace(",", ".")}rem;" : "") +
-                            (MarginTop != FbMargin.None ? $"margin-top:{((double)((int)MarginTop) / 16d).ToString().Replace(",", ".")}rem;" : "") +
-                            (MarginBottom != FbMargin.None ? $"margin-bottom:{((double)((int)MarginBottom) / 16d).ToString().Replace(",", ".")}rem;" : "") +
-                            (MarginLeft != FbMargin.None ? $"margin-left:{((double)((int)MarginLeft) / 16d).ToString().Replace(",", ".")}rem;" : "") +
-                            (MarginLeft != FbMargin.None ? $"margin-left:{((double)((int)MarginLeft) / 16d).ToString().Replace(",", ".")}rem;" : "") +
+                            (Padding != FbSpacing.None ? $"padding:{FbLayoutPresets.ToRem(Padding)};" : "") +
+                            (PaddingTop != FbSpacing.None ? $"padding-top:{FbLayoutPresets.ToRem(PaddingTop)};" : "") +
+                            (PaddingBottom != FbSpacing.None ? $"padding-bottom:{FbLayoutPresets.ToRem(PaddingBottom)};" : "") +
+                            (PaddingLeft != FbSpacing.None ? $"padding-left:{FbLayoutPresets.ToRem(PaddingLeft)};" : "") +
+                            (PaddingRight != FbSpacing.None ? $"padding-right:{FbLayoutPresets.ToRem(PaddingRight)};" : "") +
+                            (Margin != FbSpacing.None ? $"margin:{FbLayoutPresets.ToRem(Margin)};" : "") +
+                            (MarginTop != FbSpacing.None ? $"margin-top:{FbLayoutPresets.ToRem(MarginTop)};" : "") +
+                            (MarginBottom != FbSpacing.None ? $"margin-bottom:{FbLayoutPresets.ToRem(MarginBottom)};" : "") +
+                            (MarginLeft != FbSpacing.None ? $"margin-left:{FbLayoutPresets.ToRem(MarginLeft)};" : "") +
+                            (MarginRight != FbSpacing.None ? $"margin-left:{FbLayoutPresets.ToRem(MarginRight)};" : "") +
                             (_state._flex != int.MinValue ? $"flex:{_state._flex};" : "") +
                             (Hidden ? "visibility:hidden;" : "");
                     str += (string.IsNullOrWhiteSpace(WidthBasis) ? "" : $"flex-basis:{WidthBasis};") +
@@ -202,19 +202,19 @@ namespace FractalBlazor.Components.Layout
         }
 
         [Parameter]
-        public bool FlexS { get => Flex == FbPresets.S_Flex; set => Flex = FbPresets.S_Flex; }
+        public bool FlexS { get => Flex == FbLayoutPresets.S_Flex; set => Flex = FbLayoutPresets.S_Flex; }
 
         [Parameter]
-        public bool FlexM { get => Flex == FbPresets.M_Flex; set => Flex = FbPresets.M_Flex; }
+        public bool FlexM { get => Flex == FbLayoutPresets.M_Flex; set => Flex = FbLayoutPresets.M_Flex; }
 
         [Parameter]
-        public bool FlexL { get => Flex == FbPresets.L_Flex; set => Flex = FbPresets.L_Flex; }
+        public bool FlexL { get => Flex == FbLayoutPresets.L_Flex; set => Flex = FbLayoutPresets.L_Flex; }
 
         [Parameter]
-        public bool FlexX { get => Flex == FbPresets.X_Flex; set => Flex = FbPresets.X_Flex; }
+        public bool FlexX { get => Flex == FbLayoutPresets.X_Flex; set => Flex = FbLayoutPresets.X_Flex; }
 
         [Parameter]
-        public bool FlexXX { get => Flex == FbPresets.XX_Flex; set => Flex = FbPresets.XX_Flex; }
+        public bool FlexXX { get => Flex == FbLayoutPresets.XX_Flex; set => Flex = FbLayoutPresets.XX_Flex; }
 
         /// <summary>
         /// Disable flex grow/shrink
@@ -401,421 +401,421 @@ namespace FractalBlazor.Components.Layout
         /// Padding
         /// </summary>
         [Parameter]
-        public FbPadding P { get => Padding; set => Padding = value; }
+        public FbSpacing P { get => Padding; set => Padding = value; }
 
         /// <summary>
         /// Padding -> Top
         /// </summary>
         [Parameter]
-        public FbPadding PTop { get => PaddingTop; set => PaddingTop = value; }
+        public FbSpacing PTop { get => PaddingTop; set => PaddingTop = value; }
 
         /// <summary>
         /// Padding -> Bottom
         /// </summary>
         [Parameter]
-        public FbPadding PBottom { get => PaddingBottom; set => PaddingBottom = value; }
+        public FbSpacing PBottom { get => PaddingBottom; set => PaddingBottom = value; }
 
         /// <summary>
         /// Padding -> Left
         /// </summary>
         [Parameter]
-        public FbPadding PLeft { get => PaddingLeft; set => PaddingLeft = value; }
+        public FbSpacing PLeft { get => PaddingLeft; set => PaddingLeft = value; }
 
         /// <summary>
         /// Padding -> Right
         /// </summary>
         [Parameter]
-        public FbPadding PRight { get => PaddingRight; set => PaddingRight = value; }
+        public FbSpacing PRight { get => PaddingRight; set => PaddingRight = value; }
 
         /// <summary>
         /// Padding -> Horizontal
         /// </summary>
         [Parameter]
-        public FbPadding PH { get => PaddingLeft; set { PaddingLeft = PaddingRight = value; } }
+        public FbSpacing PH { get => PaddingLeft; set { PaddingLeft = PaddingRight = value; } }
 
         /// <summary>
         /// Padding -> Vertical
         /// </summary>
         [Parameter]
-        public FbPadding PV { get => PaddingTop; set { PaddingTop = PaddingBottom = value; } }
+        public FbSpacing PV { get => PaddingTop; set { PaddingTop = PaddingBottom = value; } }
 
         /// <summary>
         /// Padding -> Small
         /// </summary>
         [Parameter]
-        public bool PS { get => Padding == FbPresets.S_Padding; set => Padding = FbPresets.S_Padding; }
+        public bool PS { get => Padding == FbLayoutPresets.S; set => Padding = FbLayoutPresets.S; }
 
         /// <summary>
         /// Padding -> Medium
         /// </summary>
         [Parameter]
-        public bool PM { get => Padding == FbPresets.M_Padding; set => Padding = FbPresets.M_Padding; }
+        public bool PM { get => Padding == FbLayoutPresets.M; set => Padding = FbLayoutPresets.M; }
 
         /// <summary>
         /// Padding -> Large
         /// </summary>
         [Parameter]
-        public bool PL { get => Padding == FbPresets.L_Padding; set => Padding = FbPresets.L_Padding; }
+        public bool PL { get => Padding == FbLayoutPresets.L; set => Padding = FbLayoutPresets.L; }
 
         /// <summary>
         /// Padding -> Extra Large
         /// </summary>
         [Parameter]
-        public bool PX { get => Padding == FbPresets.X_Padding; set => Padding = FbPresets.X_Padding; }
+        public bool PX { get => Padding == FbLayoutPresets.X; set => Padding = FbLayoutPresets.X; }
 
         /// <summary>
         /// Padding -> Vertical -> Small 
         /// </summary>
         [Parameter]
-        public bool PVS { get => PaddingTop == FbPresets.S_Padding && PaddingBottom == FbPresets.S_Padding; set { PaddingTop = PaddingBottom = FbPresets.S_Padding; } }
+        public bool PVS { get => PaddingTop == FbLayoutPresets.S && PaddingBottom == FbLayoutPresets.S; set { PaddingTop = PaddingBottom = FbLayoutPresets.S; } }
 
         /// <summary>
         /// Padding -> Vertical -> Medium 
         /// </summary>
         [Parameter]
-        public bool PVM { get => PaddingTop == FbPresets.M_Padding && PaddingBottom == FbPresets.M_Padding; set { PaddingTop = PaddingBottom = FbPresets.M_Padding; } }
+        public bool PVM { get => PaddingTop == FbLayoutPresets.M && PaddingBottom == FbLayoutPresets.M; set { PaddingTop = PaddingBottom = FbLayoutPresets.M; } }
 
         /// <summary>
         /// Padding -> Vertical -> Large 
         /// </summary>
         [Parameter]
-        public bool PVL { get => PaddingTop == FbPresets.L_Padding && PaddingBottom == FbPresets.L_Padding; set { PaddingTop = PaddingBottom = FbPresets.L_Padding; } }
+        public bool PVL { get => PaddingTop == FbLayoutPresets.L && PaddingBottom == FbLayoutPresets.L; set { PaddingTop = PaddingBottom = FbLayoutPresets.L; } }
 
         /// <summary>
         /// Padding -> Vertical -> Extra Large 
         /// </summary>
         [Parameter]
-        public bool PVX { get => PaddingTop == FbPresets.X_Padding && PaddingBottom == FbPresets.X_Padding; set { PaddingTop = PaddingBottom = FbPresets.X_Padding; } }
+        public bool PVX { get => PaddingTop == FbLayoutPresets.X && PaddingBottom == FbLayoutPresets.X; set { PaddingTop = PaddingBottom = FbLayoutPresets.X; } }
 
         /// <summary>
         /// Padding -> Horizontal -> Small 
         /// </summary>
         [Parameter]
-        public bool PHS { get => PaddingLeft == FbPresets.S_Padding && PaddingRight == FbPresets.S_Padding; set { PaddingLeft = PaddingRight = FbPresets.S_Padding; } }
+        public bool PHS { get => PaddingLeft == FbLayoutPresets.S && PaddingRight == FbLayoutPresets.S; set { PaddingLeft = PaddingRight = FbLayoutPresets.S; } }
 
         /// <summary>
         /// Padding -> Horizontal -> Medium 
         /// </summary>
         [Parameter]
-        public bool PHM { get => PaddingLeft == FbPresets.M_Padding && PaddingRight == FbPresets.M_Padding; set { PaddingLeft = PaddingRight = FbPresets.M_Padding; } }
+        public bool PHM { get => PaddingLeft == FbLayoutPresets.M && PaddingRight == FbLayoutPresets.M; set { PaddingLeft = PaddingRight = FbLayoutPresets.M; } }
 
         /// <summary>
         /// Padding -> Horizontal -> Large 
         /// </summary>
         [Parameter]
-        public bool PHL { get => PaddingLeft == FbPresets.L_Padding && PaddingRight == FbPresets.L_Padding; set { PaddingLeft = PaddingRight = FbPresets.L_Padding; } }
+        public bool PHL { get => PaddingLeft == FbLayoutPresets.L && PaddingRight == FbLayoutPresets.L; set { PaddingLeft = PaddingRight = FbLayoutPresets.L; } }
 
         /// <summary>
         /// Padding -> Horizontal -> Extra Large 
         /// </summary>
         [Parameter]
-        public bool PHX { get => PaddingLeft == FbPresets.X_Padding && PaddingRight == FbPresets.X_Padding; set { PaddingLeft = PaddingRight = FbPresets.X_Padding; } }
+        public bool PHX { get => PaddingLeft == FbLayoutPresets.X && PaddingRight == FbLayoutPresets.X; set { PaddingLeft = PaddingRight = FbLayoutPresets.X; } }
 
         /// <summary>
         /// Padding -> Top -> Small
         /// </summary>
         [Parameter]
-        public bool PTS { get => PaddingTop == FbPresets.S_Padding; set => PaddingTop = FbPresets.S_Padding; }
+        public bool PTS { get => PaddingTop == FbLayoutPresets.S; set => PaddingTop = FbLayoutPresets.S; }
 
         /// <summary>
         /// Padding -> Top -> Medium
         /// </summary>
         [Parameter]
-        public bool PTM { get => PaddingTop == FbPresets.M_Padding; set => PaddingTop = FbPresets.M_Padding; }
+        public bool PTM { get => PaddingTop == FbLayoutPresets.M; set => PaddingTop = FbLayoutPresets.M; }
 
         /// <summary>
         /// Padding -> Top -> Large
         /// </summary>
         [Parameter]
-        public bool PTL { get => PaddingTop == FbPresets.L_Padding; set => PaddingTop = FbPresets.L_Padding; }
+        public bool PTL { get => PaddingTop == FbLayoutPresets.L; set => PaddingTop = FbLayoutPresets.L; }
 
         /// <summary>
         /// Padding -> Top -> Extra Large
         /// </summary>
         [Parameter]
-        public bool PTX { get => PaddingTop == FbPresets.X_Padding; set => PaddingTop = FbPresets.X_Padding; }
+        public bool PTX { get => PaddingTop == FbLayoutPresets.X; set => PaddingTop = FbLayoutPresets.X; }
 
         /// <summary>
         /// Padding -> Bottom -> Small
         /// </summary>
         [Parameter]
-        public bool PBS { get => PaddingBottom == FbPresets.S_Padding; set => PaddingBottom = FbPresets.S_Padding; }
+        public bool PBS { get => PaddingBottom == FbLayoutPresets.S; set => PaddingBottom = FbLayoutPresets.S; }
 
         /// <summary>
         /// Padding -> Bottom -> Medium
         /// </summary>
         [Parameter]
-        public bool PBM { get => PaddingBottom == FbPresets.M_Padding; set => PaddingBottom = FbPresets.M_Padding; }
+        public bool PBM { get => PaddingBottom == FbLayoutPresets.M; set => PaddingBottom = FbLayoutPresets.M; }
 
         /// <summary>
         /// Padding -> Bottom -> Large
         /// </summary>
         [Parameter]
-        public bool PBL { get => PaddingBottom == FbPresets.L_Padding; set => PaddingBottom = FbPresets.L_Padding; }
+        public bool PBL { get => PaddingBottom == FbLayoutPresets.L; set => PaddingBottom = FbLayoutPresets.L; }
 
         /// <summary>
         /// Padding -> Bottom -> Extra Large
         /// </summary>
         [Parameter]
-        public bool PBX { get => PaddingBottom == FbPresets.X_Padding; set => PaddingBottom = FbPresets.X_Padding; }
+        public bool PBX { get => PaddingBottom == FbLayoutPresets.X; set => PaddingBottom = FbLayoutPresets.X; }
 
         /// <summary>
         /// Padding -> Left -> Small
         /// </summary>
         [Parameter]
-        public bool PLS { get => PaddingLeft == FbPresets.S_Padding; set => PaddingLeft = FbPresets.S_Padding; }
+        public bool PLS { get => PaddingLeft == FbLayoutPresets.S; set => PaddingLeft = FbLayoutPresets.S; }
 
         /// <summary>
         /// Padding -> Left -> Medium
         /// </summary>
         [Parameter]
-        public bool PLM { get => PaddingLeft == FbPresets.M_Padding; set => PaddingLeft = FbPresets.M_Padding; }
+        public bool PLM { get => PaddingLeft == FbLayoutPresets.M; set => PaddingLeft = FbLayoutPresets.M; }
 
         /// <summary>
         /// Padding -> Left -> Large
         /// </summary>
         [Parameter]
-        public bool PLL { get => PaddingLeft == FbPresets.L_Padding; set => PaddingLeft = FbPresets.L_Padding; }
+        public bool PLL { get => PaddingLeft == FbLayoutPresets.L; set => PaddingLeft = FbLayoutPresets.L; }
 
         /// <summary>
         /// Padding -> Left -> Extra Large
         /// </summary>
         [Parameter]
-        public bool PLX { get => PaddingLeft == FbPresets.X_Padding; set => PaddingLeft = FbPresets.X_Padding; }
+        public bool PLX { get => PaddingLeft == FbLayoutPresets.X; set => PaddingLeft = FbLayoutPresets.X; }
 
         /// <summary>
         /// Padding -> Right -> Small
         /// </summary>
         [Parameter]
-        public bool PRS { get => PaddingRight == FbPresets.S_Padding; set => PaddingRight = FbPresets.S_Padding; }
+        public bool PRS { get => PaddingRight == FbLayoutPresets.S; set => PaddingRight = FbLayoutPresets.S; }
 
         /// <summary>
         /// Padding -> Right -> Medium
         /// </summary>
         [Parameter]
-        public bool PRM { get => PaddingRight == FbPresets.M_Padding; set => PaddingRight = FbPresets.M_Padding; }
+        public bool PRM { get => PaddingRight == FbLayoutPresets.M; set => PaddingRight = FbLayoutPresets.M; }
 
         /// <summary>
         /// Padding -> Right -> Large
         /// </summary>
         [Parameter]
-        public bool PRL { get => PaddingRight == FbPresets.L_Padding; set => PaddingRight = FbPresets.L_Padding; }
+        public bool PRL { get => PaddingRight == FbLayoutPresets.L; set => PaddingRight = FbLayoutPresets.L; }
 
         /// <summary>
         /// Padding -> Right -> Extra Large
         /// </summary>
         [Parameter]
-        public bool PRX { get => PaddingRight == FbPresets.X_Padding; set => PaddingRight = FbPresets.X_Padding; }
+        public bool PRX { get => PaddingRight == FbLayoutPresets.X; set => PaddingRight = FbLayoutPresets.X; }
 
         /// <summary>
         /// Margin
         /// </summary>
         [Parameter]
-        public FbMargin M { get => Margin; set => Margin = value; }
+        public FbSpacing M { get => Margin; set => Margin = value; }
 
         /// <summary>
         /// Margin -> Top
         /// </summary>
         [Parameter]
-        public FbMargin MTop { get => MarginTop; set => MarginTop = value; }
+        public FbSpacing MTop { get => MarginTop; set => MarginTop = value; }
 
         /// <summary>
         /// Margin -> Bottom
         /// </summary>
         [Parameter]
-        public FbMargin MBottom { get => MarginBottom; set => MarginBottom = value; }
+        public FbSpacing MBottom { get => MarginBottom; set => MarginBottom = value; }
 
         /// <summary>
         /// Margin -> Left
         /// </summary>
         [Parameter]
-        public FbMargin MLeft { get => MarginLeft; set => MarginLeft = value; }
+        public FbSpacing MLeft { get => MarginLeft; set => MarginLeft = value; }
 
         /// <summary>
         /// Margin -> Right
         /// </summary>
         [Parameter]
-        public FbMargin MRight { get => MarginRight; set => MarginRight = value; }
+        public FbSpacing MRight { get => MarginRight; set => MarginRight = value; }
 
         /// <summary>
         /// Margin -> Horizontal
         /// </summary>
         [Parameter]
-        public FbMargin MH { get => MarginLeft; set { MarginLeft = MarginRight = value; } }
+        public FbSpacing MH { get => MarginLeft; set { MarginLeft = MarginRight = value; } }
 
         /// <summary>
         /// Margin -> Vertical
         /// </summary>
         [Parameter]
-        public FbMargin MV { get => MarginTop; set { MarginTop = MarginBottom = value; } }
+        public FbSpacing MV { get => MarginTop; set { MarginTop = MarginBottom = value; } }
 
         /// <summary>
         /// Margin -> Small
         /// </summary>
         [Parameter]
-        public bool MS { get => Margin == FbPresets.S_Margin; set => Margin = FbPresets.S_Margin; }
+        public bool MS { get => Margin == FbLayoutPresets.S; set => Margin = FbLayoutPresets.S; }
 
         /// <summary>
         /// Margin -> Medium
         /// </summary>
         [Parameter]
-        public bool MM { get => Margin == FbPresets.M_Margin; set => Margin = FbPresets.M_Margin; }
+        public bool MM { get => Margin == FbLayoutPresets.M; set => Margin = FbLayoutPresets.M; }
 
         /// <summary>
         /// Margin -> Large
         /// </summary>
         [Parameter]
-        public bool ML { get => Margin == FbPresets.L_Margin; set => Margin = FbPresets.L_Margin; }
+        public bool ML { get => Margin == FbLayoutPresets.L; set => Margin = FbLayoutPresets.L; }
 
         /// <summary>
         /// Margin -> Extra Large
         /// </summary>
         [Parameter]
-        public bool MX { get => Margin == FbPresets.X_Margin; set => Margin = FbPresets.X_Margin; }
+        public bool MX { get => Margin == FbLayoutPresets.X; set => Margin = FbLayoutPresets.X; }
 
         /// <summary>
         /// Margin -> Vertical -> Small 
         /// </summary>
         [Parameter]
-        public bool MVS { get => MarginTop == FbPresets.S_Margin && MarginBottom == FbPresets.S_Margin; set { MarginTop = MarginBottom = FbPresets.S_Margin; } }
+        public bool MVS { get => MarginTop == FbLayoutPresets.S && MarginBottom == FbLayoutPresets.S; set { MarginTop = MarginBottom = FbLayoutPresets.S; } }
 
         /// <summary>
         /// Margin -> Vertical -> Medium 
         /// </summary>
         [Parameter]
-        public bool MVM { get => MarginTop == FbPresets.M_Margin && MarginBottom == FbPresets.M_Margin; set { MarginTop = MarginBottom = FbPresets.M_Margin; } }
+        public bool MVM { get => MarginTop == FbLayoutPresets.M && MarginBottom == FbLayoutPresets.M; set { MarginTop = MarginBottom = FbLayoutPresets.M; } }
 
         /// <summary>
         /// Margin -> Vertical -> Large 
         /// </summary>
         [Parameter]
-        public bool MVL { get => MarginTop == FbPresets.L_Margin && MarginBottom == FbPresets.L_Margin; set { MarginTop = MarginBottom = FbPresets.L_Margin; } }
+        public bool MVL { get => MarginTop == FbLayoutPresets.L && MarginBottom == FbLayoutPresets.L; set { MarginTop = MarginBottom = FbLayoutPresets.L; } }
 
         /// <summary>
         /// Margin -> Vertical -> Extra Large 
         /// </summary>
         [Parameter]
-        public bool MVX { get => MarginTop == FbPresets.X_Margin && MarginBottom == FbPresets.X_Margin; set { MarginTop = MarginBottom = FbPresets.X_Margin; } }
+        public bool MVX { get => MarginTop == FbLayoutPresets.X && MarginBottom == FbLayoutPresets.X; set { MarginTop = MarginBottom = FbLayoutPresets.X; } }
 
         /// <summary>
         /// Margin -> Horizontal -> Small 
         /// </summary>
         [Parameter]
-        public bool MHS { get => MarginLeft == FbPresets.S_Margin && MarginRight == FbPresets.S_Margin; set { MarginLeft = MarginRight = FbPresets.S_Margin; } }
+        public bool MHS { get => MarginLeft == FbLayoutPresets.S && MarginRight == FbLayoutPresets.S; set { MarginLeft = MarginRight = FbLayoutPresets.S; } }
 
         /// <summary>
         /// Margin -> Horizontal -> Medium 
         /// </summary>
         [Parameter]
-        public bool MHM { get => MarginLeft == FbPresets.M_Margin && MarginRight == FbPresets.M_Margin; set { MarginLeft = MarginRight = FbPresets.M_Margin; } }
+        public bool MHM { get => MarginLeft == FbLayoutPresets.M && MarginRight == FbLayoutPresets.M; set { MarginLeft = MarginRight = FbLayoutPresets.M; } }
 
         /// <summary>
         /// Margin -> Horizontal -> Large 
         /// </summary>
         [Parameter]
-        public bool MHL { get => MarginLeft == FbPresets.L_Margin && MarginRight == FbPresets.L_Margin; set { MarginLeft = MarginRight = FbPresets.L_Margin; } }
+        public bool MHL { get => MarginLeft == FbLayoutPresets.L && MarginRight == FbLayoutPresets.L; set { MarginLeft = MarginRight = FbLayoutPresets.L; } }
 
         /// <summary>
         /// Margin -> Horizontal -> Extra Large 
         /// </summary>
         [Parameter]
-        public bool MHX { get => MarginLeft == FbPresets.X_Margin && MarginRight == FbPresets.X_Margin; set { MarginLeft = MarginRight = FbPresets.X_Margin; } }
+        public bool MHX { get => MarginLeft == FbLayoutPresets.X && MarginRight == FbLayoutPresets.X; set { MarginLeft = MarginRight = FbLayoutPresets.X; } }
 
         /// <summary>
         /// Margin -> Top -> Small
         /// </summary>
         [Parameter]
-        public bool MTS { get => MarginTop == FbPresets.S_Margin; set => MarginTop = FbPresets.S_Margin; }
+        public bool MTS { get => MarginTop == FbLayoutPresets.S; set => MarginTop = FbLayoutPresets.S; }
 
         /// <summary>
         /// Margin -> Top -> Medium
         /// </summary>
         [Parameter]
-        public bool MTM { get => MarginTop == FbPresets.M_Margin; set => MarginTop = FbPresets.M_Margin; }
+        public bool MTM { get => MarginTop == FbLayoutPresets.M; set => MarginTop = FbLayoutPresets.M; }
 
         /// <summary>
         /// Margin -> Top -> Large
         /// </summary>
         [Parameter]
-        public bool MTL { get => MarginTop == FbPresets.L_Margin; set => MarginTop = FbPresets.L_Margin; }
+        public bool MTL { get => MarginTop == FbLayoutPresets.L; set => MarginTop = FbLayoutPresets.L; }
 
         /// <summary>
         /// Margin -> Top -> Extra Large
         /// </summary>
         [Parameter]
-        public bool MTX { get => MarginTop == FbPresets.X_Margin; set => MarginTop = FbPresets.X_Margin; }
+        public bool MTX { get => MarginTop == FbLayoutPresets.X; set => MarginTop = FbLayoutPresets.X; }
 
         /// <summary>
         /// Margin -> Bottom -> Small
         /// </summary>
         [Parameter]
-        public bool MBS { get => MarginBottom == FbPresets.S_Margin; set => MarginBottom = FbPresets.S_Margin; }
+        public bool MBS { get => MarginBottom == FbLayoutPresets.S; set => MarginBottom = FbLayoutPresets.S; }
 
         /// <summary>
         /// Margin -> Bottom -> Medium
         /// </summary>
         [Parameter]
-        public bool MBM { get => MarginBottom == FbPresets.M_Margin; set => MarginBottom = FbPresets.M_Margin; }
+        public bool MBM { get => MarginBottom == FbLayoutPresets.M; set => MarginBottom = FbLayoutPresets.M; }
 
         /// <summary>
         /// Margin -> Bottom -> Large
         /// </summary>
         [Parameter]
-        public bool MBL { get => MarginBottom == FbPresets.L_Margin; set => MarginBottom = FbPresets.L_Margin; }
+        public bool MBL { get => MarginBottom == FbLayoutPresets.L; set => MarginBottom = FbLayoutPresets.L; }
 
         /// <summary>
         /// Margin -> Bottom -> Extra Large
         /// </summary>
         [Parameter]
-        public bool MBX { get => MarginBottom == FbPresets.X_Margin; set => MarginBottom = FbPresets.X_Margin; }
+        public bool MBX { get => MarginBottom == FbLayoutPresets.X; set => MarginBottom = FbLayoutPresets.X; }
 
         /// <summary>
         /// Margin -> Left -> Small
         /// </summary>
         [Parameter]
-        public bool MLS { get => MarginLeft == FbPresets.S_Margin; set => MarginLeft = FbPresets.S_Margin; }
+        public bool MLS { get => MarginLeft == FbLayoutPresets.S; set => MarginLeft = FbLayoutPresets.S; }
 
         /// <summary>
         /// Margin -> Left -> Medium
         /// </summary>
         [Parameter]
-        public bool MLM { get => MarginLeft == FbPresets.M_Margin; set => MarginLeft = FbPresets.M_Margin; }
+        public bool MLM { get => MarginLeft == FbLayoutPresets.M; set => MarginLeft = FbLayoutPresets.M; }
 
         /// <summary>
         /// Margin -> Left -> Large
         /// </summary>
         [Parameter]
-        public bool MLL { get => MarginLeft == FbPresets.L_Margin; set => MarginLeft = FbPresets.L_Margin; }
+        public bool MLL { get => MarginLeft == FbLayoutPresets.L; set => MarginLeft = FbLayoutPresets.L; }
 
         /// <summary>
         /// Margin -> Left -> Extra Large
         /// </summary>
         [Parameter]
-        public bool MLX { get => MarginLeft == FbPresets.X_Margin; set => MarginLeft = FbPresets.X_Margin; }
+        public bool MLX { get => MarginLeft == FbLayoutPresets.X; set => MarginLeft = FbLayoutPresets.X; }
 
         /// <summary>
         /// Margin -> Right -> Small
         /// </summary>
         [Parameter]
-        public bool MRS { get => MarginRight == FbPresets.S_Margin; set => MarginRight = FbPresets.S_Margin; }
+        public bool MRS { get => MarginRight == FbLayoutPresets.S; set => MarginRight = FbLayoutPresets.S; }
 
         /// <summary>
         /// Margin -> Right -> Medium
         /// </summary>
         [Parameter]
-        public bool MRM { get => MarginRight == FbPresets.M_Margin; set => MarginRight = FbPresets.M_Margin; }
+        public bool MRM { get => MarginRight == FbLayoutPresets.M; set => MarginRight = FbLayoutPresets.M; }
 
         /// <summary>
         /// Margin -> Right -> Large
         /// </summary>
         [Parameter]
-        public bool MRL { get => MarginRight == FbPresets.L_Margin; set => MarginRight = FbPresets.L_Margin; }
+        public bool MRL { get => MarginRight == FbLayoutPresets.L; set => MarginRight = FbLayoutPresets.L; }
 
         /// <summary>
         /// Margin -> Right -> Extra Large
         /// </summary>
         [Parameter]
-        public bool MRX { get => MarginRight == FbPresets.X_Margin; set => MarginRight = FbPresets.X_Margin; }
+        public bool MRX { get => MarginRight == FbLayoutPresets.X; set => MarginRight = FbLayoutPresets.X; }
 
         /// <summary>
         /// Store identifier

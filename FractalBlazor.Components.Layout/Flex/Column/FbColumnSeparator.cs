@@ -68,31 +68,31 @@ namespace FractalBlazor.Components.Layout
         /// Margin size
         /// </summary>
         [Parameter]
-        public FbMargin Margin { get; set; }
+        public FbSpacing Margin { get; set; }
 
         /// <summary>
         /// Margin -> Small
         /// </summary>
         [Parameter]
-        public bool MS { get => Margin == FbPresets.S_Margin; set => Margin = FbPresets.S_Margin; }
+        public bool MS { get => Margin == FbLayoutPresets.S; set => Margin = FbLayoutPresets.S; }
 
         /// <summary>
         /// Margin -> Medium
         /// </summary>
         [Parameter]
-        public bool MM { get => Margin == FbPresets.M_Margin; set => Margin = FbPresets.M_Margin; }
+        public bool MM { get => Margin == FbLayoutPresets.M; set => Margin = FbLayoutPresets.M; }
 
         /// <summary>
         /// Margin -> Large
         /// </summary>
         [Parameter]
-        public bool ML { get => Margin == FbPresets.L_Margin; set => Margin = FbPresets.L_Margin; }
+        public bool ML { get => Margin == FbLayoutPresets.L; set => Margin = FbLayoutPresets.L; }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "div");
             builder.AddAttribute(1, "cpnt", "column-separator");
-            builder.AddAttribute(2, "style", $"display: flex; align-self: stretch;{(Margin != FbMargin.None ? $"margin-left:{MarginSize}rem;margin-right:{MarginSize}rem;" : "")}");
+            builder.AddAttribute(2, "style", $"display: flex; align-self: stretch;{(Margin != FbSpacing.None ? $"margin-left:{MarginSize}rem;margin-right:{MarginSize}rem;" : "")}");
             builder.AddAttribute(3, "class", ComputedColumnSeparatorClasses);
             builder.CloseElement();
         }

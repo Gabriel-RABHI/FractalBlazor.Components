@@ -17,7 +17,8 @@
 html {
     /* BEST PRACTICE: Added system fallbacks */
     font-family: 'text-font', system-ui, -apple-system, sans-serif;
-    font-size: 14px;
+    font-size: var(--fb-txt-base-size);
+    font-weight: var(--fb-txt-base-weight);
 }
 
 /* Optional: Apply your code font universally to pre and code tags */
@@ -30,12 +31,12 @@ pre, code {
 /* Base text definition */
 .fb-txt {
     color: var(--color-text); /* Standard contrast */
-    line-height: 1.4;
+    line-height: var(--fb-txt-base-line-height);
 }
 
 /* 1. Scale */
 .fb-t-s {
-    font-size: calc(var(--font-size-base) * 0.85);
+    font-size: calc(var(--font-size-base) * var(--fb-txt-s-coef));
 }
 /* ~11px */
 .fb-t-m {
@@ -43,43 +44,43 @@ pre, code {
 }
 /* ~13px */
 .fb-t-l {
-    font-size: calc(var(--font-size-base) * 1.25);
+    font-size: calc(var(--font-size-base) * var(--fb-txt-l-coef));
 }
 /* ~16px */
 .fb-t-x {
-    font-size: calc(var(--font-size-base) * 1.6);
+    font-size: calc(var(--font-size-base) * var(--fb-txt-x-coef));
 }
 /* ~20px */
 
 /* 2. Weight */
 .fb-t-t {
-    font-weight: 300;
+    font-weight: var(--fb-txt-t-weight);
 }
 
 .fb-t-b {
-    font-weight: 600;
+    font-weight: var(--fb-txt-b-weight);
 }
 
 .fb-t-xb {
-    font-weight: 800;
+    font-weight: var(--fb-txt-xb-weight);
 }
 /* or 700 depending on font */
 
 /* 3. Intent */
+.fb-t-shadow {
+    color: var(--fb-shadow-color);
+}
+
 .fb-t-mute {
-    color: var(--color-text-muted);
+    color: var(--fb-mute-color);
 }
 
 .fb-t-acc {
-    color: var(--color-primary);
+    color: var(--fb-accent-color);
 }
 
 .fb-t-pri {
-    color: var(--color-primary);
-}
-
-.fb-t-err {
-    color: var(--color-danger);
+    color: var(--fb-primary-color);
 }
 
 /* 4. Modifiers */

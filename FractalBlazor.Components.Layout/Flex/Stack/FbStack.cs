@@ -307,25 +307,25 @@ namespace FractalBlazor.Components.Layout
         /// With -> Radius -> Small
         /// </summary>
         [Parameter]
-        public bool WRS { get => Radius == FbPresets.S_Radius; set => Radius = FbPresets.S_Radius; }
+        public bool WRS { get => Radius == FbLayoutPresets.RS; set => Radius = FbLayoutPresets.RS; }
         
         /// <summary>
         /// With -> Radius -> Medium
         /// </summary>
         [Parameter]
-        public bool WRM { get => Radius == FbPresets.M_Radius; set => Radius = FbPresets.M_Radius; }
+        public bool WRM { get => Radius == FbLayoutPresets.RM; set => Radius = FbLayoutPresets.RM; }
         
         /// <summary>
         /// With -> Radius -> Large
         /// </summary>
         [Parameter]
-        public bool WRL { get => Radius == FbPresets.L_Radius; set => Radius = FbPresets.L_Radius; }
+        public bool WRL { get => Radius == FbLayoutPresets.RL; set => Radius = FbLayoutPresets.RL; }
         
         /// <summary>
         /// With -> Radius -> Extra Large
         /// </summary>
         [Parameter]
-        public bool WRX { get => Radius == FbPresets.X_Radius; set => Radius = FbPresets.X_Radius; }
+        public bool WRX { get => Radius == FbLayoutPresets.RX; set => Radius = FbLayoutPresets.RX; }
 
         /// <summary>
         /// With -> Background -> Default
