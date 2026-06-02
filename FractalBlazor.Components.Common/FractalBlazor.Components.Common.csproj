@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FractalBlazor.Components.Common\FractalBlazor.Components.Common.csproj" />
-  </ItemGroup>
-
 </Project>

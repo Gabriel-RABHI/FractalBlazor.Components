@@ -5,11 +5,6 @@ using System.Text;
 
 namespace FractalBlazor.Components.Forms.Contracts
 {
-    public interface IStateAction<TValue>
-    {
-        // A standard record automatically implements this property
-        TValue NewValue { get; }
-    }
 
     public interface IViewRegistry
     {

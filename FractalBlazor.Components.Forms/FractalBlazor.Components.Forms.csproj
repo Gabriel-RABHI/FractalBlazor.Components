@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FractalBlazor.Components.Common\FractalBlazor.Components.Common.csproj" />
     <ProjectReference Include="..\FractalBlazor.Components.Layout\FractalBlazor.Components.Layout.csproj" />
   </ItemGroup>
 

@@ -3,9 +3,13 @@ namespace FractalBlazor.Components.Layout;
 public static class FbPresets {
     public static FbMargin S_Margin { get; set; } = FbMargin._4;
 
+    public static string S_Padding_String => $"margin-top:{((double)((int)S_Padding) / 16d).ToString().Replace(",", ".")}rem;";
+
     public static FbPadding S_Padding { get; set; } = FbPadding._4;
 
     public static FbGutter S_Gutter { get; set; } = FbGutter._4;
+
+    public static string S_Spacing => $"margin-top:{((double)((int)S_Padding) / 16d).ToString().Replace(",", ".")}rem;";
 
     public static FbRadius S_Radius { get; set; } = FbRadius._3;
 

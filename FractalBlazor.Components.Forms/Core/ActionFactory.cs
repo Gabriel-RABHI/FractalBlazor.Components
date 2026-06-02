@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using FractalBlazor.Components.Forms.Contracts;
+using System.Linq.Expressions;
 
 namespace FractalBlazor.Components.Forms.Core
 {
@@ -29,6 +30,23 @@ namespace FractalBlazor.Components.Forms.Core
 
             // 4. Compile it into a high-performance Func delegate
             Create = Expression.Lambda<Func<TValue, TAction>>(newExp, parameterExp).Compile();
+        }
+    }
+
+    public static class ActionFactory<TAction> where TAction : IStateAction
+    {
+        // Caches the parameterless constructor delegate permanently in memory
+        public static readonly Func<TAction> Create;
+
+        static ActionFactory()
+        {
+            var actionType = typeof(TAction);
+
+            // 1. Create the 'new TAction()' expression
+            var newExp = Expression.New(actionType);
+
+            // 2. Compile it into a high-performance Func delegate
+            Create = Expression.Lambda<Func<TAction>>(newExp).Compile();
         }
     }
 }

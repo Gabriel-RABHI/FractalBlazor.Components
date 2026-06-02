@@ -6,7 +6,7 @@ using System.Text;
 
 namespace FractalBlazor.Components.Forms.Theming
 {
-    internal class FbColorTheme : FbComponentBase
+    public class FbColorTheme : FbComponentBase
     {
         [Parameter]
         public string Color { get; set; } = "#D8D8D8";
@@ -31,7 +31,7 @@ namespace FractalBlazor.Components.Forms.Theming
         public string TextErrorColor { get; set; } = "4050D8";
     }
 
-    internal class FbFontTheme : FbComponentBase
+    public class FbFontTheme : FbComponentBase
     {
         // -------- Default
         [Parameter]
@@ -58,9 +58,12 @@ namespace FractalBlazor.Components.Forms.Theming
 
         // -------- Weights
         [Parameter]
-        public string MediumWeight { get; set; } = "500";
+        public string ThinWeight { get; set; } = "300";
 
         [Parameter]
-        public string BoldWeight { get; set; } = "700";
+        public string BoldWeight { get; set; } = "500";
+
+        [Parameter]
+        public string ExtraBoldWeight { get; set; } = "700";
     }
 }
