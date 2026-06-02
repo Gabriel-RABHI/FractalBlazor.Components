@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Layout
 {
-    public class FbRowSpacer : FbSimpleComponentBase
+    public class FbRowSpacer : FbComponentBase
     {
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {

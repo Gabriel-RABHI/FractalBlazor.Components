@@ -1,5 +1,6 @@
 <Solution>
-  <Project Path="FractalBlazor.Components/FractalBlazor.Components.csproj" />
-  <Project Path="FractalBlazor.Components.Layout/FractalBlazor.Components.Layout.csproj" />
   <Project Path="FractalBlazor.Components.Forms/FractalBlazor.Components.Forms.csproj" />
+  <Project Path="FractalBlazor.Components.Layout/FractalBlazor.Components.Layout.csproj" />
+  <Project Path="FractalBlazor.Components/FractalBlazor.Components.csproj" />
+  <Project Path="FractalBlazor.Demo.States/FractalBlazor.Demo.States.csproj" Id="8d74da3e-4279-43c1-867c-44866316cd9b" />
 </Solution>

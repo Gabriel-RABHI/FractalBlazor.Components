@@ -7,7 +7,7 @@ using Microsoft.JSInterop;
 
 namespace FractalBlazor.Components.Layout
 {
-    public class FbShowWhenVisible : FbSimpleComponentBase
+    public class FbShowWhenVisible : FbComponentBase
     {
         private static object _locker = new object();
         private static Dictionary<Guid, FbShowWhenVisible> _recorded = new Dictionary<Guid, FbShowWhenVisible>();

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Layout
 {
-    public class FbShowWhenOver : FbComponentBase
+    public class FbShowWhenOver : FbLayoutComponentBase
     {
         private Guid _id = Guid.NewGuid();
 

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Layout
 {
-    public class FbColumnBreak : FbSimpleComponentBase
+    public class FbColumnBreak : FbComponentBase
     {
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {

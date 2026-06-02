@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Layout
 {
-    public class FbStackSeparator : FbSimpleComponentBase
+    public class FbStackSeparator : FbComponentBase
     {
         #region HIDDEN
         private FbFrame _frame = FbFrame.Medium;

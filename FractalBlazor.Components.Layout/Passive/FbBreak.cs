@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Layout
 {
-    public class FbBreak : FbSimpleComponentBase
+    public class FbBreak : FbComponentBase
     {
         /// <summary>
         /// Content to show on smaller screens

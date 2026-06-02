@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Layout
 {
-    public class FbRowBreak : FbSimpleComponentBase
+    public class FbRowBreak : FbComponentBase
     {
         #region HIDDEN
         private string ClassName

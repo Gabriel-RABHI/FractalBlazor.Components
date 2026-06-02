@@ -6,7 +6,7 @@ using Microsoft.JSInterop;
 
 namespace FractalBlazor.Components.Layout
 {
-    public class FbAdaptiveDivHeight : FbSimpleComponentBase, IAsyncDisposable
+    public class FbAdaptiveDivHeight : FbComponentBase, IAsyncDisposable
     {
         [Inject]
         public IJSRuntime JS { get; set; }

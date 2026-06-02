@@ -6,7 +6,7 @@ using Microsoft.JSInterop;
 
 namespace FractalBlazor.Components.Layout
 {
-    public class FbDropDown : FbSimpleComponentBase, IAsyncDisposable
+    public class FbDropDown : FbComponentBase, IAsyncDisposable
     {
         [Inject]
         public IJSRuntime JS { get; set; }

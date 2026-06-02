@@ -39,7 +39,7 @@ namespace FractalBlazor.Components.Forms.Display
         Trim
     }
 
-    public class FbText : FbSimpleComponentBase
+    public class FbText : FbComponentBase
     {
         private static string[] FbTextSizeClasses = { "", "fb-t-s", "fb-t-m", "fb-t-l", "fb-t-x" };
         private static string[] FbTextWeightClasses = { "", "fb-t-t", "fb-t-b", "fb-t-xb" };

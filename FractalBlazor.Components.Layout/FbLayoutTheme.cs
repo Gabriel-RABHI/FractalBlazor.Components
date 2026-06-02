@@ -8,7 +8,7 @@ namespace FractalBlazor.Components.Layout
     /// <summary>
     /// Component that dynamically generates and updates layout style variables at runtime.
     /// </summary>
-    public class FbLayoutTheme : FbSimpleComponentBase
+    public class FbLayoutTheme : FbComponentBase
     {
         /// <summary>
         /// CSS Selector to apply the layout variables to. Defaults to ":root".

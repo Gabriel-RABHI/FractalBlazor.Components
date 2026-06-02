@@ -6,7 +6,7 @@ using System.Text;
 
 namespace FractalBlazor.Components.Forms.Theming
 {
-    internal class FbColorTheme : FbSimpleComponentBase
+    internal class FbColorTheme : FbComponentBase
     {
         [Parameter]
         public string Color { get; set; } = "#D8D8D8";
@@ -31,7 +31,7 @@ namespace FractalBlazor.Components.Forms.Theming
         public string TextErrorColor { get; set; } = "4050D8";
     }
 
-    internal class FbFontTheme : FbSimpleComponentBase
+    internal class FbFontTheme : FbComponentBase
     {
         // -------- Default
         [Parameter]

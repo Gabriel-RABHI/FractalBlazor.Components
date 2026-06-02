@@ -1,16 +1,20 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Components;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace FractalBlazor.Components.Forms.Contracts
 {
-    public interface IStateAction<TAction, TValue>
+    public interface IStateAction<TValue>
     {
-        static abstract TAction Create(TValue newValue);
+        // A standard record automatically implements this property
+        TValue NewValue { get; }
     }
 
-    public interface IActionHandler<in TAction>
+    public interface IViewRegistry
     {
-        void Handle(TAction action);
+        void Register<TModel, TComponent>() where TComponent : IComponent;
+
+        Type? GetViewType(Type modelType);
     }
 }

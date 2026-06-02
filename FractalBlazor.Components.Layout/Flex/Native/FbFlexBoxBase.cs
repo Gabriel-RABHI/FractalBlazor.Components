@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Layout
 {
-    public abstract class FbFlexBoxBase : FbComponentBase
+    public abstract class FbFlexBoxBase : FbLayoutComponentBase
     {
         #region HIDDEN
         private static object _locker = new object();

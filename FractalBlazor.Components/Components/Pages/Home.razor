@@ -3,6 +3,8 @@
 
 @using FractalBlazor.Components
 @using FractalBlazor.Components.Components.Samples.Layouts
+@using FractalBlazor.Components.Forms.Contracts
+@using FractalBlazor.Components.Forms.Inputs
 @using FractalBlazor.Components.Layout
 
 <PageTitle>Home</PageTitle>
@@ -161,6 +163,7 @@
                     Selected User: <strong>@_selectedOption2</strong>
                 </div>
             }
+            <FbInputText TAction="ChangeFirstNameAction" Handler="this"></FbInputText>
         </FbStack>
 
     </FbRow>
@@ -181,6 +184,12 @@
 </FbStack>
 
 @code {
+    public record ChangeFirstNameAction(string NewValue) : IStateAction<string>;
+
+    public void Handle(ChangeFirstNameAction a) => FirstName = a.NewValue;
+
+    public string FirstName { get; set; }
+
     private bool _isOpen1;
     public bool IsOpen1
     {
