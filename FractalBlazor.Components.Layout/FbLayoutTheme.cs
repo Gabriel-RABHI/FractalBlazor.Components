@@ -45,7 +45,7 @@ namespace FractalBlazor.Components.Layout
         /// Border color for small frames.
         /// </summary>
         [Parameter]
-        public string SmallFrameBorderColorBackMix { get; set; } = "80%";
+        public string SmallFrameBorderColorBackMix { get; set; } = "60%";
 
         /// <summary>
         /// Border size for medium frames.
@@ -57,7 +57,7 @@ namespace FractalBlazor.Components.Layout
         /// Border color for medium frames.
         /// </summary>
         [Parameter]
-        public string MediumFrameBorderColorBackMix { get; set; } = "70%";
+        public string MediumFrameBorderColorBackMix { get; set; } = "40%";
 
         /// <summary>
         /// Border size for large frames.
@@ -69,25 +69,25 @@ namespace FractalBlazor.Components.Layout
         /// Border color for large frames.
         /// </summary>
         [Parameter]
-        public string LargeFrameBorderColorBackMix { get; set; } = "60%";
+        public string LargeFrameBorderColorBackMix { get; set; } = "20%";
 
         /// <summary>
         /// Background color for default background.
         /// </summary>
         [Parameter]
-        public string DefaultBackgroundBackMix { get; set; } = "95%";
+        public string DefaultBackgroundBackMix { get; set; } = "80%";
 
         /// <summary>
         /// Background color for accent background.
         /// </summary>
         [Parameter]
-        public string AccentBackgroundBackMix { get; set; } = "90%";
+        public string AccentBackgroundBackMix { get; set; } = "70%";
 
         /// <summary>
         /// Background color for highlight background.
         /// </summary>
         [Parameter]
-        public string HighlightBackgroundBackMix { get; set; } = "85%";
+        public string HighlightBackgroundBackMix { get; set; } = "60%";
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {

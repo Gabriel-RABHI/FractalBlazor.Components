@@ -7,8 +7,16 @@ public static class FbLayoutPresets {
 
     public static string ToRem(FbSpacing v)
     {
+        var index = (byte)v;
+        if (index < 0)
+            return "0rem";
         if (_stringMap == null)
-            _stringMap = Enum.GetValues<FbSpacing>().Select(e => (int)e > 0 ? $"{((double)((int)e) / 16d).ToString().Replace(",", ".")}rem" : "0rem").ToArray();
+        {
+            var strs = new List<string>();
+            for (var x = 0; x < Enum.GetValues<FbSpacing>().Select(e => (byte)e).Max(); x++)
+                strs.Add($"{((double)(x / 16d)).ToString().Replace(",", ".")}rem");
+            _stringMap = strs.ToArray();
+        }
         return _stringMap[((byte)v)+1];
     }
 

@@ -4,182 +4,61 @@
 @using FractalBlazor.Components
 @using FractalBlazor.Components.Components.Samples.Layouts
 @using FractalBlazor.Components.Forms.Contracts
+@using FractalBlazor.Components.Forms.Display
 @using FractalBlazor.Components.Forms.Inputs
 @using FractalBlazor.Components.Layout
 
-<PageTitle>Home</PageTitle>
 
-<FbStack Style="max-width: 800px; margin: 2rem auto; padding: 2rem; font-family: 'Outfit', sans-serif; box-shadow: 0 8px 24px rgba(0,0,0,0.05);" WRM WFrameS WAccentBackground>
-    <h1 style="font-size: 2.2rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem; background: linear-gradient(135deg, #4989E4, #BA8AA4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-        FractalBlazor Components Layout
-    </h1>
-    <p style="color: #666; margin-bottom: 2rem; font-size: 1.1rem;">
-        Demonstrating dynamic theme variables and the new <code>FbLayoutTheme</code> component.
-    </p>
-
-    <!-- Theme Customizer Section -->
-    <FbStack Style="padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);" WRS WFrameS WDefaultBackground GS>
-        <h3 style="margin-top: 0; color: #333; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-            🎨 Theme Live Customizer
-        </h3>
-        <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">
-            Modify variables in real time. The changes are immediately generated on the page via the <code>&lt;FbLayoutTheme&gt;</code> component.
-        </p>
-
-        <!-- Dynamic Theme Component Placement -->
-        <FbLayoutTheme 
-            SmallFrameBorderSize="@_smallFrameSize" 
-            SmallFrameBorderColor="@_smallFrameColor"
-            MediumFrameBorderSize="@_mediumFrameSize" 
-            MediumFrameBorderColor="@_mediumFrameColor"
-            LargeFrameBorderSize="@_largeFrameSize" 
-            LargeFrameBorderColor="@_largeFrameColor"
-            DefaultBackground="@_defaultBg" 
-            AccentBackground="@_accentBg" 
-            HighlightBackground="@_highlightBg" />
-
-        <FbRow GM Style="width: 100%; flex-wrap: wrap;" JVSt>
-            <!-- Background Colors -->
-            <FbStack Style="flex: 1; min-width: 220px;" GS>
-                <h4 style="margin: 0; font-size: 0.95rem; color: #4a5568;">Backgrounds</h4>
-                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem;">
-                    <span>Default:</span>
-                    <input type="color" @bind="_defaultBg" @bind:event="oninput" style="border: none; width: 40px; height: 24px; cursor: pointer;" />
-                </div>
-                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem;">
-                    <span>Accent:</span>
-                    <input type="color" @bind="_accentBg" @bind:event="oninput" style="border: none; width: 40px; height: 24px; cursor: pointer;" />
-                </div>
-                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem;">
-                    <span>Highlight:</span>
-                    <input type="color" @bind="_highlightBg" @bind:event="oninput" style="border: none; width: 40px; height: 24px; cursor: pointer;" />
-                </div>
-            </FbStack>
-
-            <!-- Frame Sizes/Colors -->
-            <FbStack Style="flex: 1; min-width: 220px;" GS>
-                <h4 style="margin: 0; font-size: 0.95rem; color: #4a5568;">Small & Medium Frames</h4>
-                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; gap: 8px;">
-                    <span>Small Size:</span>
-                    <input type="text" @bind="_smallFrameSize" @bind:event="oninput" style="width: 60px; padding: 2px 4px; border: 1px solid #cbd5e0; border-radius: 4px;" />
-                    <input type="color" @bind="_smallFrameColor" @bind:event="oninput" style="border: none; width: 30px; height: 20px; cursor: pointer;" />
-                </div>
-                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; gap: 8px;">
-                    <span>Medium Size:</span>
-                    <input type="text" @bind="_mediumFrameSize" @bind:event="oninput" style="width: 60px; padding: 2px 4px; border: 1px solid #cbd5e0; border-radius: 4px;" />
-                    <input type="color" @bind="_mediumFrameColor" @bind:event="oninput" style="border: none; width: 30px; height: 20px; cursor: pointer;" />
-                </div>
-            </FbStack>
-
-            <FbStack Style="flex: 1; min-width: 220px;" GS>
-                <h4 style="margin: 0; font-size: 0.95rem; color: #4a5568;">Large Frames</h4>
-                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; gap: 8px;">
-                    <span>Large Size:</span>
-                    <input type="text" @bind="_largeFrameSize" @bind:event="oninput" style="width: 60px; padding: 2px 4px; border: 1px solid #cbd5e0; border-radius: 4px;" />
-                    <input type="color" @bind="_largeFrameColor" @bind:event="oninput" style="border: none; width: 30px; height: 20px; cursor: pointer;" />
-                </div>
-                <button @onclick="ResetTheme" style="margin-top: auto; padding: 6px 12px; background: #e2e8f0; color: #4a5568; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-family: inherit; font-size: 0.85rem; transition: background 0.2s;" onmouseover="this.style.background='#cbd5e0';" onmouseout="this.style.background='#e2e8f0';">
-                    Reset Defaults
-                </button>
-            </FbStack>
+<FbStack PL GL WRM WFrameS MS>
+    <FbRow GL WFrameM PM WAccentBackground>
+        <FbRow GL WFrameL PM WHighlightBackground>
+            <FbText S T>Home</FbText>
+            <FbText M T>Home</FbText>
+            <FbText L T>Home</FbText>
+            <FbText X T>Home</FbText>
         </FbRow>
-    </FbStack>
-
-    <!-- Spacing row using strictly FbRow and FbStack -->
-    <FbRow GL Style="margin-bottom: 3rem; width: 100%;" JVSt>
-        
-        <!-- Demo 1: Button dropdown -->
-        <FbStack Style="flex: 1; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.02);" WRS WFrameS WDefaultBackground>
-            <h3 style="margin-top: 0; color: #333; font-weight: 600;">Button Action Menu</h3>
-            <p style="color: #888; font-size: 0.9rem; margin-bottom: 1rem;">Simple click-toggle action menu with backdrop click-away.</p>
-            
-            <FbDropDown @bind-IsOpen="IsOpen1" Style="width: 100%;">
-                <ChildContent>
-                    <button style="width: 100%; padding: 10px 16px; background: #4989E4; color: white; border: none; border-radius: 6px; font-weight: 600; font-family: inherit; transition: background 0.2s; display: flex; justify-content: space-between; align-items: center;">
-                        <span>Actions Menu</span>
-                        <span>@(IsOpen1 ? "▲" : "▼")</span>
-                    </button>
-                </ChildContent>
-                <DropDownContent>
-                    <FbStack Style="box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); padding: 6px; margin-top: 6px;" WRS WFrameS GS WDefaultBackground>
-                        <button @onclick='() => SelectOption(1, "Profile")' style="text-align: left; background: none; border: none; width: 100%; padding: 8px 12px; cursor: pointer; border-radius: 6px; font-family: inherit; font-size: 0.95rem; color: #4a5568;" onmouseover="this.style.background='var(--fb-accent-background)'; this.style.color='#2d3748';" onmouseout="this.style.background='transparent'; this.style.color='#4a5568';">
-                            👤 View Profile
-                        </button>
-                        <button @onclick='() => SelectOption(1, "Settings")' style="text-align: left; background: none; border: none; width: 100%; padding: 8px 12px; cursor: pointer; border-radius: 6px; font-family: inherit; font-size: 0.95rem; color: #4a5568;" onmouseover="this.style.background='var(--fb-accent-background)'; this.style.color='#2d3748';" onmouseout="this.style.background='transparent'; this.style.color='#4a5568';">
-                            ⚙️ Settings
-                        </button>
-                        <hr style="border: 0; border-top: 1px solid #edf2f7; margin: 4px 0;" />
-                        <button @onclick='() => SelectOption(1, "Logout")' style="text-align: left; background: none; border: none; width: 100%; padding: 8px 12px; cursor: pointer; border-radius: 6px; font-family: inherit; font-size: 0.95rem; color: #e53e3e;" onmouseover="this.style.background='#fff5f5';" onmouseout="this.style.background='transparent';">
-                            🚪 Log Out
-                        </button>
-                    </FbStack>
-                </DropDownContent>
-            </FbDropDown>
-            
-            @if (!string.IsNullOrEmpty(_selectedOption1))
-            {
-                <div style="margin-top: 1rem; font-size: 0.9rem; color: #4989E4;">
-                    Selected: <strong>@_selectedOption1</strong>
-                </div>
-            }
-        </FbStack>
-
-        <!-- Demo 2: Autocomplete/Mention select dropdown -->
-        <FbStack Style="flex: 1; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.02);" WRS WFrameS WDefaultBackground>
-            <h3 style="margin-top: 0; color: #333; font-weight: 600;">Autocomplete Trigger</h3>
-            <p style="color: #888; font-size: 0.9rem; margin-bottom: 1rem;">Opens dynamically on text input. Flip behavior triggers when scrolled near the viewport bottom.</p>
-            
-            <FbDropDown @bind-IsOpen="_isOpen2" AutoToggle="false" Style="width: 100%;">
-                <ChildContent>
-                    <input type="text" placeholder="Type to search..." 
-                           value="@_searchQuery" 
-                           @oninput="OnSearchInput" 
-                           @onclick="() => _isOpen2 = true"
-                           style="width: 100%; box-sizing: border-box; padding: 10px 14px; border: 1.5px solid #cbd5e0; border-radius: 6px; font-size: 0.95rem; font-family: inherit; outline: none; transition: border-color 0.2s;" 
-                           onfocus="this.style.borderColor='#4989E4'" 
-                           onblur="this.style.borderColor='#cbd5e0'" />
-                </ChildContent>
-                <DropDownContent>
-                    <FbStack Style="box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); padding: 6px; margin-top: 6px; max-height: 200px; overflow-y: auto;" WRS WFrameS GS WDefaultBackground>
-                        @foreach (var user in FilteredUsers)
-                        {
-                            <button @onclick="() => SelectOption(2, user)" style="text-align: left; background: none; border: none; width: 100%; padding: 8px 12px; cursor: pointer; border-radius: 6px; font-family: inherit; font-size: 0.95rem; color: #4a5568;" onmouseover="this.style.background='var(--fb-accent-background)'; this.style.color='#2d3748';" onmouseout="this.style.background='transparent'; this.style.color='#4a5568';">
-                                @user
-                            </button>
-                        }
-                        @if (!FilteredUsers.Any())
-                        {
-                            <div style="padding: 8px 12px; font-size: 0.9rem; color: #a0aec0; font-style: italic;">
-                                No matches found
-                            </div>
-                        }
-                    </FbStack>
-                </DropDownContent>
-            </FbDropDown>
-            
-            @if (!string.IsNullOrEmpty(_selectedOption2))
-            {
-                <div style="margin-top: 1rem; font-size: 0.9rem; color: #4989E4;">
-                    Selected User: <strong>@_selectedOption2</strong>
-                </div>
-            }
-            <FbInputText TAction="ChangeFirstNameAction" Handler="this"></FbInputText>
-        </FbStack>
-
+        <FbRow GL WFrameS PM>
+            <FbText S>Home</FbText>
+            <FbText M>Home</FbText>
+            <FbText L>Home</FbText>
+            <FbText X>Home</FbText>
+        </FbRow>
+        <FbRow GL WFrameM PM>
+            <FbText S B>Home</FbText>
+            <FbText M B>Home</FbText>
+            <FbText L B>Home</FbText>
+            <FbText X B>Home</FbText>
+        </FbRow>
+        <FbRow GL WFrameS PM>
+            <FbText S XB>Home</FbText>
+            <FbText M XB>Home</FbText>
+            <FbText L XB>Home</FbText>
+            <FbText X XB>Home</FbText>
+        </FbRow>
     </FbRow>
-
-    <!-- Extra scroll spacer to test page scroll tracking and flip behavior -->
-    <FbStack Style="padding: 1.5rem; background: #eef2f7; margin-top: 2rem; border-left: 4px solid #BA8AA4;" WRS>
-        <h4 style="margin: 0 0 0.5rem 0; color: #4a5568;">💡 Scroll / Overflow Flip Test</h4>
-        <p style="margin: 0; color: #718096; font-size: 0.9rem; line-height: 1.4;">
-            Scroll down the page so that the dropdown triggers are close to the bottom edge of your window, and click them. 
-            The dropdown will automatically flip and open <strong>upwards</strong> above the input or button to prevent overflowing!
-        </p>
-    </FbStack>
-
-    <!-- Big spacer to make page scrollable -->
-    <FbRow Style="height: 60vh; color: #a0aec0; border-top: 1px dashed #e2e8f0; margin-top: 3rem; padding-top: 2rem; font-style: italic;" JHC JVE>
-        End of page layout test zone (Scroll back up to test dropdowns)
+    <FbRow GL WGridM PM>
+        <FbRow GL WGridM PM>
+            <FbText S Shadow>Home</FbText>
+            <FbText M Shadow>Home</FbText>
+            <FbText L Shadow>Home</FbText>
+            <FbText X Shadow>Home</FbText>
+        </FbRow>
+    </FbRow>
+    <FbRow GL WGridM PM>
+        <FbRow GL WGridM PM>
+            <FbText S Mute>Home</FbText>
+            <FbText M Mute>Home</FbText>
+            <FbText L Mute>Home</FbText>
+            <FbText X Mute>Home</FbText>
+        </FbRow>
+    </FbRow>
+    <FbRow GL WGridM PM>
+        <FbRow GL WGridM PM>
+            <FbText S Accent>Home</FbText>
+            <FbText M Accent>Home</FbText>
+            <FbText L Accent>Home</FbText>
+            <FbText X Accent>Home</FbText>
+        </FbRow>
     </FbRow>
 </FbStack>
 

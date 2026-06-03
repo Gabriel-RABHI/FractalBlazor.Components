@@ -42,10 +42,10 @@ namespace FractalBlazor.Components.Forms.Display
 
     public class FbText : FbComponentBase
     {
-        private static string[] FbTextSizeClasses = { "", "fb-t-s", "fb-t-m", "fb-t-l", "fb-t-x" };
-        private static string[] FbTextWeightClasses = { "", "fb-t-t", "fb-t-b", "fb-t-xb" };
-        private static string[] FbTextIntentClasses = { "", "fb-t-shadow", "fb-t-mute", "fb-t-acc", "fb-t-pri", "fb-t-err" };
-        private static string[] FbTextModifiersClasses = { "", "fb-t-nw", "fb-t-tr" };
+        private static string[] FbTextSizeClasses = { "", "fb-t-s ", "fb-t-m ", "fb-t-l ", "fb-t-x " };
+        private static string[] FbTextWeightClasses = { "", "fb-t-t ", "fb-t-b ", "fb-t-xb " };
+        private static string[] FbTextIntentClasses = { "", "fb-t-shadow ", "fb-t-mute ", "fb-t-acc ", "fb-t-pri ", "fb-t-err " };
+        private static string[] FbTextModifiersClasses = { "", "fb-t-nw ", "fb-t-tr " };
 
         private RenderHandle _renderHandle;
 
@@ -79,7 +79,7 @@ namespace FractalBlazor.Components.Forms.Display
 
         // -------- Intent
         [Parameter]
-        public bool Shadow { get => _intent == FbTextIntent.Mute; set => _intent = FbTextIntent.Mute; }
+        public bool Shadow { get => _intent == FbTextIntent.Shadow; set => _intent = FbTextIntent.Shadow; }
 
         [Parameter]
         public bool Mute { get => _intent == FbTextIntent.Mute; set => _intent = FbTextIntent.Mute; }

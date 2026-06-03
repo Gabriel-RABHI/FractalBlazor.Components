@@ -35,7 +35,7 @@ namespace FractalBlazor.Components.Forms.Theming
         public string MutedColorBackMix { get; set; } = "35%";
 
         [Parameter]
-        public string AccentColorFrontMix { get; set; } = "40%";
+        public string AccentColorFrontMix { get; set; } = "70%";
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
@@ -45,7 +45,7 @@ namespace FractalBlazor.Components.Forms.Theming
                 $"  --fb-base-color: {Color};\n" +
                 $"  --fb-primary-color: {PrimaryColor};\n" +
                 $"  --fb-shadow-color: color-mix(in srgb, var(--fb-base-color), var(--fb-back-color) {ShadowColorBackMix});\n" +
-                $"  --fb-muted-color: color-mix(in srgb, var(--fb-base-color), var(--fb-back-color) {MutedColorBackMix});\n" +
+                $"  --fb-mute-color: color-mix(in srgb, var(--fb-base-color), var(--fb-back-color) {MutedColorBackMix});\n" +
                 $"  --fb-accent-color: color-mix(in srgb, var(--fb-base-color), var(--fb-front-color) {AccentColorFrontMix});\n" +
                 $"}}"
             );
@@ -89,22 +89,23 @@ namespace FractalBlazor.Components.Forms.Theming
         public string ThinWeight { get; set; } = "300";
 
         [Parameter]
-        public string BoldWeight { get; set; } = "500";
+        public string BoldWeight { get; set; } = "600";
 
         [Parameter]
-        public string ExtraBoldWeight { get; set; } = "700";
+        public string ExtraBoldWeight { get; set; } = "800";
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "style");
             builder.AddContent(1,
-                $"{Selector} {{\n" +
+                $"{Selector} {{\n" + //--font-size-base
+                $"  --font-size-base: {FontSizeBase};\n" +
                 $"  --fb-txt-base-size: {FontSizeBase};\n" +
                 $"  --fb-txt-base-weight: {FontWeight};\n" +
                 $"  --fb-txt-base-line-height: {LineHeight};\n" +
                 $"  --fb-txt-t-weight: {ThinWeight};\n" +
                 $"  --fb-txt-b-weight: {BoldWeight};\n" +
-                $"  --fb-txt-w-weight: {ExtraBoldWeight};\n" +
+                $"  --fb-txt-xb-weight: {ExtraBoldWeight};\n" +
                 $"  --fb-txt-s-coef: {SmallCoef};\n" +
                 $"  --fb-txt-m-coef: {MediumCoef};\n" +
                 $"  --fb-txt-l-coef: {LargeCoef};\n" +

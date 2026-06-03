@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using FractalBlazor.Components.Forms.Theming
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -16,6 +17,9 @@
 </head>
 
 <body>
+    <FbLayoutTheme />
+    <FbColorTheme />
+    <FbFontTheme />
     <Routes />
     <ReconnectModal />
     <script src="@Assets["_framework/blazor.web.js"]"></script>
