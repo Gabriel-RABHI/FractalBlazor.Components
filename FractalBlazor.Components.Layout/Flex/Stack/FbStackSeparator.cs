@@ -40,6 +40,13 @@ namespace FractalBlazor.Components.Layout
                     return "";
             }
         }
+
+        /// <summary>
+        /// Margin size
+        /// </summary>
+        protected FbSpacing Margin {
+            get; set;
+        }
         #endregion
 
         // ************************************************************************************************ //
@@ -49,28 +56,20 @@ namespace FractalBlazor.Components.Layout
         /// Frame -> Small
         /// </summary>
         [Parameter]
-        public bool WSFrame { get => Frame == FbFrame.Small; set => Frame = FbFrame.Small; }
+        public bool WFS { get => Frame == FbFrame.Small; set => Frame = FbFrame.Small; }
 
         /// <summary>
         /// Frame -> Medium
         /// </summary>
         [Parameter]
-        public bool WMFrame { get => Frame == FbFrame.Medium; set => Frame = FbFrame.Medium; }
+        public bool WFM { get => Frame == FbFrame.Medium; set => Frame = FbFrame.Medium; }
 
         /// <summary>
         /// Frame -> Large
         /// </summary>
         [Parameter]
-        public bool WLFrame { get => Frame == FbFrame.Large; set => Frame = FbFrame.Large; }
+        public bool WFL { get => Frame == FbFrame.Large; set => Frame = FbFrame.Large; }
 
-        /// <summary>
-        /// Margin size
-        /// </summary>
-        [Parameter]
-        public FbSpacing Margin
-        {
-            get; set;
-        }
 
         /// <summary>
         /// Margin -> Small
@@ -89,6 +88,12 @@ namespace FractalBlazor.Components.Layout
         /// </summary>
         [Parameter]
         public bool ML { get => Margin == FbLayoutPresets.L; set => Margin = FbLayoutPresets.L; }
+
+        /// <summary>
+        /// Margin -> Extra-Large
+        /// </summary>
+        [Parameter]
+        public bool MX { get => Margin == FbLayoutPresets.X; set => Margin = FbLayoutPresets.X; }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {

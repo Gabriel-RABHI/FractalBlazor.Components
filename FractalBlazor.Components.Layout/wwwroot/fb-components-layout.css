@@ -1,4 +1,237 @@
 /**********************************************************************************/
+/* BACKGROUNDS */
+html {
+    /* BEST PRACTICE: Added system fallbacks */
+    background-color: color-mix( in srgb, var(--fb-base-back-color), var(--fb-abs-back-color) var(--fb-current-bm) );
+}
+
+/* ==============================================================
+   1. THE PAINTING ENGINE (DRY Architecture)
+   ============================================================== */
+[class*="fb-"][class*="-background"] {
+    /* 1. Paint using the INHERITED current state */
+    background-color: color-mix(in srgb, var(--fb-base-back-color), var(--fb-abs-back-color) var(--fb-current-bm));
+}
+
+    /* 2. Pass the computed NEXT state down to all direct children */
+    [class*="fb-"][class*="-background"] > * {
+        --fb-current-bm: var(--fb-next-bm);
+    }
+
+
+/* ==============================================================
+   2. THE MATH MODIFIERS (Only compute the NEXT state)
+   ============================================================== */
+.fb-default-background {
+    --fb-next-bm: clamp(15%, calc(var(--fb-current-bm) - var(--fb-constant-background-bo)), 100%);
+}
+
+.fb-accent-background {
+    --fb-next-bm: clamp(15%, calc(var(--fb-current-bm) - var(--fb-accent-background-bo)), 100%);
+}
+
+.fb-highlight-background {
+    --fb-next-bm: clamp(15%, calc(var(--fb-current-bm) - var(--fb-highlight-background-bo)), 100%);
+}
+
+/*
+.fb-default-background {
+    --fb-current-bm: clamp(15%, calc(var(--fb-parent-bm) - var(--fb-constant-background-bo)), 100%);
+    background-color: color-mix( in srgb, var(--fb-base-back-color), var(--fb-abs-back-color) var(--fb-current-bm) );
+}
+
+.fb-accent-background {
+    --fb-current-bm: clamp(15%, calc(var(--fb-parent-bm) - var(--fb-accent-background-bo)), 100%);
+    background-color: color-mix( in srgb, var(--fb-base-back-color), var(--fb-abs-back-color) var(--fb-current-bm) );
+}
+
+.fb-highlight-background {
+    --fb-current-bm: clamp(15%, calc(var(--fb-parent-bm) - var(--fb-highlight-background-bo)), 100%);
+    background-color: color-mix( in srgb, var(--fb-base-back-color), var(--fb-abs-back-color) var(--fb-current-bm) );
+}
+
+    .fb-default-background > *,
+    .fb-accent-background > *,
+    .fb-highlight-background > * {
+        --fb-parent-bm: var(--fb-current-bm);
+    }
+    */
+/**********************************************************************************/
+/* RADIUS */
+.fb-layout-radius {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+/**********************************************************************************/
+/* FRAMED COLUMN */
+
+/* FRAME */
+.framed-column-containner {
+    border-left: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    border-top: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+}
+
+/* SEPARATOR */
+.framed-separator-column-containner > div:nth-child(n) {
+    border-right: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    border-bottom: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+}
+
+/* GRID */
+.framed-grid-column-containner {
+    border-left: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    border-top: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+}
+
+    .framed-grid-column-containner > div:nth-child(n) {
+        border-right: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+        border-bottom: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    }
+
+/**********************************************************************************/
+/* COLUMN */
+
+/* FRAME */
+.framed-column {
+    border-left: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    border-top: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+}
+
+/* SEPARATOR */
+.framed-separator-column > div:nth-child(n) {
+    border-right: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    border-bottom: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+}
+
+/* GRID */
+.framed-grid-column {
+    border-left: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    border-top: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+}
+
+    .framed-grid-column > div:nth-child(n) {
+        border-right: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+        border-bottom: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    }
+
+/**********************************************************************************/
+/* FRAMED STACK */
+
+/* FRAME */
+.framed-stack {
+    border: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+}
+
+/* SEPARATOR */
+.framed-separator-stack > div:nth-last-child(n+2) {
+    border-bottom: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+}
+
+/* GRID */
+.framed-grid-stack {
+    border: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+}
+
+    .framed-grid-stack > div:nth-last-child(n+2) {
+        border-bottom: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    }
+
+/**********************************************************************************/
+/* FRAMED ROW */
+
+/* FRAME */
+.framed-row {
+    border: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+}
+
+/* SEPARATOR */
+.framed-separator-row > div:nth-last-child(n+2) {
+    border-right: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+}
+
+/* GRID */
+.framed-grid-row {
+    border: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+}
+
+    .framed-grid-row > div:nth-last-child(n+2) {
+        border-right: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    }
+
+/**********************************************************************************/
+/* SIZING CLASSES mapping to unified custom properties */
+
+/* Small Frame Classes */
+.framed-column-containner-small-frame,
+.framed-separator-column-containner-small-frame,
+.framed-grid-column-containner-small-frame,
+.framed-column-small-frame,
+.framed-separator-column-small-frame,
+.framed-grid-column-small-frame,
+.framed-stack-small-frame,
+.framed-separator-stack-small-frame,
+.framed-grid-stack-small-frame,
+.framed-row-small-frame,
+.framed-separator-row-small-frame,
+.framed-grid-row-small-frame {
+    --fb-frame-border-size: var(--fb-s-frame-border-size, 0.07rem);
+    --fb-frame-border-color: var(--fb-s-frame-border-color, #e2e2e2);
+}
+
+/* Medium Frame Classes */
+.framed-column-containner-medium-frame,
+.framed-separator-column-containner-medium-frame,
+.framed-grid-column-containner-medium-frame,
+.framed-column-medium-frame,
+.framed-separator-column-medium-frame,
+.framed-grid-column-medium-frame,
+.framed-stack-medium-frame,
+.framed-separator-stack-medium-frame,
+.framed-grid-stack-medium-frame,
+.framed-row-medium-frame,
+.framed-separator-row-medium-frame,
+.framed-grid-row-medium-frame {
+    --fb-frame-border-size: var(--fb-m-frame-border-size, 0.07rem);
+    --fb-frame-border-color: var(--fb-m-frame-border-color, #cecece);
+}
+
+/* Large Frame Classes */
+.framed-column-containner-large-frame,
+.framed-separator-column-containner-large-frame,
+.framed-grid-column-containner-large-frame,
+.framed-column-large-frame,
+.framed-separator-column-large-frame,
+.framed-grid-column-large-frame,
+.framed-stack-large-frame,
+.framed-separator-stack-large-frame,
+.framed-grid-stack-large-frame,
+.framed-row-large-frame,
+.framed-separator-row-large-frame,
+.framed-grid-row-large-frame {
+    --fb-frame-border-size: var(--fb-l-frame-border-size, 0.14rem);
+    --fb-frame-border-color: var(--fb-l-frame-border-color, #e2e2e2);
+}
+
+/**********************************************************************************/
+/* SEPARATOR SIZE */
+
+.fb-separator-small-frame {
+    flex-basis: var(--fb-s-frame-border-size, 0.07rem);
+    background: var(--fb-s-frame-border-color, #e2e2e2);
+}
+
+.fb-separator-medium-frame {
+    flex-basis: var(--fb-m-frame-border-size, 0.07rem);
+    background: var(--fb-m-frame-border-color, #cecece);
+}
+
+.fb-separator-large-frame {
+    flex-basis: var(--fb-l-frame-border-size, 0.14rem);
+    background: var(--fb-l-frame-border-color, #e2e2e2);
+}
+
+/**********************************************************************************/
 /* UTILS */
 .fb-utils-fit-parent {
     position: absolute;
@@ -335,196 +568,6 @@
         display: none;
     }
 }
-
-/**********************************************************************************/
-/* BACKGROUNDS */
-.fb-default-background {
-    background-color: var(--fb-default-background, #FFF);
-}
-
-.fb-accent-background {
-    background-color: var(--fb-accent-background, #f8f7f7);
-}
-
-.fb-highlight-background {
-    background-color: var(--fb-highlight-background, #e8f3ff);
-}
-
-/**********************************************************************************/
-/* RADIUS */
-.fb-layout-radius {
-    border-radius: 0.5rem;
-    overflow: hidden;
-}
-
-/**********************************************************************************/
-/* FRAMED COLUMN */
-
-/* FRAME */
-.framed-column-containner {
-    border-left: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-    border-top: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-}
-
-/* SEPARATOR */
-.framed-separator-column-containner > div:nth-child(n) {
-    border-right: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-    border-bottom: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-}
-
-/* GRID */
-.framed-grid-column-containner {
-    border-left: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-    border-top: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-}
-
-.framed-grid-column-containner > div:nth-child(n) {
-    border-right: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-    border-bottom: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-}
-
-/**********************************************************************************/
-/* COLUMN */
-
-/* FRAME */
-.framed-column {
-    border-left: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-    border-top: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-}
-
-/* SEPARATOR */
-.framed-separator-column > div:nth-child(n) {
-    border-right: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-    border-bottom: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-}
-
-/* GRID */
-.framed-grid-column {
-    border-left: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-    border-top: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-}
-
-.framed-grid-column > div:nth-child(n) {
-    border-right: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-    border-bottom: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-}
-
-/**********************************************************************************/
-/* FRAMED STACK */
-
-/* FRAME */
-.framed-stack {
-    border: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-}
-
-/* SEPARATOR */
-.framed-separator-stack > div:nth-last-child(n+2) {
-    border-bottom: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-}
-
-/* GRID */
-.framed-grid-stack {
-    border: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-}
-
-.framed-grid-stack > div:nth-last-child(n+2) {
-    border-bottom: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-}
-
-/**********************************************************************************/
-/* FRAMED ROW */
-
-/* FRAME */
-.framed-row {
-    border: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-}
-
-/* SEPARATOR */
-.framed-separator-row > div:nth-last-child(n+2) {
-    border-right: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-}
-
-/* GRID */
-.framed-grid-row {
-    border: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-}
-
-.framed-grid-row > div:nth-last-child(n+2) {
-    border-right: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-}
-
-/**********************************************************************************/
-/* SIZING CLASSES mapping to unified custom properties */
-
-/* Small Frame Classes */
-.framed-column-containner-small-frame,
-.framed-separator-column-containner-small-frame,
-.framed-grid-column-containner-small-frame,
-.framed-column-small-frame,
-.framed-separator-column-small-frame,
-.framed-grid-column-small-frame,
-.framed-stack-small-frame,
-.framed-separator-stack-small-frame,
-.framed-grid-stack-small-frame,
-.framed-row-small-frame,
-.framed-separator-row-small-frame,
-.framed-grid-row-small-frame {
-    --fb-frame-border-size: var(--fb-s-frame-border-size, 0.07rem);
-    --fb-frame-border-color: var(--fb-s-frame-border-color, #e2e2e2);
-}
-
-/* Medium Frame Classes */
-.framed-column-containner-medium-frame,
-.framed-separator-column-containner-medium-frame,
-.framed-grid-column-containner-medium-frame,
-.framed-column-medium-frame,
-.framed-separator-column-medium-frame,
-.framed-grid-column-medium-frame,
-.framed-stack-medium-frame,
-.framed-separator-stack-medium-frame,
-.framed-grid-stack-medium-frame,
-.framed-row-medium-frame,
-.framed-separator-row-medium-frame,
-.framed-grid-row-medium-frame {
-    --fb-frame-border-size: var(--fb-m-frame-border-size, 0.07rem);
-    --fb-frame-border-color: var(--fb-m-frame-border-color, #cecece);
-}
-
-/* Large Frame Classes */
-.framed-column-containner-large-frame,
-.framed-separator-column-containner-large-frame,
-.framed-grid-column-containner-large-frame,
-.framed-column-large-frame,
-.framed-separator-column-large-frame,
-.framed-grid-column-large-frame,
-.framed-stack-large-frame,
-.framed-separator-stack-large-frame,
-.framed-grid-stack-large-frame,
-.framed-row-large-frame,
-.framed-separator-row-large-frame,
-.framed-grid-row-large-frame {
-    --fb-frame-border-size: var(--fb-l-frame-border-size, 0.14rem);
-    --fb-frame-border-color: var(--fb-l-frame-border-color, #e2e2e2);
-}
-
-/**********************************************************************************/
-/* SEPARATOR SIZE */
-
-.fb-separator-small-frame {
-    flex-basis: var(--fb-s-frame-border-size, 0.07rem);
-    background: var(--fb-s-frame-border-color, #e2e2e2);
-}
-
-.fb-separator-medium-frame {
-    flex-basis: var(--fb-m-frame-border-size, 0.07rem);
-    background: var(--fb-m-frame-border-color, #cecece);
-}
-
-.fb-separator-large-frame {
-    flex-basis: var(--fb-l-frame-border-size, 0.14rem);
-    background: var(--fb-l-frame-border-color, #e2e2e2);
-}
-
 
 /*********************************************************************************/
 /* DESIGN SYSTEM */

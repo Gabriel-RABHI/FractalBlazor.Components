@@ -253,55 +253,55 @@ namespace FractalBlazor.Components.Layout
         /// With -> Frame -> Small
         /// </summary>
         [Parameter]
-        public bool WFrameS { get => Frame == FbFrame.Small; set => Frame = FbFrame.Small; }
+        public bool WFS { get => Frame == FbFrame.Small; set => Frame = FbFrame.Small; }
 
         /// <summary>
         /// With -> Frame -> Medium
         /// </summary>
         [Parameter]
-        public bool WFrameM { get => Frame == FbFrame.Medium; set => Frame = FbFrame.Medium; }
+        public bool WFM { get => Frame == FbFrame.Medium; set => Frame = FbFrame.Medium; }
 
         /// <summary>
         /// With -> Frame -> Large
         /// </summary>
         [Parameter]
-        public bool WFrameL { get => Frame == FbFrame.Large; set => Frame = FbFrame.Large; }
+        public bool WFL { get => Frame == FbFrame.Large; set => Frame = FbFrame.Large; }
 
         /// <summary>
         /// With -> Separator -> Small
         /// </summary>
         [Parameter]
-        public bool WSeparatorS { get => Separator == FbFrame.Small; set => Separator = FbFrame.Small; }
+        public bool WSS { get => Separator == FbFrame.Small; set => Separator = FbFrame.Small; }
 
         /// <summary>
         /// With -> Separator -> Medium
         /// </summary>
         [Parameter]
-        public bool WSeparatorM { get => Separator == FbFrame.Medium; set => Separator = FbFrame.Medium; }
+        public bool WSM { get => Separator == FbFrame.Medium; set => Separator = FbFrame.Medium; }
 
         /// <summary>
         /// With -> Separator -> Large
         /// </summary>
         [Parameter]
-        public bool WSeparatorL { get => Separator == FbFrame.Large; set => Separator = FbFrame.Large; }
+        public bool WSL { get => Separator == FbFrame.Large; set => Separator = FbFrame.Large; }
 
         /// <summary>
         /// With -> Grid -> Small
         /// </summary>
         [Parameter]
-        public bool WGridS { get => WFrameS && WSeparatorS; set => WFrameS = WSeparatorS = true; }
+        public bool WGS { get => WFS && WSS; set => WFS = WSS = true; }
 
         /// <summary>
         /// With -> Grid -> Medium
         /// </summary>
         [Parameter]
-        public bool WGridM { get => WFrameM && WSeparatorM; set => WFrameM = WSeparatorM = true; }
+        public bool WGM { get => WFM && WSM; set => WFM = WSM = true; }
 
         /// <summary>
         /// With -> Grid -> Large
         /// </summary>
         [Parameter]
-        public bool WGridL { get => WFrameL && WSeparatorL; set => WFrameL = WSeparatorL = true; }
+        public bool WGL { get => WFL && WSL; set => WFL = WSL = true; }
 
         /// <summary>
         /// With -> Radius -> Small
@@ -331,19 +331,19 @@ namespace FractalBlazor.Components.Layout
         /// With -> Background -> Default
         /// </summary>
         [Parameter]
-        public bool WDefaultBackground { get => _background == FbBackground.Default; set => _background = FbBackground.Default; }
+        public bool L0 { get => _background == FbBackground.Default; set => _background = FbBackground.Default; }
 
         /// <summary>
         /// With -> Background -> Accent
         /// </summary>
         [Parameter]
-        public bool WAccentBackground { get => _background == FbBackground.Accent; set => _background = FbBackground.Accent; }
+        public bool L1 { get => _background == FbBackground.Accent; set => _background = FbBackground.Accent; }
 
         /// <summary>
         /// With -> Background -> Highlight
         /// </summary>
         [Parameter]
-        public bool WHighlightBackground { get => _background == FbBackground.Highlight; set => _background = FbBackground.Highlight; }
+        public bool L2 { get => _background == FbBackground.Highlight; set => _background = FbBackground.Highlight; }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {

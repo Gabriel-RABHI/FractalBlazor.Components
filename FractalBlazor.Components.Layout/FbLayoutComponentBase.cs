@@ -10,14 +10,14 @@ namespace FractalBlazor.Components.Layout
     {
         internal static bool UseCaching { get; set; } = true;
 
-        public static int ComputeHash(string input, int hash = 17)
+        internal static int ComputeHash(string input, int hash = 17)
         {
             foreach (char c in input)
                 hash = hash * 31 + c;
             return hash;
         }
 
-        public unsafe static int ComputeHash(byte* input, int size, int hash = 17)
+        internal unsafe static int ComputeHash(byte* input, int size, int hash = 17)
         {
             for (int i = 0; i < size; i++)
                 hash = hash * 31 + input[i];

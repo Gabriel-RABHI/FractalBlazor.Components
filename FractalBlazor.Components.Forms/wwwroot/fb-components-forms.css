@@ -20,7 +20,6 @@ html {
     font-size: var(--fb-txt-base-size);
     font-weight: var(--fb-txt-base-weight);
     color: var(--fb-base-color);
-    background-color: var(--fb-default-background);
 }
 
 /* Optional: Apply your code font universally to pre and code tags */

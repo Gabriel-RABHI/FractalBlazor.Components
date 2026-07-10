@@ -26,12 +26,19 @@ namespace FractalBlazor.Components.Forms.Display
 
     public enum FbTextIntent : byte
     {
-        None,
+        Default,
+        /// <summary>
+        /// Really dark.
+        /// </summary>
         Shadow,
+        /// <summary>
+        /// Darker.
+        /// </summary>
         Mute,
-        Accent,
-        Primary,
-        Error
+        /// <summary>
+        /// Lighter
+        /// </summary>
+        Accent
     }
 
     public enum FbTextModifiers : byte
@@ -86,12 +93,6 @@ namespace FractalBlazor.Components.Forms.Display
 
         [Parameter]
         public bool Accent { get => _intent == FbTextIntent.Accent; set => _intent = FbTextIntent.Accent; }
-
-        [Parameter]
-        public bool Primary { get => _intent == FbTextIntent.Primary; set => _intent = FbTextIntent.Primary; }
-
-        [Parameter]
-        public bool Error { get => _intent == FbTextIntent.Error; set => _intent = FbTextIntent.Error; }
 
         // -------- Modifiers
         [Parameter]

@@ -23,6 +23,14 @@ namespace FractalBlazor.Components.Layout
 
         // -------------- FbColumnSeparator Frame ------------ //
         protected FbFrame Frame { get => _frame; set => _frame = value; }
+
+
+        /// <summary>
+        /// Margin size
+        /// </summary>
+        [Parameter]
+        public FbSpacing Margin { get; set; }
+
         #endregion
 
         // ************************************************************************************************ //
@@ -63,12 +71,6 @@ namespace FractalBlazor.Components.Layout
                     return "";
             }
         }
-
-        /// <summary>
-        /// Margin size
-        /// </summary>
-        [Parameter]
-        public FbSpacing Margin { get; set; }
 
         /// <summary>
         /// Margin -> Small

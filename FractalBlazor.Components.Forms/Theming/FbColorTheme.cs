@@ -44,9 +44,9 @@ namespace FractalBlazor.Components.Forms.Theming
                 $"{Selector} {{\n" +
                 $"  --fb-base-color: {Color};\n" +
                 $"  --fb-primary-color: {PrimaryColor};\n" +
-                $"  --fb-shadow-color: color-mix(in srgb, var(--fb-base-color), var(--fb-back-color) {ShadowColorBackMix});\n" +
-                $"  --fb-mute-color: color-mix(in srgb, var(--fb-base-color), var(--fb-back-color) {MutedColorBackMix});\n" +
-                $"  --fb-accent-color: color-mix(in srgb, var(--fb-base-color), var(--fb-front-color) {AccentColorFrontMix});\n" +
+                $"  --fb-shadow-color: color-mix(in srgb, var(--fb-base-color), var(--fb-abs-back-color) {ShadowColorBackMix});\n" +
+                $"  --fb-mute-color: color-mix(in srgb, var(--fb-base-color), var(--fb-abs-back-color) {MutedColorBackMix});\n" +
+                $"  --fb-accent-color: color-mix(in srgb, var(--fb-base-color), var(--fb-abs-front-color) {AccentColorFrontMix});\n" +
                 $"}}"
             );
             builder.CloseElement();

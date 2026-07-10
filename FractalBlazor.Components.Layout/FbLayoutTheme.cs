@@ -5,35 +5,83 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Layout
 {
+    
     /// <summary>
     /// Component that dynamically generates and updates layout style variables at runtime.
     /// </summary>
     public class FbLayoutTheme : FbComponentBase
     {
+        // ---------------- ABSOLUTE, ROOT VARIABLES ---------------- //
+
         /// <summary>
         /// CSS Selector to apply the layout variables to. Defaults to ":root".
         /// </summary>
         [Parameter]
         public string Selector { get; set; } = ":root";
 
+        /// <summary>
+        /// Background color for default background.
+        /// </summary>
+        [Parameter]
+        public string AbsoluteBackColor { get; set; } = "#000";
 
         /// <summary>
         /// Background color for default background.
         /// </summary>
         [Parameter]
-        public string BackColor { get; set; } = "#000";
+        public string AbsoluteForeColor { get; set; } = "#FFF";
 
         /// <summary>
         /// Background color for default background.
         /// </summary>
         [Parameter]
-        public string FrontColor { get; set; } = "#FFF";
+        public string BaseBackColor { get; set; } = "#546E7A";
 
         /// <summary>
         /// Background color for default background.
         /// </summary>
         [Parameter]
-        public string LayoutBaseColor { get; set; } = "#546E7A";
+        public string BaseForeColor { get; set; } = "#546E7A";
+
+        /// <summary>
+        /// Offset from the current computed .
+        /// </summary>
+        [Parameter]
+        public string DefaultBackgroundBackMix { get; set; } = "90%";
+
+        /// <summary>
+        /// Offset from the current computed .
+        /// </summary>
+        [Parameter]
+        public string DefaultForegroundForeMix { get; set; } = "90%";
+
+        // ---------------- RELATIVE TO CURRENT BACKGROUND ---------------- //
+
+        /// <summary>
+        /// Offset from the current computed background : still the same with 0%.
+        /// </summary>
+        [Parameter]
+        public string SurfaceBackgroundMixOffset { get; set; } = "0%";
+        /// <summary>
+        /// Background color for accent background.
+        /// </summary>
+        [Parameter]
+        public string AccentBackgroundMixOffset { get; set; } = "8%";
+
+        /// <summary>
+        /// Background color for highlight background.
+        /// </summary>
+        [Parameter]
+        public string HighlightBackgroundMixOffset { get; set; } = "16%";
+
+        // ---------------- RELATIVE TO CURRENT BACKGROUND LEVEL ---------------- //
+        /// <summary>
+        /// Background color for highlight background.
+        /// </summary>
+        [Parameter]
+        public string HoverBackgroundMixOffset { get; set; } = "12%";
+
+        // ---------------- RELATIVE TO CURRENT BACKGROUND ---------------- //
 
         /// <summary>
         /// Border size for small frames.
@@ -45,7 +93,7 @@ namespace FractalBlazor.Components.Layout
         /// Border color for small frames.
         /// </summary>
         [Parameter]
-        public string SmallFrameBorderColorBackMix { get; set; } = "60%";
+        public string SmallFrameBorderMixOffset { get; set; } = "10%";
 
         /// <summary>
         /// Border size for medium frames.
@@ -57,63 +105,61 @@ namespace FractalBlazor.Components.Layout
         /// Border color for medium frames.
         /// </summary>
         [Parameter]
-        public string MediumFrameBorderColorBackMix { get; set; } = "40%";
+        public string MediumFrameBorderMixOffset { get; set; } = "20%";
 
         /// <summary>
         /// Border size for large frames.
         /// </summary>
         [Parameter]
-        public string LargeFrameBorderSize { get; set; } = "0.07rem";
+        public string LargeFrameBorderSize { get; set; } = "0.14rem";
 
         /// <summary>
         /// Border color for large frames.
         /// </summary>
         [Parameter]
-        public string LargeFrameBorderColorBackMix { get; set; } = "20%";
-
-        /// <summary>
-        /// Background color for default background.
-        /// </summary>
-        [Parameter]
-        public string DefaultBackgroundBackMix { get; set; } = "80%";
-
-        /// <summary>
-        /// Background color for accent background.
-        /// </summary>
-        [Parameter]
-        public string AccentBackgroundBackMix { get; set; } = "70%";
-
-        /// <summary>
-        /// Background color for highlight background.
-        /// </summary>
-        [Parameter]
-        public string HighlightBackgroundBackMix { get; set; } = "60%";
+        public string LargeFrameBorderMixOffset { get; set; } = "20%";
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "style");
             builder.AddContent(1, 
                 $"{Selector} {{\n" +
-                $"  --fb-back-color: {BackColor};\n" +
-                $"  --fb-front-color: {FrontColor};\n" +
-                $"  --fb-layout-base-color: {LayoutBaseColor};\n" +
+                // -------- Base elements
+                $"  --fb-abs-back-color: {AbsoluteBackColor};\n" +
+                $"  --fb-abs-front-color: {AbsoluteForeColor};\n" +
+                $"  --fb-base-back-color: {BaseBackColor};\n" +
+
+                // -------- (bm) Back Mix
+                $"  --fb-parent-bm: {DefaultBackgroundBackMix};\n" +
+                $"  --fb-current-bm: {DefaultBackgroundBackMix};\n" +
+
+                // -------- (bo) Back Offsets
+                $"  --fb-constant-background-bo: {SurfaceBackgroundMixOffset};\n" +
+                $"  --fb-accent-background-bo: {AccentBackgroundMixOffset};\n" +
+                $"  --fb-highlight-background-bo: {HighlightBackgroundMixOffset};\n" +
+                $"  --fb-hover-background-bo: {HoverBackgroundMixOffset};\n" +
+
+                // -------- (bo) Back Offsets
+                $"  --fb-s-frame-border-bo: {SmallFrameBorderMixOffset};\n" +
+                $"  --fb-m-frame-border-bo: {MediumFrameBorderMixOffset};\n" +
+                $"  --fb-l-frame-border-bo: {LargeFrameBorderMixOffset};\n" +
+
+                // -------- Sizes
+                $"  --fb-s-frame-border-size: {SmallFrameBorderSize};\n" +
+                $"  --fb-m-frame-border-size: {MediumFrameBorderSize};\n" +
+                $"  --fb-l-frame-border-size: {LargeFrameBorderSize};\n" +
+
+                // -------- Spacings
                 $"  --fb-s-spacing: {FbLayoutPresets.ToRem(FbLayoutPresets.S)};\n" +
                 $"  --fb-m-spacing: {FbLayoutPresets.ToRem(FbLayoutPresets.M)};\n" +
                 $"  --fb-l-spacing: {FbLayoutPresets.ToRem(FbLayoutPresets.L)};\n" +
                 $"  --fb-x-spacing: {FbLayoutPresets.ToRem(FbLayoutPresets.X)};\n" +
+
+                // -------- Radius
                 $"  --fb-s-radius: {FbLayoutPresets.ToRem(FbLayoutPresets.RS)};\n" +
                 $"  --fb-m-radius: {FbLayoutPresets.ToRem(FbLayoutPresets.RM)};\n" +
                 $"  --fb-l-radius: {FbLayoutPresets.ToRem(FbLayoutPresets.RL)};\n" +
                 $"  --fb-x-radius: {FbLayoutPresets.ToRem(FbLayoutPresets.RX)};\n" +
-                $"  --fb-s-frame-border-size: {SmallFrameBorderSize};\n" +
-                $"  --fb-s-frame-border-color: color-mix(in srgb, var(--fb-layout-base-color), var(--fb-back-color) {SmallFrameBorderColorBackMix});\n" +
-                $"  --fb-m-frame-border-size: {MediumFrameBorderSize};\n" +
-                $"  --fb-m-frame-border-color: color-mix(in srgb, var(--fb-layout-base-color), var(--fb-back-color) {MediumFrameBorderColorBackMix});\n" +
-                $"  --fb-l-frame-border-size: {LargeFrameBorderSize};\n" +
-                $"  --fb-l-frame-border-color: color-mix(in srgb, var(--fb-layout-base-color), var(--fb-back-color) {LargeFrameBorderColorBackMix});\n" +
-                $"  --fb-default-background: color-mix(in srgb, var(--fb-layout-base-color), var(--fb-back-color) {DefaultBackgroundBackMix});\n" +
-                $"  --fb-accent-background: color-mix(in srgb, var(--fb-layout-base-color), var(--fb-back-color) {AccentBackgroundBackMix});\n" +
-                $"  --fb-highlight-background: color-mix(in srgb, var(--fb-layout-base-color), var(--fb-back-color) {HighlightBackgroundBackMix});\n" +
                 $"}}"
             );
             builder.CloseElement();
