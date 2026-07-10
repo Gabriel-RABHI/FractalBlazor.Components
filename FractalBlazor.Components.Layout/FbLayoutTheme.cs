@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Layout
 {
-    public sealed class FbLayoutTheme
+    public sealed class FbLayoutTheme : IFbCssVariables
     {
         public string BackgroundAnchor { get; set; } = "#111113";
 
@@ -69,26 +69,46 @@ namespace FractalBlazor.Components.Layout
         {
             var builder = new StringBuilder();
 
-            Append(builder, "--fb-bg-anchor", BackgroundAnchor);
-            Append(builder, "--fb-bg-tint", BackgroundTint);
-            Append(builder, "--fb-bg-high-anchor", BackgroundHighAnchor);
-            Append(builder, "--fb-bg-surface-mix", SurfaceMix);
-            Append(builder, "--fb-bg-accent-offset", AccentOffset);
-            Append(builder, "--fb-bg-highlight-offset", HighlightOffset);
-            Append(builder, "--fb-frame-light-mix", FrameLightMix);
-            Append(builder, "--fb-frame-medium-mix", FrameMediumMix);
-            Append(builder, "--fb-frame-strong-mix", FrameStrongMix);
-            Append(builder, "--fb-frame-light-size", FrameLightSize);
-            Append(builder, "--fb-frame-medium-size", FrameMediumSize);
-            Append(builder, "--fb-frame-strong-size", FrameStrongSize);
-            Append(builder, "--fb-space-s", SpaceS);
-            Append(builder, "--fb-space-m", SpaceM);
-            Append(builder, "--fb-space-l", SpaceL);
-            Append(builder, "--fb-space-x", SpaceX);
-            Append(builder, "--fb-radius-s", RadiusS);
-            Append(builder, "--fb-radius-m", RadiusM);
-            Append(builder, "--fb-radius-l", RadiusL);
-            Append(builder, "--fb-radius-x", RadiusX);
+            Append(builder, "--fb-default-bg-anchor", BackgroundAnchor);
+            Append(builder, "--fb-default-bg-tint", BackgroundTint);
+            Append(builder, "--fb-default-bg-high-anchor", BackgroundHighAnchor);
+            Append(builder, "--fb-default-bg-surface-mix", SurfaceMix);
+            Append(builder, "--fb-default-bg-accent-offset", AccentOffset);
+            Append(builder, "--fb-default-bg-highlight-offset", HighlightOffset);
+            Append(builder, "--fb-default-frame-light-mix", FrameLightMix);
+            Append(builder, "--fb-default-frame-medium-mix", FrameMediumMix);
+            Append(builder, "--fb-default-frame-strong-mix", FrameStrongMix);
+            Append(builder, "--fb-default-frame-light-size", FrameLightSize);
+            Append(builder, "--fb-default-frame-medium-size", FrameMediumSize);
+            Append(builder, "--fb-default-frame-strong-size", FrameStrongSize);
+            Append(builder, "--fb-default-space-s", SpaceS);
+            Append(builder, "--fb-default-space-m", SpaceM);
+            Append(builder, "--fb-default-space-l", SpaceL);
+            Append(builder, "--fb-default-space-x", SpaceX);
+            Append(builder, "--fb-default-radius-s", RadiusS);
+            Append(builder, "--fb-default-radius-m", RadiusM);
+            Append(builder, "--fb-default-radius-l", RadiusL);
+            Append(builder, "--fb-default-radius-x", RadiusX);
+            AppendRaw(builder, "--fb-bg-anchor:var(--fb-default-bg-anchor);");
+            AppendRaw(builder, "--fb-bg-tint:var(--fb-default-bg-tint);");
+            AppendRaw(builder, "--fb-bg-high-anchor:var(--fb-default-bg-high-anchor);");
+            AppendRaw(builder, "--fb-bg-surface-mix:var(--fb-default-bg-surface-mix);");
+            AppendRaw(builder, "--fb-bg-accent-offset:var(--fb-default-bg-accent-offset);");
+            AppendRaw(builder, "--fb-bg-highlight-offset:var(--fb-default-bg-highlight-offset);");
+            AppendRaw(builder, "--fb-frame-light-mix:var(--fb-default-frame-light-mix);");
+            AppendRaw(builder, "--fb-frame-medium-mix:var(--fb-default-frame-medium-mix);");
+            AppendRaw(builder, "--fb-frame-strong-mix:var(--fb-default-frame-strong-mix);");
+            AppendRaw(builder, "--fb-frame-light-size:var(--fb-default-frame-light-size);");
+            AppendRaw(builder, "--fb-frame-medium-size:var(--fb-default-frame-medium-size);");
+            AppendRaw(builder, "--fb-frame-strong-size:var(--fb-default-frame-strong-size);");
+            AppendRaw(builder, "--fb-space-s:var(--fb-default-space-s);");
+            AppendRaw(builder, "--fb-space-m:var(--fb-default-space-m);");
+            AppendRaw(builder, "--fb-space-l:var(--fb-default-space-l);");
+            AppendRaw(builder, "--fb-space-x:var(--fb-default-space-x);");
+            AppendRaw(builder, "--fb-radius-s:var(--fb-default-radius-s);");
+            AppendRaw(builder, "--fb-radius-m:var(--fb-default-radius-m);");
+            AppendRaw(builder, "--fb-radius-l:var(--fb-default-radius-l);");
+            AppendRaw(builder, "--fb-radius-x:var(--fb-default-radius-x);");
 
             return builder.ToString();
         }
@@ -98,6 +118,9 @@ namespace FractalBlazor.Components.Layout
             if (!string.IsNullOrWhiteSpace(value))
                 builder.Append(name).Append(':').Append(value).Append(';');
         }
+
+        private static void AppendRaw(StringBuilder builder, string value)
+            => builder.Append(value);
     }
 
     public class FbLayoutThemeScope : FbComponentBase

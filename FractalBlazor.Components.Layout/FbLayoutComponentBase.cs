@@ -131,6 +131,8 @@ namespace FractalBlazor.Components.Layout
                         hash = ComputeHash(WidthBasis, hash);
                     if (!string.IsNullOrWhiteSpace(Style))
                         hash = ComputeHash(Style, hash);
+                    if (Variables is not null)
+                        hash = ComputeHash(Variables.ToCssVariables(), hash);
                     return hash;
                 }
             }
@@ -168,6 +170,7 @@ namespace FractalBlazor.Components.Layout
                             (_state._flex != int.MinValue ? $"flex:{_state._flex};" : "") +
                             (Hidden ? "visibility:hidden;" : "");
                     str += (string.IsNullOrWhiteSpace(WidthBasis) ? "" : $"flex-basis:{WidthBasis};") +
+                            (Variables is null ? "" : Variables.ToCssVariables()) +
                             (string.IsNullOrWhiteSpace(Style) ? "" : Style + ";");
                     if (UseCaching && !_cache.ContainsKey(hash))
                         _cache[hash] = str;
@@ -276,6 +279,12 @@ namespace FractalBlazor.Components.Layout
         /// </summary>
         [Parameter]
         public string Style { get; set; } = "";
+
+        /// <summary>
+        /// Local CSS variables applied before custom style.
+        /// </summary>
+        [Parameter]
+        public IFbCssVariables? Variables { get; set; }
 
         /// <summary>
         /// Custom CSS classes

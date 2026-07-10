@@ -1,12 +1,18 @@
 /**********************************************************************************/
 /* UTILS */
 :root {
-    --fb-fg-anchor: #111113;
-    --fb-fg-high-anchor: #f7f7f8;
-    --fb-fg-default-high-mix: 82%;
-    --fb-fg-subtle-high-mix: 46%;
-    --fb-fg-muted-high-mix: 64%;
-    --fb-fg-highlight-high-mix: 100%;
+    --fb-default-fg-anchor: #111113;
+    --fb-default-fg-high-anchor: #f7f7f8;
+    --fb-default-fg-default-high-mix: 82%;
+    --fb-default-fg-subtle-high-mix: 46%;
+    --fb-default-fg-muted-high-mix: 64%;
+    --fb-default-fg-highlight-high-mix: 100%;
+    --fb-fg-anchor: var(--fb-default-fg-anchor);
+    --fb-fg-high-anchor: var(--fb-default-fg-high-anchor);
+    --fb-fg-default-high-mix: var(--fb-default-fg-default-high-mix);
+    --fb-fg-subtle-high-mix: var(--fb-default-fg-subtle-high-mix);
+    --fb-fg-muted-high-mix: var(--fb-default-fg-muted-high-mix);
+    --fb-fg-highlight-high-mix: var(--fb-default-fg-highlight-high-mix);
     --fb-fg-default: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-default-high-mix));
     --fb-fg-subtle: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-subtle-high-mix));
     --fb-fg-muted: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-muted-high-mix));

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace FractalBlazor.Components.Forms.Theming
 {
-    public class FbColorTheme : FbComponentBase
+    public class FbColorTheme : FbComponentBase, IFbCssVariables
     {
         /// <summary>
         /// CSS Selector to apply the layout variables to. Defaults to ":root".
@@ -64,25 +64,45 @@ namespace FractalBlazor.Components.Forms.Theming
         [Obsolete("Use ForegroundHighlightHighMix instead.")]
         public string AccentColorFrontMix { get => ForegroundHighlightHighMix; set => ForegroundHighlightHighMix = value; }
 
+        public string ToCssVariables()
+        {
+            var builder = new StringBuilder();
+
+            Append(builder, "--fb-default-fg-anchor", ForegroundAnchor);
+            Append(builder, "--fb-default-fg-high-anchor", ForegroundHighAnchor);
+            Append(builder, "--fb-default-fg-default-high-mix", ForegroundDefaultHighMix);
+            Append(builder, "--fb-default-fg-subtle-high-mix", ForegroundSubtleHighMix);
+            Append(builder, "--fb-default-fg-muted-high-mix", ForegroundMutedHighMix);
+            Append(builder, "--fb-default-fg-highlight-high-mix", ForegroundHighlightHighMix);
+            AppendRaw(builder, "--fb-fg-anchor:var(--fb-default-fg-anchor);");
+            AppendRaw(builder, "--fb-fg-high-anchor:var(--fb-default-fg-high-anchor);");
+            AppendRaw(builder, "--fb-fg-default-high-mix:var(--fb-default-fg-default-high-mix);");
+            AppendRaw(builder, "--fb-fg-subtle-high-mix:var(--fb-default-fg-subtle-high-mix);");
+            AppendRaw(builder, "--fb-fg-muted-high-mix:var(--fb-default-fg-muted-high-mix);");
+            AppendRaw(builder, "--fb-fg-highlight-high-mix:var(--fb-default-fg-highlight-high-mix);");
+            AppendRaw(builder, "--fb-fg-default:color-mix(in oklab,var(--fb-fg-anchor),var(--fb-fg-high-anchor) var(--fb-fg-default-high-mix));");
+            AppendRaw(builder, "--fb-fg-subtle:color-mix(in oklab,var(--fb-fg-anchor),var(--fb-fg-high-anchor) var(--fb-fg-subtle-high-mix));");
+            AppendRaw(builder, "--fb-fg-muted:color-mix(in oklab,var(--fb-fg-anchor),var(--fb-fg-high-anchor) var(--fb-fg-muted-high-mix));");
+            AppendRaw(builder, "--fb-fg-highlight:color-mix(in oklab,var(--fb-fg-anchor),var(--fb-fg-high-anchor) var(--fb-fg-highlight-high-mix));");
+
+            return builder.ToString();
+        }
+
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "style");
-            builder.AddContent(1,
-                $"{Selector} {{\n" +
-                $"  --fb-fg-anchor: {ForegroundAnchor};\n" +
-                $"  --fb-fg-high-anchor: {ForegroundHighAnchor};\n" +
-                $"  --fb-fg-default-high-mix: {ForegroundDefaultHighMix};\n" +
-                $"  --fb-fg-subtle-high-mix: {ForegroundSubtleHighMix};\n" +
-                $"  --fb-fg-muted-high-mix: {ForegroundMutedHighMix};\n" +
-                $"  --fb-fg-highlight-high-mix: {ForegroundHighlightHighMix};\n" +
-                $"  --fb-fg-default: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-default-high-mix));\n" +
-                $"  --fb-fg-subtle: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-subtle-high-mix));\n" +
-                $"  --fb-fg-muted: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-muted-high-mix));\n" +
-                $"  --fb-fg-highlight: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-highlight-high-mix));\n" +
-                $"}}"
-            );
+            builder.AddContent(1, $"{Selector}{{{ToCssVariables()}}}");
             builder.CloseElement();
         }
+
+        private static void Append(StringBuilder builder, string name, string value)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+                builder.Append(name).Append(':').Append(value).Append(';');
+        }
+
+        private static void AppendRaw(StringBuilder builder, string value)
+            => builder.Append(value);
     }
 
     public class FbFontTheme : FbComponentBase
