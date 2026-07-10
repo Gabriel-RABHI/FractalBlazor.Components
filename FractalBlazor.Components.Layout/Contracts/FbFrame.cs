@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace  FractalBlazor.Components.Layout
 {
-    public enum FbFrame
+    public enum FbFrame : byte
     {
         None,
-        Small,
+        Light,
         Medium,
-        Large
+        Strong
     }
 }

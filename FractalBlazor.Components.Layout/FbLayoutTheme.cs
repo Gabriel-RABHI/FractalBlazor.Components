@@ -1,167 +1,141 @@
-using System;
-using System.Threading.Tasks;
+using System.Text;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Layout
 {
-    
-    /// <summary>
-    /// Component that dynamically generates and updates layout style variables at runtime.
-    /// </summary>
-    public class FbLayoutTheme : FbComponentBase
+    public sealed class FbLayoutTheme
     {
-        // ---------------- ABSOLUTE, ROOT VARIABLES ---------------- //
+        public string BackgroundAnchor { get; set; } = "#111113";
 
-        /// <summary>
-        /// CSS Selector to apply the layout variables to. Defaults to ":root".
-        /// </summary>
+        public string BackgroundTint { get; set; } = "#34343A";
+
+        public string BackgroundHighAnchor { get; set; } = "#F7F7F8";
+
+        [System.Obsolete("Use BackgroundHighAnchor instead.")]
+        public string ForegroundAnchor
+        {
+            get => BackgroundHighAnchor;
+            set => BackgroundHighAnchor = value;
+        }
+
+        public string SurfaceMix { get; set; } = "8%";
+
+        public string AccentOffset { get; set; } = "10%";
+
+        public string HighlightOffset { get; set; } = "18%";
+
+        public string FrameLightMix { get; set; } = "8%";
+
+        public string FrameMediumMix { get; set; } = "14%";
+
+        public string FrameStrongMix { get; set; } = "22%";
+
+        public string FrameLightSize { get; set; } = "0.0625rem";
+
+        public string FrameMediumSize { get; set; } = "0.0625rem";
+
+        public string FrameStrongSize { get; set; } = "0.125rem";
+
+        public string SpaceS { get; set; } = FbLayoutPresets.ToRem(FbLayoutPresets.S);
+
+        public string SpaceM { get; set; } = FbLayoutPresets.ToRem(FbLayoutPresets.M);
+
+        public string SpaceL { get; set; } = FbLayoutPresets.ToRem(FbLayoutPresets.L);
+
+        public string SpaceX { get; set; } = FbLayoutPresets.ToRem(FbLayoutPresets.X);
+
+        public string RadiusS { get; set; } = FbLayoutPresets.ToRem(FbLayoutPresets.RS);
+
+        public string RadiusM { get; set; } = FbLayoutPresets.ToRem(FbLayoutPresets.RM);
+
+        public string RadiusL { get; set; } = FbLayoutPresets.ToRem(FbLayoutPresets.RL);
+
+        public string RadiusX { get; set; } = FbLayoutPresets.ToRem(FbLayoutPresets.RX);
+
+        public static FbLayoutTheme Dark() => new();
+
+        public static FbLayoutTheme Light() => new()
+        {
+            BackgroundAnchor = "#F7F7F8",
+            BackgroundTint = "#D8DAE0",
+            BackgroundHighAnchor = "#111113",
+            SurfaceMix = "8%",
+            AccentOffset = "8%",
+            HighlightOffset = "16%"
+        };
+
+        public string ToCssVariables()
+        {
+            var builder = new StringBuilder();
+
+            Append(builder, "--fb-bg-anchor", BackgroundAnchor);
+            Append(builder, "--fb-bg-tint", BackgroundTint);
+            Append(builder, "--fb-bg-high-anchor", BackgroundHighAnchor);
+            Append(builder, "--fb-bg-surface-mix", SurfaceMix);
+            Append(builder, "--fb-bg-accent-offset", AccentOffset);
+            Append(builder, "--fb-bg-highlight-offset", HighlightOffset);
+            Append(builder, "--fb-frame-light-mix", FrameLightMix);
+            Append(builder, "--fb-frame-medium-mix", FrameMediumMix);
+            Append(builder, "--fb-frame-strong-mix", FrameStrongMix);
+            Append(builder, "--fb-frame-light-size", FrameLightSize);
+            Append(builder, "--fb-frame-medium-size", FrameMediumSize);
+            Append(builder, "--fb-frame-strong-size", FrameStrongSize);
+            Append(builder, "--fb-space-s", SpaceS);
+            Append(builder, "--fb-space-m", SpaceM);
+            Append(builder, "--fb-space-l", SpaceL);
+            Append(builder, "--fb-space-x", SpaceX);
+            Append(builder, "--fb-radius-s", RadiusS);
+            Append(builder, "--fb-radius-m", RadiusM);
+            Append(builder, "--fb-radius-l", RadiusL);
+            Append(builder, "--fb-radius-x", RadiusX);
+
+            return builder.ToString();
+        }
+
+        private static void Append(StringBuilder builder, string name, string value)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+                builder.Append(name).Append(':').Append(value).Append(';');
+        }
+    }
+
+    public class FbLayoutThemeScope : FbComponentBase
+    {
+        [Parameter]
+        public FbLayoutTheme Theme { get; set; } = FbLayoutTheme.Dark();
+
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
+        [Parameter]
+        public string Classes { get; set; } = "";
+
+        [Parameter]
+        public string Style { get; set; } = "";
+
+        protected override void BuildRenderTree(RenderTreeBuilder builder)
+        {
+            builder.OpenElement(0, "div");
+            builder.AddAttribute(1, "class", $"fb-theme-scope {Classes}".TrimEnd());
+            builder.AddAttribute(2, "style", $"{Theme.ToCssVariables()}{Style}");
+            builder.AddContent(3, ChildContent);
+            builder.CloseElement();
+        }
+    }
+
+    public class FbLayoutThemeStyle : FbComponentBase
+    {
+        [Parameter]
+        public FbLayoutTheme Theme { get; set; } = FbLayoutTheme.Dark();
+
         [Parameter]
         public string Selector { get; set; } = ":root";
-
-        /// <summary>
-        /// Background color for default background.
-        /// </summary>
-        [Parameter]
-        public string AbsoluteBackColor { get; set; } = "#000";
-
-        /// <summary>
-        /// Background color for default background.
-        /// </summary>
-        [Parameter]
-        public string AbsoluteForeColor { get; set; } = "#FFF";
-
-        /// <summary>
-        /// Background color for default background.
-        /// </summary>
-        [Parameter]
-        public string BaseBackColor { get; set; } = "#546E7A";
-
-        /// <summary>
-        /// Background color for default background.
-        /// </summary>
-        [Parameter]
-        public string BaseForeColor { get; set; } = "#546E7A";
-
-        /// <summary>
-        /// Offset from the current computed .
-        /// </summary>
-        [Parameter]
-        public string DefaultBackgroundBackMix { get; set; } = "90%";
-
-        /// <summary>
-        /// Offset from the current computed .
-        /// </summary>
-        [Parameter]
-        public string DefaultForegroundForeMix { get; set; } = "90%";
-
-        // ---------------- RELATIVE TO CURRENT BACKGROUND ---------------- //
-
-        /// <summary>
-        /// Offset from the current computed background : still the same with 0%.
-        /// </summary>
-        [Parameter]
-        public string SurfaceBackgroundMixOffset { get; set; } = "0%";
-        /// <summary>
-        /// Background color for accent background.
-        /// </summary>
-        [Parameter]
-        public string AccentBackgroundMixOffset { get; set; } = "8%";
-
-        /// <summary>
-        /// Background color for highlight background.
-        /// </summary>
-        [Parameter]
-        public string HighlightBackgroundMixOffset { get; set; } = "16%";
-
-        // ---------------- RELATIVE TO CURRENT BACKGROUND LEVEL ---------------- //
-        /// <summary>
-        /// Background color for highlight background.
-        /// </summary>
-        [Parameter]
-        public string HoverBackgroundMixOffset { get; set; } = "12%";
-
-        // ---------------- RELATIVE TO CURRENT BACKGROUND ---------------- //
-
-        /// <summary>
-        /// Border size for small frames.
-        /// </summary>
-        [Parameter]
-        public string SmallFrameBorderSize { get; set; } = "0.07rem";
-
-        /// <summary>
-        /// Border color for small frames.
-        /// </summary>
-        [Parameter]
-        public string SmallFrameBorderMixOffset { get; set; } = "10%";
-
-        /// <summary>
-        /// Border size for medium frames.
-        /// </summary>
-        [Parameter]
-        public string MediumFrameBorderSize { get; set; } = "0.07rem";
-
-        /// <summary>
-        /// Border color for medium frames.
-        /// </summary>
-        [Parameter]
-        public string MediumFrameBorderMixOffset { get; set; } = "20%";
-
-        /// <summary>
-        /// Border size for large frames.
-        /// </summary>
-        [Parameter]
-        public string LargeFrameBorderSize { get; set; } = "0.14rem";
-
-        /// <summary>
-        /// Border color for large frames.
-        /// </summary>
-        [Parameter]
-        public string LargeFrameBorderMixOffset { get; set; } = "20%";
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "style");
-            builder.AddContent(1, 
-                $"{Selector} {{\n" +
-                // -------- Base elements
-                $"  --fb-abs-back-color: {AbsoluteBackColor};\n" +
-                $"  --fb-abs-front-color: {AbsoluteForeColor};\n" +
-                $"  --fb-base-back-color: {BaseBackColor};\n" +
-
-                // -------- (bm) Back Mix
-                $"  --fb-parent-bm: {DefaultBackgroundBackMix};\n" +
-                $"  --fb-current-bm: {DefaultBackgroundBackMix};\n" +
-
-                // -------- (bo) Back Offsets
-                $"  --fb-constant-background-bo: {SurfaceBackgroundMixOffset};\n" +
-                $"  --fb-accent-background-bo: {AccentBackgroundMixOffset};\n" +
-                $"  --fb-highlight-background-bo: {HighlightBackgroundMixOffset};\n" +
-                $"  --fb-hover-background-bo: {HoverBackgroundMixOffset};\n" +
-
-                // -------- (bo) Back Offsets
-                $"  --fb-s-frame-border-bo: {SmallFrameBorderMixOffset};\n" +
-                $"  --fb-m-frame-border-bo: {MediumFrameBorderMixOffset};\n" +
-                $"  --fb-l-frame-border-bo: {LargeFrameBorderMixOffset};\n" +
-
-                // -------- Sizes
-                $"  --fb-s-frame-border-size: {SmallFrameBorderSize};\n" +
-                $"  --fb-m-frame-border-size: {MediumFrameBorderSize};\n" +
-                $"  --fb-l-frame-border-size: {LargeFrameBorderSize};\n" +
-
-                // -------- Spacings
-                $"  --fb-s-spacing: {FbLayoutPresets.ToRem(FbLayoutPresets.S)};\n" +
-                $"  --fb-m-spacing: {FbLayoutPresets.ToRem(FbLayoutPresets.M)};\n" +
-                $"  --fb-l-spacing: {FbLayoutPresets.ToRem(FbLayoutPresets.L)};\n" +
-                $"  --fb-x-spacing: {FbLayoutPresets.ToRem(FbLayoutPresets.X)};\n" +
-
-                // -------- Radius
-                $"  --fb-s-radius: {FbLayoutPresets.ToRem(FbLayoutPresets.RS)};\n" +
-                $"  --fb-m-radius: {FbLayoutPresets.ToRem(FbLayoutPresets.RM)};\n" +
-                $"  --fb-l-radius: {FbLayoutPresets.ToRem(FbLayoutPresets.RL)};\n" +
-                $"  --fb-x-radius: {FbLayoutPresets.ToRem(FbLayoutPresets.RX)};\n" +
-                $"}}"
-            );
+            builder.AddContent(1, $"{Selector}{{{Theme.ToCssVariables()}}}");
             builder.CloseElement();
         }
     }

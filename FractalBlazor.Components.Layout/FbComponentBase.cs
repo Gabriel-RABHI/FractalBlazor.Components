@@ -5,11 +5,10 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Layout
 {
-    public abstract class FbComponentBase : IComponent, IHandleAfterRender
+    public abstract class FbComponentBase : IComponent
     {
         protected RenderHandle _renderHandle;
         private bool _initialized;
-        private bool _hasCalledOnAfterRender;
 
         public void Attach(RenderHandle renderHandle)
         {
@@ -51,19 +50,6 @@ namespace FractalBlazor.Components.Layout
 
         protected virtual void BuildRenderTree(RenderTreeBuilder builder) {
         }
-
-        Task IHandleAfterRender.OnAfterRenderAsync()
-        {
-            var firstRender = !_hasCalledOnAfterRender;
-            _hasCalledOnAfterRender = true;
-
-            OnAfterRender(firstRender);
-            return OnAfterRenderAsync(firstRender);
-        }
-
-        protected virtual void OnAfterRender(bool firstRender) { }
-
-        protected virtual Task OnAfterRenderAsync(bool firstRender) => Task.CompletedTask;
 
         protected Task InvokeAsync(Action work) => _renderHandle.Dispatcher.InvokeAsync(work);
 

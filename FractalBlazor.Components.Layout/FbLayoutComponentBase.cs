@@ -155,16 +155,16 @@ namespace FractalBlazor.Components.Layout
                     RenderingStatistics.AddComponentBaseStyleComputation();
 
                     var str = _state.DisplayModeString +
-                            (Padding != FbSpacing.None ? $"padding:{FbLayoutPresets.ToRem(Padding)};" : "") +
-                            (PaddingTop != FbSpacing.None ? $"padding-top:{FbLayoutPresets.ToRem(PaddingTop)};" : "") +
-                            (PaddingBottom != FbSpacing.None ? $"padding-bottom:{FbLayoutPresets.ToRem(PaddingBottom)};" : "") +
-                            (PaddingLeft != FbSpacing.None ? $"padding-left:{FbLayoutPresets.ToRem(PaddingLeft)};" : "") +
-                            (PaddingRight != FbSpacing.None ? $"padding-right:{FbLayoutPresets.ToRem(PaddingRight)};" : "") +
-                            (Margin != FbSpacing.None ? $"margin:{FbLayoutPresets.ToRem(Margin)};" : "") +
-                            (MarginTop != FbSpacing.None ? $"margin-top:{FbLayoutPresets.ToRem(MarginTop)};" : "") +
-                            (MarginBottom != FbSpacing.None ? $"margin-bottom:{FbLayoutPresets.ToRem(MarginBottom)};" : "") +
-                            (MarginLeft != FbSpacing.None ? $"margin-left:{FbLayoutPresets.ToRem(MarginLeft)};" : "") +
-                            (MarginRight != FbSpacing.None ? $"margin-left:{FbLayoutPresets.ToRem(MarginRight)};" : "") +
+                            (Padding != FbSpacing.None ? $"padding:{FbLayoutPresets.ToSpacingCss(Padding)};" : "") +
+                            (PaddingTop != FbSpacing.None ? $"padding-top:{FbLayoutPresets.ToSpacingCss(PaddingTop)};" : "") +
+                            (PaddingBottom != FbSpacing.None ? $"padding-bottom:{FbLayoutPresets.ToSpacingCss(PaddingBottom)};" : "") +
+                            (PaddingLeft != FbSpacing.None ? $"padding-left:{FbLayoutPresets.ToSpacingCss(PaddingLeft)};" : "") +
+                            (PaddingRight != FbSpacing.None ? $"padding-right:{FbLayoutPresets.ToSpacingCss(PaddingRight)};" : "") +
+                            (Margin != FbSpacing.None ? $"margin:{FbLayoutPresets.ToSpacingCss(Margin)};" : "") +
+                            (MarginTop != FbSpacing.None ? $"margin-top:{FbLayoutPresets.ToSpacingCss(MarginTop)};" : "") +
+                            (MarginBottom != FbSpacing.None ? $"margin-bottom:{FbLayoutPresets.ToSpacingCss(MarginBottom)};" : "") +
+                            (MarginLeft != FbSpacing.None ? $"margin-left:{FbLayoutPresets.ToSpacingCss(MarginLeft)};" : "") +
+                            (MarginRight != FbSpacing.None ? $"margin-right:{FbLayoutPresets.ToSpacingCss(MarginRight)};" : "") +
                             (_state._flex != int.MinValue ? $"flex:{_state._flex};" : "") +
                             (Hidden ? "visibility:hidden;" : "");
                     str += (string.IsNullOrWhiteSpace(WidthBasis) ? "" : $"flex-basis:{WidthBasis};") +

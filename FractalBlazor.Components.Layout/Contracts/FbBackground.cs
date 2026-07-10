@@ -1,9 +1,9 @@
 namespace  FractalBlazor.Components.Layout
 {
-    public enum FbBackground
+    public enum FbBackground : byte
     {
         None,
-        Default,
+        Surface,
         Accent,
         Highlight
     }

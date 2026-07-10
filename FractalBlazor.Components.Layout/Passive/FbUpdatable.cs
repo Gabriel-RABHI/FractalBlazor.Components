@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Layout
 {
-    public class FbUpdatable : FbComponentBase
+    public class FbUpdatable : FbAfterRenderComponentBase
     {
         private bool _periodic = true;
         private TimeSpan _interval = new TimeSpan(0, 0, 1);

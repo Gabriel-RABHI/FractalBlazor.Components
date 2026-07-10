@@ -6,7 +6,7 @@ using Microsoft.JSInterop;
 
 namespace FractalBlazor.Components.Layout
 {
-    public class FbShowWhenOverPerformance : FbComponentBase, IAsyncDisposable
+    public class FbShowWhenOverPerformance : FbAfterRenderComponentBase, IAsyncDisposable
     {
         [Inject]
         public IJSRuntime JS { get; set; }

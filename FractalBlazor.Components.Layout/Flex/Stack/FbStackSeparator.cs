@@ -30,12 +30,12 @@ namespace FractalBlazor.Components.Layout
             {
                 string baseClasse = "fb-separator";
 
-                if (_frame is FbFrame.Small)
-                    return $"{baseClasse}-small-frame";
+                if (_frame is FbFrame.Light)
+                    return $"{baseClasse}-light-frame";
                 else if (_frame is FbFrame.Medium)
                     return $"{baseClasse}-medium-frame";
-                else if (_frame is FbFrame.Large)
-                    return $"{baseClasse}-large-frame";
+                else if (_frame is FbFrame.Strong)
+                    return $"{baseClasse}-strong-frame";
                 else
                     return "";
             }
@@ -53,22 +53,22 @@ namespace FractalBlazor.Components.Layout
         // ***************************************    PUBLIC   ******************************************** //
         // ************************************************************************************************ //
         /// <summary>
-        /// Frame -> Small
+        /// Frame -> Light
         /// </summary>
         [Parameter]
-        public bool WFS { get => Frame == FbFrame.Small; set => Frame = FbFrame.Small; }
+        public bool WFL { get => Frame == FbFrame.Light; set { if (value) Frame = FbFrame.Light; } }
 
         /// <summary>
         /// Frame -> Medium
         /// </summary>
         [Parameter]
-        public bool WFM { get => Frame == FbFrame.Medium; set => Frame = FbFrame.Medium; }
+        public bool WFM { get => Frame == FbFrame.Medium; set { if (value) Frame = FbFrame.Medium; } }
 
         /// <summary>
-        /// Frame -> Large
+        /// Frame -> Strong
         /// </summary>
         [Parameter]
-        public bool WFL { get => Frame == FbFrame.Large; set => Frame = FbFrame.Large; }
+        public bool WFS { get => Frame == FbFrame.Strong; set { if (value) Frame = FbFrame.Strong; } }
 
 
         /// <summary>

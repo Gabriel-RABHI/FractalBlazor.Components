@@ -407,9 +407,9 @@ namespace FractalBlazor.Components.Layout
                             (_state._selfAlign == FbFlexItemSelfAlign.None ? "" : $"align-self:{SelfAlignString};") +
                             $"flex-direction: {DirectionString}; flex-wrap: {WrapString}; justify-content: {JustifyString}; align-items: {AlignItemsString}; align-content: {AlignContentString}; " +
                             (PlaceItemsString != "" ? $"place-items: {PlaceItemsString};" : "") +
-                            (Gutter != FbSpacing.None ? $"gap:{FbLayoutPresets.ToRem(Gutter)};" : "") +
-                            (RowGutter != FbSpacing.None ? $"row-gap:{FbLayoutPresets.ToRem(RowGutter)};" : "") +
-                            (ColumnGutter != FbSpacing.None ? $"column-gap:{FbLayoutPresets.ToRem(ColumnGutter)};" : "") +
+                            (Gutter != FbSpacing.None ? $"gap:{FbLayoutPresets.ToSpacingCss(Gutter)};" : "") +
+                            (RowGutter != FbSpacing.None ? $"row-gap:{FbLayoutPresets.ToSpacingCss(RowGutter)};" : "") +
+                            (ColumnGutter != FbSpacing.None ? $"column-gap:{FbLayoutPresets.ToSpacingCss(ColumnGutter)};" : "") +
                             (Grow != int.MinValue ? $"flex-grow:{Grow};" : "") +
                             (Shrink != int.MinValue ? $"flex-shrink:{Shrink};" : "") +
                             (Order != int.MinValue ? $"order:{Order};" : "") +
@@ -418,7 +418,7 @@ namespace FractalBlazor.Components.Layout
                             (MaxHeightString != "" ? $"max-height: {MaxHeightString};" : "") +
                             (ColumnDisplay ? "flex-flow : column;" : "") +
                             (Scrollable ? "overflow : scroll;" : "") +
-                            (Radius != FbSpacing.None ? $"border-radius:{FbLayoutPresets.ToRem(Radius)};" : "") +
+                            (Radius != FbSpacing.None ? $"border-radius:{FbLayoutPresets.ToRadiusCss(Radius)};" : "") +
                             ComputedBaseStyle;
                     if (UseCaching && !_cache.ContainsKey(hash))
                         _cache[hash] = str;

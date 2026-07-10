@@ -12,11 +12,14 @@ namespace FractalBlazor.Components.Layout
         private FbFrame _separator = FbFrame.None;
         private FbBackground _background = FbBackground.None;
 
-        protected FbFrame Frame { get => _frame; set => _frame = value; }
+        [Parameter]
+        public FbFrame Frame { get => _frame; set => _frame = value; }
 
-        protected FbFrame Separator { get => _separator; set => _separator = value; }
+        [Parameter]
+        public FbFrame Separator { get => _separator; set => _separator = value; }
 
-        protected FbBackground Background { get => _background; set => _background = value; }
+        [Parameter]
+        public FbBackground Background { get => _background; set => _background = value; }
 
         public FbRow()
         {
@@ -33,12 +36,12 @@ namespace FractalBlazor.Components.Layout
             {
                 string baseClasse = "framed-row";
 
-                if (_frame is FbFrame.Small)
-                    return $"{baseClasse} {baseClasse}-small-frame";
+                if (_frame is FbFrame.Light)
+                    return $"{baseClasse} {baseClasse}-light-frame";
                 else if (_frame is FbFrame.Medium)
                     return $"{baseClasse} {baseClasse}-medium-frame";
-                else if (_frame is FbFrame.Large)
-                    return $"{baseClasse} {baseClasse}-large-frame";
+                else if (_frame is FbFrame.Strong)
+                    return $"{baseClasse} {baseClasse}-strong-frame";
                 else
                     return "";
             }
@@ -50,12 +53,12 @@ namespace FractalBlazor.Components.Layout
             {
                 string baseClasse = "framed-separator-row";
 
-                if (_separator is FbFrame.Small)
-                    return $"{baseClasse} {baseClasse}-small-frame";
+                if (_separator is FbFrame.Light)
+                    return $"{baseClasse} {baseClasse}-light-frame";
                 else if (_separator is FbFrame.Medium)
                     return $"{baseClasse} {baseClasse}-medium-frame";
-                else if (_separator is FbFrame.Large)
-                    return $"{baseClasse} {baseClasse}-large-frame";
+                else if (_separator is FbFrame.Strong)
+                    return $"{baseClasse} {baseClasse}-strong-frame";
                 else
                     return "";
             }
@@ -77,12 +80,12 @@ namespace FractalBlazor.Components.Layout
             {
                 switch (_background)
                 {
-                    case FbBackground.Default:
-                        return "fb-default-background";
+                    case FbBackground.Surface:
+                        return "fb-bg-surface";
                     case FbBackground.Accent:
-                        return "fb-accent-background";
+                        return "fb-bg-accent";
                     case FbBackground.Highlight:
-                        return "fb-highlight-background";
+                        return "fb-bg-highlight";
                 }
                 return "";
             }
@@ -276,100 +279,112 @@ namespace FractalBlazor.Components.Layout
 
         // -------------- FbRow Frame ------------ //
         /// <summary>
-        /// With -> Frame -> Small
+        /// With -> Frame -> Light
         /// </summary>
         [Parameter]
-        public bool WFS { get => Frame == FbFrame.Small; set => Frame = FbFrame.Small; }
+        public bool WFL { get => Frame == FbFrame.Light; set { if (value) Frame = FbFrame.Light; } }
 
         /// <summary>
         /// With -> Frame -> Medium
         /// </summary>
         [Parameter]
-        public bool WFM { get => Frame == FbFrame.Medium; set => Frame = FbFrame.Medium; }
+        public bool WFM { get => Frame == FbFrame.Medium; set { if (value) Frame = FbFrame.Medium; } }
 
         /// <summary>
-        /// With -> Frame -> Large
+        /// With -> Frame -> Strong
         /// </summary>
         [Parameter]
-        public bool WFL { get => Frame == FbFrame.Large; set => Frame = FbFrame.Large; }
+        public bool WFS { get => Frame == FbFrame.Strong; set { if (value) Frame = FbFrame.Strong; } }
 
         /// <summary>
-        /// With -> Separator -> Small
+        /// With -> Separator -> Light
         /// </summary>
         [Parameter]
-        public bool WSS { get => Separator == FbFrame.Small; set => Separator = FbFrame.Small; }
+        public bool WSL { get => Separator == FbFrame.Light; set { if (value) Separator = FbFrame.Light; } }
 
         /// <summary>
         /// With -> Separator -> Medium
         /// </summary>
         [Parameter]
-        public bool WSM { get => Separator == FbFrame.Medium; set => Separator = FbFrame.Medium; }
+        public bool WSM { get => Separator == FbFrame.Medium; set { if (value) Separator = FbFrame.Medium; } }
 
         /// <summary>
-        /// With -> Separator -> Large
+        /// With -> Separator -> Strong
         /// </summary>
         [Parameter]
-        public bool WSL { get => Separator == FbFrame.Large; set => Separator = FbFrame.Large; }
+        public bool WSS { get => Separator == FbFrame.Strong; set { if (value) Separator = FbFrame.Strong; } }
 
         /// <summary>
-        /// With -> Grid -> Small
+        /// With -> Grid -> Light
         /// </summary>
         [Parameter]
-        public bool WGS { get => WFS && WSS; set => WFS = WSS = true; }
+        public bool WGL { get => WFL && WSL; set { if (value) WFL = WSL = true; } }
 
         /// <summary>
         /// With -> Grid -> Medium
         /// </summary>
         [Parameter]
-        public bool WGM { get => WFM && WSM; set => WFM = WSM = true; }
+        public bool WGM { get => WFM && WSM; set { if (value) WFM = WSM = true; } }
 
         /// <summary>
-        /// With -> Grid -> Large
+        /// With -> Grid -> Strong
         /// </summary>
         [Parameter]
-        public bool WGL { get => WFL && WSL; set => WFL = WSL = true; }
+        public bool WGS { get => WFS && WSS; set { if (value) WFS = WSS = true; } }
 
         /// <summary>
         /// With -> Radius -> Small
         /// </summary>
         [Parameter]
-        public bool WRS { get => Radius == FbLayoutPresets.RS; set => Radius = FbLayoutPresets.RS; }
+        public bool WRS { get => Radius == FbLayoutPresets.RS; set { if (value) Radius = FbLayoutPresets.RS; } }
         
         /// <summary>
         /// With -> Radius -> Medium
         /// </summary>
         [Parameter]
-        public bool WRM { get => Radius == FbLayoutPresets.RM; set => Radius = FbLayoutPresets.RM; }
+        public bool WRM { get => Radius == FbLayoutPresets.RM; set { if (value) Radius = FbLayoutPresets.RM; } }
         
         /// <summary>
         /// With -> Radius -> Large
         /// </summary>
         [Parameter]
-        public bool WRL { get => Radius == FbLayoutPresets.RL; set => Radius = FbLayoutPresets.RL; }
+        public bool WRL { get => Radius == FbLayoutPresets.RL; set { if (value) Radius = FbLayoutPresets.RL; } }
         
         /// <summary>
         /// With -> Radius -> Extra Large
         /// </summary>
         [Parameter]
-        public bool WRX { get => Radius == FbLayoutPresets.RX; set => Radius = FbLayoutPresets.RX; }
+        public bool WRX { get => Radius == FbLayoutPresets.RX; set { if (value) Radius = FbLayoutPresets.RX; } }
 
         /// <summary>
-        /// With -> Background -> Default
+        /// With -> Background -> Surface
         /// </summary>
         [Parameter]
-        public bool L0 { get => _background == FbBackground.Default; set => _background = FbBackground.Default; }
+        public bool WBS { get => _background == FbBackground.Surface; set { if (value) _background = FbBackground.Surface; } }
 
         /// <summary>
         /// With -> Background -> Accent
         /// </summary>
         [Parameter]
-        public bool L1 { get => _background == FbBackground.Accent; set => _background = FbBackground.Accent; }
+        public bool WBA { get => _background == FbBackground.Accent; set { if (value) _background = FbBackground.Accent; } }
 
         /// <summary>
         /// With -> Background -> Highlight
         /// </summary>
         [Parameter]
-        public bool L2 { get => _background == FbBackground.Highlight; set => _background = FbBackground.Highlight; }
+        public bool WBH { get => _background == FbBackground.Highlight; set { if (value) _background = FbBackground.Highlight; } }
+
+        [Parameter]
+        [Obsolete("Use WBS instead.")]
+        public bool L0 { get => WBS; set => WBS = value; }
+
+        [Parameter]
+        [Obsolete("Use WBA instead.")]
+        public bool L1 { get => WBA; set => WBA = value; }
+
+        [Parameter]
+        [Obsolete("Use WBH instead.")]
+        public bool L2 { get => WBH; set => WBH = value; }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
