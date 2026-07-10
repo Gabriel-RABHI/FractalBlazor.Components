@@ -1,5 +1,18 @@
 /**********************************************************************************/
 /* UTILS */
+:root {
+    --fb-fg-anchor: #111113;
+    --fb-fg-high-anchor: #f7f7f8;
+    --fb-fg-default-high-mix: 82%;
+    --fb-fg-subtle-high-mix: 46%;
+    --fb-fg-muted-high-mix: 64%;
+    --fb-fg-highlight-high-mix: 100%;
+    --fb-fg-default: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-default-high-mix));
+    --fb-fg-subtle: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-subtle-high-mix));
+    --fb-fg-muted: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-muted-high-mix));
+    --fb-fg-highlight: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-highlight-high-mix));
+}
+
 @font-face {
     font-family: 'code-font';
     src: url('fonts/JetBrainsMono-VariableFont_wght.ttf') format('truetype');
@@ -19,7 +32,7 @@ html {
     font-family: 'text-font', system-ui, -apple-system, sans-serif;
     font-size: var(--fb-txt-base-size);
     font-weight: var(--fb-txt-base-weight);
-    color: var(--fb-base-color);
+    color: var(--fb-fg-default);
 }
 
 /* Optional: Apply your code font universally to pre and code tags */
@@ -31,7 +44,7 @@ pre, code {
 /* TEXT */
 /* Base text definition */
 .fb-txt {
-    color: var(--color-text); /* Standard contrast */
+    color: var(--fb-fg-default);
     line-height: var(--fb-txt-base-line-height);
 }
 
@@ -68,20 +81,23 @@ pre, code {
 /* or 700 depending on font */
 
 /* 3. Intent */
+.fb-fg-subtle,
 .fb-t-shadow {
-    color: var(--fb-shadow-color);
+    color: var(--fb-fg-subtle);
 }
 
+.fb-fg-muted,
 .fb-t-mute {
-    color: var(--fb-mute-color);
+    color: var(--fb-fg-muted);
 }
 
+.fb-fg-highlight,
 .fb-t-acc {
-    color: var(--fb-accent-color);
+    color: var(--fb-fg-highlight);
 }
 
-.fb-t-pri {
-    color: var(--fb-primary-color);
+.fb-fg-default {
+    color: var(--fb-fg-default);
 }
 
 /* 4. Modifiers */

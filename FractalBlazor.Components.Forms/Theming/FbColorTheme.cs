@@ -16,10 +16,10 @@ namespace FractalBlazor.Components.Forms.Theming
         public string Selector { get; set; } = ":root";
 
         [Parameter]
-        public string Color { get; set; } = "#BDBDBD";
+        public string ForegroundAnchor { get; set; } = "#111113";
 
         [Parameter]
-        public string PrimaryColor { get; set; } = "#2196F3";
+        public string ForegroundHighAnchor { get; set; } = "#F7F7F8";
 
 
         // -------- https://mudblazor.com/features/colors#material-colors-csharp-and-material-colors
@@ -29,24 +29,56 @@ namespace FractalBlazor.Components.Forms.Theming
         // ...
 
         [Parameter]
-        public string ShadowColorBackMix { get; set; } = "60%";
+        public string ForegroundDefaultHighMix { get; set; } = "82%";
 
         [Parameter]
-        public string MutedColorBackMix { get; set; } = "35%";
+        public string ForegroundSubtleHighMix { get; set; } = "46%";
 
         [Parameter]
-        public string AccentColorFrontMix { get; set; } = "70%";
+        public string ForegroundMutedHighMix { get; set; } = "64%";
+
+        [Parameter]
+        public string ForegroundHighlightHighMix { get; set; } = "100%";
+
+        [Parameter]
+        [Obsolete("Use ForegroundDefaultHighMix instead.")]
+        public string ForegroundDefaultTintMix { get => ForegroundDefaultHighMix; set => ForegroundDefaultHighMix = value; }
+
+        [Parameter]
+        [Obsolete("Use ForegroundHighlightHighMix instead.")]
+        public string ForegroundHighlightTintMix { get => ForegroundHighlightHighMix; set => ForegroundHighlightHighMix = value; }
+
+        [Parameter]
+        [Obsolete("Use ForegroundAnchor instead.")]
+        public string Color { get => ForegroundAnchor; set => ForegroundAnchor = value; }
+
+        [Parameter]
+        [Obsolete("Use ForegroundSubtleHighMix instead.")]
+        public string ShadowColorBackMix { get => ForegroundSubtleHighMix; set => ForegroundSubtleHighMix = value; }
+
+        [Parameter]
+        [Obsolete("Use ForegroundMutedHighMix instead.")]
+        public string MutedColorBackMix { get => ForegroundMutedHighMix; set => ForegroundMutedHighMix = value; }
+
+        [Parameter]
+        [Obsolete("Use ForegroundHighlightHighMix instead.")]
+        public string AccentColorFrontMix { get => ForegroundHighlightHighMix; set => ForegroundHighlightHighMix = value; }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "style");
             builder.AddContent(1,
                 $"{Selector} {{\n" +
-                $"  --fb-base-color: {Color};\n" +
-                $"  --fb-primary-color: {PrimaryColor};\n" +
-                $"  --fb-shadow-color: color-mix(in srgb, var(--fb-base-color), var(--fb-abs-back-color) {ShadowColorBackMix});\n" +
-                $"  --fb-mute-color: color-mix(in srgb, var(--fb-base-color), var(--fb-abs-back-color) {MutedColorBackMix});\n" +
-                $"  --fb-accent-color: color-mix(in srgb, var(--fb-base-color), var(--fb-abs-front-color) {AccentColorFrontMix});\n" +
+                $"  --fb-fg-anchor: {ForegroundAnchor};\n" +
+                $"  --fb-fg-high-anchor: {ForegroundHighAnchor};\n" +
+                $"  --fb-fg-default-high-mix: {ForegroundDefaultHighMix};\n" +
+                $"  --fb-fg-subtle-high-mix: {ForegroundSubtleHighMix};\n" +
+                $"  --fb-fg-muted-high-mix: {ForegroundMutedHighMix};\n" +
+                $"  --fb-fg-highlight-high-mix: {ForegroundHighlightHighMix};\n" +
+                $"  --fb-fg-default: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-default-high-mix));\n" +
+                $"  --fb-fg-subtle: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-subtle-high-mix));\n" +
+                $"  --fb-fg-muted: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-muted-high-mix));\n" +
+                $"  --fb-fg-highlight: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-highlight-high-mix));\n" +
                 $"}}"
             );
             builder.CloseElement();

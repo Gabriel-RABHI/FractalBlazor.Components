@@ -26,19 +26,16 @@ namespace FractalBlazor.Components.Forms.Display
 
     public enum FbTextIntent : byte
     {
-        Default,
-        /// <summary>
-        /// Really dark.
-        /// </summary>
-        Shadow,
-        /// <summary>
-        /// Darker.
-        /// </summary>
-        Mute,
-        /// <summary>
-        /// Lighter
-        /// </summary>
-        Accent
+        Default = 0,
+        Subtle = 1,
+        Muted = 2,
+        Highlight = 3,
+        [Obsolete("Use Subtle instead.")]
+        Shadow = Subtle,
+        [Obsolete("Use Muted instead.")]
+        Mute = Muted,
+        [Obsolete("Use Highlight instead.")]
+        Accent = Highlight
     }
 
     public enum FbTextModifiers : byte
@@ -51,7 +48,7 @@ namespace FractalBlazor.Components.Forms.Display
     {
         private static string[] FbTextSizeClasses = { "", "fb-t-s ", "fb-t-m ", "fb-t-l ", "fb-t-x " };
         private static string[] FbTextWeightClasses = { "", "fb-t-t ", "fb-t-b ", "fb-t-xb " };
-        private static string[] FbTextIntentClasses = { "", "fb-t-shadow ", "fb-t-mute ", "fb-t-acc ", "fb-t-pri ", "fb-t-err " };
+        private static string[] FbTextIntentClasses = { "", "fb-fg-subtle ", "fb-fg-muted ", "fb-fg-highlight " };
         private static string[] FbTextModifiersClasses = { "", "fb-t-nw ", "fb-t-tr " };
 
         private RenderHandle _renderHandle;
@@ -63,43 +60,55 @@ namespace FractalBlazor.Components.Forms.Display
 
         // -------- Scale
         [Parameter]
-        public bool S { get => _size == FbTextSize.S; set => _size = FbTextSize.S; }
+        public bool S { get => _size == FbTextSize.S; set { if (value) _size = FbTextSize.S; } }
 
         [Parameter]
-        public bool M { get => _size == FbTextSize.M; set => _size = FbTextSize.M; }
+        public bool M { get => _size == FbTextSize.M; set { if (value) _size = FbTextSize.M; } }
 
         [Parameter]
-        public bool L { get => _size == FbTextSize.L; set => _size = FbTextSize.L; }
+        public bool L { get => _size == FbTextSize.L; set { if (value) _size = FbTextSize.L; } }
 
         [Parameter]
-        public bool X { get => _size == FbTextSize.X; set => _size = FbTextSize.X; }
+        public bool X { get => _size == FbTextSize.X; set { if (value) _size = FbTextSize.X; } }
 
         // -------- Weight
         [Parameter]
-        public bool T { get => _weight == FbTextWeight.T; set => _weight = FbTextWeight.T; }
+        public bool T { get => _weight == FbTextWeight.T; set { if (value) _weight = FbTextWeight.T; } }
 
         [Parameter]
-        public bool B { get => _weight == FbTextWeight.B; set => _weight = FbTextWeight.B; }
+        public bool B { get => _weight == FbTextWeight.B; set { if (value) _weight = FbTextWeight.B; } }
 
         [Parameter]
-        public bool XB { get => _weight == FbTextWeight.XB; set => _weight = FbTextWeight.XB; }
+        public bool XB { get => _weight == FbTextWeight.XB; set { if (value) _weight = FbTextWeight.XB; } }
 
         // -------- Intent
         [Parameter]
-        public bool Shadow { get => _intent == FbTextIntent.Shadow; set => _intent = FbTextIntent.Shadow; }
+        public bool Subtle { get => _intent == FbTextIntent.Subtle; set { if (value) _intent = FbTextIntent.Subtle; } }
 
         [Parameter]
-        public bool Mute { get => _intent == FbTextIntent.Mute; set => _intent = FbTextIntent.Mute; }
+        public bool Muted { get => _intent == FbTextIntent.Muted; set { if (value) _intent = FbTextIntent.Muted; } }
 
         [Parameter]
-        public bool Accent { get => _intent == FbTextIntent.Accent; set => _intent = FbTextIntent.Accent; }
+        public bool Highlight { get => _intent == FbTextIntent.Highlight; set { if (value) _intent = FbTextIntent.Highlight; } }
+
+        [Parameter]
+        [Obsolete("Use Subtle instead.")]
+        public bool Shadow { get => Subtle; set => Subtle = value; }
+
+        [Parameter]
+        [Obsolete("Use Muted instead.")]
+        public bool Mute { get => Muted; set => Muted = value; }
+
+        [Parameter]
+        [Obsolete("Use Highlight instead.")]
+        public bool Accent { get => Highlight; set => Highlight = value; }
 
         // -------- Modifiers
         [Parameter]
-        public bool NW { get => _modifiers == FbTextModifiers.NoWrap; set => _modifiers = FbTextModifiers.NoWrap; }
+        public bool NW { get => _modifiers == FbTextModifiers.NoWrap; set { if (value) _modifiers = FbTextModifiers.NoWrap; } }
 
         [Parameter]
-        public bool TR { get => _modifiers == FbTextModifiers.Trim; set => _modifiers = FbTextModifiers.Trim; }
+        public bool TR { get => _modifiers == FbTextModifiers.Trim; set { if (value) _modifiers = FbTextModifiers.Trim; } }
 
         // -------- Content
         [Parameter]

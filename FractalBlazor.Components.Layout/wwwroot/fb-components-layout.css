@@ -25,9 +25,6 @@
     --fb-bg-accent: color-mix(in oklab, var(--fb-bg-surface), var(--fb-bg-high-anchor) var(--fb-bg-accent-offset));
     --fb-bg-highlight: color-mix(in oklab, var(--fb-bg-surface), var(--fb-bg-high-anchor) var(--fb-bg-highlight-offset));
     --fb-current-bg: var(--fb-bg-surface);
-    --fb-fg-muted: color-mix(in oklab, var(--fb-current-bg) 36%, var(--fb-bg-high-anchor) 64%);
-    --fb-fg-default: color-mix(in oklab, var(--fb-current-bg) 10%, var(--fb-bg-high-anchor) 90%);
-    --fb-fg-highlight: color-mix(in oklab, var(--fb-current-bg) 0%, var(--fb-bg-high-anchor) 100%);
 }
 
 .fb-theme-scope {
@@ -59,17 +56,6 @@ html {
     background-color: var(--fb-current-bg);
 }
 
-.fb-fg-muted {
-    color: color-mix(in oklab, var(--fb-current-bg) 36%, var(--fb-bg-high-anchor) 64%);
-}
-
-.fb-fg-default {
-    color: color-mix(in oklab, var(--fb-current-bg) 10%, var(--fb-bg-high-anchor) 90%);
-}
-
-.fb-fg-highlight {
-    color: color-mix(in oklab, var(--fb-current-bg) 0%, var(--fb-bg-high-anchor) 100%);
-}
 /**********************************************************************************/
 /* RADIUS */
 .fb-layout-radius {
