@@ -80,10 +80,14 @@ namespace FractalBlazor.Components.Forms.Theming
             AppendRaw(builder, "--fb-fg-subtle-high-mix:var(--fb-default-fg-subtle-high-mix);");
             AppendRaw(builder, "--fb-fg-muted-high-mix:var(--fb-default-fg-muted-high-mix);");
             AppendRaw(builder, "--fb-fg-highlight-high-mix:var(--fb-default-fg-highlight-high-mix);");
-            AppendRaw(builder, "--fb-fg-default:color-mix(in oklab,var(--fb-fg-anchor),var(--fb-fg-high-anchor) var(--fb-fg-default-high-mix));");
-            AppendRaw(builder, "--fb-fg-subtle:color-mix(in oklab,var(--fb-fg-anchor),var(--fb-fg-high-anchor) var(--fb-fg-subtle-high-mix));");
-            AppendRaw(builder, "--fb-fg-muted:color-mix(in oklab,var(--fb-fg-anchor),var(--fb-fg-high-anchor) var(--fb-fg-muted-high-mix));");
-            AppendRaw(builder, "--fb-fg-highlight:color-mix(in oklab,var(--fb-fg-anchor),var(--fb-fg-high-anchor) var(--fb-fg-highlight-high-mix));");
+            AppendRaw(builder, "--fb-current-fg-default-high-mix:var(--fb-fg-default-high-mix);");
+            AppendRaw(builder, "--fb-current-fg-subtle-high-mix:var(--fb-fg-subtle-high-mix);");
+            AppendRaw(builder, "--fb-current-fg-muted-high-mix:var(--fb-fg-muted-high-mix);");
+            AppendRaw(builder, "--fb-current-fg-highlight-high-mix:var(--fb-fg-highlight-high-mix);");
+            AppendRaw(builder, "--fb-fg-default:color-mix(in oklab,var(--fb-fg-anchor),var(--fb-fg-high-anchor) var(--fb-current-fg-default-high-mix));");
+            AppendRaw(builder, "--fb-fg-subtle:color-mix(in oklab,var(--fb-fg-anchor),var(--fb-fg-high-anchor) var(--fb-current-fg-subtle-high-mix));");
+            AppendRaw(builder, "--fb-fg-muted:color-mix(in oklab,var(--fb-fg-anchor),var(--fb-fg-high-anchor) var(--fb-current-fg-muted-high-mix));");
+            AppendRaw(builder, "--fb-fg-highlight:color-mix(in oklab,var(--fb-fg-anchor),var(--fb-fg-high-anchor) var(--fb-current-fg-highlight-high-mix));");
 
             return builder.ToString();
         }

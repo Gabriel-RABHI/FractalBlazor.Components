@@ -131,6 +131,8 @@ namespace FractalBlazor.Components.Layout
                         hash = ComputeHash(WidthBasis, hash);
                     if (!string.IsNullOrWhiteSpace(Style))
                         hash = ComputeHash(Style, hash);
+                    if (!string.IsNullOrWhiteSpace(HoverMixOffset))
+                        hash = ComputeHash(HoverMixOffset, hash);
                     if (Variables is not null)
                         hash = ComputeHash(Variables.ToCssVariables(), hash);
                     return hash;
@@ -171,6 +173,7 @@ namespace FractalBlazor.Components.Layout
                             (Hidden ? "visibility:hidden;" : "");
                     str += (string.IsNullOrWhiteSpace(WidthBasis) ? "" : $"flex-basis:{WidthBasis};") +
                             (Variables is null ? "" : Variables.ToCssVariables()) +
+                            (string.IsNullOrWhiteSpace(HoverMixOffset) ? "" : $"--fb-hover-mix-offset:{HoverMixOffset};") +
                             (string.IsNullOrWhiteSpace(Style) ? "" : Style + ";");
                     if (UseCaching && !_cache.ContainsKey(hash))
                         _cache[hash] = str;
@@ -287,6 +290,18 @@ namespace FractalBlazor.Components.Layout
         public IFbCssVariables? Variables { get; set; }
 
         /// <summary>
+        /// Enable CSS-only hover color offset.
+        /// </summary>
+        [Parameter]
+        public bool Hover { get; set; }
+
+        /// <summary>
+        /// Offset added to background, frame and foreground mixes on hover.
+        /// </summary>
+        [Parameter]
+        public string HoverMixOffset { get; set; } = "";
+
+        /// <summary>
         /// Custom CSS classes
         /// </summary>
         [Parameter]
@@ -297,6 +312,16 @@ namespace FractalBlazor.Components.Layout
         /// </summary>
         [Parameter]
         public bool Hidden { get; set; } = false;
+
+        protected string HoverClassString
+        {
+            get
+            {
+                if (Hover || !string.IsNullOrWhiteSpace(HoverMixOffset))
+                    return "fb-hover";
+                return "";
+            }
+        }
 
         /// <summary>
         /// Responsive container setting

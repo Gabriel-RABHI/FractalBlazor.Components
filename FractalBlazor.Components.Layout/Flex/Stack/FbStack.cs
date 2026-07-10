@@ -94,7 +94,7 @@ namespace FractalBlazor.Components.Layout
         {
             get
             {
-                return $"{Classes} {ComputedFrameClasses} {BackgroundClasses} {WrapClassString} {ResponsiveClassString}";
+                return $"{Classes} {ComputedFrameClasses} {BackgroundClasses} {HoverClassString} {WrapClassString} {ResponsiveClassString}";
             }
         }
 

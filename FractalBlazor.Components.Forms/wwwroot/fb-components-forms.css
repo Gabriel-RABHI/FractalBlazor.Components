@@ -13,10 +13,36 @@
     --fb-fg-subtle-high-mix: var(--fb-default-fg-subtle-high-mix);
     --fb-fg-muted-high-mix: var(--fb-default-fg-muted-high-mix);
     --fb-fg-highlight-high-mix: var(--fb-default-fg-highlight-high-mix);
-    --fb-fg-default: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-default-high-mix));
-    --fb-fg-subtle: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-subtle-high-mix));
-    --fb-fg-muted: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-muted-high-mix));
-    --fb-fg-highlight: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-fg-highlight-high-mix));
+    --fb-current-fg-default-high-mix: var(--fb-fg-default-high-mix);
+    --fb-current-fg-subtle-high-mix: var(--fb-fg-subtle-high-mix);
+    --fb-current-fg-muted-high-mix: var(--fb-fg-muted-high-mix);
+    --fb-current-fg-highlight-high-mix: var(--fb-fg-highlight-high-mix);
+    --fb-fg-default: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-default-high-mix));
+    --fb-fg-subtle: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-subtle-high-mix));
+    --fb-fg-muted: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-muted-high-mix));
+    --fb-fg-highlight: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-highlight-high-mix));
+}
+
+.fb-theme-scope {
+    --fb-current-fg-default-high-mix: var(--fb-fg-default-high-mix);
+    --fb-current-fg-subtle-high-mix: var(--fb-fg-subtle-high-mix);
+    --fb-current-fg-muted-high-mix: var(--fb-fg-muted-high-mix);
+    --fb-current-fg-highlight-high-mix: var(--fb-fg-highlight-high-mix);
+    --fb-fg-default: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-default-high-mix));
+    --fb-fg-subtle: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-subtle-high-mix));
+    --fb-fg-muted: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-muted-high-mix));
+    --fb-fg-highlight: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-highlight-high-mix));
+}
+
+.fb-hover:hover {
+    --fb-current-fg-default-high-mix: clamp(0%, calc(var(--fb-fg-default-high-mix) + var(--fb-hover-mix-offset)), 100%);
+    --fb-current-fg-subtle-high-mix: clamp(0%, calc(var(--fb-fg-subtle-high-mix) + var(--fb-hover-mix-offset)), 100%);
+    --fb-current-fg-muted-high-mix: clamp(0%, calc(var(--fb-fg-muted-high-mix) + var(--fb-hover-mix-offset)), 100%);
+    --fb-current-fg-highlight-high-mix: clamp(0%, calc(var(--fb-fg-highlight-high-mix) + var(--fb-hover-mix-offset)), 100%);
+    --fb-fg-default: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-default-high-mix));
+    --fb-fg-subtle: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-subtle-high-mix));
+    --fb-fg-muted: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-muted-high-mix));
+    --fb-fg-highlight: color-mix(in oklab, var(--fb-fg-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-highlight-high-mix));
 }
 
 @font-face {

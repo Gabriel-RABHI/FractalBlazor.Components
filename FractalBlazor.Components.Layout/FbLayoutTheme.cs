@@ -101,6 +101,12 @@ namespace FractalBlazor.Components.Layout
             AppendRaw(builder, "--fb-frame-light-size:var(--fb-default-frame-light-size);");
             AppendRaw(builder, "--fb-frame-medium-size:var(--fb-default-frame-medium-size);");
             AppendRaw(builder, "--fb-frame-strong-size:var(--fb-default-frame-strong-size);");
+            AppendRaw(builder, "--fb-current-bg-surface-mix:var(--fb-bg-surface-mix);");
+            AppendRaw(builder, "--fb-current-bg-accent-offset:var(--fb-bg-accent-offset);");
+            AppendRaw(builder, "--fb-current-bg-highlight-offset:var(--fb-bg-highlight-offset);");
+            AppendRaw(builder, "--fb-current-frame-light-mix:var(--fb-frame-light-mix);");
+            AppendRaw(builder, "--fb-current-frame-medium-mix:var(--fb-frame-medium-mix);");
+            AppendRaw(builder, "--fb-current-frame-strong-mix:var(--fb-frame-strong-mix);");
             AppendRaw(builder, "--fb-space-s:var(--fb-default-space-s);");
             AppendRaw(builder, "--fb-space-m:var(--fb-default-space-m);");
             AppendRaw(builder, "--fb-space-l:var(--fb-default-space-l);");
