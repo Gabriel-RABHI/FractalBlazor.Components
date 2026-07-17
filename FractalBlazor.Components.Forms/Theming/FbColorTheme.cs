@@ -16,7 +16,7 @@ namespace FractalBlazor.Components.Forms.Theming
         public string Selector { get; set; } = ":root";
 
         [Parameter]
-        public string ForegroundAnchor { get; set; } = "#111113";
+        public string ForegroundLowAnchor { get; set; } = "#111113";
 
         [Parameter]
         public string ForegroundHighAnchor { get; set; } = "#F7F7F8";
@@ -27,15 +27,14 @@ namespace FractalBlazor.Components.Forms.Theming
         public string RedColor { get; set; } = "#F44336";
 
         // ...
-
-        [Parameter]
-        public string ForegroundDefaultHighMix { get; set; } = "82%";
-
         [Parameter]
         public string ForegroundSubtleHighMix { get; set; } = "46%";
 
         [Parameter]
         public string ForegroundMutedHighMix { get; set; } = "64%";
+
+        [Parameter]
+        public string ForegroundDefaultHighMix { get; set; } = "82%";
 
         [Parameter]
         public string ForegroundHighlightHighMix { get; set; } = "100%";
@@ -50,7 +49,7 @@ namespace FractalBlazor.Components.Forms.Theming
 
         [Parameter]
         [Obsolete("Use ForegroundAnchor instead.")]
-        public string Color { get => ForegroundAnchor; set => ForegroundAnchor = value; }
+        public string Color { get => ForegroundLowAnchor; set => ForegroundLowAnchor = value; }
 
         [Parameter]
         [Obsolete("Use ForegroundSubtleHighMix instead.")]
@@ -68,7 +67,7 @@ namespace FractalBlazor.Components.Forms.Theming
         {
             var builder = new StringBuilder();
 
-            Append(builder, "--fb-default-fg-anchor", ForegroundAnchor);
+            Append(builder, "--fb-default-fg-anchor", ForegroundLowAnchor);
             Append(builder, "--fb-default-fg-high-anchor", ForegroundHighAnchor);
             Append(builder, "--fb-default-fg-default-high-mix", ForegroundDefaultHighMix);
             Append(builder, "--fb-default-fg-subtle-high-mix", ForegroundSubtleHighMix);

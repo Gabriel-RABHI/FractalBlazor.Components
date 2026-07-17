@@ -6,7 +6,7 @@ namespace FractalBlazor.Components.Layout
 {
     public sealed class FbLayoutTheme : IFbCssVariables
     {
-        public string BackgroundAnchor { get; set; } = "#111113";
+        public string BackgroundLowAnchor { get; set; } = "#111113";
 
         public string BackgroundTint { get; set; } = "#34343A";
 
@@ -19,12 +19,14 @@ namespace FractalBlazor.Components.Layout
             set => BackgroundHighAnchor = value;
         }
 
+        // ******** BACKGROUND MIX
         public string SurfaceMix { get; set; } = "8%";
 
         public string AccentOffset { get; set; } = "10%";
 
         public string HighlightOffset { get; set; } = "18%";
 
+        // ******** FRAMES (BORDER)
         public string FrameLightMix { get; set; } = "8%";
 
         public string FrameMediumMix { get; set; } = "14%";
@@ -57,7 +59,7 @@ namespace FractalBlazor.Components.Layout
 
         public static FbLayoutTheme Light() => new()
         {
-            BackgroundAnchor = "#F7F7F8",
+            BackgroundLowAnchor = "#F7F7F8",
             BackgroundTint = "#D8DAE0",
             BackgroundHighAnchor = "#111113",
             SurfaceMix = "8%",
@@ -69,7 +71,7 @@ namespace FractalBlazor.Components.Layout
         {
             var builder = new StringBuilder();
 
-            Append(builder, "--fb-default-bg-anchor", BackgroundAnchor);
+            Append(builder, "--fb-default-bg-low-anchor", BackgroundLowAnchor);
             Append(builder, "--fb-default-bg-tint", BackgroundTint);
             Append(builder, "--fb-default-bg-high-anchor", BackgroundHighAnchor);
             Append(builder, "--fb-default-bg-surface-mix", SurfaceMix);
@@ -106,7 +108,7 @@ namespace FractalBlazor.Components.Layout
             AppendRaw(builder, "--fb-current-bg-highlight-offset:var(--fb-bg-highlight-offset);");
             AppendRaw(builder, "--fb-current-frame-light-mix:var(--fb-frame-light-mix);");
             AppendRaw(builder, "--fb-current-frame-medium-mix:var(--fb-frame-medium-mix);");
-            AppendRaw(builder, "--fb-current-frame-strong-mix:var(--fb-frame-strong-mix);");
+            AppendRaw(builder, "--fb-current-frame-strong-mix:var(--fb-frame-strong-mix);");    
             AppendRaw(builder, "--fb-space-s:var(--fb-default-space-s);");
             AppendRaw(builder, "--fb-space-m:var(--fb-default-space-m);");
             AppendRaw(builder, "--fb-space-l:var(--fb-default-space-l);");
