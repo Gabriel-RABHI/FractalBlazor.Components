@@ -1,58 +1,6 @@
 /**********************************************************************************/
 /* BACKGROUNDS */
-:root {
-    --fb-default-bg-anchor: #111113;
-    --fb-default-bg-tint: #34343a;
-    --fb-default-bg-high-anchor: #f7f7f8;
-    --fb-default-bg-surface-mix: 8%;
-    --fb-default-bg-accent-offset: 10%;
-    --fb-default-bg-highlight-offset: 18%;
-    --fb-default-frame-light-mix: 8%;
-    --fb-default-frame-medium-mix: 14%;
-    --fb-default-frame-strong-mix: 22%;
-    --fb-default-frame-light-size: 0.0625rem;
-    --fb-default-frame-medium-size: 0.0625rem;
-    --fb-default-frame-strong-size: 0.125rem;
-    --fb-default-space-s: 0.25rem;
-    --fb-default-space-m: 0.5rem;
-    --fb-default-space-l: 0.875rem;
-    --fb-default-space-x: 1.75rem;
-    --fb-default-radius-s: 0.125rem;
-    --fb-default-radius-m: 0.25rem;
-    --fb-default-radius-l: 0.4375rem;
-    --fb-default-radius-x: 1rem;
-    --fb-bg-anchor: var(--fb-default-bg-anchor);
-    --fb-bg-tint: var(--fb-default-bg-tint);
-    --fb-bg-high-anchor: var(--fb-default-bg-high-anchor);
-    --fb-bg-surface-mix: var(--fb-default-bg-surface-mix);
-    --fb-bg-accent-offset: var(--fb-default-bg-accent-offset);
-    --fb-bg-highlight-offset: var(--fb-default-bg-highlight-offset);
-    --fb-frame-light-mix: var(--fb-default-frame-light-mix);
-    --fb-frame-medium-mix: var(--fb-default-frame-medium-mix);
-    --fb-frame-strong-mix: var(--fb-default-frame-strong-mix);
-    --fb-frame-light-size: var(--fb-default-frame-light-size);
-    --fb-frame-medium-size: var(--fb-default-frame-medium-size);
-    --fb-frame-strong-size: var(--fb-default-frame-strong-size);
-    --fb-current-bg-surface-mix: var(--fb-bg-surface-mix);
-    --fb-current-bg-accent-offset: var(--fb-bg-accent-offset);
-    --fb-current-bg-highlight-offset: var(--fb-bg-highlight-offset);
-    --fb-current-frame-light-mix: var(--fb-frame-light-mix);
-    --fb-current-frame-medium-mix: var(--fb-frame-medium-mix);
-    --fb-current-frame-strong-mix: var(--fb-frame-strong-mix);
-    --fb-space-s: var(--fb-default-space-s);
-    --fb-space-m: var(--fb-default-space-m);
-    --fb-space-l: var(--fb-default-space-l);
-    --fb-space-x: var(--fb-default-space-x);
-    --fb-radius-s: var(--fb-default-radius-s);
-    --fb-radius-m: var(--fb-default-radius-m);
-    --fb-radius-l: var(--fb-default-radius-l);
-    --fb-radius-x: var(--fb-default-radius-x);
-    --fb-bg-surface: color-mix(in oklab, var(--fb-bg-anchor), var(--fb-bg-tint) var(--fb-current-bg-surface-mix));
-    --fb-bg-accent: color-mix(in oklab, var(--fb-bg-surface), var(--fb-bg-high-anchor) var(--fb-current-bg-accent-offset));
-    --fb-bg-highlight: color-mix(in oklab, var(--fb-bg-surface), var(--fb-bg-high-anchor) var(--fb-current-bg-highlight-offset));
-    --fb-current-bg: var(--fb-bg-surface);
-}
-
+:root,
 .fb-theme-scope {
     --fb-current-bg-surface-mix: var(--fb-bg-surface-mix);
     --fb-current-bg-accent-offset: var(--fb-bg-accent-offset);
@@ -60,7 +8,7 @@
     --fb-current-frame-light-mix: var(--fb-frame-light-mix);
     --fb-current-frame-medium-mix: var(--fb-frame-medium-mix);
     --fb-current-frame-strong-mix: var(--fb-frame-strong-mix);
-    --fb-bg-surface: color-mix(in oklab, var(--fb-bg-anchor), var(--fb-bg-tint) var(--fb-current-bg-surface-mix));
+    --fb-bg-surface: color-mix(in oklab, var(--fb-bg-low-anchor), var(--fb-bg-tint) var(--fb-current-bg-surface-mix));
     --fb-bg-accent: color-mix(in oklab, var(--fb-bg-surface), var(--fb-bg-high-anchor) var(--fb-current-bg-accent-offset));
     --fb-bg-highlight: color-mix(in oklab, var(--fb-bg-surface), var(--fb-bg-high-anchor) var(--fb-current-bg-highlight-offset));
     --fb-current-bg: var(--fb-bg-surface);
@@ -77,7 +25,7 @@
     --fb-current-frame-light-mix: clamp(0%, calc(var(--fb-frame-light-mix) + var(--fb-hover-mix-offset)), 100%);
     --fb-current-frame-medium-mix: clamp(0%, calc(var(--fb-frame-medium-mix) + var(--fb-hover-mix-offset)), 100%);
     --fb-current-frame-strong-mix: clamp(0%, calc(var(--fb-frame-strong-mix) + var(--fb-hover-mix-offset)), 100%);
-    --fb-bg-surface: color-mix(in oklab, var(--fb-bg-anchor), var(--fb-bg-tint) var(--fb-current-bg-surface-mix));
+    --fb-bg-surface: color-mix(in oklab, var(--fb-bg-low-anchor), var(--fb-bg-tint) var(--fb-current-bg-surface-mix));
     --fb-bg-accent: color-mix(in oklab, var(--fb-bg-surface), var(--fb-bg-high-anchor) var(--fb-current-bg-accent-offset));
     --fb-bg-highlight: color-mix(in oklab, var(--fb-bg-surface), var(--fb-bg-high-anchor) var(--fb-current-bg-highlight-offset));
 }
@@ -86,20 +34,17 @@ html {
     background-color: var(--fb-bg-surface);
 }
 
-.fb-bg-surface,
-.fb-default-background {
+.fb-bg-surface {
     --fb-current-bg: var(--fb-bg-surface);
     background-color: var(--fb-current-bg);
 }
 
-.fb-bg-accent,
-.fb-accent-background {
+.fb-bg-accent {
     --fb-current-bg: var(--fb-bg-accent);
     background-color: var(--fb-current-bg);
 }
 
-.fb-bg-highlight,
-.fb-highlight-background {
+.fb-bg-highlight {
     --fb-current-bg: var(--fb-bg-highlight);
     background-color: var(--fb-current-bg);
 }
@@ -107,7 +52,7 @@ html {
 /**********************************************************************************/
 /* RADIUS */
 .fb-layout-radius {
-    border-radius: 0.5rem;
+    border-radius: var(--fb-radius-m);
     overflow: hidden;
 }
 
@@ -222,20 +167,8 @@ html {
 .framed-grid-stack-light-frame,
 .framed-row-light-frame,
 .framed-separator-row-light-frame,
-.framed-grid-row-light-frame,
-.framed-column-containner-small-frame,
-.framed-separator-column-containner-small-frame,
-.framed-grid-column-containner-small-frame,
-.framed-column-small-frame,
-.framed-separator-column-small-frame,
-.framed-grid-column-small-frame,
-.framed-stack-small-frame,
-.framed-separator-stack-small-frame,
-.framed-grid-stack-small-frame,
-.framed-row-small-frame,
-.framed-separator-row-small-frame,
-.framed-grid-row-small-frame {
-    --fb-frame-border-size: var(--fb-frame-light-size, 0.0625rem);
+.framed-grid-row-light-frame {
+    --fb-frame-border-size: var(--fb-frame-light-size);
     --fb-frame-border-color: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-light-mix));
 }
 
@@ -252,7 +185,7 @@ html {
 .framed-row-medium-frame,
 .framed-separator-row-medium-frame,
 .framed-grid-row-medium-frame {
-    --fb-frame-border-size: var(--fb-frame-medium-size, 0.0625rem);
+    --fb-frame-border-size: var(--fb-frame-medium-size);
     --fb-frame-border-color: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-medium-mix));
 }
 
@@ -268,40 +201,26 @@ html {
 .framed-grid-stack-strong-frame,
 .framed-row-strong-frame,
 .framed-separator-row-strong-frame,
-.framed-grid-row-strong-frame,
-.framed-column-containner-large-frame,
-.framed-separator-column-containner-large-frame,
-.framed-grid-column-containner-large-frame,
-.framed-column-large-frame,
-.framed-separator-column-large-frame,
-.framed-grid-column-large-frame,
-.framed-stack-large-frame,
-.framed-separator-stack-large-frame,
-.framed-grid-stack-large-frame,
-.framed-row-large-frame,
-.framed-separator-row-large-frame,
-.framed-grid-row-large-frame {
-    --fb-frame-border-size: var(--fb-frame-strong-size, 0.125rem);
+.framed-grid-row-strong-frame {
+    --fb-frame-border-size: var(--fb-frame-strong-size);
     --fb-frame-border-color: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-strong-mix));
 }
 
 /**********************************************************************************/
 /* SEPARATOR SIZE */
 
-.fb-separator-light-frame,
-.fb-separator-small-frame {
-    flex-basis: var(--fb-frame-light-size, 0.0625rem);
+.fb-separator-light-frame {
+    flex-basis: var(--fb-frame-light-size);
     background: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-light-mix));
 }
 
 .fb-separator-medium-frame {
-    flex-basis: var(--fb-frame-medium-size, 0.0625rem);
+    flex-basis: var(--fb-frame-medium-size);
     background: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-medium-mix));
 }
 
-.fb-separator-strong-frame,
-.fb-separator-large-frame {
-    flex-basis: var(--fb-frame-strong-size, 0.125rem);
+.fb-separator-strong-frame {
+    flex-basis: var(--fb-frame-strong-size);
     background: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-strong-mix));
 }
 

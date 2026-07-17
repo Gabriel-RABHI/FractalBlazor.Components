@@ -6,6 +6,7 @@
 @using FractalBlazor.Components.Forms.Contracts
 @using FractalBlazor.Components.Forms.Display
 @using FractalBlazor.Components.Forms.Inputs
+@using FractalBlazor.Components.Forms.Theming
 @using FractalBlazor.Components.Layout
 
 
@@ -53,12 +54,14 @@
         </FbRow>
     </FbRow>
     <FbRow GL WGM PM>
-        <FbRow GL WGM PM>
-            <FbText S Highlight>Home</FbText>
-            <FbText M Highlight>Home</FbText>
-            <FbText L Highlight>Home</FbText>
-            <FbText X Highlight>Home</FbText>
-        </FbRow>
+        <FbVariant Variant="Error">
+            <FbRow GL WGM PM WBA>
+                <FbText S Highlight>Home</FbText>
+                <FbText M Highlight>Home</FbText>
+                <FbText L Highlight>Home</FbText>
+                <FbText X Highlight>Home</FbText>
+            </FbRow>
+        </FbVariant>
     </FbRow>
 </FbStack>
 

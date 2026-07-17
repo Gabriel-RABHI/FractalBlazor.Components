@@ -348,18 +348,6 @@ namespace FractalBlazor.Components.Layout
         [Parameter]
         public bool WBH { get => _background == FbBackground.Highlight; set { if (value) _background = FbBackground.Highlight; } }
 
-        [Parameter]
-        [Obsolete("Use WBS instead.")]
-        public bool L0 { get => WBS; set => WBS = value; }
-
-        [Parameter]
-        [Obsolete("Use WBA instead.")]
-        public bool L1 { get => WBA; set => WBA = value; }
-
-        [Parameter]
-        [Obsolete("Use WBH instead.")]
-        public bool L2 { get => WBH; set => WBH = value; }
-
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "div");

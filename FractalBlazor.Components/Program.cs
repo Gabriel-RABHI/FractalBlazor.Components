@@ -1,6 +1,7 @@
 using FractalBlazor.Components.Components;
 using FractalBlazor.Components.Forms.Contracts;
 using FractalBlazor.Components.Forms.Core;
+using FractalBlazor.Components.Forms.Theming;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddSingleton<IViewRegistry, ViewRegistry>();
+builder.Services.AddFractalBlazorTheming();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

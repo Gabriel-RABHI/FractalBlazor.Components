@@ -29,13 +29,7 @@ namespace FractalBlazor.Components.Forms.Display
         Default = 0,
         Subtle = 1,
         Muted = 2,
-        Highlight = 3,
-        [Obsolete("Use Subtle instead.")]
-        Shadow = Subtle,
-        [Obsolete("Use Muted instead.")]
-        Mute = Muted,
-        [Obsolete("Use Highlight instead.")]
-        Accent = Highlight
+        Highlight = 3
     }
 
     public enum FbTextModifiers : byte
@@ -90,18 +84,6 @@ namespace FractalBlazor.Components.Forms.Display
 
         [Parameter]
         public bool Highlight { get => _intent == FbTextIntent.Highlight; set { if (value) _intent = FbTextIntent.Highlight; } }
-
-        [Parameter]
-        [Obsolete("Use Subtle instead.")]
-        public bool Shadow { get => Subtle; set => Subtle = value; }
-
-        [Parameter]
-        [Obsolete("Use Muted instead.")]
-        public bool Mute { get => Muted; set => Muted = value; }
-
-        [Parameter]
-        [Obsolete("Use Highlight instead.")]
-        public bool Accent { get => Highlight; set => Highlight = value; }
 
         // -------- Modifiers
         [Parameter]

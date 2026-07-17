@@ -1,12 +1,16 @@
 using System.Text;
+using FractalBlazor.Components.Layout;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace FractalBlazor.Components.Layout;
+namespace FractalBlazor.Components.Forms.Theming;
 
-public static class FbLayoutThemeCssWriter
+public static class FbThemeCssWriter
 {
-    public static string ToCssVariables(FbResolvedLayoutTheme theme)
+    public static readonly IReadOnlyList<string> VariantTokens =
+    [.. FbThemeCssNames.LayoutVariantTokens, "fg-low-anchor", "fg-high-anchor"];
+
+    public static string ToCssVariables(FbResolvedTheme theme)
     {
         ArgumentNullException.ThrowIfNull(theme);
         var builder = new StringBuilder();
@@ -20,6 +24,24 @@ public static class FbLayoutThemeCssWriter
         Append(builder, "--fb-default-radius-l", theme.Corners.L);
         Append(builder, "--fb-default-radius-x", theme.Corners.X);
 
+        Append(builder, "--fb-default-fg-default-high-mix", theme.TextVariant.DefaultHighMix);
+        Append(builder, "--fb-default-fg-subtle-high-mix", theme.TextVariant.SubtleHighMix);
+        Append(builder, "--fb-default-fg-muted-high-mix", theme.TextVariant.MutedHighMix);
+        Append(builder, "--fb-default-fg-highlight-high-mix", theme.TextVariant.HighlightHighMix);
+
+        Append(builder, "--fb-txt-font-family", theme.Typography.TextFontFamily);
+        Append(builder, "--fb-code-font-family", theme.Typography.CodeFontFamily);
+        Append(builder, "--fb-txt-base-size", theme.Typography.FontSizeBase);
+        Append(builder, "--fb-txt-base-weight", theme.Typography.DefaultWeight);
+        Append(builder, "--fb-txt-base-line-height", theme.Typography.LineHeight);
+        Append(builder, "--fb-txt-s-coef", theme.Typography.SmallCoef);
+        Append(builder, "--fb-txt-m-coef", theme.Typography.MediumCoef);
+        Append(builder, "--fb-txt-l-coef", theme.Typography.LargeCoef);
+        Append(builder, "--fb-txt-x-coef", theme.Typography.ExtraLargeCoef);
+        Append(builder, "--fb-txt-t-weight", theme.Typography.ThinWeight);
+        Append(builder, "--fb-txt-b-weight", theme.Typography.BoldWeight);
+        Append(builder, "--fb-txt-xb-weight", theme.Typography.ExtraBoldWeight);
+
         foreach (var variantName in theme.VariantOrder)
             AppendVariant(builder, theme.GetVariant(variantName));
 
@@ -31,23 +53,27 @@ public static class FbLayoutThemeCssWriter
         AppendReference(builder, "radius-m", "default-radius-m");
         AppendReference(builder, "radius-l", "default-radius-l");
         AppendReference(builder, "radius-x", "default-radius-x");
-        builder.Append(BuildVariantReferences(FbLayoutThemeVariants.Default));
+        AppendReference(builder, "fg-default-high-mix", "default-fg-default-high-mix");
+        AppendReference(builder, "fg-subtle-high-mix", "default-fg-subtle-high-mix");
+        AppendReference(builder, "fg-muted-high-mix", "default-fg-muted-high-mix");
+        AppendReference(builder, "fg-highlight-high-mix", "default-fg-highlight-high-mix");
+        builder.Append(BuildVariantReferences(FbThemeVariants.Default));
 
         return builder.ToString();
     }
 
     public static string BuildVariantReferences(string? variant)
     {
-        var normalized = FbThemeCssNames.Normalize(FbLayoutThemeVariants.Normalize(variant));
+        var normalized = FbThemeCssNames.Normalize(FbThemeVariants.Normalize(variant));
         var builder = new StringBuilder();
 
-        foreach (var token in FbThemeCssNames.LayoutVariantTokens)
+        foreach (var token in VariantTokens)
             builder.Append(FbThemeCssNames.ActiveReference(normalized, token));
 
         return builder.ToString();
     }
 
-    private static void AppendVariant(StringBuilder builder, FbResolvedLayoutThemeVariant variant)
+    private static void AppendVariant(StringBuilder builder, FbResolvedThemeVariant variant)
     {
         var name = variant.Name;
         AppendVariant(builder, name, "bg-low-anchor", variant.LayoutColors.LowAnchor);
@@ -62,6 +88,8 @@ public static class FbLayoutThemeCssWriter
         AppendVariant(builder, name, "frame-medium-size", variant.Borders.MediumSize);
         AppendVariant(builder, name, "frame-strong-mix", variant.Borders.StrongMix);
         AppendVariant(builder, name, "frame-strong-size", variant.Borders.StrongSize);
+        AppendVariant(builder, name, "fg-low-anchor", variant.FormColors.LowAnchor);
+        AppendVariant(builder, name, "fg-high-anchor", variant.FormColors.HighAnchor);
     }
 
     private static void AppendVariant(StringBuilder builder, string variant, string token, string? value)
@@ -77,19 +105,16 @@ public static class FbLayoutThemeCssWriter
         => builder.Append("--fb-").Append(activeToken).Append(":var(--fb-").Append(sourceToken).Append(");");
 }
 
-public sealed class FbLayoutThemeContext
-{
-    internal FbLayoutThemeContext(FbResolvedLayoutTheme theme) => Theme = theme;
-    public FbResolvedLayoutTheme Theme { get; }
-}
-
-public sealed class FbLayoutTheme : FbComponentBase
+public sealed class FbTheme : FbComponentBase
 {
     [Inject]
-    public IFbLayoutThemeRegistry Registry { get; set; } = default!;
+    public IFbThemeRegistry Registry { get; set; } = default!;
 
     [Parameter]
     public string Theme { get; set; } = "Default";
+
+    [Parameter]
+    public string Branch { get; set; } = FbThemeBranches.Dark;
 
     [Parameter]
     public string Selector { get; set; } = ":root";
@@ -100,30 +125,21 @@ public sealed class FbLayoutTheme : FbComponentBase
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         FbThemeCssNames.ValidateSelector(Selector);
-        var resolved = Registry.Resolve(Theme);
-        var variables = FbLayoutThemeCssWriter.ToCssVariables(resolved);
+        var resolved = Registry.Resolve(Theme, Branch);
+        var variables = FbThemeCssWriter.ToCssVariables(resolved);
 
         builder.OpenElement(0, "style");
         builder.AddMarkupContent(1, $"{Selector}{{{variables}}}");
         builder.CloseElement();
 
-        if (ChildContent is null)
-            return;
-
-        builder.OpenComponent<CascadingValue<FbLayoutThemeContext>>(2);
-        builder.AddAttribute(3, "Value", new FbLayoutThemeContext(resolved));
-        builder.AddAttribute(4, "ChildContent", ChildContent);
-        builder.CloseComponent();
+        builder.AddContent(2, ChildContent);
     }
 }
 
-public sealed class FbLayoutVariant : FbComponentBase
+public sealed class FbVariant : FbComponentBase
 {
-    [CascadingParameter]
-    public FbLayoutThemeContext? ThemeContext { get; set; }
-
     [Parameter]
-    public string Variant { get; set; } = FbLayoutThemeVariants.Default;
+    public string Variant { get; set; } = FbThemeVariants.Default;
 
     [Parameter]
     public string Classes { get; set; } = "";
@@ -136,15 +152,11 @@ public sealed class FbLayoutVariant : FbComponentBase
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        if (ThemeContext is null)
-            throw new InvalidOperationException($"{nameof(FbLayoutVariant)} must be rendered inside {nameof(FbLayoutTheme)}.");
-
-        var normalized = FbLayoutThemeVariants.Normalize(Variant);
-        ThemeContext.Theme.GetVariant(normalized);
+        var normalized = FbThemeVariants.Normalize(Variant);
 
         builder.OpenElement(0, "div");
         builder.AddAttribute(1, "class", $"fb-theme-scope {Classes}".TrimEnd());
-        builder.AddAttribute(2, "style", FbLayoutThemeCssWriter.BuildVariantReferences(normalized) + Style);
+        builder.AddAttribute(2, "style", FbThemeCssWriter.BuildVariantReferences(normalized) + Style);
         builder.AddContent(3, ChildContent);
         builder.CloseElement();
     }
