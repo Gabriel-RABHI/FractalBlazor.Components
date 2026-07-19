@@ -683,6 +683,202 @@ html {
 }
 
 /**********************************************************************************/
+/* RESPONSIVE CSS GRID
+ *
+ * Breakpoints intentionally match FbResponsiveBreakpoint and the responsive
+ * container utilities above: XS 360, S 640, M 768, L 1024, XL 1280, XXL 1536.
+ * The outer element owns the query context; the inner grid can therefore react
+ * to the component's own allocated width. This also keeps nested grids isolated.
+ */
+
+.fb-grid-container {
+    /* Reset optional inherited inputs so nested grids are independent. */
+    --fb-grid-columns-xs: initial;
+    --fb-grid-columns-s: initial;
+    --fb-grid-columns-m: initial;
+    --fb-grid-columns-l: initial;
+    --fb-grid-columns-xl: initial;
+    --fb-grid-columns-xxl: initial;
+    --fb-grid-gap-xs: initial;
+    --fb-grid-gap-s: initial;
+    --fb-grid-gap-m: initial;
+    --fb-grid-gap-l: initial;
+    --fb-grid-gap-xl: initial;
+    --fb-grid-gap-xxl: initial;
+    --fb-grid-row-gap: initial;
+    --fb-grid-column-gap: initial;
+    --fb-grid-template-columns: initial;
+    --fb-grid-template-rows: initial;
+    --fb-grid-auto-rows: initial;
+
+    box-sizing: border-box;
+    container-type: inline-size;
+    min-inline-size: 0;
+    inline-size: 100%;
+}
+
+.fb-grid {
+    --fb-grid-current-columns: var(--fb-grid-columns, 12);
+    --fb-grid-current-gap: var(--fb-grid-gap, 0);
+
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: var(--fb-grid-template-columns, repeat(var(--fb-grid-current-columns), minmax(0, 1fr)));
+    grid-template-rows: var(--fb-grid-template-rows, none);
+    grid-auto-rows: var(--fb-grid-auto-rows, auto);
+    grid-auto-flow: var(--fb-grid-auto-flow, row);
+    gap: var(--fb-grid-current-gap);
+    row-gap: var(--fb-grid-row-gap, var(--fb-grid-current-gap));
+    column-gap: var(--fb-grid-column-gap, var(--fb-grid-current-gap));
+    align-items: var(--fb-grid-align-items, stretch);
+    justify-items: var(--fb-grid-justify-items, stretch);
+    align-content: var(--fb-grid-align-content, normal);
+    justify-content: var(--fb-grid-justify-content, normal);
+    min-inline-size: 0;
+    inline-size: 100%;
+}
+
+.fb-grid > .fb-grid-item {
+    /* Reset optional inherited inputs so nested item trees cannot leak values. */
+    --fb-grid-column-start: initial;
+    --fb-grid-column-span-xs: initial;
+    --fb-grid-column-span-s: initial;
+    --fb-grid-column-span-m: initial;
+    --fb-grid-column-span-l: initial;
+    --fb-grid-column-span-xl: initial;
+    --fb-grid-column-span-xxl: initial;
+    --fb-grid-column-start-xs: initial;
+    --fb-grid-column-start-s: initial;
+    --fb-grid-column-start-m: initial;
+    --fb-grid-column-start-l: initial;
+    --fb-grid-column-start-xl: initial;
+    --fb-grid-column-start-xxl: initial;
+    --fb-grid-row-span-xs: initial;
+    --fb-grid-row-span-s: initial;
+    --fb-grid-row-span-m: initial;
+    --fb-grid-row-span-l: initial;
+    --fb-grid-row-span-xl: initial;
+    --fb-grid-row-span-xxl: initial;
+    --fb-grid-row-start: initial;
+    --fb-grid-row-start-xs: initial;
+    --fb-grid-row-start-s: initial;
+    --fb-grid-row-start-m: initial;
+    --fb-grid-row-start-l: initial;
+    --fb-grid-row-start-xl: initial;
+    --fb-grid-row-start-xxl: initial;
+    --fb-grid-order-xs: initial;
+    --fb-grid-order-s: initial;
+    --fb-grid-order-m: initial;
+    --fb-grid-order-l: initial;
+    --fb-grid-order-xl: initial;
+    --fb-grid-order-xxl: initial;
+
+    --fb-grid-current-column-span: var(--fb-grid-column-span, 1);
+    --fb-grid-current-column-start: var(--fb-grid-column-start, auto);
+    --fb-grid-current-row-span: var(--fb-grid-row-span, 1);
+    --fb-grid-current-row-start: var(--fb-grid-row-start, auto);
+    --fb-grid-current-order: var(--fb-grid-order, 0);
+
+    box-sizing: border-box;
+    grid-column: var(--fb-grid-current-column-start) / span var(--fb-grid-current-column-span);
+    grid-row: var(--fb-grid-current-row-start) / span var(--fb-grid-current-row-span);
+    order: var(--fb-grid-current-order);
+    align-self: var(--fb-grid-align-self, auto);
+    justify-self: var(--fb-grid-justify-self, auto);
+    min-inline-size: 0;
+}
+
+@container (min-width: 360px) {
+    .fb-grid {
+        --fb-grid-current-columns: var(--fb-grid-columns-xs, var(--fb-grid-columns, 12));
+        --fb-grid-current-gap: var(--fb-grid-gap-xs, var(--fb-grid-gap, 0));
+    }
+
+    .fb-grid > .fb-grid-item {
+        --fb-grid-current-column-span: var(--fb-grid-column-span-xs, var(--fb-grid-column-span, 1));
+        --fb-grid-current-column-start: var(--fb-grid-column-start-xs, var(--fb-grid-column-start, auto));
+        --fb-grid-current-row-span: var(--fb-grid-row-span-xs, var(--fb-grid-row-span, 1));
+        --fb-grid-current-row-start: var(--fb-grid-row-start-xs, var(--fb-grid-row-start, auto));
+        --fb-grid-current-order: var(--fb-grid-order-xs, var(--fb-grid-order, 0));
+    }
+}
+
+@container (min-width: 640px) {
+    .fb-grid {
+        --fb-grid-current-columns: var(--fb-grid-columns-s, var(--fb-grid-columns-xs, var(--fb-grid-columns, 12)));
+        --fb-grid-current-gap: var(--fb-grid-gap-s, var(--fb-grid-gap-xs, var(--fb-grid-gap, 0)));
+    }
+
+    .fb-grid > .fb-grid-item {
+        --fb-grid-current-column-span: var(--fb-grid-column-span-s, var(--fb-grid-column-span-xs, var(--fb-grid-column-span, 1)));
+        --fb-grid-current-column-start: var(--fb-grid-column-start-s, var(--fb-grid-column-start-xs, var(--fb-grid-column-start, auto)));
+        --fb-grid-current-row-span: var(--fb-grid-row-span-s, var(--fb-grid-row-span-xs, var(--fb-grid-row-span, 1)));
+        --fb-grid-current-row-start: var(--fb-grid-row-start-s, var(--fb-grid-row-start-xs, var(--fb-grid-row-start, auto)));
+        --fb-grid-current-order: var(--fb-grid-order-s, var(--fb-grid-order-xs, var(--fb-grid-order, 0)));
+    }
+}
+
+@container (min-width: 768px) {
+    .fb-grid {
+        --fb-grid-current-columns: var(--fb-grid-columns-m, var(--fb-grid-columns-s, var(--fb-grid-columns-xs, var(--fb-grid-columns, 12))));
+        --fb-grid-current-gap: var(--fb-grid-gap-m, var(--fb-grid-gap-s, var(--fb-grid-gap-xs, var(--fb-grid-gap, 0))));
+    }
+
+    .fb-grid > .fb-grid-item {
+        --fb-grid-current-column-span: var(--fb-grid-column-span-m, var(--fb-grid-column-span-s, var(--fb-grid-column-span-xs, var(--fb-grid-column-span, 1))));
+        --fb-grid-current-column-start: var(--fb-grid-column-start-m, var(--fb-grid-column-start-s, var(--fb-grid-column-start-xs, var(--fb-grid-column-start, auto))));
+        --fb-grid-current-row-span: var(--fb-grid-row-span-m, var(--fb-grid-row-span-s, var(--fb-grid-row-span-xs, var(--fb-grid-row-span, 1))));
+        --fb-grid-current-row-start: var(--fb-grid-row-start-m, var(--fb-grid-row-start-s, var(--fb-grid-row-start-xs, var(--fb-grid-row-start, auto))));
+        --fb-grid-current-order: var(--fb-grid-order-m, var(--fb-grid-order-s, var(--fb-grid-order-xs, var(--fb-grid-order, 0))));
+    }
+}
+
+@container (min-width: 1024px) {
+    .fb-grid {
+        --fb-grid-current-columns: var(--fb-grid-columns-l, var(--fb-grid-columns-m, var(--fb-grid-columns-s, var(--fb-grid-columns-xs, var(--fb-grid-columns, 12)))));
+        --fb-grid-current-gap: var(--fb-grid-gap-l, var(--fb-grid-gap-m, var(--fb-grid-gap-s, var(--fb-grid-gap-xs, var(--fb-grid-gap, 0)))));
+    }
+
+    .fb-grid > .fb-grid-item {
+        --fb-grid-current-column-span: var(--fb-grid-column-span-l, var(--fb-grid-column-span-m, var(--fb-grid-column-span-s, var(--fb-grid-column-span-xs, var(--fb-grid-column-span, 1)))));
+        --fb-grid-current-column-start: var(--fb-grid-column-start-l, var(--fb-grid-column-start-m, var(--fb-grid-column-start-s, var(--fb-grid-column-start-xs, var(--fb-grid-column-start, auto)))));
+        --fb-grid-current-row-span: var(--fb-grid-row-span-l, var(--fb-grid-row-span-m, var(--fb-grid-row-span-s, var(--fb-grid-row-span-xs, var(--fb-grid-row-span, 1)))));
+        --fb-grid-current-row-start: var(--fb-grid-row-start-l, var(--fb-grid-row-start-m, var(--fb-grid-row-start-s, var(--fb-grid-row-start-xs, var(--fb-grid-row-start, auto)))));
+        --fb-grid-current-order: var(--fb-grid-order-l, var(--fb-grid-order-m, var(--fb-grid-order-s, var(--fb-grid-order-xs, var(--fb-grid-order, 0)))));
+    }
+}
+
+@container (min-width: 1280px) {
+    .fb-grid {
+        --fb-grid-current-columns: var(--fb-grid-columns-xl, var(--fb-grid-columns-l, var(--fb-grid-columns-m, var(--fb-grid-columns-s, var(--fb-grid-columns-xs, var(--fb-grid-columns, 12))))));
+        --fb-grid-current-gap: var(--fb-grid-gap-xl, var(--fb-grid-gap-l, var(--fb-grid-gap-m, var(--fb-grid-gap-s, var(--fb-grid-gap-xs, var(--fb-grid-gap, 0))))));
+    }
+
+    .fb-grid > .fb-grid-item {
+        --fb-grid-current-column-span: var(--fb-grid-column-span-xl, var(--fb-grid-column-span-l, var(--fb-grid-column-span-m, var(--fb-grid-column-span-s, var(--fb-grid-column-span-xs, var(--fb-grid-column-span, 1))))));
+        --fb-grid-current-column-start: var(--fb-grid-column-start-xl, var(--fb-grid-column-start-l, var(--fb-grid-column-start-m, var(--fb-grid-column-start-s, var(--fb-grid-column-start-xs, var(--fb-grid-column-start, auto))))));
+        --fb-grid-current-row-span: var(--fb-grid-row-span-xl, var(--fb-grid-row-span-l, var(--fb-grid-row-span-m, var(--fb-grid-row-span-s, var(--fb-grid-row-span-xs, var(--fb-grid-row-span, 1))))));
+        --fb-grid-current-row-start: var(--fb-grid-row-start-xl, var(--fb-grid-row-start-l, var(--fb-grid-row-start-m, var(--fb-grid-row-start-s, var(--fb-grid-row-start-xs, var(--fb-grid-row-start, auto))))));
+        --fb-grid-current-order: var(--fb-grid-order-xl, var(--fb-grid-order-l, var(--fb-grid-order-m, var(--fb-grid-order-s, var(--fb-grid-order-xs, var(--fb-grid-order, 0))))));
+    }
+}
+
+@container (min-width: 1536px) {
+    .fb-grid {
+        --fb-grid-current-columns: var(--fb-grid-columns-xxl, var(--fb-grid-columns-xl, var(--fb-grid-columns-l, var(--fb-grid-columns-m, var(--fb-grid-columns-s, var(--fb-grid-columns-xs, var(--fb-grid-columns, 12)))))));
+        --fb-grid-current-gap: var(--fb-grid-gap-xxl, var(--fb-grid-gap-xl, var(--fb-grid-gap-l, var(--fb-grid-gap-m, var(--fb-grid-gap-s, var(--fb-grid-gap-xs, var(--fb-grid-gap, 0)))))));
+    }
+
+    .fb-grid > .fb-grid-item {
+        --fb-grid-current-column-span: var(--fb-grid-column-span-xxl, var(--fb-grid-column-span-xl, var(--fb-grid-column-span-l, var(--fb-grid-column-span-m, var(--fb-grid-column-span-s, var(--fb-grid-column-span-xs, var(--fb-grid-column-span, 1)))))));
+        --fb-grid-current-column-start: var(--fb-grid-column-start-xxl, var(--fb-grid-column-start-xl, var(--fb-grid-column-start-l, var(--fb-grid-column-start-m, var(--fb-grid-column-start-s, var(--fb-grid-column-start-xs, var(--fb-grid-column-start, auto)))))));
+        --fb-grid-current-row-span: var(--fb-grid-row-span-xxl, var(--fb-grid-row-span-xl, var(--fb-grid-row-span-l, var(--fb-grid-row-span-m, var(--fb-grid-row-span-s, var(--fb-grid-row-span-xs, var(--fb-grid-row-span, 1)))))));
+        --fb-grid-current-row-start: var(--fb-grid-row-start-xxl, var(--fb-grid-row-start-xl, var(--fb-grid-row-start-l, var(--fb-grid-row-start-m, var(--fb-grid-row-start-s, var(--fb-grid-row-start-xs, var(--fb-grid-row-start, auto)))))));
+        --fb-grid-current-order: var(--fb-grid-order-xxl, var(--fb-grid-order-xl, var(--fb-grid-order-l, var(--fb-grid-order-m, var(--fb-grid-order-s, var(--fb-grid-order-xs, var(--fb-grid-order, 0)))))));
+    }
+}
+
+/**********************************************************************************/
 /* MINI-PROGRESS */
 
 .fb-prog-loader {

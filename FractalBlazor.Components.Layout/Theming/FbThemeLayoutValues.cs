@@ -51,10 +51,18 @@ public static class FbThemeCssNames
 {
     public static readonly IReadOnlyList<string> LayoutVariantTokens =
     [
-        "bg-low-anchor", "bg-tint", "bg-high-anchor", "bg-surface-mix",
-        "bg-accent-offset", "bg-highlight-offset", "frame-light-mix",
-        "frame-light-size", "frame-medium-mix", "frame-medium-size",
-        "frame-strong-mix", "frame-strong-size"
+        "bg-low-anchor",
+        "bg-tint",
+        "bg-high-anchor",
+        "bg-surface-mix",
+        "bg-accent-offset", 
+        "bg-highlight-offset",
+        "frame-light-mix",
+        "frame-light-size",
+        "frame-medium-mix",
+        "frame-medium-size",
+        "frame-strong-mix", 
+        "frame-strong-size"
     ];
 
     public static string Normalize(string name)
