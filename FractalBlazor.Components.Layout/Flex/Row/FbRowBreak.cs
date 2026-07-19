@@ -45,37 +45,37 @@ namespace FractalBlazor.Components.Layout
         /// Break -> Extra Extra Small (480px)
         /// </summary>
         [Parameter]
-        public bool XXS { get => Break == FbBreaks.XXS_480px; set => Break = FbBreaks.XXS_480px; }
+        public bool XXS { get => Break == FbBreaks.XXS_480px; set { if (value) Break = FbBreaks.XXS_480px; } }
 
         /// <summary>
         /// Break -> Extra Small (600px)
         /// </summary>
         [Parameter]
-        public bool XS { get => Break == FbBreaks.XS_600px; set => Break = FbBreaks.XS_600px; }
+        public bool XS { get => Break == FbBreaks.XS_600px; set { if (value) Break = FbBreaks.XS_600px; } }
 
         /// <summary>
         /// Break -> Small (960px)
         /// </summary>
         [Parameter]
-        public bool S { get => Break == FbBreaks.S_960px; set => Break = FbBreaks.S_960px; }
+        public bool S { get => Break == FbBreaks.S_960px; set { if (value) Break = FbBreaks.S_960px; } }
 
         /// <summary>
         /// Break -> Medium (1280px)
         /// </summary>
         [Parameter]
-        public bool M { get => Break == FbBreaks.M_1280px; set => Break = FbBreaks.M_1280px; }
+        public bool M { get => Break == FbBreaks.M_1280px; set { if (value) Break = FbBreaks.M_1280px; } }
 
         /// <summary>
         /// Break -> Large (1600px)
         /// </summary>
         [Parameter]
-        public bool L { get => Break == FbBreaks.L_1600px; set => Break = FbBreaks.L_1600px; }
+        public bool L { get => Break == FbBreaks.L_1600px; set { if (value) Break = FbBreaks.L_1600px; } }
 
         /// <summary>
         /// Break -> Extra Large (1960px)
         /// </summary>
         [Parameter]
-        public bool XL { get => Break == FbBreaks.XL_1960px; set => Break = FbBreaks.XL_1960px; }
+        public bool XL { get => Break == FbBreaks.XL_1960px; set { if (value) Break = FbBreaks.XL_1960px; } }
 
         /// <summary>
         /// Under breakpoint setting

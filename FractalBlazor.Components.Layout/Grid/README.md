@@ -23,8 +23,8 @@ parameter.
 <FbGridContainer Columns="4"
                  ColumnsM="8"
                  ColumnsXL="12"
-                 Gap="FbSpacing._8"
-                 GapL="FbSpacing._16">
+                 Gap="FbSpacing.M"
+                 GapL="FbSpacing.X">
     <FbGridItem ColumnSpan="4" ColumnSpanM="5" ColumnSpanXL="8">
         Main content
     </FbGridItem>

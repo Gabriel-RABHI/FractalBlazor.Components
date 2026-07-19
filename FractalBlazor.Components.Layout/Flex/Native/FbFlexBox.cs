@@ -17,19 +17,19 @@ namespace FractalBlazor.Components.Layout
         /// No Wrap
         /// </summary>
         [Parameter]
-        public bool NoWrap { get => base.Wrap == FbFlexWrap.NoWrap; set => base.Wrap = FbFlexWrap.NoWrap; }
+        public bool NoWrap { get => base.Wrap == FbFlexWrap.NoWrap; set { if (value) base.Wrap = FbFlexWrap.NoWrap; } }
 
         /// <summary>
         /// Do Wrap
         /// </summary>
         [Parameter]
-        public bool DoWrap { get => base.Wrap == FbFlexWrap.Wrap; set => base.Wrap = FbFlexWrap.Wrap; }
+        public bool DoWrap { get => base.Wrap == FbFlexWrap.Wrap; set { if (value) base.Wrap = FbFlexWrap.Wrap; } }
 
         /// <summary>
         /// Wrap Reverse
         /// </summary>
         [Parameter]
-        public bool WrapReverse { get => base.Wrap == FbFlexWrap.WrapReverse; set => base.Wrap = FbFlexWrap.WrapReverse; }
+        public bool WrapReverse { get => base.Wrap == FbFlexWrap.WrapReverse; set { if (value) base.Wrap = FbFlexWrap.WrapReverse; } }
 
         // -------------- FbFlexDirection ------------ //
         /// <summary>
@@ -42,25 +42,25 @@ namespace FractalBlazor.Components.Layout
         /// Direction Row
         /// </summary>
         [Parameter]
-        public bool DirectionRow { get => base.Direction == FbFlexDirection.Row; set => base.Direction = FbFlexDirection.Row; }
+        public bool DirectionRow { get => base.Direction == FbFlexDirection.Row; set { if (value) base.Direction = FbFlexDirection.Row; } }
         
         /// <summary>
         /// Direction Row Reverse
         /// </summary>
         [Parameter]
-        public bool DirectionRowReverse { get => base.Direction == FbFlexDirection.RowReverse; set => base.Direction = FbFlexDirection.RowReverse; }
+        public bool DirectionRowReverse { get => base.Direction == FbFlexDirection.RowReverse; set { if (value) base.Direction = FbFlexDirection.RowReverse; } }
         
         /// <summary>
         /// Direction Column
         /// </summary>
         [Parameter]
-        public bool DirectionColumn { get => base.Direction == FbFlexDirection.Column; set => base.Direction = FbFlexDirection.Column; }
+        public bool DirectionColumn { get => base.Direction == FbFlexDirection.Column; set { if (value) base.Direction = FbFlexDirection.Column; } }
         
         /// <summary>
         /// Direction Column Reverse
         /// </summary>
         [Parameter]
-        public bool DirectionColumnReverse { get => base.Direction == FbFlexDirection.ColumnReverse; set => base.Direction = FbFlexDirection.ColumnReverse; }
+        public bool DirectionColumnReverse { get => base.Direction == FbFlexDirection.ColumnReverse; set { if (value) base.Direction = FbFlexDirection.ColumnReverse; } }
 
         // -------------- FbFlexJustify ------------ //
         /// <summary>
@@ -73,43 +73,43 @@ namespace FractalBlazor.Components.Layout
         /// Justify Start
         /// </summary>
         [Parameter]
-        public bool JustifyStart { get => base.Justify == FbFlexJustify.Start; set => base.Justify = FbFlexJustify.Start; }
+        public bool JustifyStart { get => base.Justify == FbFlexJustify.Start; set { if (value) base.Justify = FbFlexJustify.Start; } }
 
         /// <summary>
         /// Justify End
         /// </summary>
         [Parameter]
-        public bool JustifyEnd { get => base.Justify == FbFlexJustify.End; set => base.Justify = FbFlexJustify.End; }
+        public bool JustifyEnd { get => base.Justify == FbFlexJustify.End; set { if (value) base.Justify = FbFlexJustify.End; } }
 
         /// <summary>
         /// Justify Center
         /// </summary>
         [Parameter]
-        public bool JustifyCenter { get => base.Justify == FbFlexJustify.Center; set => base.Justify = FbFlexJustify.Center; }
+        public bool JustifyCenter { get => base.Justify == FbFlexJustify.Center; set { if (value) base.Justify = FbFlexJustify.Center; } }
 
         /// <summary>
         /// Justify Stretch
         /// </summary>
         [Parameter]
-        public bool JustifyStretch { get => base.Justify == FbFlexJustify.Stretch; set => base.Justify = FbFlexJustify.Stretch; }
+        public bool JustifyStretch { get => base.Justify == FbFlexJustify.Stretch; set { if (value) base.Justify = FbFlexJustify.Stretch; } }
 
         /// <summary>
         /// Justify Space Betwen
         /// </summary>
         [Parameter]
-        public bool JustifySpaceBetwen { get => base.Justify == FbFlexJustify.SpaceBetween; set => base.Justify = FbFlexJustify.SpaceBetween; }
+        public bool JustifySpaceBetwen { get => base.Justify == FbFlexJustify.SpaceBetween; set { if (value) base.Justify = FbFlexJustify.SpaceBetween; } }
 
         /// <summary>
         /// Justify Space Around
         /// </summary>
         [Parameter]
-        public bool JustifySpaceAround { get => base.Justify == FbFlexJustify.SpaceAround; set => base.Justify = FbFlexJustify.SpaceAround; }
+        public bool JustifySpaceAround { get => base.Justify == FbFlexJustify.SpaceAround; set { if (value) base.Justify = FbFlexJustify.SpaceAround; } }
 
         /// <summary>
         /// Justify Evenly
         /// </summary>
         [Parameter]
-        public bool JustifyEvenly { get => base.Justify == FbFlexJustify.Evenly; set => base.Justify = FbFlexJustify.Evenly; }
+        public bool JustifyEvenly { get => base.Justify == FbFlexJustify.Evenly; set { if (value) base.Justify = FbFlexJustify.Evenly; } }
 
         // -------------- FbFlexAlignItems ------------ //
         /// <summary>
@@ -122,31 +122,31 @@ namespace FractalBlazor.Components.Layout
         /// Align Items Start
         /// </summary>
         [Parameter]
-        public bool AlignItemsStart { get => base.AlignItems == FbFlexAlignItems.Start; set => base.AlignItems = FbFlexAlignItems.Start; }
+        public bool AlignItemsStart { get => base.AlignItems == FbFlexAlignItems.Start; set { if (value) base.AlignItems = FbFlexAlignItems.Start; } }
 
         /// <summary>
         /// Align Items End
         /// </summary>
         [Parameter]
-        public bool AlignItemsEnd { get => base.AlignItems == FbFlexAlignItems.End; set => base.AlignItems = FbFlexAlignItems.End; }
+        public bool AlignItemsEnd { get => base.AlignItems == FbFlexAlignItems.End; set { if (value) base.AlignItems = FbFlexAlignItems.End; } }
 
         /// <summary>
         /// Align Items Center
         /// </summary>
         [Parameter]
-        public bool AlignItemsCenter { get => base.AlignItems == FbFlexAlignItems.Center; set => base.AlignItems = FbFlexAlignItems.Center; }
+        public bool AlignItemsCenter { get => base.AlignItems == FbFlexAlignItems.Center; set { if (value) base.AlignItems = FbFlexAlignItems.Center; } }
 
         /// <summary>
         /// Align Items Baseline
         /// </summary>
         [Parameter]
-        public bool AlignItemsBaseline { get => base.AlignItems == FbFlexAlignItems.Baseline; set => base.AlignItems = FbFlexAlignItems.Baseline; }
+        public bool AlignItemsBaseline { get => base.AlignItems == FbFlexAlignItems.Baseline; set { if (value) base.AlignItems = FbFlexAlignItems.Baseline; } }
 
         /// <summary>
         /// Align Items Stretch
         /// </summary>
         [Parameter]
-        public bool AlignItemsStretch { get => base.AlignItems == FbFlexAlignItems.Stretch; set => base.AlignItems = FbFlexAlignItems.Stretch; }
+        public bool AlignItemsStretch { get => base.AlignItems == FbFlexAlignItems.Stretch; set { if (value) base.AlignItems = FbFlexAlignItems.Stretch; } }
 
         // -------------- FbFlexAlignContent ------------ //
         /// <summary>
@@ -159,37 +159,37 @@ namespace FractalBlazor.Components.Layout
         /// Align Content Start
         /// </summary>
         [Parameter]
-        public bool AlignContentStart { get => base.AlignContent == FbFlexAlignContent.Start; set => base.AlignContent = FbFlexAlignContent.Start; }
+        public bool AlignContentStart { get => base.AlignContent == FbFlexAlignContent.Start; set { if (value) base.AlignContent = FbFlexAlignContent.Start; } }
 
         /// <summary>
         /// Align Content End
         /// </summary>
         [Parameter]
-        public bool AlignContentEnd { get => base.AlignContent == FbFlexAlignContent.End; set => base.AlignContent = FbFlexAlignContent.End; }
+        public bool AlignContentEnd { get => base.AlignContent == FbFlexAlignContent.End; set { if (value) base.AlignContent = FbFlexAlignContent.End; } }
 
         /// <summary>
         /// Align Content Center
         /// </summary>
         [Parameter]
-        public bool AlignContentCenter { get => base.AlignContent == FbFlexAlignContent.Center; set => base.AlignContent = FbFlexAlignContent.Center; }
+        public bool AlignContentCenter { get => base.AlignContent == FbFlexAlignContent.Center; set { if (value) base.AlignContent = FbFlexAlignContent.Center; } }
 
         /// <summary>
         /// Align Content Space Betwen
         /// </summary>
         [Parameter]
-        public bool AlignContentSpaceBetwen { get => base.AlignContent == FbFlexAlignContent.SpaceBetween; set => base.AlignContent = FbFlexAlignContent.SpaceBetween; }
+        public bool AlignContentSpaceBetwen { get => base.AlignContent == FbFlexAlignContent.SpaceBetween; set { if (value) base.AlignContent = FbFlexAlignContent.SpaceBetween; } }
 
         /// <summary>
         /// Align Content Space Around
         /// </summary>
         [Parameter]
-        public bool AlignContentSpaceAround { get => base.AlignContent == FbFlexAlignContent.SpaceAround; set => base.AlignContent = FbFlexAlignContent.SpaceAround; }
+        public bool AlignContentSpaceAround { get => base.AlignContent == FbFlexAlignContent.SpaceAround; set { if (value) base.AlignContent = FbFlexAlignContent.SpaceAround; } }
 
         /// <summary>
         /// Align Content Stretch
         /// </summary>
         [Parameter]
-        public bool AlignContentStretch { get => base.AlignContent == FbFlexAlignContent.Stretch; set => base.AlignContent = FbFlexAlignContent.Stretch; }
+        public bool AlignContentStretch { get => base.AlignContent == FbFlexAlignContent.Stretch; set { if (value) base.AlignContent = FbFlexAlignContent.Stretch; } }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {

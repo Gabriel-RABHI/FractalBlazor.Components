@@ -242,29 +242,7 @@ namespace FractalBlazor.Components.Layout
             }
         }
 
-        protected bool NoSelf { get => _state._selfAlign == FbFlexItemSelfAlign.None; set => _state._selfAlign = FbFlexItemSelfAlign.None; }
-
-        // -------- In Row
-        protected bool SelfOnTop { get => _state._selfAlign == FbFlexItemSelfAlign.Start; set => _state._selfAlign = FbFlexItemSelfAlign.Start; }
-
-        protected bool SelfOnBottom { get => _state._selfAlign == FbFlexItemSelfAlign.End; set => _state._selfAlign = FbFlexItemSelfAlign.End; }
-
-        protected bool SelfOnCenter { get => _state._selfAlign == FbFlexItemSelfAlign.Center; set => _state._selfAlign = FbFlexItemSelfAlign.Center; }
-
-        protected bool SelfOnStretch { get => _state._selfAlign == FbFlexItemSelfAlign.Stretch; set => _state._selfAlign = FbFlexItemSelfAlign.Stretch; }
-
-        protected bool SelfOnBaseline { get => _state._selfAlign == FbFlexItemSelfAlign.Baseline; set => _state._selfAlign = FbFlexItemSelfAlign.Baseline; }
-
-        // -------- In Column
-        protected bool SelfJustifyRight { get => _state._selfAlign == FbFlexItemSelfAlign.Start; set => _state._selfAlign = FbFlexItemSelfAlign.Start; }
-
-        protected bool SelfJustifyLeft { get => _state._selfAlign == FbFlexItemSelfAlign.End; set => _state._selfAlign = FbFlexItemSelfAlign.End; }
-
-        protected bool SelfJustifyCenter { get => _state._selfAlign == FbFlexItemSelfAlign.Center; set => _state._selfAlign = FbFlexItemSelfAlign.Center; }
-
-        protected bool SelfJustifyStretch { get => _state._selfAlign == FbFlexItemSelfAlign.Stretch; set => _state._selfAlign = FbFlexItemSelfAlign.Stretch; }
-
-        protected bool SelfJustifyBaseline { get => _state._selfAlign == FbFlexItemSelfAlign.Baseline; set => _state._selfAlign = FbFlexItemSelfAlign.Baseline; }
+        
 
         private string SelfAlignString
         {
@@ -291,9 +269,9 @@ namespace FractalBlazor.Components.Layout
         // -------- Value assignation
         protected new string MinWidth { get; set; }
 
-        protected bool MinWidthMaxContent { get => _state._minWithSize == FbFlexSize.MaxContent; set => _state._minWithSize = FbFlexSize.MaxContent; }
+        protected bool MinWidthMaxContent { get => _state._minWithSize == FbFlexSize.MaxContent; set { if (value) _state._minWithSize = FbFlexSize.MaxContent; } }
 
-        protected bool MinWidthMinContent { get => _state._minWithSize == FbFlexSize.MinContent; set => _state._minWithSize = FbFlexSize.MinContent; }
+        protected bool MinWidthMinContent { get => _state._minWithSize == FbFlexSize.MinContent; set { if (value) _state._minWithSize = FbFlexSize.MinContent; } }
 
         private string MinWithString
         {
@@ -317,9 +295,9 @@ namespace FractalBlazor.Components.Layout
         // -------- Value assignation
         protected new string MinHeight { get; set; }
 
-        protected bool MinHeightMaxContent { get => _state._minHeightSize == FbFlexSize.MaxContent; set => _state._minHeightSize = FbFlexSize.MaxContent; }
+        protected bool MinHeightMaxContent { get => _state._minHeightSize == FbFlexSize.MaxContent; set { if (value) _state._minHeightSize = FbFlexSize.MaxContent; } }
 
-        protected bool MinHeightMinContent { get => _state._minHeightSize == FbFlexSize.MinContent; set => _state._minHeightSize = FbFlexSize.MinContent; }
+        protected bool MinHeightMinContent { get => _state._minHeightSize == FbFlexSize.MinContent; set { if (value) _state._minHeightSize = FbFlexSize.MinContent; } }
 
         private string MinHeightString
         {
@@ -343,9 +321,9 @@ namespace FractalBlazor.Components.Layout
         // -------- Value assignation
         protected new string MaxHeight { get; set; }
 
-        protected bool MaxHeightMaxContent { get => _state._maxHeightSize == FbFlexSize.MaxContent; set => _state._maxHeightSize = FbFlexSize.MaxContent; }
+        protected bool MaxHeightMaxContent { get => _state._maxHeightSize == FbFlexSize.MaxContent; set { if (value) _state._maxHeightSize = FbFlexSize.MaxContent; } }
 
-        protected bool MaxHeightMinContent { get => _state._maxHeightSize == FbFlexSize.MinContent; set => _state._maxHeightSize = FbFlexSize.MinContent; }
+        protected bool MaxHeightMinContent { get => _state._maxHeightSize == FbFlexSize.MinContent; set { if (value) _state._maxHeightSize = FbFlexSize.MinContent; } }
 
         private string MaxHeightString
         {
@@ -407,9 +385,9 @@ namespace FractalBlazor.Components.Layout
                             (_state._selfAlign == FbFlexItemSelfAlign.None ? "" : $"align-self:{SelfAlignString};") +
                             $"flex-direction: {DirectionString}; flex-wrap: {WrapString}; justify-content: {JustifyString}; align-items: {AlignItemsString}; align-content: {AlignContentString}; " +
                             (PlaceItemsString != "" ? $"place-items: {PlaceItemsString};" : "") +
-                            (Gutter != FbSpacing.None ? $"gap:{FbLayoutPresets.ToSpacingCss(Gutter)};" : "") +
-                            (RowGutter != FbSpacing.None ? $"row-gap:{FbLayoutPresets.ToSpacingCss(RowGutter)};" : "") +
-                            (ColumnGutter != FbSpacing.None ? $"column-gap:{FbLayoutPresets.ToSpacingCss(ColumnGutter)};" : "") +
+                            (Gutter != FbSpacing.None ? $"gap:{FbLayoutHelper.ToSpacingCss(Gutter)};" : "") +
+                            (RowGutter != FbSpacing.None ? $"row-gap:{FbLayoutHelper.ToSpacingCss(RowGutter)};" : "") +
+                            (ColumnGutter != FbSpacing.None ? $"column-gap:{FbLayoutHelper.ToSpacingCss(ColumnGutter)};" : "") +
                             (Grow != int.MinValue ? $"flex-grow:{Grow};" : "") +
                             (Shrink != int.MinValue ? $"flex-shrink:{Shrink};" : "") +
                             (Order != int.MinValue ? $"order:{Order};" : "") +
@@ -418,7 +396,7 @@ namespace FractalBlazor.Components.Layout
                             (MaxHeightString != "" ? $"max-height: {MaxHeightString};" : "") +
                             (ColumnDisplay ? "flex-flow : column;" : "") +
                             (Scrollable ? "overflow : scroll;" : "") +
-                            (Radius != FbSpacing.None ? $"border-radius:{FbLayoutPresets.ToRadiusCss(Radius)};" : "") +
+                            (Radius != FbSpacing.None ? $"border-radius:{FbLayoutHelper.ToRadiusCss(Radius)};" : "") +
                             ComputedBaseStyle;
                     if (UseCaching && !_cache.ContainsKey(hash))
                         _cache[hash] = str;
@@ -469,25 +447,99 @@ namespace FractalBlazor.Components.Layout
         /// Gutter -> Small
         /// </summary>
         [Parameter]
-        public bool GS { get => Gutter == FbLayoutPresets.S; set => Gutter = FbLayoutPresets.S; }
+        public bool GS { get => Gutter == FbSpacing.S; set { if (value) Gutter = FbSpacing.S; } }
 
         /// <summary>
         /// Gutter -> Medium
         /// </summary>
         [Parameter]
-        public bool GM { get => Gutter == FbLayoutPresets.M; set => Gutter = FbLayoutPresets.M; }
+        public bool GM { get => Gutter == FbSpacing.M; set { if (value) Gutter = FbSpacing.M; } }
 
         /// <summary>
         /// Gutter -> Large
         /// </summary>
         [Parameter]
-        public bool GL { get => Gutter == FbLayoutPresets.L; set => Gutter = FbLayoutPresets.L; }
+        public bool GL { get => Gutter == FbSpacing.L; set { if (value) Gutter = FbSpacing.L; } }
 
         /// <summary>
         /// Gutter -> Extra Large
         /// </summary>
         [Parameter]
-        public bool GX { get => Gutter == FbLayoutPresets.X; set => Gutter = FbLayoutPresets.X; }
+        public bool GX { get => Gutter == FbSpacing.X; set { if (value) Gutter = FbSpacing.X; } }
+
+        // -------- In Row
+        /// <summary>
+        /// Self -> Justify -> Horizontal -> Default
+        /// </summary>
+        [Parameter]
+        public bool SJHD { get => _state._selfAlign == FbFlexItemSelfAlign.None; set { if (value) _state._selfAlign = FbFlexItemSelfAlign.None; } }
+
+        /// <summary>
+        /// Self -> Justify -> Horizontal -> Start
+        /// </summary>
+        [Parameter]
+        public bool SJHS { get => _state._selfAlign == FbFlexItemSelfAlign.Start; set { if (value) _state._selfAlign = FbFlexItemSelfAlign.Start; } }
+
+        /// <summary>
+        /// Self -> Justify -> Horizontal -> End
+        /// </summary>
+        [Parameter]
+        public bool SJHE { get => _state._selfAlign == FbFlexItemSelfAlign.End; set { if (value) _state._selfAlign = FbFlexItemSelfAlign.End; } }
+
+        /// <summary>
+        /// Self -> Justify -> Horizontal -> Center
+        /// </summary>
+        [Parameter]
+        public bool SJHC { get => _state._selfAlign == FbFlexItemSelfAlign.Center; set { if (value) _state._selfAlign = FbFlexItemSelfAlign.Center; } }
+
+        /// <summary>
+        /// Self -> Justify -> Horizontal -> Stretch
+        /// </summary>
+        [Parameter]
+        public bool SJHSt { get => _state._selfAlign == FbFlexItemSelfAlign.Stretch; set { if (value) _state._selfAlign = FbFlexItemSelfAlign.Stretch; } }
+
+        /// <summary>
+        /// Self -> Justify -> Horizontal -> Baseline
+        /// </summary>
+        [Parameter]
+        public bool SJHBl { get => _state._selfAlign == FbFlexItemSelfAlign.Baseline; set { if (value) _state._selfAlign = FbFlexItemSelfAlign.Baseline; } }
+
+        // -------- In Column
+        /// <summary>
+        /// Self -> Justify -> Vertical -> Default
+        /// </summary>
+        [Parameter]
+        public bool SJVD { get => _state._selfAlign == FbFlexItemSelfAlign.None; set { if (value) _state._selfAlign = FbFlexItemSelfAlign.None; } }
+
+        /// <summary>
+        /// Self -> Justify -> Vertical -> Start
+        /// </summary>
+        [Parameter]
+        public bool SJVS { get => _state._selfAlign == FbFlexItemSelfAlign.Start; set { if (value) _state._selfAlign = FbFlexItemSelfAlign.Start; } }
+
+        /// <summary>
+        /// Self -> Justify -> Vertical -> End
+        /// </summary>
+        [Parameter]
+        public bool SJVE { get => _state._selfAlign == FbFlexItemSelfAlign.End; set { if (value) _state._selfAlign = FbFlexItemSelfAlign.End; } }
+
+        /// <summary>
+        /// Self -> Justify -> Vertical -> Center
+        /// </summary>
+        [Parameter]
+        public bool SJVC { get => _state._selfAlign == FbFlexItemSelfAlign.Center; set { if (value) _state._selfAlign = FbFlexItemSelfAlign.Center; } }
+
+        /// <summary>
+        /// Self -> Justify -> Vertical -> Stretch
+        /// </summary>
+        [Parameter]
+        public bool SJVSt { get => _state._selfAlign == FbFlexItemSelfAlign.Stretch; set { if (value) _state._selfAlign = FbFlexItemSelfAlign.Stretch; } }
+
+        /// <summary>
+        /// Self -> Justify -> Vertical -> Baseline
+        /// </summary>
+        [Parameter]
+        public bool SJVBl { get => _state._selfAlign == FbFlexItemSelfAlign.Baseline; set { if (value) _state._selfAlign = FbFlexItemSelfAlign.Baseline; } }
         #endregion
 
         #endregion

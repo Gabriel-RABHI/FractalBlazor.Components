@@ -68,34 +68,40 @@ namespace FractalBlazor.Components.Layout
 
         // -------- In Column
         /// <summary>
-        /// Self -> Justify -> Start
+        /// Self -> Justify -> Horizontal -> Default
         /// </summary>
         [Parameter]
-        public bool SJS { get => _selfAlign == FbFlexItemSelfAlign.Start; set => _selfAlign = FbFlexItemSelfAlign.Start; }
+        public bool SJHD { get => _selfAlign == FbFlexItemSelfAlign.None; set { if (value) _selfAlign = FbFlexItemSelfAlign.None; } }
 
         /// <summary>
-        /// Self -> Justify -> End
+        /// Self -> Justify -> Horizontal ->Start
         /// </summary>
         [Parameter]
-        public bool SJE { get => _selfAlign == FbFlexItemSelfAlign.End; set => _selfAlign = FbFlexItemSelfAlign.End; }
+        public bool SJHS { get => _selfAlign == FbFlexItemSelfAlign.Start; set { if (value) _selfAlign = FbFlexItemSelfAlign.Start; } }
 
         /// <summary>
-        /// Self -> Justify -> Center
+        /// Self -> Justify -> Horizontal ->End
         /// </summary>
         [Parameter]
-        public bool SJC { get => _selfAlign == FbFlexItemSelfAlign.Center; set => _selfAlign = FbFlexItemSelfAlign.Center; }
+        public bool SJHE { get => _selfAlign == FbFlexItemSelfAlign.End; set { if (value) _selfAlign = FbFlexItemSelfAlign.End; } }
 
         /// <summary>
-        /// Self -> Justify -> Stretch
+        /// Self -> Justify -> Horizontal ->Center
         /// </summary>
         [Parameter]
-        public bool SJSt { get => _selfAlign == FbFlexItemSelfAlign.Stretch; set => _selfAlign = FbFlexItemSelfAlign.Stretch; }
+        public bool SJHC { get => _selfAlign == FbFlexItemSelfAlign.Center; set { if (value) _selfAlign = FbFlexItemSelfAlign.Center; } }
 
         /// <summary>
-        /// Self -> Justify -> Baseline
+        /// Self -> Justify -> Horizontal ->Stretch
         /// </summary>
         [Parameter]
-        public bool SJBL { get => _selfAlign == FbFlexItemSelfAlign.Baseline; set => _selfAlign = FbFlexItemSelfAlign.Baseline; }
+        public bool SJHSt { get => _selfAlign == FbFlexItemSelfAlign.Stretch; set { if (value) _selfAlign = FbFlexItemSelfAlign.Stretch; } }
+
+        /// <summary>
+        /// Self -> Justify -> Horizontal ->Baseline
+        /// </summary>
+        [Parameter]
+        public bool SJHBL { get => _selfAlign == FbFlexItemSelfAlign.Baseline; set { if (value) _selfAlign = FbFlexItemSelfAlign.Baseline; } }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {

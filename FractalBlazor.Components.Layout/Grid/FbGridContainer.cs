@@ -19,21 +19,31 @@ public class FbGridContainer : FbComponentBase
     public int Columns { get; set; } = 12;
 
     [Parameter] public int? ColumnsXS { get; set; }
+
     [Parameter] public int? ColumnsS { get; set; }
+
     [Parameter] public int? ColumnsM { get; set; }
+
     [Parameter] public int? ColumnsL { get; set; }
+
     [Parameter] public int? ColumnsXL { get; set; }
+
     [Parameter] public int? ColumnsXXL { get; set; }
 
     /// <summary>Gap between rows and columns.</summary>
     [Parameter]
-    public FbSpacing Gap { get; set; } = FbSpacing._0;
+    public FbSpacing Gap { get; set; } = FbSpacing.None;
 
     [Parameter] public FbSpacing? GapXS { get; set; }
+
     [Parameter] public FbSpacing? GapS { get; set; }
+
     [Parameter] public FbSpacing? GapM { get; set; }
+
     [Parameter] public FbSpacing? GapL { get; set; }
+
     [Parameter] public FbSpacing? GapXL { get; set; }
+
     [Parameter] public FbSpacing? GapXXL { get; set; }
 
     /// <summary>Overrides <see cref="Gap"/> for rows.</summary>
@@ -169,8 +179,7 @@ public class FbGridContainer : FbComponentBase
             Add(css, property, SpacingToCss(value.Value));
     }
 
-    private static string SpacingToCss(FbSpacing value) =>
-        value is FbSpacing._0 ? "0" : FbLayoutPresets.ToSpacingCss(value);
+    private static string SpacingToCss(FbSpacing value) => FbLayoutHelper.ToSpacingCss(value);
 
     private static void Add(StringBuilder css, string property, string value) =>
         css.Append(property).Append(':').Append(value).Append(';');

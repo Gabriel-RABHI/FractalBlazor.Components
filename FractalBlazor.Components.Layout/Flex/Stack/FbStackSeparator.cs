@@ -11,8 +11,6 @@ namespace FractalBlazor.Components.Layout
         #region HIDDEN
         private FbFrame _frame = FbFrame.Medium;
 
-        private string MarginSize => ((double)((int)Margin) / 16d).ToString().Replace(",", ".");
-
         // -------------- FbStackSeparator Frame ------------ //
         protected FbFrame Frame { get => _frame; set => _frame = value; }
 
@@ -75,31 +73,31 @@ namespace FractalBlazor.Components.Layout
         /// Margin -> Small
         /// </summary>
         [Parameter]
-        public bool MS { get => Margin == FbLayoutPresets.S; set => Margin = FbLayoutPresets.S; }
+        public bool MS { get => Margin == FbSpacing.S; set { if (value) Margin = FbSpacing.S; } }
 
         /// <summary>
         /// Margin -> Medium
         /// </summary>
         [Parameter]
-        public bool MM { get => Margin == FbLayoutPresets.M; set => Margin = FbLayoutPresets.M; }
+        public bool MM { get => Margin == FbSpacing.M; set { if (value) Margin = FbSpacing.M; } }
 
         /// <summary>
         /// Margin -> Large
         /// </summary>
         [Parameter]
-        public bool ML { get => Margin == FbLayoutPresets.L; set => Margin = FbLayoutPresets.L; }
+        public bool ML { get => Margin == FbSpacing.L; set { if (value) Margin = FbSpacing.L; } }
 
         /// <summary>
         /// Margin -> Extra-Large
         /// </summary>
         [Parameter]
-        public bool MX { get => Margin == FbLayoutPresets.X; set => Margin = FbLayoutPresets.X; }
+        public bool MX { get => Margin == FbSpacing.X; set { if (value) Margin = FbSpacing.X; } }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "div");
             builder.AddAttribute(1, "cpnt", "stack-separator");
-            builder.AddAttribute(2, "style", $"display: flex; align-self: stretch;{(Margin != FbSpacing.None ? $"margin-top:{MarginSize}rem;margin-bottom:{MarginSize}rem;" : "")}");
+            builder.AddAttribute(2, "style", $"display: flex; align-self: stretch;{(Margin != FbSpacing.None ? $"margin-top:{FbLayoutHelper.ToSpacingCss(Margin)};margin-bottom:{FbLayoutHelper.ToSpacingCss(Margin)};" : "")}");
             builder.AddAttribute(3, "class", ComputedStackSeparatorClasses);
             builder.CloseElement();
         }
