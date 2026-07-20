@@ -170,6 +170,7 @@ namespace  FractalBlazor.Components.Layout
         InlineFlex,
         Table,
         TableRow,
-        TableCell
+        TableCell,
+        Grid
     }
 }

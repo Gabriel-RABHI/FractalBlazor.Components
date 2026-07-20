@@ -47,8 +47,8 @@ namespace FractalBlazor.Components.Layout
             public bool _noWrap = false;
             public bool _responsiveUnder = false;
             public BaseDisplayMode DisplayMode = BaseDisplayMode.None;
-            public FbSpacing Padding = FbSpacing.None;
             public FbResponsiveBreakpoint ResponsiveBreakpoint = FbResponsiveBreakpoint.None;
+            public FbSpacing Padding = FbSpacing.None;
             public FbSpacing PaddingTop = FbSpacing.None;
             public FbSpacing PaddingBottom = FbSpacing.None;
             public FbSpacing PaddingLeft = FbSpacing.None;
@@ -83,6 +83,7 @@ namespace FractalBlazor.Components.Layout
                         case BaseDisplayMode.Table: return "display:table;";
                         case BaseDisplayMode.TableRow: return "display:table-row;";
                         case BaseDisplayMode.TableCell: return "display:table-cell;";
+                        case BaseDisplayMode.Grid: return "display:grid;";
                     }
                     return "";
                 }
@@ -91,7 +92,7 @@ namespace FractalBlazor.Components.Layout
 
         private ComponentBaseState _state = new ComponentBaseState();
 
-        private string _widthBasis = "";
+        private string _flexBasis = "";
 
         protected BaseDisplayMode DisplayMode { get => _state.DisplayMode; set => _state.DisplayMode = value; }
 
@@ -125,6 +126,14 @@ namespace FractalBlazor.Components.Layout
 
         protected bool IsInlineFlex { get => _state.IsInlineFlex; set => _state.IsInlineFlex = value; }
 
+        protected string HoverClassString {
+            get {
+                if (Hover || !string.IsNullOrWhiteSpace(HoverMixOffset))
+                    return "fb-hover";
+                return "";
+            }
+        }
+
         protected unsafe int CpntHash
         {
             get
@@ -133,8 +142,8 @@ namespace FractalBlazor.Components.Layout
                 fixed (ComponentBaseState* sptr = &_state)
                 {
                     hash = ComputeHash((byte*)sptr, sizeof(ComponentBaseState));
-                    if (!string.IsNullOrWhiteSpace(WidthBasis))
-                        hash = ComputeHash(WidthBasis, hash);
+                    if (!string.IsNullOrWhiteSpace(FlexBasis))
+                        hash = ComputeHash(FlexBasis, hash);
                     if (!string.IsNullOrWhiteSpace(Style))
                         hash = ComputeHash(Style, hash);
                     if (!string.IsNullOrWhiteSpace(HoverMixOffset))
@@ -177,7 +186,7 @@ namespace FractalBlazor.Components.Layout
                             (MarginRight != FbSpacing.None ? $"margin-right:{FbLayoutHelper.ToSpacingCss(MarginRight)};" : "") +
                             (_state._flex != int.MinValue ? $"flex:{_state._flex};" : "") +
                             (Hidden ? "visibility:hidden;" : "");
-                    str += (string.IsNullOrWhiteSpace(WidthBasis) ? "" : $"flex-basis:{WidthBasis};") +
+                    str +=  (string.IsNullOrWhiteSpace(FlexBasis) ? "" : $"flex-basis:{FlexBasis};") +
                             (string.IsNullOrWhiteSpace(HoverMixOffset) ? "" : $"--fb-hover-mix-offset:{HoverMixOffset};") +
                             (string.IsNullOrWhiteSpace(Style) ? "" : Style + ";");
                     if (UseCaching && !_cache.ContainsKey(hash))
@@ -186,11 +195,6 @@ namespace FractalBlazor.Components.Layout
                     return _style;
                 }
             }
-        }
-
-        public void UpdateState()
-        {
-            InvokeAsync(() => { StateHasChanged(); });
         }
 
         // ************************************************************************************************ //
@@ -241,13 +245,13 @@ namespace FractalBlazor.Components.Layout
         /// Flex basis width
         /// </summary>
         [Parameter]
-        public string WidthBasis
+        public string FlexBasis
         {
-            get => _widthBasis;
+            get => _flexBasis;
             set
             {
-                _widthBasis = value;
-                if (!string.IsNullOrWhiteSpace(_widthBasis))
+                _flexBasis = value;
+                if (!string.IsNullOrWhiteSpace(_flexBasis))
                     _state._flex = int.MinValue;
             }
         }
@@ -311,16 +315,6 @@ namespace FractalBlazor.Components.Layout
         /// </summary>
         [Parameter]
         public bool Hidden { get; set; } = false;
-
-        protected string HoverClassString
-        {
-            get
-            {
-                if (Hover || !string.IsNullOrWhiteSpace(HoverMixOffset))
-                    return "fb-hover";
-                return "";
-            }
-        }
 
         /// <summary>
         /// Responsive container setting
@@ -429,48 +423,6 @@ namespace FractalBlazor.Components.Layout
                 return "";
             }
         }
-
-        /// <summary>
-        /// Padding
-        /// </summary>
-        [Parameter]
-        public FbSpacing P { get => Padding; set => Padding = value; }
-
-        /// <summary>
-        /// Padding -> Top
-        /// </summary>
-        [Parameter]
-        public FbSpacing PTop { get => PaddingTop; set => PaddingTop = value; }
-
-        /// <summary>
-        /// Padding -> Bottom
-        /// </summary>
-        [Parameter]
-        public FbSpacing PBottom { get => PaddingBottom; set => PaddingBottom = value; }
-
-        /// <summary>
-        /// Padding -> Left
-        /// </summary>
-        [Parameter]
-        public FbSpacing PLeft { get => PaddingLeft; set => PaddingLeft = value; }
-
-        /// <summary>
-        /// Padding -> Right
-        /// </summary>
-        [Parameter]
-        public FbSpacing PRight { get => PaddingRight; set => PaddingRight = value; }
-
-        /// <summary>
-        /// Padding -> Horizontal
-        /// </summary>
-        [Parameter]
-        public FbSpacing PH { get => PaddingLeft; set { PaddingLeft = PaddingRight = value; } }
-
-        /// <summary>
-        /// Padding -> Vertical
-        /// </summary>
-        [Parameter]
-        public FbSpacing PV { get => PaddingTop; set { PaddingTop = PaddingBottom = value; } }
 
         /// <summary>
         /// Padding -> Small
@@ -639,48 +591,6 @@ namespace FractalBlazor.Components.Layout
         /// </summary>
         [Parameter]
         public bool PRX { get => PaddingRight == FbSpacing.X; set { if (value) PaddingRight = FbSpacing.X; } }
-
-        /// <summary>
-        /// Margin
-        /// </summary>
-        [Parameter]
-        public FbSpacing M { get => Margin; set => Margin = value; }
-
-        /// <summary>
-        /// Margin -> Top
-        /// </summary>
-        [Parameter]
-        public FbSpacing MTop { get => MarginTop; set => MarginTop = value; }
-
-        /// <summary>
-        /// Margin -> Bottom
-        /// </summary>
-        [Parameter]
-        public FbSpacing MBottom { get => MarginBottom; set => MarginBottom = value; }
-
-        /// <summary>
-        /// Margin -> Left
-        /// </summary>
-        [Parameter]
-        public FbSpacing MLeft { get => MarginLeft; set => MarginLeft = value; }
-
-        /// <summary>
-        /// Margin -> Right
-        /// </summary>
-        [Parameter]
-        public FbSpacing MRight { get => MarginRight; set => MarginRight = value; }
-
-        /// <summary>
-        /// Margin -> Horizontal
-        /// </summary>
-        [Parameter]
-        public FbSpacing MH { get => MarginLeft; set { MarginLeft = MarginRight = value; } }
-
-        /// <summary>
-        /// Margin -> Vertical
-        /// </summary>
-        [Parameter]
-        public FbSpacing MV { get => MarginTop; set { MarginTop = MarginBottom = value; } }
 
         /// <summary>
         /// Margin -> Small
