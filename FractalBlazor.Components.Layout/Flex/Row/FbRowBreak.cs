@@ -14,18 +14,18 @@ namespace FractalBlazor.Components.Layout
             {
                 switch (Break)
                 {
-                    case FbBreaks.XXS_480px:
-                        return Under ? "row-break-under-xxs" : "row-break-over-xxs";
-                    case FbBreaks.XS_600px:
+                    case FbBreaks.XS:
                         return Under ? "row-break-under-xs" : "row-break-over-xs";
-                    case FbBreaks.S_960px:
+                    case FbBreaks.S:
                         return Under ? "row-break-under-s" : "row-break-over-s";
-                    case FbBreaks.M_1280px:
+                    case FbBreaks.M:
                         return Under ? "row-break-under-m" : "row-break-over-m";
-                    case FbBreaks.L_1600px:
+                    case FbBreaks.L:
                         return Under ? "row-break-under-l" : "row-break-over-l";
-                    case FbBreaks.XL_1960px:
+                    case FbBreaks.XL:
                         return Under ? "row-break-under-xl" : "row-break-over-xl";
+                    case FbBreaks.XXL:
+                        return Under ? "row-break-under-xxl" : "row-break-over-xxl";
                 }
                 return "break-row-under-s";
             }
@@ -39,43 +39,43 @@ namespace FractalBlazor.Components.Layout
         /// Responsive breakpoint
         /// </summary>
         [Parameter]
-        public FbBreaks Break { get; set; } = FbBreaks.S_960px;
+        public FbBreaks Break { get; set; } = FbBreaks.XL;
 
         /// <summary>
-        /// Break -> Extra Extra Small (480px)
+        /// Break -> Extra Small (512px)
         /// </summary>
         [Parameter]
-        public bool XXS { get => Break == FbBreaks.XXS_480px; set { if (value) Break = FbBreaks.XXS_480px; } }
+        public bool XS { get => Break == FbBreaks.XS; set { if (value) Break = FbBreaks.XS; } }
 
         /// <summary>
-        /// Break -> Extra Small (600px)
+        /// Break -> Small (640px)
         /// </summary>
         [Parameter]
-        public bool XS { get => Break == FbBreaks.XS_600px; set { if (value) Break = FbBreaks.XS_600px; } }
+        public bool S { get => Break == FbBreaks.S; set { if (value) Break = FbBreaks.S; } }
 
         /// <summary>
-        /// Break -> Small (960px)
+        /// Break -> Medium (768px)
         /// </summary>
         [Parameter]
-        public bool S { get => Break == FbBreaks.S_960px; set { if (value) Break = FbBreaks.S_960px; } }
+        public bool M { get => Break == FbBreaks.M; set { if (value) Break = FbBreaks.M; } }
 
         /// <summary>
-        /// Break -> Medium (1280px)
+        /// Break -> Large (1024px)
         /// </summary>
         [Parameter]
-        public bool M { get => Break == FbBreaks.M_1280px; set { if (value) Break = FbBreaks.M_1280px; } }
+        public bool L { get => Break == FbBreaks.L; set { if (value) Break = FbBreaks.L; } }
 
         /// <summary>
-        /// Break -> Large (1600px)
+        /// Break -> Extra Large (1280px)
         /// </summary>
         [Parameter]
-        public bool L { get => Break == FbBreaks.L_1600px; set { if (value) Break = FbBreaks.L_1600px; } }
+        public bool XL { get => Break == FbBreaks.XL; set { if (value) Break = FbBreaks.XL; } }
 
         /// <summary>
-        /// Break -> Extra Large (1960px)
+        /// Break -> Extra Extra Large (1536px)
         /// </summary>
         [Parameter]
-        public bool XL { get => Break == FbBreaks.XL_1960px; set { if (value) Break = FbBreaks.XL_1960px; } }
+        public bool XXL { get => Break == FbBreaks.XXL; set { if (value) Break = FbBreaks.XXL; } }
 
         /// <summary>
         /// Under breakpoint setting

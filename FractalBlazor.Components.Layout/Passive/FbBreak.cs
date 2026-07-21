@@ -29,43 +29,44 @@ namespace FractalBlazor.Components.Layout
         /// Responsive breakpoint
         /// </summary>
         [Parameter]
-        public FbBreaks Break { get; set; } = FbBreaks.XS_600px;
+        public FbBreaks Break { get; set; } = FbBreaks.XS;
 
         /// <summary>
-        /// Break -> Extra Extra Small (480px)
+        /// Break -> Extra Small (512px)
         /// </summary>
         [Parameter]
-        public bool XXS { get => Break == FbBreaks.XXS_480px; set { if (value) Break = FbBreaks.XXS_480px; } }
+        public bool XS { get => Break == FbBreaks.XS; set { if (value) Break = FbBreaks.XS; } }
         
         /// <summary>
-        /// Break -> Extra Small (600px)
+        /// Break -> Small (640px)
         /// </summary>
         [Parameter]
-        public bool XS { get => Break == FbBreaks.XS_600px; set { if (value) Break = FbBreaks.XS_600px; } }
+        public bool S { get => Break == FbBreaks.S; set { if (value) Break = FbBreaks.S; } }
         
         /// <summary>
-        /// Break -> Small (960px)
+        /// Break -> Medium (768px)
         /// </summary>
         [Parameter]
-        public bool S { get => Break == FbBreaks.S_960px; set { if (value) Break = FbBreaks.S_960px; } }
+        public bool M { get => Break == FbBreaks.M; set { if (value) Break = FbBreaks.M; } }
         
         /// <summary>
-        /// Break -> Medium (1280px)
+        /// Break -> Large (1024px)
         /// </summary>
         [Parameter]
-        public bool M { get => Break == FbBreaks.M_1280px; set { if (value) Break = FbBreaks.M_1280px; } }
+        public bool L { get => Break == FbBreaks.L; set { if (value) Break = FbBreaks.L; } }
         
         /// <summary>
-        /// Break -> Large (1600px)
+        /// Break -> Extra Large (1280px)
         /// </summary>
         [Parameter]
-        public bool L { get => Break == FbBreaks.L_1600px; set { if (value) Break = FbBreaks.L_1600px; } }
-        
+        public bool XL { get => Break == FbBreaks.XL; set { if (value) Break = FbBreaks.XL; } }
+
+
         /// <summary>
-        /// Break -> Extra Large (1960px)
+        /// Break -> Extra Extra Large (1536px)
         /// </summary>
         [Parameter]
-        public bool XL { get => Break == FbBreaks.XL_1960px; set { if (value) Break = FbBreaks.XL_1960px; } }
+        public bool XXL { get => Break == FbBreaks.XXL; set { if (value) Break = FbBreaks.XXL; } }
 
         /// <summary>
         /// Custom inline CSS style
@@ -85,23 +86,23 @@ namespace FractalBlazor.Components.Layout
         {
             switch (Break)
             {
-                case FbBreaks.XXS_480px:
-                    RenderBreakContent(builder, "hide-under-xxs", "hide-over-xxs");
-                    break;
-                case FbBreaks.XS_600px:
+                case FbBreaks.XS:
                     RenderBreakContent(builder, "hide-under-xs", "hide-over-xs");
                     break;
-                case FbBreaks.S_960px:
+                case FbBreaks.S:
                     RenderBreakContent(builder, "hide-under-s", "hide-over-s");
                     break;
-                case FbBreaks.M_1280px:
+                case FbBreaks.M:
                     RenderBreakContent(builder, "hide-under-m", "hide-over-m");
                     break;
-                case FbBreaks.L_1600px:
+                case FbBreaks.L:
                     RenderBreakContent(builder, "hide-under-l", "hide-over-l");
                     break;
-                case FbBreaks.XL_1960px:
+                case FbBreaks.XL:
                     RenderBreakContent(builder, "hide-under-xl", "hide-over-xl");
+                    break;
+                case FbBreaks.XXL:
+                    RenderBreakContent(builder, "hide-under-xxl", "hide-over-xxl");
                     break;
             }
         }

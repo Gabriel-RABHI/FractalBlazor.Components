@@ -45,7 +45,7 @@ namespace FractalBlazor.Components.Layout
             public bool _noWrap = false;
             public bool _responsiveUnder = false;
             public BaseDisplayMode DisplayMode = BaseDisplayMode.None;
-            public FbResponsiveBreakpoint ResponsiveBreakpoint = FbResponsiveBreakpoint.None;
+            public FbBreaks ResponsiveBreakpoint = FbBreaks.None;
             public FbSpacing Padding = FbSpacing.None;
             public FbSpacing PaddingTop = FbSpacing.None;
             public FbSpacing PaddingBottom = FbSpacing.None;
@@ -96,7 +96,7 @@ namespace FractalBlazor.Components.Layout
 
         private BaseDisplayMode DisplayMode { get => _state.DisplayMode; set => _state.DisplayMode = value; }
 
-        private FbResponsiveBreakpoint ResponsiveBreakpoint { get => _state.ResponsiveBreakpoint; set => _state.ResponsiveBreakpoint = value; }
+        private FbBreaks ResponsiveBreakpoint { get => _state.ResponsiveBreakpoint; set => _state.ResponsiveBreakpoint = value; }
 
         private FbSpacing Padding { get => _state.Padding; set => _state.Padding = value; }
 
@@ -131,17 +131,17 @@ namespace FractalBlazor.Components.Layout
                 if (ResponsiveContainer)
                     return "fb-container-init";
 
-                if (ResponsiveBreakpoint is not FbResponsiveBreakpoint.None)
+                if (ResponsiveBreakpoint is not FbBreaks.None)
                 {
                     var responsiveResultClasse = "fb-container";
                     switch (ResponsiveBreakpoint)
                     {
-                        case FbResponsiveBreakpoint.XXL_1536px: responsiveResultClasse = $"{responsiveResultClasse}-xxl"; break;
-                        case FbResponsiveBreakpoint.XL_1280px: responsiveResultClasse = $"{responsiveResultClasse}-xl"; break;
-                        case FbResponsiveBreakpoint.L_1024px: responsiveResultClasse = $"{responsiveResultClasse}-l"; break;
-                        case FbResponsiveBreakpoint.M_768px: responsiveResultClasse = $"{responsiveResultClasse}-m"; break;
-                        case FbResponsiveBreakpoint.S_640px: responsiveResultClasse = $"{responsiveResultClasse}-s"; break;
-                        case FbResponsiveBreakpoint.XS_360px: responsiveResultClasse = $"{responsiveResultClasse}-xs"; break;
+                        case FbBreaks.XXL: responsiveResultClasse = $"{responsiveResultClasse}-xxl"; break;
+                        case FbBreaks.XL: responsiveResultClasse = $"{responsiveResultClasse}-xl"; break;
+                        case FbBreaks.L: responsiveResultClasse = $"{responsiveResultClasse}-l"; break;
+                        case FbBreaks.M: responsiveResultClasse = $"{responsiveResultClasse}-m"; break;
+                        case FbBreaks.S: responsiveResultClasse = $"{responsiveResultClasse}-s"; break;
+                        case FbBreaks.XS: responsiveResultClasse = $"{responsiveResultClasse}-xs"; break;
                     }
 
                     if (_state._responsiveUnder)
@@ -299,73 +299,73 @@ namespace FractalBlazor.Components.Layout
         /// Show when initialize container width ≥ 1536px
         /// </summary>
         [Parameter]
-        public bool VO_XXL { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.XXL_1536px && !_state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbResponsiveBreakpoint.XXL_1536px; _state._responsiveUnder = false; } } }
+        public bool VO_XXL { get => ResponsiveBreakpoint == FbBreaks.XXL && !_state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbBreaks.XXL; _state._responsiveUnder = false; } } }
 
         /// <summary>
-        /// Show when initialize container width ≤ 1536px
+        /// Show when initialize container width &lt; 1536px
         /// </summary>
         [Parameter]
-        public bool VU_XXL { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.XXL_1536px && _state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbResponsiveBreakpoint.XXL_1536px; _state._responsiveUnder = true; } } }
+        public bool VU_XXL { get => ResponsiveBreakpoint == FbBreaks.XXL && _state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbBreaks.XXL; _state._responsiveUnder = true; } } }
 
         /// <summary>
         /// Show when initialize container width ≥ 1280px
         /// </summary>
         [Parameter]
-        public bool VO_XL { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.XL_1280px && !_state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbResponsiveBreakpoint.XL_1280px; _state._responsiveUnder = false; } } }
+        public bool VO_XL { get => ResponsiveBreakpoint == FbBreaks.XL && !_state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbBreaks.XL; _state._responsiveUnder = false; } } }
 
         /// <summary>
-        /// Show when initialize container width ≤ 1280px
+        /// Show when initialize container width &lt; 1280px
         /// </summary>
         [Parameter]
-        public bool VU_XL { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.XL_1280px && _state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbResponsiveBreakpoint.XL_1280px; _state._responsiveUnder = true; } } }
+        public bool VU_XL { get => ResponsiveBreakpoint == FbBreaks.XL && _state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbBreaks.XL; _state._responsiveUnder = true; } } }
 
         /// <summary>
         /// Show when initialize container width ≥ 1024px
         /// </summary>
         [Parameter]
-        public bool VO_L { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.L_1024px && !_state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbResponsiveBreakpoint.L_1024px; _state._responsiveUnder = false; } } }
+        public bool VO_L { get => ResponsiveBreakpoint == FbBreaks.L && !_state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbBreaks.L; _state._responsiveUnder = false; } } }
 
         /// <summary>
-        /// Show when initialize container width ≤ 1024px
+        /// Show when initialize container width &lt; 1024px
         /// </summary>
         [Parameter]
-        public bool VU_L { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.L_1024px && _state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbResponsiveBreakpoint.L_1024px; _state._responsiveUnder = true; } } }
+        public bool VU_L { get => ResponsiveBreakpoint == FbBreaks.L && _state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbBreaks.L; _state._responsiveUnder = true; } } }
 
         /// <summary>
         /// Show when initialize container width ≥ 768px
         /// </summary>
         [Parameter]
-        public bool VO_M { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.M_768px && !_state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbResponsiveBreakpoint.M_768px; _state._responsiveUnder = false; } } }
+        public bool VO_M { get => ResponsiveBreakpoint == FbBreaks.M && !_state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbBreaks.M; _state._responsiveUnder = false; } } }
 
         /// <summary>
-        /// Show when initialize container width ≤ 768px
+        /// Show when initialize container width &lt; 768px
         /// </summary>
         [Parameter]
-        public bool VU_M { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.M_768px && _state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbResponsiveBreakpoint.M_768px; _state._responsiveUnder = true; } } }
+        public bool VU_M { get => ResponsiveBreakpoint == FbBreaks.M && _state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbBreaks.M; _state._responsiveUnder = true; } } }
 
         /// <summary>
         /// Show when initialize container width ≥ 640px
         /// </summary>
         [Parameter]
-        public bool VO_S { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.S_640px && !_state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbResponsiveBreakpoint.S_640px; _state._responsiveUnder = false; } } }
+        public bool VO_S { get => ResponsiveBreakpoint == FbBreaks.S && !_state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbBreaks.S; _state._responsiveUnder = false; } } }
 
         /// <summary>
-        /// Show when initialize container width ≤ 640px
+        /// Show when initialize container width &lt; 640px
         /// </summary>
         [Parameter]
-        public bool VU_S { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.S_640px && _state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbResponsiveBreakpoint.S_640px; _state._responsiveUnder = true; } } }
+        public bool VU_S { get => ResponsiveBreakpoint == FbBreaks.S && _state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbBreaks.S; _state._responsiveUnder = true; } } }
 
         /// <summary>
-        /// Show when initialize container width ≥ 360px
+        /// Show when initialize container width ≥ 512px
         /// </summary>
         [Parameter]
-        public bool VO_XS { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.XS_360px && !_state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbResponsiveBreakpoint.XS_360px; _state._responsiveUnder = false; } } }
+        public bool VO_XS { get => ResponsiveBreakpoint == FbBreaks.XS && !_state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbBreaks.XS; _state._responsiveUnder = false; } } }
 
         /// <summary>
-        /// Visible -> Under -> XS (width ≤ 360px)
+        /// Visible -> Under -> XS (width &lt; 512px)
         /// </summary>
         [Parameter]
-        public bool VU_XS { get => ResponsiveBreakpoint == FbResponsiveBreakpoint.XS_360px && _state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbResponsiveBreakpoint.XS_360px; _state._responsiveUnder = true; } } }
+        public bool VU_XS { get => ResponsiveBreakpoint == FbBreaks.XS && _state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbBreaks.XS; _state._responsiveUnder = true; } } }
 
         /// <summary>
         /// Padding -> Small

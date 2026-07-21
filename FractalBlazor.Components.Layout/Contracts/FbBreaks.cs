@@ -1,23 +1,14 @@
 namespace  FractalBlazor.Components.Layout
 {
-    public enum FbBreaks : byte
+    public enum FbBreaks : int
     {
-        XXS_480px,
-        XS_600px,
-        S_960px,
-        M_1280px,
-        L_1600px,
-        XL_1960px
-    }
-    public enum FbResponsiveBreakpoint : byte
-    {
-        None,
-        XS_360px,
-        S_640px,
-        M_768px,
-        L_1024px,
-        XL_1280px,
-        XXL_1536px
+        None = 0,
+        XS = 512,
+        S = 640,
+        M = 768,
+        L = 1024,
+        XL = 1280,
+        XXL = 1536
     }
     
     public enum FbSpacing : byte

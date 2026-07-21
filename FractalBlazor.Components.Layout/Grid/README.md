@@ -8,7 +8,7 @@ The breakpoints match the project's current responsive container scale:
 
 | Step | Minimum container width |
 | --- | ---: |
-| XS | 360px |
+| XS | 512px |
 | S | 640px |
 | M | 768px |
 | L | 1024px |

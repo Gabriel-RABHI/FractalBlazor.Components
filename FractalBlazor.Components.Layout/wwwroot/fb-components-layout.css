@@ -246,27 +246,7 @@ html {
 
 /**********************************************************************************/
 /* ROW BREAKS */
-@media (max-width: 480px) {
-    .row-break-under-xxs {
-        display: inline-flex;
-    }
-
-    .row-break-over-xxs {
-        display: none;
-    }
-}
-
-@media (min-width: 480px) {
-    .row-break-under-xxs {
-        display: none;
-    }
-
-    .row-break-over-xxs {
-        display: inline-flex;
-    }
-}
-
-@media (max-width: 600px) {
+@media (width < 512px) {
     .row-break-under-xs {
         display: inline-flex;
     }
@@ -276,7 +256,7 @@ html {
     }
 }
 
-@media (min-width: 600px) {
+@media (width >= 512px) {
     .row-break-under-xs {
         display: none;
     }
@@ -286,7 +266,7 @@ html {
     }
 }
 
-@media (max-width: 960px) {
+@media (width < 640px) {
     .row-break-under-s {
         display: inline-flex;
     }
@@ -296,7 +276,7 @@ html {
     }
 }
 
-@media (min-width: 960px) {
+@media (width >= 640px) {
     .row-break-under-s {
         display: none;
     }
@@ -306,7 +286,7 @@ html {
     }
 }
 
-@media (max-width: 1280px) {
+@media (width < 768px) {
     .row-break-under-m {
         display: inline-flex;
     }
@@ -316,7 +296,7 @@ html {
     }
 }
 
-@media (min-width: 1280px) {
+@media (width >= 768px) {
     .row-break-under-m {
         display: none;
     }
@@ -326,7 +306,7 @@ html {
     }
 }
 
-@media (max-width: 1600px) {
+@media (width < 1024px) {
     .row-break-under-l {
         display: inline-flex;
     }
@@ -336,7 +316,7 @@ html {
     }
 }
 
-@media (min-width: 1600px) {
+@media (width >= 1024px) {
     .row-break-under-l {
         display: none;
     }
@@ -346,7 +326,7 @@ html {
     }
 }
 
-@media (max-width: 1960px) {
+@media (width < 1280px) {
     .row-break-under-xl {
         display: inline-flex;
     }
@@ -356,39 +336,39 @@ html {
     }
 }
 
-@media (min-width: 1960px) {
+@media (width >= 1280px) {
     .row-break-under-xl {
         display: none;
     }
 
     .row-break-over-xl {
+        display: inline-flex;
+    }
+}
+
+@media (width < 1536px) {
+    .row-break-under-xxl {
+        display: inline-flex;
+    }
+
+    .row-break-over-xxl {
+        display: none;
+    }
+}
+
+@media (width >= 1536px) {
+    .row-break-under-xxl {
+        display: none;
+    }
+
+    .row-break-over-xxl {
         display: inline-flex;
     }
 }
 
 /**********************************************************************************/
 /* COLUMN BREAKS */
-@media (max-width: 480px) {
-    .column-break-under-xxs {
-        display: inline-flex;
-    }
-
-    .column-break-over-xxs {
-        display: none;
-    }
-}
-
-@media (min-width: 480px) {
-    .column-break-under-xxs {
-        display: none;
-    }
-
-    .column-break-over-xxs {
-        display: inline-flex;
-    }
-}
-
-@media (max-width: 600px) {
+@media (width < 512px) {
     .column-break-under-xs {
         display: inline-flex;
     }
@@ -398,7 +378,7 @@ html {
     }
 }
 
-@media (min-width: 600px) {
+@media (width >= 512px) {
     .column-break-under-xs {
         display: none;
     }
@@ -408,7 +388,7 @@ html {
     }
 }
 
-@media (max-width: 960px) {
+@media (width < 640px) {
     .column-break-under-s {
         display: inline-flex;
     }
@@ -418,7 +398,7 @@ html {
     }
 }
 
-@media (min-width: 960px) {
+@media (width >= 640px) {
     .column-break-under-s {
         display: none;
     }
@@ -428,7 +408,7 @@ html {
     }
 }
 
-@media (max-width: 1280px) {
+@media (width < 768px) {
     .column-break-under-m {
         display: inline-flex;
     }
@@ -438,7 +418,7 @@ html {
     }
 }
 
-@media (min-width: 1280px) {
+@media (width >= 768px) {
     .column-break-under-m {
         display: none;
     }
@@ -448,7 +428,7 @@ html {
     }
 }
 
-@media (max-width: 1600px) {
+@media (width < 1024px) {
     .column-break-under-l {
         display: inline-flex;
     }
@@ -458,7 +438,7 @@ html {
     }
 }
 
-@media (min-width: 1600px) {
+@media (width >= 1024px) {
     .column-break-under-l {
         display: none;
     }
@@ -468,7 +448,7 @@ html {
     }
 }
 
-@media (max-width: 1960px) {
+@media (width < 1280px) {
     .column-break-under-xl {
         display: inline-flex;
     }
@@ -478,86 +458,106 @@ html {
     }
 }
 
-@media (min-width: 1960px) {
+@media (width >= 1280px) {
     .column-break-under-xl {
         display: none;
     }
 
     .column-break-over-xl {
+        display: inline-flex;
+    }
+}
+
+@media (width < 1536px) {
+    .column-break-under-xxl {
+        display: inline-flex;
+    }
+
+    .column-break-over-xxl {
+        display: none;
+    }
+}
+
+@media (width >= 1536px) {
+    .column-break-under-xxl {
+        display: none;
+    }
+
+    .column-break-over-xxl {
         display: inline-flex;
     }
 }
 
 /**********************************************************************************/
 /* BREAKS -> HIDE */
-@media (max-width: 480px) {
-    .hide-under-xxs {
-        display: none;
-    }
-}
-
-@media (min-width: 481px) {
-    .hide-over-xxs {
-        display: none;
-    }
-}
-
-@media (max-width: 600px) {
+@media (width < 512px) {
     .hide-under-xs {
         display: none;
     }
 }
 
-@media (min-width: 601px) {
+@media (width >= 512px) {
     .hide-over-xs {
         display: none;
     }
 }
 
-@media (max-width: 960px) {
+@media (width < 640px) {
     .hide-under-s {
         display: none;
     }
 }
 
-@media (min-width: 961px) {
+@media (width >= 640px) {
     .hide-over-s {
         display: none;
     }
 }
 
-@media (max-width: 1280px) {
+@media (width < 768px) {
     .hide-under-m {
         display: none;
     }
 }
 
-@media (min-width: 1281px) {
+@media (width >= 768px) {
     .hide-over-m {
         display: none;
     }
 }
 
-@media (max-width: 1600px) {
+@media (width < 1024px) {
     .hide-under-l {
         display: none;
     }
 }
 
-@media (min-width: 1601px) {
+@media (width >= 1024px) {
     .hide-over-l {
         display: none;
     }
 }
 
-@media (max-width: 1960px) {
+@media (width < 1280px) {
     .hide-under-xl {
         display: none;
     }
 }
 
-@media (min-width: 1961px) {
+@media (width >= 1280px) {
     .hide-over-xl {
+        display: none;
+    }
+}
+
+@media (width < 1536px) {
+    .hide-under-xxl {
+        display: none;
+    }
+}
+
+@media (width >= 1536px) {
+    .hide-over-xxl {
         display: none;
     }
 }
@@ -670,13 +670,13 @@ html {
     display: none !important;
 }
 
-@container (min-width: 360px) {
+@container (min-width: 512px) {
     .fb-container-xs-flex {
         display: flex !important;
     }
 }
 
-@container (min-width: 360px) {
+@container (min-width: 512px) {
     .fb-container-xs-none {
         display: none !important;
     }
@@ -685,8 +685,8 @@ html {
 /**********************************************************************************/
 /* RESPONSIVE CSS GRID
  *
- * Breakpoints intentionally match FbResponsiveBreakpoint and the responsive
- * container utilities above: XS 360, S 640, M 768, L 1024, XL 1280, XXL 1536.
+ * Breakpoints intentionally match FbBreaks and the responsive
+ * container utilities above: XS 512, S 640, M 768, L 1024, XL 1280, XXL 1536.
  * The outer element owns the query context; the inner grid can therefore react
  * to the component's own allocated width. This also keeps nested grids isolated.
  */
@@ -788,7 +788,7 @@ html {
     min-inline-size: 0;
 }
 
-@container (min-width: 360px) {
+@container (min-width: 512px) {
     .fb-grid {
         --fb-grid-current-columns: var(--fb-grid-columns-xs, var(--fb-grid-columns, 12));
         --fb-grid-current-gap: var(--fb-grid-gap-xs, var(--fb-grid-gap, 0));
