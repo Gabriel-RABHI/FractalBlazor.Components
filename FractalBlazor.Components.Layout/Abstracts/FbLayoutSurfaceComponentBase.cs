@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace FractalBlazor.Components.Layout.Abstracts
 {
-    public abstract class FbLayoutVisibleComponentBase : FbLayoutComponentBase
+    public abstract class FbLayoutSurfaceComponentBase : FbLayoutComponentBase
     {
         private FbFrame _frame = FbFrame.None;
         private FbBackground _background = FbBackground.None;

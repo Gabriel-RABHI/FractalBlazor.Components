@@ -10,7 +10,7 @@ namespace FractalBlazor.Components.Layout;
 /// An item placed in an <see cref="FbGridContainer"/>. Every responsive
 /// parameter is implemented with CSS custom properties and container queries.
 /// </summary>
-public sealed class FbGridItem : FbLayoutVisibleComponentBase
+public sealed class FbGridItem : FbLayoutSurfaceComponentBase
 {
     private string _cachedStyle = null;
 

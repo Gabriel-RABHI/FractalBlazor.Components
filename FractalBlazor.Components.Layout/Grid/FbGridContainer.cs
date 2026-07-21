@@ -10,7 +10,7 @@ namespace FractalBlazor.Components.Layout;
 /// A container-query-based CSS Grid. Responsive values are relative to this
 /// component's width, not to the browser viewport.
 /// </summary>
-public class FbGridContainer : FbLayoutVisibleComponentBase
+public class FbGridContainer : FbLayoutSurfaceComponentBase
 {
     #region HIDDEN
     private FbFrame _separator = FbFrame.None;
