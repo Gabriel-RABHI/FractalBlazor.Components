@@ -58,11 +58,8 @@ public static class FbLayoutThemeCssWriter
         AppendVariant(builder, name, "bg-accent-offset", variant.LayoutColors.AccentOffset);
         AppendVariant(builder, name, "bg-highlight-offset", variant.LayoutColors.HighlightOffset);
         AppendVariant(builder, name, "frame-light-mix", variant.Borders.LightMix);
-        AppendVariant(builder, name, "frame-light-size", variant.Borders.LightSize);
         AppendVariant(builder, name, "frame-medium-mix", variant.Borders.MediumMix);
-        AppendVariant(builder, name, "frame-medium-size", variant.Borders.MediumSize);
         AppendVariant(builder, name, "frame-strong-mix", variant.Borders.StrongMix);
-        AppendVariant(builder, name, "frame-strong-size", variant.Borders.StrongSize);
     }
 
     private static void AppendVariant(StringBuilder builder, string variant, string token, string? value)

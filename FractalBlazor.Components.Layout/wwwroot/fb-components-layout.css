@@ -1,5 +1,9 @@
 /**********************************************************************************/
 /* BACKGROUNDS */
+:root {
+    --fb-outline-size: 1px;
+}
+
 :root,
 .fb-theme-scope {
     --fb-current-bg-surface-mix: var(--fb-bg-surface-mix);
@@ -54,25 +58,25 @@ html {
 
 /* FRAME */
 .framed-column-containner {
-    border-left: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-    border-top: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    border-left: 1px solid var(--fb-frame-border-color);
+    border-top: 1px solid var(--fb-frame-border-color);
 }
 
 /* SEPARATOR */
 .framed-separator-column-containner > div:nth-child(n) {
-    border-right: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-    border-bottom: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    border-right: 1px solid var(--fb-frame-border-color);
+    border-bottom: 1px solid var(--fb-frame-border-color);
 }
 
 /* GRID */
 .framed-grid-column-containner {
-    border-left: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-    border-top: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    border-left: 1px solid var(--fb-frame-border-color);
+    border-top: 1px solid var(--fb-frame-border-color);
 }
 
     .framed-grid-column-containner > div:nth-child(n) {
-        border-right: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-        border-bottom: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+        border-right: 1px solid var(--fb-frame-border-color);
+        border-bottom: 1px solid var(--fb-frame-border-color);
     }
 
 /**********************************************************************************/
@@ -80,25 +84,25 @@ html {
 
 /* FRAME */
 .framed-column {
-    border-left: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-    border-top: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    border-left: 1px solid var(--fb-frame-border-color);
+    border-top: 1px solid var(--fb-frame-border-color);
 }
 
 /* SEPARATOR */
 .framed-separator-column > div:nth-child(n) {
-    border-right: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-    border-bottom: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    border-right: 1px solid var(--fb-frame-border-color);
+    border-bottom: 1px solid var(--fb-frame-border-color);
 }
 
 /* GRID */
 .framed-grid-column {
-    border-left: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-    border-top: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    border-left: 1px solid var(--fb-frame-border-color);
+    border-top: 1px solid var(--fb-frame-border-color);
 }
 
     .framed-grid-column > div:nth-child(n) {
-        border-right: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
-        border-bottom: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+        border-right: 1px solid var(--fb-frame-border-color);
+        border-bottom: 1px solid var(--fb-frame-border-color);
     }
 
 /**********************************************************************************/
@@ -106,21 +110,21 @@ html {
 
 /* FRAME */
 .framed-stack {
-    border: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    border: 1px solid var(--fb-frame-border-color);
 }
 
 /* SEPARATOR */
 .framed-separator-stack > div:nth-last-child(n+2) {
-    border-bottom: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    border-bottom: 1px solid var(--fb-frame-border-color);
 }
 
 /* GRID */
 .framed-grid-stack {
-    border: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    border: 1px solid var(--fb-frame-border-color);
 }
 
     .framed-grid-stack > div:nth-last-child(n+2) {
-        border-bottom: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+        border-bottom: 1px solid var(--fb-frame-border-color);
     }
 
 /**********************************************************************************/
@@ -128,25 +132,25 @@ html {
 
 /* FRAME */
 .framed-row {
-    border: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    border: 1px solid var(--fb-frame-border-color);
 }
 
 /* SEPARATOR */
 .framed-separator-row > div:nth-last-child(n+2) {
-    border-right: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    border-right: 1px solid var(--fb-frame-border-color);
 }
 
 /* GRID */
 .framed-grid-row {
-    border: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+    border: 1px solid var(--fb-frame-border-color);
 }
 
     .framed-grid-row > div:nth-last-child(n+2) {
-        border-right: var(--fb-frame-border-size) solid var(--fb-frame-border-color);
+        border-right: 1px solid var(--fb-frame-border-color);
     }
 
 /**********************************************************************************/
-/* SIZING CLASSES mapping to unified custom properties */
+/* FRAME STRENGTH */
 
 /* Light Frame Classes */
 .framed-column-containner-light-frame,
@@ -161,7 +165,6 @@ html {
 .framed-row-light-frame,
 .framed-separator-row-light-frame,
 .framed-grid-row-light-frame {
-    --fb-frame-border-size: var(--fb-frame-light-size);
     --fb-frame-border-color: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-light-mix));
 }
 
@@ -178,7 +181,6 @@ html {
 .framed-row-medium-frame,
 .framed-separator-row-medium-frame,
 .framed-grid-row-medium-frame {
-    --fb-frame-border-size: var(--fb-frame-medium-size);
     --fb-frame-border-color: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-medium-mix));
 }
 
@@ -195,25 +197,29 @@ html {
 .framed-row-strong-frame,
 .framed-separator-row-strong-frame,
 .framed-grid-row-strong-frame {
-    --fb-frame-border-size: var(--fb-frame-strong-size);
     --fb-frame-border-color: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-strong-mix));
 }
 
+.fb-outline {
+    outline: var(--fb-outline-size) solid var(--fb-frame-border-color);
+    outline-offset: 0;
+}
+
 /**********************************************************************************/
-/* SEPARATOR SIZE */
+/* SEPARATORS */
 
 .fb-separator-light-frame {
-    flex-basis: var(--fb-frame-light-size);
+    flex-basis: 1px;
     background: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-light-mix));
 }
 
 .fb-separator-medium-frame {
-    flex-basis: var(--fb-frame-medium-size);
+    flex-basis: 1px;
     background: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-medium-mix));
 }
 
 .fb-separator-strong-frame {
-    flex-basis: var(--fb-frame-strong-size);
+    flex-basis: 1px;
     background: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-strong-mix));
 }
 

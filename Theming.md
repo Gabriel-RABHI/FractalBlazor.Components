@@ -67,11 +67,8 @@ public sealed class FbThemeLayoutCorners
 public sealed class FbThemeLayoutBorders
 {
     public string? LightMix { get; init; }
-    public string? LightSize { get; init; }
     public string? MediumMix { get; init; }
-    public string? MediumSize { get; init; }
     public string? StrongMix { get; init; }
-    public string? StrongSize { get; init; }
 }
 
 public sealed class FbThemeLayoutColors
@@ -437,12 +434,10 @@ Le même principe s'applique aux couleurs de premier plan et aux frames :
 --fb-default-fg-low-anchor
 --fb-default-fg-high-anchor
 --fb-default-frame-light-mix
---fb-default-frame-light-size
 
 --fb-error-fg-low-anchor
 --fb-error-fg-high-anchor
 --fb-error-frame-light-mix
---fb-error-frame-light-size
 ```
 
 Ces variables sont des valeurs sources. Elles ne sont jamais consommées directement par les classes CSS des composants.
@@ -509,11 +504,8 @@ Les classes CSS statiques ne consomment que les variables actives. Dans le bloc 
 --fb-fg-highlight-high-mix: var(--fb-default-fg-highlight-high-mix);
 
 --fb-frame-light-mix: var(--fb-default-frame-light-mix);
---fb-frame-light-size: var(--fb-default-frame-light-size);
 --fb-frame-medium-mix: var(--fb-default-frame-medium-mix);
---fb-frame-medium-size: var(--fb-default-frame-medium-size);
 --fb-frame-strong-mix: var(--fb-default-frame-strong-mix);
---fb-frame-strong-size: var(--fb-default-frame-strong-size);
 ```
 
 Une variante ne change jamais les classes CSS. Elle redéfinit localement les mêmes variables actives pour les faire pointer vers un autre préfixe :
@@ -530,11 +522,8 @@ Une variante ne change jamais les classes CSS. Elle redéfinit localement les m�
 --fb-fg-high-anchor: var(--fb-error-fg-high-anchor);
 
 --fb-frame-light-mix: var(--fb-error-frame-light-mix);
---fb-frame-light-size: var(--fb-error-frame-light-size);
 --fb-frame-medium-mix: var(--fb-error-frame-medium-mix);
---fb-frame-medium-size: var(--fb-error-frame-medium-size);
 --fb-frame-strong-mix: var(--fb-error-frame-strong-mix);
---fb-frame-strong-size: var(--fb-error-frame-strong-size);
 ```
 
 Les valeurs sources de chaque variante sont complètes après résolution C#. Les redirections ne nécessitent donc ni valeur en dur, ni fallback, ni calcul de thème dans `FbVariant`.
@@ -645,7 +634,6 @@ Avec le sélecteur par défaut, le DOM produit est de la forme :
         --fb-error-fg-low-anchor: #701824;
         --fb-error-fg-high-anchor: #ffffff;
         --fb-error-frame-light-mix: 14%;
-        --fb-error-frame-light-size: 0.0625rem;
 
         --fb-bg-low-anchor: var(--fb-default-bg-low-anchor);
         --fb-bg-tint: var(--fb-default-bg-tint);
@@ -657,7 +645,6 @@ Avec le sélecteur par défaut, le DOM produit est de la forme :
         --fb-fg-low-anchor: var(--fb-default-fg-low-anchor);
         --fb-fg-high-anchor: var(--fb-default-fg-high-anchor);
         --fb-frame-light-mix: var(--fb-default-frame-light-mix);
-        --fb-frame-light-size: var(--fb-default-frame-light-size);
     }
 </style>
 ```
@@ -702,12 +689,20 @@ bg-highlight-offset
 fg-low-anchor
 fg-high-anchor
 frame-light-mix
-frame-light-size
 frame-medium-mix
-frame-medium-size
 frame-strong-mix
-frame-strong-size
 ```
+
+Les filets ont une épaisseur fixe de `1px`. Leur force visuelle dépend uniquement des tokens `frame-*-mix`.
+
+Les composants dérivés de `FbLayoutSurfaceComponentBase` exposent le booléen `WOl` pour ajouter un outline utilisant la couleur calculée de la frame courante :
+
+```css
+outline: var(--fb-outline-size) solid var(--fb-frame-border-color);
+outline-offset: 0;
+```
+
+`--fb-outline-size` vaut `1px` par défaut et peut être redéfini localement.
 
 Le changement de `Theme` ou de `Branch` provoque une nouvelle résolution et un nouveau rendu du contenu de `<style>`. Il ne modifie aucune feuille CSS statique.
 

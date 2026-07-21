@@ -7,7 +7,8 @@ namespace FractalBlazor.Components.Layout.Abstracts
     {
         private FbFrame _frame = FbFrame.None;
         private FbBackground _background = FbBackground.None;
-        public FbSpacing _radius = FbSpacing.None;
+        private FbSpacing _radius = FbSpacing.None;
+        private bool _outline;
 
         private string HoverClassString {
             get {
@@ -16,6 +17,8 @@ namespace FractalBlazor.Components.Layout.Abstracts
                 return "";
             }
         }
+
+        private string OutlineClassString => EOutline ? "fb-outline" : "";
 
         private FbSpacing Radius { get => _radius; set => _radius = value; }
 
@@ -70,7 +73,7 @@ namespace FractalBlazor.Components.Layout.Abstracts
         }
 
         // -------------------------------- LEVEL AGGREGATES -------------------------------- //
-        protected string AggregatedClasses => $"{base.AggregatedClasses} {BackgroundClasses} {ComputedFrameClasses} {HoverClassString}".Trim();
+        protected string AggregatedClasses => $"{base.AggregatedClasses} {BackgroundClasses} {ComputedFrameClasses} {HoverClassString} {OutlineClassString}".Trim();
 
         // ************************************************************************************************ //
         // **********************************    PUBLIC PARAMETERS    ************************************* //
@@ -115,6 +118,18 @@ namespace FractalBlazor.Components.Layout.Abstracts
         /// </summary>
         [Parameter]
         public bool WFS { get => _frame == FbFrame.Strong; set { if (value) _frame = FbFrame.Strong; } }
+
+        /// <summary>
+        /// Enable -> Outline
+        /// </summary>
+        [Parameter]
+        public bool EOutline { get => _outline; set { if (value) _outline = true; } }
+
+        /// <summary>
+        /// Disable -> Outline
+        /// </summary>
+        [Parameter]
+        public bool DOutline { get => _outline; set { if (value) _outline = false; } }
 
         /// <summary>
         /// With -> Radius -> Small

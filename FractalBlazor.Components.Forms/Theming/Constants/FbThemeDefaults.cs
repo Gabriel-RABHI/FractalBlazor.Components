@@ -36,11 +36,8 @@ public static class FbThemeDefaults
         var borders = new FbThemeLayoutBorders
         {
             LightMix = "8%",
-            LightSize = "0.0625rem",
             MediumMix = "14%",
-            MediumSize = "0.0625rem",
-            StrongMix = "22%",
-            StrongSize = "0.15rem"
+            StrongMix = "22%"
         };
 
         return light

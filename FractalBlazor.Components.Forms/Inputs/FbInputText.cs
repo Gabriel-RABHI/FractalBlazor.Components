@@ -68,20 +68,25 @@ namespace FractalBlazor.Components.Forms.Inputs
             builder.AddAttribute(1, nameof(FbRow.JVC), true);
 
             if (_hasFocus)
-                builder.AddAttribute(2, nameof(FbRow.WFS), true);
-            else
-                builder.AddAttribute(2, nameof(FbRow.WFM), true);
+            {
+                builder.AddAttribute(2, nameof(FbRow.EOutline), true);
+                builder.AddAttribute(3, nameof(FbRow.WFS), true);
+            } else
+            {
+                builder.AddAttribute(2, nameof(FbRow.DOutline), true);
+                builder.AddAttribute(3, nameof(FbRow.WFM), true);
+            }
 
-            builder.AddAttribute(3, nameof(FbRow.GS), true);
-            builder.AddAttribute(3, nameof(FbRow.PVS), true);
-            builder.AddAttribute(3, nameof(FbRow.PHM), true);
-            builder.AddAttribute(4, nameof(FbRow.WBA), true);
-            builder.AddAttribute(5, nameof(FbRow.WRM), true);
-            builder.AddAttribute(5, nameof(FbRow.DS), true);
-            builder.AddAttribute(5, nameof(FbRow.JVBl), true);
-            builder.AddAttribute(6, nameof(FbRow.Classes), "fb-input-text");
+            builder.AddAttribute(4, nameof(FbRow.GS), true);
+            builder.AddAttribute(5, nameof(FbRow.PVS), true);
+            builder.AddAttribute(6, nameof(FbRow.PHM), true);
+            builder.AddAttribute(7, nameof(FbRow.WBA), true);
+            builder.AddAttribute(8, nameof(FbRow.WRM), true);
+            builder.AddAttribute(9, nameof(FbRow.DS), true);
+            builder.AddAttribute(10, nameof(FbRow.JVBl), true);
+            builder.AddAttribute(11, nameof(FbRow.Classes), "fb-input-text");
 
-            builder.AddAttribute( 7, nameof(FbRow.ChildContent), (RenderFragment)BuildRowContent);
+            builder.AddAttribute( 12, nameof(FbRow.ChildContent), (RenderFragment)BuildRowContent);
 
             builder.CloseComponent();
         }

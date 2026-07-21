@@ -10,11 +10,8 @@ public static class FbLayoutThemeDefaults
         var defaultBorders = new FbThemeLayoutBorders
         {
             LightMix = "8%",
-            LightSize = "0.0625rem",
             MediumMix = "14%",
-            MediumSize = "0.0625rem",
-            StrongMix = "22%",
-            StrongSize = "0.125rem"
+            StrongMix = "22%"
         };
 
         return new FbLayoutThemeSetup("Default")

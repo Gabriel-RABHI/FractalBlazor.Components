@@ -30,11 +30,8 @@ public sealed class FbThemeLayoutCorners
 public sealed class FbThemeLayoutBorders
 {
     public string? LightMix { get; init; }
-    public string? LightSize { get; init; }
     public string? MediumMix { get; init; }
-    public string? MediumSize { get; init; }
     public string? StrongMix { get; init; }
-    public string? StrongSize { get; init; }
 }
 
 public sealed class FbThemeLayoutColors
@@ -58,11 +55,8 @@ public static class FbThemeCssNames
         "bg-accent-offset", 
         "bg-highlight-offset",
         "frame-light-mix",
-        "frame-light-size",
         "frame-medium-mix",
-        "frame-medium-size",
-        "frame-strong-mix", 
-        "frame-strong-size"
+        "frame-strong-mix"
     ];
 
     public static string Normalize(string name)

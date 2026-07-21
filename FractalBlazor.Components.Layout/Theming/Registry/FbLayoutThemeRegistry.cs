@@ -131,11 +131,8 @@ public sealed class FbLayoutThemeRegistry : IFbLayoutThemeRegistry
         var borders = new FbThemeLayoutBorders
         {
             LightMix = Pick(value => value.Borders?.LightMix, value => value.Borders.LightMix, $"{variantName}.Borders.LightMix"),
-            LightSize = Pick(value => value.Borders?.LightSize, value => value.Borders.LightSize, $"{variantName}.Borders.LightSize"),
             MediumMix = Pick(value => value.Borders?.MediumMix, value => value.Borders.MediumMix, $"{variantName}.Borders.MediumMix"),
-            MediumSize = Pick(value => value.Borders?.MediumSize, value => value.Borders.MediumSize, $"{variantName}.Borders.MediumSize"),
-            StrongMix = Pick(value => value.Borders?.StrongMix, value => value.Borders.StrongMix, $"{variantName}.Borders.StrongMix"),
-            StrongSize = Pick(value => value.Borders?.StrongSize, value => value.Borders.StrongSize, $"{variantName}.Borders.StrongSize")
+            StrongMix = Pick(value => value.Borders?.StrongMix, value => value.Borders.StrongMix, $"{variantName}.Borders.StrongMix")
         };
 
         return new FbResolvedLayoutThemeVariant(variantName, colors, borders);
@@ -259,7 +256,7 @@ public sealed class FbLayoutThemeRegistry : IFbLayoutThemeRegistry
 
     private static void ValidateValues(FbThemeLayoutBorders? values)
         => ValidateValues(values is null ? [] :
-            [values.LightMix, values.LightSize, values.MediumMix, values.MediumSize, values.StrongMix, values.StrongSize]);
+            [values.LightMix, values.MediumMix, values.StrongMix]);
 
     private static void ValidateValues(IEnumerable<string?> values)
     {

@@ -187,11 +187,8 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
         var borders = new FbThemeLayoutBorders
         {
             LightMix = Pick(value => value.Borders?.LightMix, value => value.Borders.LightMix, $"{branchName}.{variantName}.Borders.LightMix"),
-            LightSize = Pick(value => value.Borders?.LightSize, value => value.Borders.LightSize, $"{branchName}.{variantName}.Borders.LightSize"),
             MediumMix = Pick(value => value.Borders?.MediumMix, value => value.Borders.MediumMix, $"{branchName}.{variantName}.Borders.MediumMix"),
-            MediumSize = Pick(value => value.Borders?.MediumSize, value => value.Borders.MediumSize, $"{branchName}.{variantName}.Borders.MediumSize"),
-            StrongMix = Pick(value => value.Borders?.StrongMix, value => value.Borders.StrongMix, $"{branchName}.{variantName}.Borders.StrongMix"),
-            StrongSize = Pick(value => value.Borders?.StrongSize, value => value.Borders.StrongSize, $"{branchName}.{variantName}.Borders.StrongSize")
+            StrongMix = Pick(value => value.Borders?.StrongMix, value => value.Borders.StrongMix, $"{branchName}.{variantName}.Borders.StrongMix")
         };
 
         return new FbResolvedThemeVariant(variantName, layoutColors, formColors, borders);
@@ -371,7 +368,7 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
         => Validate(value is null ? [] : [value.LowAnchor, value.Tint, value.HighAnchor, value.SurfaceMix, value.AccentOffset, value.HighlightOffset]);
     
     private static void ValidateValues(FbThemeLayoutBorders? value)
-        => Validate(value is null ? [] : [value.LightMix, value.LightSize, value.MediumMix, value.MediumSize, value.StrongMix, value.StrongSize]);
+        => Validate(value is null ? [] : [value.LightMix, value.MediumMix, value.StrongMix]);
     
     private static void ValidateValues(FbThemeFormColors? value)
         => Validate(value is null ? [] : [value.LowAnchor, value.HighAnchor]);
