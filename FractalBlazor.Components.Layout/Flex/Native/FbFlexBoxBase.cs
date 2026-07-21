@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Layout
 {
-    public abstract class FbFlexBoxBase : FbLayoutComponentBase
+    public abstract class FbFlexBoxBase : FbLayoutVisibleComponentBase
     {
         #region HIDDEN
         private static object _locker = new object();
@@ -34,10 +34,8 @@ namespace FractalBlazor.Components.Layout
             public FbFlexSize _maxHeightSize = FbFlexSize.None;
 
             public FbSpacing Gutter = FbSpacing.None;
-            public FbSpacing RowGutter = FbSpacing.None;
-            public FbSpacing ColumnGutter = FbSpacing.None;
-            
-            public FbSpacing Radius = FbSpacing.None;
+            //public FbSpacing RowGutter = FbSpacing.None;
+            //public FbSpacing ColumnGutter = FbSpacing.None;
 
             public bool ColumnDisplay = false;
 
@@ -58,13 +56,11 @@ namespace FractalBlazor.Components.Layout
         }
         
         // -------------- As flex item ------------ //
-        protected FbSpacing Radius { get => _state.Radius; set => _state.Radius = value; }
-
         protected FbSpacing Gutter { get => _state.Gutter; set => _state.Gutter = value; }
 
-        protected FbSpacing RowGutter { get => _state.RowGutter; set => _state.RowGutter = value; }
+        //protected FbSpacing RowGutter { get => _state.RowGutter; set => _state.RowGutter = value; }
 
-        protected FbSpacing ColumnGutter { get => _state.ColumnGutter; set => _state.ColumnGutter = value; }
+        //protected FbSpacing ColumnGutter { get => _state.ColumnGutter; set => _state.ColumnGutter = value; }
 
         protected bool ColumnDisplay { get => _state.ColumnDisplay; set => _state.ColumnDisplay = value; }
 
@@ -242,8 +238,6 @@ namespace FractalBlazor.Components.Layout
             }
         }
 
-        
-
         private string SelfAlignString
         {
             get
@@ -363,7 +357,7 @@ namespace FractalBlazor.Components.Layout
             }
         }
 
-        protected new unsafe string ComputedStyle
+        protected new unsafe string AggregatedStyles
         {
             get
             {
@@ -386,8 +380,8 @@ namespace FractalBlazor.Components.Layout
                             $"flex-direction: {DirectionString}; flex-wrap: {WrapString}; justify-content: {JustifyString}; align-items: {AlignItemsString}; align-content: {AlignContentString}; " +
                             (PlaceItemsString != "" ? $"place-items: {PlaceItemsString};" : "") +
                             (Gutter != FbSpacing.None ? $"gap:{FbLayoutHelper.ToSpacingCss(Gutter)};" : "") +
-                            (RowGutter != FbSpacing.None ? $"row-gap:{FbLayoutHelper.ToSpacingCss(RowGutter)};" : "") +
-                            (ColumnGutter != FbSpacing.None ? $"column-gap:{FbLayoutHelper.ToSpacingCss(ColumnGutter)};" : "") +
+                            //(RowGutter != FbSpacing.None ? $"row-gap:{FbLayoutHelper.ToSpacingCss(RowGutter)};" : "") +
+                            //(ColumnGutter != FbSpacing.None ? $"column-gap:{FbLayoutHelper.ToSpacingCss(ColumnGutter)};" : "") +
                             (Grow != int.MinValue ? $"flex-grow:{Grow};" : "") +
                             (Shrink != int.MinValue ? $"flex-shrink:{Shrink};" : "") +
                             (Order != int.MinValue ? $"order:{Order};" : "") +
@@ -396,8 +390,7 @@ namespace FractalBlazor.Components.Layout
                             (MaxHeightString != "" ? $"max-height: {MaxHeightString};" : "") +
                             (ColumnDisplay ? "flex-flow : column;" : "") +
                             (Scrollable ? "overflow : scroll;" : "") +
-                            (Radius != FbSpacing.None ? $"border-radius:{FbLayoutHelper.ToRadiusCss(Radius)};" : "") +
-                            ComputedBaseStyle;
+                            base.AggregatedStyles;
                     if (UseCaching && !_cache.ContainsKey(hash))
                         _cache[hash] = str;
                     _style = str;
@@ -411,6 +404,41 @@ namespace FractalBlazor.Components.Layout
         // ***************************************    PUBLIC   ******************************************** //
         // ************************************************************************************************ //
         #region PUBLIC PARAMETERS
+
+        /// <summary>
+        /// Flex grow factor
+        /// </summary>
+        [Parameter]
+        public int Flex {
+            get => base.Flex;
+            set {
+                if (!IsFlex && !IsInlineFlex)
+                    IsFlex = true;
+                base.Flex = value;
+            }
+        }
+
+        /// <summary>
+        /// Disable flex grow/shrink
+        /// </summary>
+        [Parameter]
+        public bool NoFlex {
+            get => base.Flex == int.MinValue;
+            set { if (value) base.Flex = int.MinValue; }
+        }
+
+        /// <summary>
+        /// Flex basis width
+        /// </summary>
+        [Parameter]
+        public string FlexBasis {
+            get => base.FlexBasis;
+            set {
+                base.FlexBasis = value;
+                if (!string.IsNullOrWhiteSpace(base.FlexBasis))
+                    base.Flex = int.MinValue;
+            }
+        }
 
         /// <summary>
         /// Child content
@@ -437,12 +465,6 @@ namespace FractalBlazor.Components.Layout
         public bool Scrollable { get => _state.Scrollable; set => _state.Scrollable = value; }
 
         #region GUTTER
-        /// <summary>
-        /// Gutter -> 0
-        /// </summary>
-        [Parameter]
-        public FbSpacing G { get => Gutter; set => Gutter = value; }
-
         /// <summary>
         /// Gutter -> Small
         /// </summary>
@@ -543,14 +565,15 @@ namespace FractalBlazor.Components.Layout
         #endregion
 
         #endregion
-
+        /*
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "div");
-            builder.AddAttribute(1, "style", ComputedStyle);
-            builder.AddAttribute(2, "class", Classes);
+            builder.AddAttribute(1, "style", AggregatedStyles);
+            builder.AddAttribute(2, "class", AggregatedClasses);
             builder.AddContent(3, ChildContent);
             builder.CloseElement();
         }
+        */
     }
 }

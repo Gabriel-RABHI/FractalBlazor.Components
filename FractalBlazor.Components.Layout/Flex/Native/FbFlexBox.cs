@@ -194,7 +194,7 @@ namespace FractalBlazor.Components.Layout
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "div");
-            builder.AddAttribute(1, "style", ComputedStyle);
+            builder.AddAttribute(1, "style", AggregatedStyles);
             builder.AddAttribute(2, "class", Classes);
             builder.AddContent(3, ChildContent);
             builder.CloseElement();

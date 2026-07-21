@@ -569,12 +569,12 @@ html {
 /*********************************************************************************/
 /* RESPONSIVE CONTAINER */
 
-/* TINY REPONSIVE CONTAINER INITIALIZER */
+/* RESPONSIVE CONTAINER INITIALIZER */
 .fb-container-init {
     container-type: inline-size;
 }
 
-/* TINY REPONSIVE CONTAINER-XXL */
+/* RESPONSIVE CONTAINER-XXL */
 
 .fb-container-xxl-flex {
     display: none !important;
@@ -592,7 +592,7 @@ html {
     }
 }
 
-/* TINY REPONSIVE CONTAINER-XL */
+/* RESPONSIVE CONTAINER-XL */
 
 .fb-container-xl-flex {
     display: none !important;
@@ -610,7 +610,7 @@ html {
     }
 }
 
-/* TINY REPONSIVE CONTAINER-L */
+/* RESPONSIVE CONTAINER-L */
 
 .fb-container-l-flex {
     display: none !important;
@@ -628,7 +628,7 @@ html {
     }
 }
 
-/* TINY REPONSIVE CONTAINER-M */
+/* RESPONSIVE CONTAINER-M */
 
 .fb-container-m-flex {
     display: none !important;
@@ -646,7 +646,7 @@ html {
     }
 }
 
-/* TINY REPONSIVE CONTAINER-S */
+/* RESPONSIVE CONTAINER-S */
 
 .fb-container-s-flex {
     display: none !important;
@@ -664,7 +664,7 @@ html {
     }
 }
 
-/* TINY REPONSIVE CONTAINER-XS */
+/* REPONSIVE CONTAINER-XS */
 
 .fb-container-xs-flex {
     display: none !important;

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Layout
 {
-    public class FbFlexItem : FbLayoutComponentBase
+    public class FbFlexItem : FbLayoutVisibleComponentBase
     {
         #region HIDDEN
         private FbFlexVerticalAlign _verticalAlign = FbFlexVerticalAlign.None;
@@ -41,7 +41,7 @@ namespace FractalBlazor.Components.Layout
         {
             get
             {
-                return ComputedBaseStyle +
+                return AggregatedStyles +
                         (_verticalAlign != FbFlexVerticalAlign.None ? $"align-self:{VerticalAlignString};" : "");
             }
         }

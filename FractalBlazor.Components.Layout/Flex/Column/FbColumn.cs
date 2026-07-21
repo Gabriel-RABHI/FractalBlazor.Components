@@ -18,7 +18,7 @@ namespace FractalBlazor.Components.Layout
         {
             get
             {
-                return $"{Classes} {WrapClassString} {ResponsiveClassString}";
+                return $"{Classes} {AggregatedClasses}";
             }
         }
 
@@ -48,7 +48,7 @@ namespace FractalBlazor.Components.Layout
         {
             builder.OpenElement(0, "div");
             builder.AddAttribute(1, "cpnt", $"column[{StoreId}]");
-            builder.AddAttribute(2, "style", ComputedStyle);
+            builder.AddAttribute(2, "style", AggregatedStyles);
             builder.AddAttribute(3, "class", $"fb-column {ComputedColumnClasses}");
             builder.AddContent(4, ChildContent);
             builder.CloseElement();

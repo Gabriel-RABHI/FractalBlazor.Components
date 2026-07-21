@@ -8,18 +8,7 @@ namespace FractalBlazor.Components.Layout
     public class FbRow : FbFlexBoxBase
     {
         #region HIDDEN
-        private FbFrame _frame = FbFrame.None;
         private FbFrame _separator = FbFrame.None;
-        private FbBackground _background = FbBackground.None;
-
-        [Parameter]
-        public FbFrame Frame { get => _frame; set => _frame = value; }
-
-        [Parameter]
-        public FbFrame Separator { get => _separator; set => _separator = value; }
-
-        [Parameter]
-        public FbBackground Background { get => _background; set => _background = value; }
 
         public FbRow()
         {
@@ -28,23 +17,6 @@ namespace FractalBlazor.Components.Layout
             JHSt = true;
             IsFlex = true;
             Flex = 1;
-        }
-
-        private string FrameClass
-        {
-            get
-            {
-                string baseClasse = "framed-row";
-
-                if (_frame is FbFrame.Light)
-                    return $"{baseClasse} {baseClasse}-light-frame";
-                else if (_frame is FbFrame.Medium)
-                    return $"{baseClasse} {baseClasse}-medium-frame";
-                else if (_frame is FbFrame.Strong)
-                    return $"{baseClasse} {baseClasse}-strong-frame";
-                else
-                    return "";
-            }
         }
 
         private string SeparatorClass
@@ -64,55 +36,13 @@ namespace FractalBlazor.Components.Layout
             }
         }
 
-        private string ComputedFrameClasses
-        {
-            get
-            {
-                if (FrameClass != "" || SeparatorClass != "")
-                    return $"{FrameClass} {SeparatorClass}";
-                return "";
-            }
-        }
-
-        private string BackgroundClasses
-        {
-            get
-            {
-                switch (_background)
-                {
-                    case FbBackground.Surface:
-                        return "fb-bg-surface";
-                    case FbBackground.Accent:
-                        return "fb-bg-accent";
-                    case FbBackground.Highlight:
-                        return "fb-bg-highlight";
-                }
-                return "";
-            }
-        }
-
         protected string ComputedRowClasses
         {
             get
             {
-                return $"{Classes} {ComputedFrameClasses} {BackgroundClasses} {HoverClassString} {WrapClassString} {ResponsiveClassString}";
+                return $"{base.AggregatedClasses} {SeparatorClass}";
             }
         }
-
-        // -------------- FbFlexAlignContent ------------ //
-        protected bool LinesOnTop { get => base.AlignContent == FbFlexAlignContent.Start; set { if (value) base.AlignContent = FbFlexAlignContent.Start; } }
-
-        protected bool LinesOnBottom { get => base.AlignContent == FbFlexAlignContent.End; set { if (value) base.AlignContent = FbFlexAlignContent.End; } }
-
-        protected bool LinesOnCenter { get => base.AlignContent == FbFlexAlignContent.Center; set { if (value) base.AlignContent = FbFlexAlignContent.Center; } }
-
-        protected bool LinesWithSpaceBetwen { get => base.AlignContent == FbFlexAlignContent.SpaceBetween; set { if (value) base.AlignContent = FbFlexAlignContent.SpaceBetween; } }
-
-        protected bool LinesWithSpaceAround { get => base.AlignContent == FbFlexAlignContent.SpaceAround; set { if (value) base.AlignContent = FbFlexAlignContent.SpaceAround; } }
-
-        protected bool LinesStretched { get => base.AlignContent == FbFlexAlignContent.Stretch; set { if (value) base.AlignContent = FbFlexAlignContent.Stretch; } }
-
-        protected new BaseDisplayMode DisplayMode { get => base.DisplayMode; set => base.DisplayMode = value; }
         #endregion
 
         // ************************************************************************************************ //
@@ -278,41 +208,24 @@ namespace FractalBlazor.Components.Layout
         public bool JVSt { get => base.AlignItems == FbFlexAlignItems.Stretch; set { if (value) base.AlignItems = FbFlexAlignItems.Stretch; } }
 
         // -------------- FbRow Frame ------------ //
-        /// <summary>
-        /// With -> Frame -> Light
-        /// </summary>
-        [Parameter]
-        public bool WFL { get => Frame == FbFrame.Light; set { if (value) Frame = FbFrame.Light; } }
-
-        /// <summary>
-        /// With -> Frame -> Medium
-        /// </summary>
-        [Parameter]
-        public bool WFM { get => Frame == FbFrame.Medium; set { if (value) Frame = FbFrame.Medium; } }
-
-        /// <summary>
-        /// With -> Frame -> Strong
-        /// </summary>
-        [Parameter]
-        public bool WFS { get => Frame == FbFrame.Strong; set { if (value) Frame = FbFrame.Strong; } }
 
         /// <summary>
         /// With -> Separator -> Light
         /// </summary>
         [Parameter]
-        public bool WSL { get => Separator == FbFrame.Light; set { if (value) Separator = FbFrame.Light; } }
+        public bool WSL { get => _separator == FbFrame.Light; set { if (value) _separator = FbFrame.Light; } }
 
         /// <summary>
         /// With -> Separator -> Medium
         /// </summary>
         [Parameter]
-        public bool WSM { get => Separator == FbFrame.Medium; set { if (value) Separator = FbFrame.Medium; } }
+        public bool WSM { get => _separator == FbFrame.Medium; set { if (value) _separator = FbFrame.Medium; } }
 
         /// <summary>
         /// With -> Separator -> Strong
         /// </summary>
         [Parameter]
-        public bool WSS { get => Separator == FbFrame.Strong; set { if (value) Separator = FbFrame.Strong; } }
+        public bool WSS { get => _separator == FbFrame.Strong; set { if (value) _separator = FbFrame.Strong; } }
 
         /// <summary>
         /// With -> Grid -> Light
@@ -332,53 +245,11 @@ namespace FractalBlazor.Components.Layout
         [Parameter]
         public bool WGS { get => WFS && WSS; set { if (value) WFS = WSS = true; } }
 
-        /// <summary>
-        /// With -> Radius -> Small
-        /// </summary>
-        [Parameter]
-        public bool WRS { get => Radius == FbSpacing.S; set { if (value) Radius = FbSpacing.S; } }
-        
-        /// <summary>
-        /// With -> Radius -> Medium
-        /// </summary>
-        [Parameter]
-        public bool WRM { get => Radius == FbSpacing.M; set { if (value) Radius = FbSpacing.M; } }
-        
-        /// <summary>
-        /// With -> Radius -> Large
-        /// </summary>
-        [Parameter]
-        public bool WRL { get => Radius == FbSpacing.L; set { if (value) Radius = FbSpacing.L; } }
-        
-        /// <summary>
-        /// With -> Radius -> Extra Large
-        /// </summary>
-        [Parameter]
-        public bool WRX { get => Radius == FbSpacing.X; set { if (value) Radius = FbSpacing.X; } }
-
-        /// <summary>
-        /// With -> Background -> Surface
-        /// </summary>
-        [Parameter]
-        public bool WBS { get => _background == FbBackground.Surface; set { if (value) _background = FbBackground.Surface; } }
-
-        /// <summary>
-        /// With -> Background -> Accent
-        /// </summary>
-        [Parameter]
-        public bool WBA { get => _background == FbBackground.Accent; set { if (value) _background = FbBackground.Accent; } }
-
-        /// <summary>
-        /// With -> Background -> Highlight
-        /// </summary>
-        [Parameter]
-        public bool WBH { get => _background == FbBackground.Highlight; set { if (value) _background = FbBackground.Highlight; } }
-
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "div");
             builder.AddAttribute(1, "cpnt", $"row[{StoreId}]");
-            builder.AddAttribute(2, "style", ComputedStyle);
+            builder.AddAttribute(2, "style", AggregatedStyles);
             builder.AddAttribute(3, "class", $"fb-row {ComputedRowClasses}");
             builder.AddAttribute(4, "onclick", EventCallback.Factory.Create(this, () => OnClick.InvokeAsync()));
 

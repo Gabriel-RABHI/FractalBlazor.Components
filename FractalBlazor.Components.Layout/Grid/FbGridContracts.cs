@@ -9,6 +9,7 @@ public enum FbGridAutoFlow : byte
     ColumnDense
 }
 
+// -------- ITEMS
 /// <summary>Alignment of grid items inside their grid areas.</summary>
 public enum FbGridItemAlignment : byte
 {
@@ -21,8 +22,19 @@ public enum FbGridItemAlignment : byte
     Baseline
 }
 
+/// <summary>Justify of grid items inside their grid areas.</summary>
+public enum FbGridItemJustify : byte
+{
+    Auto,
+    Start,
+    End,
+    Center,
+    Stretch
+}
+
+// -------- CONTAINNER
 /// <summary>Default alignment of items within all grid areas.</summary>
-public enum FbGridTrackAlignment : byte
+public enum FbGridContainerItemAlignment : byte
 {
     Normal,
     Start,
@@ -33,7 +45,7 @@ public enum FbGridTrackAlignment : byte
 }
 
 /// <summary>Alignment of grid tracks when the grid is smaller than its container.</summary>
-public enum FbGridContentAlignment : byte
+public enum FbGridContainerContentAlignment : byte
 {
     Normal,
     Start,
@@ -66,25 +78,33 @@ internal static class FbGridCss
         _ => "auto"
     };
 
-    internal static string TrackAlignment(FbGridTrackAlignment value) => value switch
+    internal static string ItemAlignment(FbGridItemJustify value) => value switch {
+        FbGridItemJustify.Start => "start",
+        FbGridItemJustify.End => "end",
+        FbGridItemJustify.Center => "center",
+        FbGridItemJustify.Stretch => "stretch",
+        _ => "auto"
+    };
+
+    internal static string TrackAlignment(FbGridContainerItemAlignment value) => value switch
     {
-        FbGridTrackAlignment.Start => "start",
-        FbGridTrackAlignment.End => "end",
-        FbGridTrackAlignment.Center => "center",
-        FbGridTrackAlignment.Stretch => "stretch",
-        FbGridTrackAlignment.Baseline => "baseline",
+        FbGridContainerItemAlignment.Start => "start",
+        FbGridContainerItemAlignment.End => "end",
+        FbGridContainerItemAlignment.Center => "center",
+        FbGridContainerItemAlignment.Stretch => "stretch",
+        FbGridContainerItemAlignment.Baseline => "baseline",
         _ => "normal"
     };
 
-    internal static string ContentAlignment(FbGridContentAlignment value) => value switch
+    internal static string ContentAlignment(FbGridContainerContentAlignment value) => value switch
     {
-        FbGridContentAlignment.Start => "start",
-        FbGridContentAlignment.End => "end",
-        FbGridContentAlignment.Center => "center",
-        FbGridContentAlignment.Stretch => "stretch",
-        FbGridContentAlignment.SpaceBetween => "space-between",
-        FbGridContentAlignment.SpaceAround => "space-around",
-        FbGridContentAlignment.SpaceEvenly => "space-evenly",
+        FbGridContainerContentAlignment.Start => "start",
+        FbGridContainerContentAlignment.End => "end",
+        FbGridContainerContentAlignment.Center => "center",
+        FbGridContainerContentAlignment.Stretch => "stretch",
+        FbGridContainerContentAlignment.SpaceBetween => "space-between",
+        FbGridContainerContentAlignment.SpaceAround => "space-around",
+        FbGridContainerContentAlignment.SpaceEvenly => "space-evenly",
         _ => "normal"
     };
 }

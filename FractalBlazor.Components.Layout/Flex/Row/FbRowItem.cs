@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Layout
 {
-    public class FbRowItem : FbLayoutComponentBase
+    public class FbRowItem : FbLayoutVisibleComponentBase
     {
         #region HIDDEN
         private FbFlexItemSelfAlign _selfAlign = FbFlexItemSelfAlign.None;
@@ -58,7 +58,7 @@ namespace FractalBlazor.Components.Layout
         {
             get
             {
-                return ComputedBaseStyle +
+                return AggregatedStyles +
                         "flex-wrap: wrap;" +
                         (_selfAlign != FbFlexItemSelfAlign.None ? $"align-self:{VerticalAlignString};" : "");
             }
@@ -106,7 +106,7 @@ namespace FractalBlazor.Components.Layout
             builder.OpenElement(0, "div");
             builder.AddAttribute(1, "cpnt", $"row-item[{StoreId}]");
             builder.AddAttribute(2, "style", ComputedStyle);
-            builder.AddAttribute(3, "class", $"{Classes} {WrapClassString} {ResponsiveClassString}");
+            builder.AddAttribute(3, "class", $"{Classes} {AggregatedClasses}");
             builder.AddAttribute(4, "onclick", EventCallback.Factory.Create(this, () => OnClick.InvokeAsync()));
             builder.AddContent(5, ChildContent);
             builder.CloseElement();

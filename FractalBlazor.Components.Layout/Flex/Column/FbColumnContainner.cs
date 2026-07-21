@@ -22,8 +22,8 @@ namespace FractalBlazor.Components.Layout
         {
             builder.OpenElement(0, "div");
             builder.AddAttribute(1, "cpnt", $"column-cntr[{StoreId}]");
-            builder.AddAttribute(2, "style", $"{Style} {ComputedStyle}");
-            builder.AddAttribute(3, "class", $"fb-column-containner {Classes} {ResponsiveClassString}");
+            builder.AddAttribute(2, "style", $"{Style} {AggregatedStyles}");
+            builder.AddAttribute(3, "class", $"fb-column-containner {base.AggregatedClasses}");
             builder.AddContent(4, ChildContent);
             builder.CloseElement();
         }
