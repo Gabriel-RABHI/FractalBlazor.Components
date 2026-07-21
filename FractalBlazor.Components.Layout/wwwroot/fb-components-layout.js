@@ -66,7 +66,6 @@ function OnWindowsResize() {
 
 window.onresize = OnWindowsResize;
 
-
 function UpdateVisibilityMessageCallerJS(cpntId) {
     DotNet.invokeMethodAsync('FractalBlazor.Components.Layout', 'VisibilityChangedMessageCaller', cpntId);
 }

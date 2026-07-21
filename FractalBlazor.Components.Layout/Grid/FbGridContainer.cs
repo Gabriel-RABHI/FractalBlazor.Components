@@ -39,6 +39,9 @@ public class FbGridContainer : FbLayoutVisibleComponentBase
         IsGrid = true;
     }
 
+    /// <summary>Controls automatic item placement.</summary>
+    private FbGridAutoFlow AutoFlow { get; set; } = FbGridAutoFlow.Row;
+
     /// <summary>Gap between rows and columns.</summary>
     private FbSpacing Gap { get; set; } = FbSpacing.None;
 
@@ -164,29 +167,25 @@ public class FbGridContainer : FbLayoutVisibleComponentBase
     /// Gap -> Column -> Small
     /// </summary>
     [Parameter]
-    public bool GCS { get => RowGap == FbSpacing.S; set { if (value) RowGap = FbSpacing.S; } }
+    public bool GCS { get => ColumnGap == FbSpacing.S; set { if (value) ColumnGap = FbSpacing.S; } }
 
     /// <summary>
     /// Gap -> Column -> Medium
     /// </summary>
     [Parameter]
-    public bool GCM { get => RowGap == FbSpacing.M; set { if (value) RowGap = FbSpacing.M; } }
+    public bool GCM { get => ColumnGap == FbSpacing.M; set { if (value) ColumnGap = FbSpacing.M; } }
 
     /// <summary>
     /// Gap -> Column -> Large
     /// </summary>
     [Parameter]
-    public bool GCL { get => RowGap == FbSpacing.L; set { if (value) RowGap = FbSpacing.L; } }
+    public bool GCL { get => ColumnGap == FbSpacing.L; set { if (value) ColumnGap = FbSpacing.L; } }
 
     /// <summary>
     /// Gap -> Column -> Extra Large
     /// </summary>
     [Parameter]
-    public bool GCX { get => RowGap == FbSpacing.X; set { if (value) RowGap = FbSpacing.X; } }
-
-    /// <summary>Controls automatic item placement.</summary>
-    [Parameter]
-    public FbGridAutoFlow AutoFlow { get; set; } = FbGridAutoFlow.Row;
+    public bool GCX { get => ColumnGap == FbSpacing.X; set { if (value) ColumnGap = FbSpacing.X; } }
 
     /// <summary>
     /// Flow -> Row
