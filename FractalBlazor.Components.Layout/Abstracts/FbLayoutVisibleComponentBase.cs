@@ -1,6 +1,7 @@
+using FractalBlazor.Components.Layout.Utilities;
 using Microsoft.AspNetCore.Components;
 
-namespace FractalBlazor.Components.Layout
+namespace FractalBlazor.Components.Layout.Abstracts
 {
     public abstract class FbLayoutVisibleComponentBase : FbLayoutComponentBase
     {

@@ -1,4 +1,4 @@
-﻿using FractalBlazor.Components.Layout;
+﻿using FractalBlazor.Components.Layout.Abstracts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using System;

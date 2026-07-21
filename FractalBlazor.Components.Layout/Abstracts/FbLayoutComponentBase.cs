@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using FractalBlazor.Components.Layout.Utilities;
 using Microsoft.AspNetCore.Components;
 
-namespace FractalBlazor.Components.Layout
+namespace FractalBlazor.Components.Layout.Abstracts
 {
 
 
@@ -44,7 +45,7 @@ namespace FractalBlazor.Components.Layout
             // -------- Fields
             public bool _noWrap = false;
             public bool _responsiveUnder = false;
-            public BaseDisplayMode DisplayMode = BaseDisplayMode.None;
+            public FbBaseDisplayMode DisplayMode = FbBaseDisplayMode.None;
             public FbBreaks ResponsiveBreakpoint = FbBreaks.None;
             public FbSpacing Padding = FbSpacing.None;
             public FbSpacing PaddingTop = FbSpacing.None;
@@ -59,15 +60,15 @@ namespace FractalBlazor.Components.Layout
             public int _flex = int.MinValue;
 
             // -------- Properties
-            public bool IsBlock { get => DisplayMode == BaseDisplayMode.Block; set { if (value) DisplayMode = BaseDisplayMode.Block; } }
+            public bool IsBlock { get => DisplayMode == FbBaseDisplayMode.Block; set { if (value) DisplayMode = FbBaseDisplayMode.Block; } }
 
-            public bool IsInlineBloc { get => DisplayMode == BaseDisplayMode.InlineBloc; set { if (value) DisplayMode = BaseDisplayMode.InlineBloc; } }
+            public bool IsInlineBloc { get => DisplayMode == FbBaseDisplayMode.InlineBloc; set { if (value) DisplayMode = FbBaseDisplayMode.InlineBloc; } }
 
-            public bool IsFlex { get => DisplayMode == BaseDisplayMode.Flex; set { if (value) DisplayMode = BaseDisplayMode.Flex; } }
+            public bool IsFlex { get => DisplayMode == FbBaseDisplayMode.Flex; set { if (value) DisplayMode = FbBaseDisplayMode.Flex; } }
 
-            public bool IsInlineFlex { get => DisplayMode == BaseDisplayMode.InlineFlex; set { if (value) DisplayMode = BaseDisplayMode.InlineFlex; } }
+            public bool IsInlineFlex { get => DisplayMode == FbBaseDisplayMode.InlineFlex; set { if (value) DisplayMode = FbBaseDisplayMode.InlineFlex; } }
 
-            public bool IsGrid { get => DisplayMode == BaseDisplayMode.Grid; set { if (value) DisplayMode = BaseDisplayMode.Grid; } }
+            public bool IsGrid { get => DisplayMode == FbBaseDisplayMode.Grid; set { if (value) DisplayMode = FbBaseDisplayMode.Grid; } }
 
             public string DisplayModeString
             {
@@ -76,14 +77,14 @@ namespace FractalBlazor.Components.Layout
                     GetHashCode();
                     switch (DisplayMode)
                     {
-                        case BaseDisplayMode.Block: return "display:block;";
-                        case BaseDisplayMode.InlineBloc: return "display:inline-block;";
-                        case BaseDisplayMode.Flex: return "display:flex;";
-                        case BaseDisplayMode.InlineFlex: return "display:inline-flex;";
-                        case BaseDisplayMode.Table: return "display:table;";
-                        case BaseDisplayMode.TableRow: return "display:table-row;";
-                        case BaseDisplayMode.TableCell: return "display:table-cell;";
-                        case BaseDisplayMode.Grid: return "display:grid;";
+                        case FbBaseDisplayMode.Block: return "display:block;";
+                        case FbBaseDisplayMode.InlineBloc: return "display:inline-block;";
+                        case FbBaseDisplayMode.Flex: return "display:flex;";
+                        case FbBaseDisplayMode.InlineFlex: return "display:inline-flex;";
+                        case FbBaseDisplayMode.Table: return "display:table;";
+                        case FbBaseDisplayMode.TableRow: return "display:table-row;";
+                        case FbBaseDisplayMode.TableCell: return "display:table-cell;";
+                        case FbBaseDisplayMode.Grid: return "display:grid;";
                     }
                     return "";
                 }
@@ -94,7 +95,7 @@ namespace FractalBlazor.Components.Layout
 
         private string _flexBasis = "";
 
-        private BaseDisplayMode DisplayMode { get => _state.DisplayMode; set => _state.DisplayMode = value; }
+        private FbBaseDisplayMode DisplayMode { get => _state.DisplayMode; set => _state.DisplayMode = value; }
 
         private FbBreaks ResponsiveBreakpoint { get => _state.ResponsiveBreakpoint; set => _state.ResponsiveBreakpoint = value; }
 

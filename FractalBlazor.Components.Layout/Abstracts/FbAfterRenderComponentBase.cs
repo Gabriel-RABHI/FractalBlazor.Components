@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
-namespace FractalBlazor.Components.Layout
+namespace FractalBlazor.Components.Layout.Abstracts
 {
     public abstract class FbAfterRenderComponentBase : FbComponentBase, IHandleAfterRender
     {

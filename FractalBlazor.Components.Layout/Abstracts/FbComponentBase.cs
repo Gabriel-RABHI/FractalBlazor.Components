@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace FractalBlazor.Components.Layout
+namespace FractalBlazor.Components.Layout.Abstracts
 {
     public abstract class FbComponentBase : IComponent
     {

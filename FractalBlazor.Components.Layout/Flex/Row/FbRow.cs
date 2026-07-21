@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using FractalBlazor.Components.Layout.Flex;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
@@ -252,17 +253,6 @@ namespace FractalBlazor.Components.Layout
             builder.AddAttribute(2, "style", AggregatedStyles);
             builder.AddAttribute(3, "class", $"fb-row {ComputedRowClasses}");
             builder.AddAttribute(4, "onclick", EventCallback.Factory.Create(this, () => OnClick.InvokeAsync()));
-
-            switch (MasterSlaveStatus)
-            {
-                case FbFlexMasterSlave.Master:
-                    builder.AddAttribute(5, "data-fb-width-master-id", WidthMasterId);
-                    break;
-                case FbFlexMasterSlave.Slave:
-                    builder.AddAttribute(6, "data-fb-width-slave-id", WidthSlaveId);
-                    break;
-            }
-
             builder.AddContent(7, ChildContent);
             builder.CloseElement();
         }

@@ -43,28 +43,8 @@ window.setInterval(function () {
                 el.removeAttribute('data-fb-visibility-id');
         }
     }
-    OnWindowsResize();
 }, 250);
 
-
-function OnWindowsResize() {
-    var allMaster = getAllElementsWithAttribute('data-fb-width-master-id');
-    var allSlaves = getAllElementsWithAttribute('data-fb-width-slave-id');
-    for (var i = 0, n = allMaster.length; i < n; i++) {
-        var m = allMaster[i];
-        var m_id = m.getAttribute('data-fb-width-master-id');
-        for (var j = 0, sn = allSlaves.length; j < sn; j++) {
-            var s = allSlaves[j];
-            var s_id = s.getAttribute('data-fb-width-slave-id');
-            if (m_id == s_id) {
-                var w = m.clientWidth;
-                s.style.width = w + "px";
-            }
-        }
-    }
-}
-
-window.onresize = OnWindowsResize;
 
 function UpdateVisibilityMessageCallerJS(cpntId) {
     DotNet.invokeMethodAsync('FractalBlazor.Components.Layout', 'VisibilityChangedMessageCaller', cpntId);
@@ -174,60 +154,6 @@ function stopFbShowOnOverPerformance() {
     document.removeEventListener('mousemove', mouseMoveListener);
     document.removeEventListener('scroll', mouseMoveListener);
     document.removeEventListener('scrollend', mouseMoveListener);
-}
-
-//------ AdaptativeDivHeight ------//
-
-var fbAdaptativeDivsIntervals = {};
-
-function fbAdaptDivHeight(targetId, additionalSpace = 0, paddingBottomRem = 0.0, inModal = false) {
-
-    var element = document.getElementById(targetId);
-
-    if (!element) return;
-
-    var fontSizePx = parseFloat(getComputedStyle(document.documentElement).fontSize);
-    var spaceAbove = element.getBoundingClientRect().top;
-
-    if (inModal) {
-        if (document.getElementsByClassName("mud-dialog-actions").length) {
-            additionalSpace += document.getElementsByClassName("mud-dialog-actions")[0].offsetHeight;
-        }
-        paddingBottomRem = paddingBottomRem + 2.5;
-    }
-
-    var totalHeight = (spaceAbove + additionalSpace) / fontSizePx;
-
-    var spaceAboveRem = (totalHeight + paddingBottomRem).toFixed(2);
-
-    element.style.height = `calc(-${spaceAboveRem}rem + 100vh)`;
-}
-
-function runFbAdaptDivHeightInterval(targetId, additionalSpace = 0, paddingBottomRem = 0.0, inModal = false, intervalDelay = 0) {
-
-    fbAdaptDivHeight(targetId, additionalSpace, paddingBottomRem, inModal);
-
-    if (!fbAdaptativeDivsIntervals[targetId]) {
-        fbAdaptativeDivsIntervals[targetId] = setInterval(() => {
-            fbAdaptDivHeight(targetId, additionalSpace, paddingBottomRem, inModal);
-        }, intervalDelay);
-    }
-}
-
-function stopFbAdaptDivHeightInterval(targetId) {
-    if (fbAdaptativeDivsIntervals[targetId]) {
-        clearInterval(fbAdaptativeDivsIntervals[targetId]);
-        delete fbAdaptativeDivsIntervals[targetId];
-    }
-}
-
-function killFbAdaptDivHeightIntervals() {
-    for (var targetId in fbAdaptativeDivsIntervals) {
-        if (fbAdaptativeDivsIntervals.hasOwnProperty(targetId)) {
-            clearInterval(fbAdaptativeDivsIntervals[targetId]);
-        }
-    }
-    fbAdaptativeDivsIntervals = {};
 }
 
 //------ Dropdown Positioning & Tracking ------//

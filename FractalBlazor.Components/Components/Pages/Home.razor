@@ -10,7 +10,7 @@
 @using FractalBlazor.Components.Layout
 
 
-<FbStack MS PL GL WRX WFS WBS Hide VO_M>
+<FbStack MS PL GL WRX WFS WBS>
     <FbRow GL WFM WSS WRL PL WBA>
         <FbRow GL WFL PL WBH WRM Hover>
             <FbText S T>Home</FbText>
@@ -22,7 +22,7 @@
             <FbText S>Home</FbText>
             <FbText M>Home</FbText>
             <FbText L>Home</FbText>
-            <FbText X>Home</FbText>
+            <FbText X>Home with <b>bold</b></FbText>
         </FbRow>
         <FbRow GL WFM PM Hover SJVE JVBl>
             <FbText S B>Home</FbText>
@@ -32,7 +32,7 @@
                 <FbText X B>Home</FbText>
             </FbRowItem>
         </FbRow>
-        <FbRow GL WFS PM SJVSt WSM JVSt Scrollable>
+        <FbRow GL PM SJVSt WSM JVSt WFS>
             <FbRowItem PHM SJVBl>
                 <FbText S XB>Home 1</FbText>
             </FbRowItem>
@@ -87,6 +87,7 @@
             <FbText X Muted>Home_of_the_layout_and_form_library</FbText>
         </FbGridItem>
     </FbGridContainer>
+    <FbInputText Handler="this" TAction="ChangeFirstNameAction" Value="@FirstName"></FbInputText>
 </FbStack>
 
 @code {
@@ -94,7 +95,7 @@
 
     public void Handle(ChangeFirstNameAction a) => FirstName = a.NewValue;
 
-    public string FirstName { get; set; }
+    public string FirstName { get; set; } = "Toto";
 
     private bool _isOpen1;
     public bool IsOpen1

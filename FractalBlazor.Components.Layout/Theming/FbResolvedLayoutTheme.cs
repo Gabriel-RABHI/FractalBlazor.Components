@@ -1,0 +1,32 @@
+namespace FractalBlazor.Components.Layout;
+
+public sealed class FbResolvedLayoutTheme
+{
+    internal FbResolvedLayoutTheme(
+        string name,
+        FbThemeLayoutSpacings spacings,
+        FbThemeLayoutCorners corners,
+        IReadOnlyDictionary<string, FbResolvedLayoutThemeVariant> variants,
+        IReadOnlyList<string> variantOrder)
+    {
+        Name = name;
+        Spacings = spacings;
+        Corners = corners;
+        Variants = variants;
+        VariantOrder = variantOrder;
+    }
+
+    public string Name { get; }
+    public FbThemeLayoutSpacings Spacings { get; }
+    public FbThemeLayoutCorners Corners { get; }
+    public IReadOnlyDictionary<string, FbResolvedLayoutThemeVariant> Variants { get; }
+    public IReadOnlyList<string> VariantOrder { get; }
+
+    public FbResolvedLayoutThemeVariant GetVariant(string? name)
+    {
+        var normalized = FbLayoutThemeVariants.Normalize(name);
+        return Variants.TryGetValue(normalized, out var variant)
+            ? variant
+            : throw new KeyNotFoundException($"The layout variant '{normalized}' is not defined by theme '{Name}'.");
+    }
+}

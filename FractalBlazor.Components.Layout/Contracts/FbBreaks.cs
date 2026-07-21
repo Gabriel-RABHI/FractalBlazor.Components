@@ -10,13 +10,4 @@ namespace  FractalBlazor.Components.Layout
         XL = 1280,
         XXL = 1536
     }
-    
-    public enum FbSpacing : byte
-    {
-        None,
-        S,
-        M,
-        L,
-        X
-    }
 }

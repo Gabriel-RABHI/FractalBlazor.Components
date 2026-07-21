@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace  FractalBlazor.Components.Layout
+namespace  FractalBlazor.Components.Layout.Utilities
 {
     internal static class BackgroundProcess
     {

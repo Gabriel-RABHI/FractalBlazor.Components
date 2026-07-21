@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using FractalBlazor.Components.Layout.Abstracts;
+using FractalBlazor.Components.Layout.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace FractalBlazor.Components.Layout
+namespace FractalBlazor.Components.Layout.Flex
 {
     public abstract class FbFlexBoxBase : FbLayoutVisibleComponentBase
     {
@@ -223,18 +225,6 @@ namespace FractalBlazor.Components.Layout
                     default:
                         return "";
                 }
-            }
-        }
-
-        protected FbFlexMasterSlave MasterSlaveStatus
-        {
-            get
-            {
-                if (!string.IsNullOrWhiteSpace(WidthMasterId))
-                    return FbFlexMasterSlave.Master;
-                if (!string.IsNullOrWhiteSpace(WidthSlaveId))
-                    return FbFlexMasterSlave.Slave;
-                return FbFlexMasterSlave.None;
             }
         }
 
@@ -565,15 +555,5 @@ namespace FractalBlazor.Components.Layout
         #endregion
 
         #endregion
-        /*
-        protected override void BuildRenderTree(RenderTreeBuilder builder)
-        {
-            builder.OpenElement(0, "div");
-            builder.AddAttribute(1, "style", AggregatedStyles);
-            builder.AddAttribute(2, "class", AggregatedClasses);
-            builder.AddContent(3, ChildContent);
-            builder.CloseElement();
-        }
-        */
     }
 }

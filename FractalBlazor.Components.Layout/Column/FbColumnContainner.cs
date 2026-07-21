@@ -1,9 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using FractalBlazor.Components.Layout.Abstracts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace FractalBlazor.Components.Layout
+namespace FractalBlazor.Components.Layout.Column
 {
     /// <summary>
     /// CSS container-query based column system.
@@ -82,31 +83,37 @@ namespace FractalBlazor.Components.Layout
         /// <summary>
         /// Break -> Under -> Extra Small
         /// </summary>
+        [Parameter]
         public bool BU_XS { get => BreakOn == FbBreaks.XS; set { if (value) BreakOn = FbBreaks.XS; } }
 
         /// <summary>
         /// Break -> Under -> Small
         /// </summary>
+        [Parameter]
         public bool BU_S { get => BreakOn == FbBreaks.S; set { if (value) BreakOn = FbBreaks.S; } }
 
         /// <summary>
         /// Break -> Under -> Medium
         /// </summary>
+        [Parameter]
         public bool BU_M { get => BreakOn == FbBreaks.M; set { if (value) BreakOn = FbBreaks.M; } }
 
         /// <summary>
         /// Break -> Under -> Large
         /// </summary>
+        [Parameter]
         public bool BU_L { get => BreakOn == FbBreaks.L; set { if (value) BreakOn = FbBreaks.L; } }
 
         /// <summary>
         /// Break -> Under -> Extra Large
         /// </summary>
+        [Parameter]
         public bool BU_XL { get => BreakOn == FbBreaks.XL; set { if (value) BreakOn = FbBreaks.XL; } }
 
         /// <summary>
         /// Break -> Under -> Extra-Extra Large
         /// </summary>
+        [Parameter]
         public bool BU_XXL { get => BreakOn == FbBreaks.XXL; set { if (value) BreakOn = FbBreaks.XXL; } }
 
         /// <summary>
@@ -151,6 +158,8 @@ namespace FractalBlazor.Components.Layout
         [Parameter]
         public bool WSMX { get => SeparatorMargin == FbSpacing.X; set { if (value) SeparatorMargin = FbSpacing.X; } }
 
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {

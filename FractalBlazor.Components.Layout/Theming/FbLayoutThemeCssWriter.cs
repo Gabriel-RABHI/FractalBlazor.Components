@@ -1,8 +1,6 @@
 using System.Text;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
 
-namespace FractalBlazor.Components.Layout;
+namespace FractalBlazor.Components.Layout.Theming;
 
 public static class FbLayoutThemeCssWriter
 {
@@ -75,77 +73,4 @@ public static class FbLayoutThemeCssWriter
 
     private static void AppendReference(StringBuilder builder, string activeToken, string sourceToken)
         => builder.Append("--fb-").Append(activeToken).Append(":var(--fb-").Append(sourceToken).Append(");");
-}
-
-public sealed class FbLayoutThemeContext
-{
-    internal FbLayoutThemeContext(FbResolvedLayoutTheme theme) => Theme = theme;
-    public FbResolvedLayoutTheme Theme { get; }
-}
-
-public sealed class FbLayoutTheme : FbComponentBase
-{
-    [Inject]
-    public IFbLayoutThemeRegistry Registry { get; set; } = default!;
-
-    [Parameter]
-    public string Theme { get; set; } = "Default";
-
-    [Parameter]
-    public string Selector { get; set; } = ":root";
-
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-
-    protected override void BuildRenderTree(RenderTreeBuilder builder)
-    {
-        FbThemeCssNames.ValidateSelector(Selector);
-        var resolved = Registry.Resolve(Theme);
-        var variables = FbLayoutThemeCssWriter.ToCssVariables(resolved);
-
-        builder.OpenElement(0, "style");
-        builder.AddMarkupContent(1, $"{Selector}{{{variables}}}");
-        builder.CloseElement();
-
-        if (ChildContent is null)
-            return;
-
-        builder.OpenComponent<CascadingValue<FbLayoutThemeContext>>(2);
-        builder.AddAttribute(3, "Value", new FbLayoutThemeContext(resolved));
-        builder.AddAttribute(4, "ChildContent", ChildContent);
-        builder.CloseComponent();
-    }
-}
-
-public sealed class FbLayoutVariant : FbComponentBase
-{
-    [CascadingParameter]
-    public FbLayoutThemeContext? ThemeContext { get; set; }
-
-    [Parameter]
-    public string Variant { get; set; } = FbLayoutThemeVariants.Default;
-
-    [Parameter]
-    public string Classes { get; set; } = "";
-
-    [Parameter]
-    public string Style { get; set; } = "";
-
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-
-    protected override void BuildRenderTree(RenderTreeBuilder builder)
-    {
-        if (ThemeContext is null)
-            throw new InvalidOperationException($"{nameof(FbLayoutVariant)} must be rendered inside {nameof(FbLayoutTheme)}.");
-
-        var normalized = FbLayoutThemeVariants.Normalize(Variant);
-        ThemeContext.Theme.GetVariant(normalized);
-
-        builder.OpenElement(0, "div");
-        builder.AddAttribute(1, "class", $"fb-theme-scope {Classes}".TrimEnd());
-        builder.AddAttribute(2, "style", FbLayoutThemeCssWriter.BuildVariantReferences(normalized) + Style);
-        builder.AddContent(3, ChildContent);
-        builder.CloseElement();
-    }
 }
