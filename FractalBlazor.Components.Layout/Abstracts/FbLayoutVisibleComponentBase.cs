@@ -92,7 +92,17 @@ namespace FractalBlazor.Components.Layout.Abstracts
         /// With -> Frame -> Light
         /// </summary>
         [Parameter]
-        public bool WFL { get => _frame == FbFrame.Light; set { if (value) _frame = FbFrame.Light; } }
+        public bool WFL
+        {
+            get => _frame == FbFrame.Light;
+            set
+            {
+                if (value)
+                    _frame = FbFrame.Light;
+                else if (_frame == FbFrame.Light)
+                    _frame = FbFrame.None;
+            }
+        }
 
         /// <summary>
         /// With -> Frame -> Medium

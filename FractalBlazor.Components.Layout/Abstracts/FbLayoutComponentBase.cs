@@ -44,6 +44,8 @@ namespace FractalBlazor.Components.Layout.Abstracts
 
             // -------- Fields
             public bool _noWrap = false;
+            public bool _noSelect = false;
+            public bool _canSelect = false;
             public bool _responsiveUnder = false;
             public FbBaseDisplayMode DisplayMode = FbBaseDisplayMode.None;
             public FbBreaks ResponsiveBreakpoint = FbBreaks.None;
@@ -236,6 +238,8 @@ namespace FractalBlazor.Components.Layout.Abstracts
                             (MarginLeft != FbSpacing.None ? $"margin-left:{FbLayoutHelper.ToSpacingCss(MarginLeft)};" : "") +
                             (MarginRight != FbSpacing.None ? $"margin-right:{FbLayoutHelper.ToSpacingCss(MarginRight)};" : "") +
                             (_state._flex != int.MinValue ? $"flex:{_state._flex};" : "") +
+                            (_state._noSelect ? $"-webkit-user-select: none;user-select: none;" : "") +
+                            (_state._canSelect ? $"-webkit-user-select: text;user-select: text;" : "") +
                             (Hide ? "visibility:hidden;" : "");
 
                     str +=  (string.IsNullOrWhiteSpace(FlexBasis) ? "" : $"flex-basis:{FlexBasis};") +
@@ -276,6 +280,24 @@ namespace FractalBlazor.Components.Layout.Abstracts
         {
             get => !_state._noWrap;
             set { if (value) _state._noWrap = false; }
+        }
+
+        /// <summary>
+        /// Disable -> Sellection : disable text selection
+        /// </summary>
+        [Parameter]
+        public bool DS {
+            get => _state._noSelect;
+            set { if (value) _state._noSelect = true; }
+        }
+
+        /// <summary>
+        /// Enable -> Sellection : disable text wrap
+        /// </summary>
+        [Parameter]
+        public bool ES {
+            get => _state._canSelect;
+            set { if (value) _state._canSelect = true; }
         }
 
         /// <summary>

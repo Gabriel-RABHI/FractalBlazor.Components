@@ -1,7 +1,22 @@
 /**********************************************************************************/
 /* UTILS */
+.fb-input-text {
+    width: 100%;
+}
+
+.fb-input-text__input {
+    flex: 1 1 auto;
+    min-width: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+}
+
 :root,
 .fb-theme-scope {
+    display: inherit;
     --fb-current-fg-default-high-mix: var(--fb-fg-default-high-mix);
     --fb-current-fg-subtle-high-mix: var(--fb-fg-subtle-high-mix);
     --fb-current-fg-muted-high-mix: var(--fb-fg-muted-high-mix);

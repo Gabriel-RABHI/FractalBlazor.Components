@@ -8,6 +8,7 @@
 @using FractalBlazor.Components.Forms.Inputs
 @using FractalBlazor.Components.Forms.Theming
 @using FractalBlazor.Components.Layout
+@using FractalBlazor.Components.Forms.Theming.Constants
 
 
 <FbStack MS PL GL WRX WFS WBS>
@@ -64,7 +65,7 @@
         </FbRow>
     </FbRow>
     <FbRow GL WGM PM>
-        <FbVariant Variant="Error">
+        <FbVariant Variant="@FbThemeVariants.Focused">
             <FbRow GL WGM PM WBA WFL>
                 <FbText S Highlight>Home</FbText>
                 <FbText M Highlight>Home</FbText>
@@ -87,7 +88,18 @@
             <FbText X Muted>Home_of_the_layout_and_form_library</FbText>
         </FbGridItem>
     </FbGridContainer>
-    <FbInputText Handler="this" TAction="ChangeFirstNameAction" Value="@FirstName"></FbInputText>
+    <FbRow GM PL>
+        <FbRowItem>
+        <FbInputText Handler="this" TAction="ChangeFirstNameAction" Value="@FirstName">
+            <StartContent>
+                <FbText M Subtle>Name</FbText>
+            </StartContent>
+        </FbInputText>
+        </FbRowItem>
+        <FbRowItem>
+            <FbInputText Handler="this" TAction="ChangeFirstNameAction" Value="@FirstName"/>
+        </FbRowItem>
+    </FbRow>
 </FbStack>
 
 @code {

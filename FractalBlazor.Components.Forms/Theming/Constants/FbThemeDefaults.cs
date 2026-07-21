@@ -40,7 +40,7 @@ public static class FbThemeDefaults
             MediumMix = "14%",
             MediumSize = "0.0625rem",
             StrongMix = "22%",
-            StrongSize = "0.125rem"
+            StrongSize = "0.15rem"
         };
 
         return light
