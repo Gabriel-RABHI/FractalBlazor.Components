@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace FractalBlazor.Components.Layout;
+namespace FractalBlazor.Components.Layout.Theming.Model;
 
 public sealed class FbThemeLayoutSpacings
 {

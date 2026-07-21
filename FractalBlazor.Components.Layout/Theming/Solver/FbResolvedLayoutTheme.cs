@@ -1,4 +1,7 @@
-namespace FractalBlazor.Components.Layout;
+using FractalBlazor.Components.Layout.Theming.Contracts;
+using FractalBlazor.Components.Layout.Theming.Model;
+
+namespace FractalBlazor.Components.Layout.Theming.Solver;
 
 public sealed class FbResolvedLayoutTheme
 {
@@ -17,9 +20,13 @@ public sealed class FbResolvedLayoutTheme
     }
 
     public string Name { get; }
+
     public FbThemeLayoutSpacings Spacings { get; }
+
     public FbThemeLayoutCorners Corners { get; }
+
     public IReadOnlyDictionary<string, FbResolvedLayoutThemeVariant> Variants { get; }
+
     public IReadOnlyList<string> VariantOrder { get; }
 
     public FbResolvedLayoutThemeVariant GetVariant(string? name)

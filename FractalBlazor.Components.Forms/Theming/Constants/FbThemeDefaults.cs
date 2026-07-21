@@ -1,6 +1,7 @@
-using FractalBlazor.Components.Layout;
+using FractalBlazor.Components.Forms.Theming.Model;
+using FractalBlazor.Components.Layout.Theming.Model;
 
-namespace FractalBlazor.Components.Forms.Theming;
+namespace FractalBlazor.Components.Forms.Theming.Constants;
 
 public static class FbThemeDefaults
 {

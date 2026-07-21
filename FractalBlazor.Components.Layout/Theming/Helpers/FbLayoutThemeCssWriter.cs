@@ -1,6 +1,9 @@
+using FractalBlazor.Components.Layout.Theming.Contracts;
+using FractalBlazor.Components.Layout.Theming.Model;
+using FractalBlazor.Components.Layout.Theming.Solver;
 using System.Text;
 
-namespace FractalBlazor.Components.Layout.Theming;
+namespace FractalBlazor.Components.Layout.Theming.Helpers;
 
 public static class FbLayoutThemeCssWriter
 {

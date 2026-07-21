@@ -1,6 +1,6 @@
-namespace FractalBlazor.Components.Layout;
+namespace FractalBlazor.Components.Forms.Theming.Constants;
 
-public static class FbLayoutThemeVariants
+public static class FbThemeVariants
 {
     public const string Default = "Default";
     public const string Selected = "Selected";

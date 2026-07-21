@@ -1,24 +1,19 @@
 using System.Collections.ObjectModel;
-using FractalBlazor.Components.Layout;
-using Microsoft.Extensions.DependencyInjection;
+using FractalBlazor.Components.Forms.Contracts;
+using FractalBlazor.Components.Forms.Theming.Constants;
+using FractalBlazor.Components.Forms.Theming.Model;
+using FractalBlazor.Components.Forms.Theming.Solver;
+using FractalBlazor.Components.Layout.Theming.Model;
 
-namespace FractalBlazor.Components.Forms.Theming;
+namespace FractalBlazor.Components.Forms.Theming.Registry;
 
-public interface IFbThemeRegistry
-{
-    FbThemeSetup Default { get; }
-    void Register(FbThemeSetup theme);
-    bool TryGet(string name, out FbThemeSetup theme);
-    FbResolvedTheme Resolve(string theme, string branch);
-}
-
-public sealed class FbThemeRegistry : IFbThemeRegistry
+public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
 {
     private readonly object _sync = new();
     private readonly Dictionary<string, FbThemeSetup> _themes = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, FbResolvedTheme> _resolved = new(StringComparer.OrdinalIgnoreCase);
 
-    public FbThemeRegistry()
+    public FbFormThemeRegistry()
     {
         Default = FbThemeDefaults.Create();
         ValidateDefinition(Default);
@@ -366,13 +361,26 @@ public sealed class FbThemeRegistry : IFbThemeRegistry
         ValidateValues(theme.Typography);
     }
 
-    private static void ValidateValues(FbThemeLayoutSpacings? value) => Validate(value is null ? [] : [value.S, value.M, value.L, value.X]);
-    private static void ValidateValues(FbThemeLayoutCorners? value) => Validate(value is null ? [] : [value.S, value.M, value.L, value.X]);
-    private static void ValidateValues(FbThemeLayoutColors? value) => Validate(value is null ? [] : [value.LowAnchor, value.Tint, value.HighAnchor, value.SurfaceMix, value.AccentOffset, value.HighlightOffset]);
-    private static void ValidateValues(FbThemeLayoutBorders? value) => Validate(value is null ? [] : [value.LightMix, value.LightSize, value.MediumMix, value.MediumSize, value.StrongMix, value.StrongSize]);
-    private static void ValidateValues(FbThemeFormColors? value) => Validate(value is null ? [] : [value.LowAnchor, value.HighAnchor]);
-    private static void ValidateValues(FbThemeFormTextVariant? value) => Validate(value is null ? [] : [value.DefaultHighMix, value.SubtleHighMix, value.MutedHighMix, value.HighlightHighMix]);
-    private static void ValidateValues(FbThemeFormTypography? value) => Validate(value is null ? [] : [value.TextFontFamily, value.CodeFontFamily, value.FontSizeBase, value.LineHeight, value.SmallCoef, value.MediumCoef, value.LargeCoef, value.ExtraLargeCoef, value.ThinWeight, value.DefaultWeight, value.BoldWeight, value.ExtraBoldWeight]);
+    private static void ValidateValues(FbThemeLayoutSpacings? value)
+        => Validate(value is null ? [] : [value.S, value.M, value.L, value.X]);
+
+    private static void ValidateValues(FbThemeLayoutCorners? value)
+        => Validate(value is null ? [] : [value.S, value.M, value.L, value.X]);
+
+    private static void ValidateValues(FbThemeLayoutColors? value)
+        => Validate(value is null ? [] : [value.LowAnchor, value.Tint, value.HighAnchor, value.SurfaceMix, value.AccentOffset, value.HighlightOffset]);
+    
+    private static void ValidateValues(FbThemeLayoutBorders? value)
+        => Validate(value is null ? [] : [value.LightMix, value.LightSize, value.MediumMix, value.MediumSize, value.StrongMix, value.StrongSize]);
+    
+    private static void ValidateValues(FbThemeFormColors? value)
+        => Validate(value is null ? [] : [value.LowAnchor, value.HighAnchor]);
+    
+    private static void ValidateValues(FbThemeFormTextVariant? value)
+        => Validate(value is null ? [] : [value.DefaultHighMix, value.SubtleHighMix, value.MutedHighMix, value.HighlightHighMix]);
+    
+    private static void ValidateValues(FbThemeFormTypography? value)
+        => Validate(value is null ? [] : [value.TextFontFamily, value.CodeFontFamily, value.FontSizeBase, value.LineHeight, value.SmallCoef, value.MediumCoef, value.LargeCoef, value.ExtraLargeCoef, value.ThinWeight, value.DefaultWeight, value.BoldWeight, value.ExtraBoldWeight]);
 
     private static void Validate(IEnumerable<string?> values)
     {
@@ -381,26 +389,5 @@ public sealed class FbThemeRegistry : IFbThemeRegistry
             if (value is not null)
                 FbThemeCssNames.ValidateCssValue(value, "theme definition");
         }
-    }
-}
-
-public static class FbThemeServiceCollectionExtensions
-{
-    public static IServiceCollection AddFractalBlazorTheming(
-        this IServiceCollection services,
-        Action<IFbThemeRegistry>? configure = null,
-        Action<IFbLayoutThemeRegistry>? configureLayout = null)
-    {
-        ArgumentNullException.ThrowIfNull(services);
-
-        var layoutRegistry = new FbLayoutThemeRegistry();
-        configureLayout?.Invoke(layoutRegistry);
-        services.AddSingleton<IFbLayoutThemeRegistry>(layoutRegistry);
-
-        var registry = new FbThemeRegistry();
-        configure?.Invoke(registry);
-        services.AddSingleton<IFbThemeRegistry>(registry);
-
-        return services;
     }
 }

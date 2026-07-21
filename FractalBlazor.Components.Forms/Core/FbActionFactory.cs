@@ -3,12 +3,12 @@ using System.Linq.Expressions;
 
 namespace FractalBlazor.Components.Forms.Core
 {
-    public static class ActionFactory<TAction, TValue>
+    public static class FbActionFactory<TAction, TValue>
     {
         // This delegate is cached permanently in memory for this specific TAction
         public static readonly Func<TValue, TAction> Create;
 
-        static ActionFactory()
+        static FbActionFactory()
         {
             var valueType = typeof(TValue);
             var actionType = typeof(TAction);

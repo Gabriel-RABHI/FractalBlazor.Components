@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace FractalBlazor.Components.Forms.Core
 {
-    public static class ActionDispatcher<TAction>
+    public static class FbActionDispatcher<TAction>
     {
         private static readonly ConcurrentDictionary<Type, Action<object, TAction>> _handlers = new();
 

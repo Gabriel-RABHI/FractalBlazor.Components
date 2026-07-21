@@ -1,3 +1,6 @@
+using FractalBlazor.Components.Layout.Theming.Contracts;
+using FractalBlazor.Components.Layout.Theming.Model;
+
 namespace FractalBlazor.Components.Layout;
 
 public sealed class FbLayoutThemeVariant
@@ -9,6 +12,8 @@ public sealed class FbLayoutThemeVariant
     }
 
     public string Name { get; }
+
     public FbThemeLayoutColors? LayoutColors { get; init; }
+
     public FbThemeLayoutBorders? Borders { get; init; }
 }

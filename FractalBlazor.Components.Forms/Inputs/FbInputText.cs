@@ -101,8 +101,8 @@ namespace FractalBlazor.Components.Forms.Inputs
         {
             if (Handler != null)
             {
-                TAction action = ActionFactory<TAction, string>.Create(newValue);
-                ActionDispatcher<TAction>.Dispatch(Handler, action);
+                TAction action = FbActionFactory<TAction, string>.Create(newValue);
+                FbActionDispatcher<TAction>.Dispatch(Handler, action);
             }
         }
     }

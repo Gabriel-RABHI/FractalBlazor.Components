@@ -13,7 +13,7 @@ namespace FractalBlazor.Components.Forms.Mapping
         // --- Services ---
 
         [Inject]
-        public IViewRegistry Registry { get; set; } = default!;
+        public IFbViewRegistry Registry { get; set; } = default!;
 
         // --- Parameters ---
 

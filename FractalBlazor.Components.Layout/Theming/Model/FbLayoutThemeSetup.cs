@@ -1,3 +1,5 @@
+using FractalBlazor.Components.Layout.Theming.Model;
+
 namespace FractalBlazor.Components.Layout;
 
 public sealed class FbLayoutThemeSetup
@@ -10,8 +12,12 @@ public sealed class FbLayoutThemeSetup
     }
 
     public string Name { get; }
+
     public FbLayoutThemeSetup? Parent { get; }
+
     public FbThemeLayoutSpacings? Spacings { get; init; }
+
     public FbThemeLayoutCorners? Corners { get; init; }
+
     public IReadOnlyList<FbLayoutThemeVariant> Variants { get; init; } = [];
 }

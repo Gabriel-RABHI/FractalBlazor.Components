@@ -9,7 +9,7 @@ using System.Text;
 
 namespace FractalBlazor.Components.Forms.Core
 {
-    public class ViewRegistry : IViewRegistry
+    public class FbViewRegistry : IFbViewRegistry
     {
         private readonly ConcurrentDictionary<Type, Type> _registry = new();
         private readonly HashSet<Assembly> _scannedAssemblies = new();

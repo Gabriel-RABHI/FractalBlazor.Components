@@ -1,32 +1,29 @@
-namespace FractalBlazor.Components.Forms.Theming;
-
-public sealed class FbThemeFormTextVariant
-{
-    public string? DefaultHighMix { get; init; }
-    public string? SubtleHighMix { get; init; }
-    public string? MutedHighMix { get; init; }
-    public string? HighlightHighMix { get; init; }
-}
-
-public sealed class FbThemeFormColors
-{
-    public string? LowAnchor { get; init; }
-    public string? HighAnchor { get; init; }
-}
+namespace FractalBlazor.Components.Forms.Theming.Model;
 
 public sealed class FbThemeFormTypography
 {
     public string? TextFontFamily { get; init; }
+
     public string? CodeFontFamily { get; init; }
+
     public string? FontSizeBase { get; init; }
+
     public string? LineHeight { get; init; }
+
     public string? SmallCoef { get; init; }
+
     public string? MediumCoef { get; init; }
+
     public string? LargeCoef { get; init; }
+
     public string? ExtraLargeCoef { get; init; }
+
     public string? ThinWeight { get; init; }
+
     public string? DefaultWeight { get; init; }
+
     public string? BoldWeight { get; init; }
+
     public string? ExtraBoldWeight { get; init; }
 
     public static FbThemeFormTypography Compact => new()
