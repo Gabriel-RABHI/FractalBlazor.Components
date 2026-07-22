@@ -37,7 +37,7 @@ public static class FbThemeDefaults
         {
             LightMix = "8%",
             MediumMix = "14%",
-            StrongMix = "22%"
+            StrongMix = "28%"
         };
 
         return light

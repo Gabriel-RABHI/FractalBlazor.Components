@@ -9,10 +9,25 @@ namespace FractalBlazor.Components.Forms.Display
 {
     public enum FbTextSize : byte
     {
+        /// <summary>
+        /// Default is M
+        /// </summary>
         None,
+        /// <summary>
+        /// Small
+        /// </summary>
         S,
+        /// <summary>
+        /// Medium, as default, or paragrph
+        /// </summary>
         M,
+        /// <summary>
+        /// Large
+        /// </summary>
         L,
+        /// <summary>
+        /// Extra large
+        /// </summary>
         X
     }
 

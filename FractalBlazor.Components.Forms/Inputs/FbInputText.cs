@@ -50,7 +50,7 @@ namespace FractalBlazor.Components.Forms.Inputs
                 _currentInputValue = Value;
         }
 
-        private string CurrentVarient => _hasFocus ? FbThemeVariants.Focused : FbThemeVariants.Default;
+        private string CurrentVarient => _hasFocus ? FbThemeVariants.Default : FbThemeVariants.Default;
 
         // --- Rendering ---
 
