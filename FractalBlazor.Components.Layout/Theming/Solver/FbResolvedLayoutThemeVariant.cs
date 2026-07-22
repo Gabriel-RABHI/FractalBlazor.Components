@@ -4,7 +4,7 @@ namespace FractalBlazor.Components.Layout.Theming.Solver;
 
 public sealed class FbResolvedLayoutThemeVariant
 {
-    internal FbResolvedLayoutThemeVariant(string name, FbThemeLayoutColors layoutColors, FbThemeLayoutBorders borders)
+    internal FbResolvedLayoutThemeVariant(string name, FbThemeLayoutColors layoutColors, FbThemeLayoutBordersMix borders)
     {
         Name = name;
         LayoutColors = layoutColors;
@@ -15,5 +15,5 @@ public sealed class FbResolvedLayoutThemeVariant
 
     public FbThemeLayoutColors LayoutColors { get; }
 
-    public FbThemeLayoutBorders Borders { get; }
+    public FbThemeLayoutBordersMix Borders { get; }
 }

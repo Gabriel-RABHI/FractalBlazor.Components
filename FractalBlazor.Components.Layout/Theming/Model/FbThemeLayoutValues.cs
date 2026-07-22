@@ -27,16 +27,26 @@ public sealed class FbThemeLayoutCorners
     public static FbThemeLayoutCorners Rounded => new() { S = "0.25rem", M = "0.5rem", L = "0.875rem", X = "2rem" };
 }
 
-public sealed class FbThemeLayoutBorders
+public sealed class FbThemeLayoutBordersMix
 {
     public string? LightMix { get; init; }
     public string? MediumMix { get; init; }
     public string? StrongMix { get; init; }
 }
 
+// NEW : tu use instead of FbThemeLayoutColors fields
+public sealed class FbThemeLayoutSurfaceMix
+{
+    public string? SurfaceMix { get; init; }
+    public string? AccentOffset { get; init; }
+    public string? HighlightOffset { get; init; }
+}
+
 public sealed class FbThemeLayoutColors
 {
     public string? LowAnchor { get; init; }
+
+    // To remove
     public string? Tint { get; init; }
     public string? HighAnchor { get; init; }
     public string? SurfaceMix { get; init; }

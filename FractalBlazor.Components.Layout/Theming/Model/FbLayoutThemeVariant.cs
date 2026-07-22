@@ -15,5 +15,5 @@ public sealed class FbLayoutThemeVariant
 
     public FbThemeLayoutColors? LayoutColors { get; init; }
 
-    public FbThemeLayoutBorders? Borders { get; init; }
+    public FbThemeLayoutBordersMix? Borders { get; init; }
 }

@@ -186,7 +186,7 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
             HighAnchor = Pick(value => value.FormColors?.HighAnchor, value => value.FormColors.HighAnchor, $"{branchName}.{variantName}.FormColors.HighAnchor")
         };
 
-        var borders = new FbThemeLayoutBorders
+        var borders = new FbThemeLayoutBordersMix
         {
             LightMix = Pick(value => value.Borders?.LightMix, value => value.Borders.LightMix, $"{branchName}.{variantName}.Borders.LightMix"),
             MediumMix = Pick(value => value.Borders?.MediumMix, value => value.Borders.MediumMix, $"{branchName}.{variantName}.Borders.MediumMix"),
@@ -369,7 +369,7 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
     private static void ValidateValues(FbThemeLayoutColors? value)
         => Validate(value is null ? [] : [value.LowAnchor, value.Tint, value.HighAnchor, value.SurfaceMix, value.AccentOffset, value.HighlightOffset]);
     
-    private static void ValidateValues(FbThemeLayoutBorders? value)
+    private static void ValidateValues(FbThemeLayoutBordersMix? value)
         => Validate(value is null ? [] : [value.LightMix, value.MediumMix, value.StrongMix]);
     
     private static void ValidateValues(FbThemeFormColors? value)

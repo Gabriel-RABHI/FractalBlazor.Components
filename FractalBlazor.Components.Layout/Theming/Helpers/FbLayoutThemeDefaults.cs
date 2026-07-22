@@ -7,7 +7,7 @@ public static class FbLayoutThemeDefaults
 {
     public static FbLayoutThemeSetup Create()
     {
-        var defaultBorders = new FbThemeLayoutBorders
+        var defaultBorders = new FbThemeLayoutBordersMix
         {
             LightMix = "8%",
             MediumMix = "14%",
@@ -32,7 +32,7 @@ public static class FbLayoutThemeDefaults
                 new(FbLayoutThemeVariants.Error)
                 {
                     LayoutColors = Colors("#2a0f14", "#5c1c28", "#fff5f6", "10%", "12%", "22%"),
-                    Borders = new FbThemeLayoutBorders { LightMix = "14%", MediumMix = "24%", StrongMix = "38%" }
+                    Borders = new FbThemeLayoutBordersMix { LightMix = "14%", MediumMix = "24%", StrongMix = "38%" }
                 },
                 new(FbLayoutThemeVariants.Warning)
                 {
@@ -41,7 +41,7 @@ public static class FbLayoutThemeDefaults
                 new(FbLayoutThemeVariants.Disabled)
                 {
                     LayoutColors = Colors("#151517", "#303036", "#a5a5ad", "6%", "6%", "10%"),
-                    Borders = new FbThemeLayoutBorders { LightMix = "6%", MediumMix = "9%", StrongMix = "14%" }
+                    Borders = new FbThemeLayoutBordersMix { LightMix = "6%", MediumMix = "9%", StrongMix = "14%" }
                 },
                 new(FbLayoutThemeVariants.Success)
                 {

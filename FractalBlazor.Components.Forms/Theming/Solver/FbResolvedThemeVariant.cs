@@ -9,7 +9,7 @@ public sealed class FbResolvedThemeVariant
         string name,
         FbThemeLayoutColors layoutColors,
         FbThemeFormColors formColors,
-        FbThemeLayoutBorders borders)
+        FbThemeLayoutBordersMix borders)
     {
         Name = name;
         LayoutColors = layoutColors;
@@ -23,5 +23,5 @@ public sealed class FbResolvedThemeVariant
 
     public FbThemeFormColors FormColors { get; }
 
-    public FbThemeLayoutBorders Borders { get; }
+    public FbThemeLayoutBordersMix Borders { get; }
 }

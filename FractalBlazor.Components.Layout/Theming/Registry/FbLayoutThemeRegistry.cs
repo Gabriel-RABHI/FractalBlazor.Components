@@ -128,7 +128,7 @@ public sealed class FbLayoutThemeRegistry : IFbLayoutThemeRegistry
             HighlightOffset = Pick(value => value.LayoutColors?.HighlightOffset, value => value.LayoutColors.HighlightOffset, $"{variantName}.LayoutColors.HighlightOffset")
         };
 
-        var borders = new FbThemeLayoutBorders
+        var borders = new FbThemeLayoutBordersMix
         {
             LightMix = Pick(value => value.Borders?.LightMix, value => value.Borders.LightMix, $"{variantName}.Borders.LightMix"),
             MediumMix = Pick(value => value.Borders?.MediumMix, value => value.Borders.MediumMix, $"{variantName}.Borders.MediumMix"),
@@ -254,7 +254,7 @@ public sealed class FbLayoutThemeRegistry : IFbLayoutThemeRegistry
         => ValidateValues(values is null ? [] :
             [values.LowAnchor, values.Tint, values.HighAnchor, values.SurfaceMix, values.AccentOffset, values.HighlightOffset]);
 
-    private static void ValidateValues(FbThemeLayoutBorders? values)
+    private static void ValidateValues(FbThemeLayoutBordersMix? values)
         => ValidateValues(values is null ? [] :
             [values.LightMix, values.MediumMix, values.StrongMix]);
 

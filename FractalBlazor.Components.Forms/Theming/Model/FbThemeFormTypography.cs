@@ -2,6 +2,7 @@ namespace FractalBlazor.Components.Forms.Theming.Model;
 
 public sealed class FbThemeFormTypography
 {
+    // -------- Typo
     public string? TextFontFamily { get; init; }
 
     public string? CodeFontFamily { get; init; }
@@ -10,6 +11,7 @@ public sealed class FbThemeFormTypography
 
     public string? LineHeight { get; init; }
 
+    // -------- Coefs
     public string? ExtraSmallCoef { get; init; }
 
     public string? SmallCoef { get; init; }
@@ -22,6 +24,7 @@ public sealed class FbThemeFormTypography
 
     public string? ExtraExtraLargeCoef { get; init; }
 
+    // -------- Weights
     public string? ThinWeight { get; init; }
 
     public string? DefaultWeight { get; init; }

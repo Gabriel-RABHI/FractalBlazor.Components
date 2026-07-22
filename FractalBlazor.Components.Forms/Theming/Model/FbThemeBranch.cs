@@ -9,6 +9,8 @@ public sealed class FbThemeBranch
     }
 
     public string Name { get; }
+
     public FbThemeFormTextVariant? TextVariant { get; init; }
+
     public IReadOnlyList<FbThemeVariant> Variants { get; init; } = [];
 }
