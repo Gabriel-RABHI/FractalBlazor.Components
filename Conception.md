@@ -335,10 +335,12 @@ Très bien. Mes composants sont configurés via des paramètres booléens :
 
 ```
 <FbRow GL WFL PL L1>
+    <FbText XS T>Extra Small</FbText>
     <FbText S T>Small</FbText>
     <FbText M T>Medium</FbText>
     <FbText L T>Large</FbText>
-    <FbText X T>Extra Large</FbText>
+    <FbText XL T>Extra Large</FbText>
+    <FbText XXL T>Extra Extra Large</FbText>
 </FbRow>
 ```
 
@@ -378,10 +380,12 @@ Voici un example de composant :
 public enum FbTextSize : byte
 {
     None,
+    XS,
     S,
     M,
     L,
-    X
+    XL,
+    XXL
 }
 
 public enum FbTextWeight : byte
@@ -417,7 +421,7 @@ public enum FbTextModifiers : byte
 
 public class FbText : FbComponentBase
 {
-    private static string[] FbTextSizeClasses = { "", "fb-t-s ", "fb-t-m ", "fb-t-l ", "fb-t-x " };
+    private static string[] FbTextSizeClasses = { "", "fb-t-xs ", "fb-t-s ", "fb-t-m ", "fb-t-l ", "fb-t-xl ", "fb-t-xxl " };
     private static string[] FbTextWeightClasses = { "", "fb-t-t ", "fb-t-b ", "fb-t-xb " };
     private static string[] FbTextIntentClasses = { "", "fb-t-shadow ", "fb-t-mute ", "fb-t-acc ", "fb-t-pri ", "fb-t-err " };
     private static string[] FbTextModifiersClasses = { "", "fb-t-nw ", "fb-t-tr " };
@@ -431,6 +435,9 @@ public class FbText : FbComponentBase
 
     // -------- Scale
     [Parameter]
+    public bool XS { get => _size == FbTextSize.XS; set => _size = FbTextSize.XS; }
+
+    [Parameter]
     public bool S { get => _size == FbTextSize.S; set => _size = FbTextSize.S; }
 
     [Parameter]
@@ -440,7 +447,10 @@ public class FbText : FbComponentBase
     public bool L { get => _size == FbTextSize.L; set => _size = FbTextSize.L; }
 
     [Parameter]
-    public bool X { get => _size == FbTextSize.X; set => _size = FbTextSize.X; }
+    public bool XL { get => _size == FbTextSize.XL; set => _size = FbTextSize.XL; }
+
+    [Parameter]
+    public bool XXL { get => _size == FbTextSize.XXL; set => _size = FbTextSize.XXL; }
 
     // -------- Weight
     [Parameter]
@@ -1037,6 +1047,10 @@ public override Task SetParametersAsync(ParameterView parameters)
     {
         switch (parameter.Name)
         {
+            case nameof(XS):
+                if (parameter.Value is true) _size = FbTextSize.XS;
+                break;
+
             case nameof(S):
                 if (parameter.Value is true) _size = FbTextSize.S;
                 break;
@@ -1049,8 +1063,12 @@ public override Task SetParametersAsync(ParameterView parameters)
                 if (parameter.Value is true) _size = FbTextSize.L;
                 break;
 
-            case nameof(X):
-                if (parameter.Value is true) _size = FbTextSize.X;
+            case nameof(XL):
+                if (parameter.Value is true) _size = FbTextSize.XL;
+                break;
+
+            case nameof(XXL):
+                if (parameter.Value is true) _size = FbTextSize.XXL;
                 break;
 
             case nameof(T):

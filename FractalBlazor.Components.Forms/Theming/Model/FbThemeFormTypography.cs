@@ -10,6 +10,8 @@ public sealed class FbThemeFormTypography
 
     public string? LineHeight { get; init; }
 
+    public string? ExtraSmallCoef { get; init; }
+
     public string? SmallCoef { get; init; }
 
     public string? MediumCoef { get; init; }
@@ -17,6 +19,8 @@ public sealed class FbThemeFormTypography
     public string? LargeCoef { get; init; }
 
     public string? ExtraLargeCoef { get; init; }
+
+    public string? ExtraExtraLargeCoef { get; init; }
 
     public string? ThinWeight { get; init; }
 
@@ -32,10 +36,12 @@ public sealed class FbThemeFormTypography
         CodeFontFamily = "'code-font',monospace",
         FontSizeBase = "13px",
         LineHeight = "1.35",
+        ExtraSmallCoef = "0.7",
         SmallCoef = "0.85",
         MediumCoef = "1",
         LargeCoef = "1.2",
         ExtraLargeCoef = "1.5",
+        ExtraExtraLargeCoef = "2",
         ThinWeight = "300",
         DefaultWeight = "400",
         BoldWeight = "600",
@@ -48,10 +54,12 @@ public sealed class FbThemeFormTypography
         CodeFontFamily = "'code-font',monospace",
         FontSizeBase = "14px",
         LineHeight = "1.4",
+        ExtraSmallCoef = "0.7",
         SmallCoef = "0.85",
         MediumCoef = "1",
         LargeCoef = "1.25",
         ExtraLargeCoef = "1.6",
+        ExtraExtraLargeCoef = "2",
         ThinWeight = "300",
         DefaultWeight = "400",
         BoldWeight = "600",
@@ -64,10 +72,12 @@ public sealed class FbThemeFormTypography
         CodeFontFamily = "'code-font',monospace",
         FontSizeBase = "16px",
         LineHeight = "1.5",
+        ExtraSmallCoef = "0.75",
         SmallCoef = "0.875",
         MediumCoef = "1",
         LargeCoef = "1.25",
         ExtraLargeCoef = "1.625",
+        ExtraExtraLargeCoef = "2",
         ThinWeight = "300",
         DefaultWeight = "400",
         BoldWeight = "600",

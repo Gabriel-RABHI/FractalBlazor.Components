@@ -82,7 +82,7 @@ public sealed class FbThemeLayoutColors
 }
 ```
 
-Les espacements S/M/L/X alimentent les margins, paddings et gutters. Les rayons S/M/L/X alimentent les `border-radius`. Les frames Light/Medium/Strong définissent à la fois un taux de mélange et une épaisseur.
+Les espacements S/M/L/X alimentent les margins, paddings et gutters. Les rayons S/M/L/X alimentent les `border-radius`. Les frames Light/Medium/Strong définissent leur force par leur taux de mélange ; leur épaisseur est fixée à `1px`.
 
 ### Groupes Forms
 
@@ -108,10 +108,12 @@ public sealed class FbThemeFormTypography
     public string? FontSizeBase { get; init; }
     public string? LineHeight { get; init; }
 
+    public string? ExtraSmallCoef { get; init; }
     public string? SmallCoef { get; init; }
     public string? MediumCoef { get; init; }
     public string? LargeCoef { get; init; }
     public string? ExtraLargeCoef { get; init; }
+    public string? ExtraExtraLargeCoef { get; init; }
 
     public string? ThinWeight { get; init; }
     public string? DefaultWeight { get; init; }
@@ -120,7 +122,7 @@ public sealed class FbThemeFormTypography
 }
 ```
 
-Les tailles de texte ne constituent pas un groupe séparé : elles font partie de `FbThemeFormTypography`. Les quatre tailles sont calculées à partir de `FontSizeBase` et des coefficients S/M/L/X.
+Les tailles de texte ne constituent pas un groupe séparé : elles font partie de `FbThemeFormTypography`. Les six tailles sont calculées à partir de `FontSizeBase` et des coefficients XS/S/M/L/XL/XXL.
 
 Toutes les propriétés sont nullable afin qu'un thème dérivé ne déclare que ses différences. `null` signifie « hériter ». Une chaîne vide ou composée d'espaces est invalide et doit être refusée par la validation.
 
@@ -469,10 +471,12 @@ La typographie, qui appartient à Main et n'est pas affectée par `FbVariant`, e
 --fb-txt-base-size
 --fb-txt-base-weight
 --fb-txt-base-line-height
+--fb-txt-xs-coef
 --fb-txt-s-coef
 --fb-txt-m-coef
 --fb-txt-l-coef
---fb-txt-x-coef
+--fb-txt-xl-coef
+--fb-txt-xxl-coef
 --fb-txt-t-weight
 --fb-txt-b-weight
 --fb-txt-xb-weight
@@ -853,10 +857,10 @@ Les règles à suivre sont :
 - employer systématiquement `--fb-bg-low-anchor` et `--fb-fg-low-anchor` pour les ancres basses actives ;
 - conserver les variables `--fb-current-*` pour tous les états temporaires ;
 - compléter les scopes afin qu'ils réinitialisent à la fois fond, texte et frame ;
-- faire consommer `--fb-txt-m-coef` à la taille M, comme les coefficients S/L/X ;
+- faire consommer à chaque taille son coefficient XS/S/M/L/XL/XXL ;
 - ajouter les variables de familles de fontes au lieu de coder `text-font` et `code-font` directement dans les règles ;
 - retirer toute logique de thème ou de variante des classes CSS statiques ;
-- garantir que le bloc `<style>` définit aussi `Tint`, `SurfaceMix` et les tailles de frame pour chaque variante ;
+- garantir que le bloc `<style>` définit aussi `Tint`, `SurfaceMix` et les mixes de frame pour chaque variante ;
 - garantir que `FbVariant` redirige exactement la même liste de tokens que celle émise par `FbTheme` ;
 - centraliser la création des noms de variables pour que Layout, Forms, `FbTheme` et `FbVariant` produisent exactement la même nomenclature.
 

@@ -17,6 +17,18 @@ public sealed class FbVariant : FbComponentBase
     [Parameter]
     public string Style { get; set; } = "";
 
+    /// <summary>
+    /// Swap background colors (fill, frames)
+    /// </summary>
+    [Parameter]
+    public bool SB { get; set; }
+
+    /// <summary>
+    /// Swap foreground colors (text, icons)
+    /// </summary>
+    [Parameter]
+    public bool SF { get; set; }
+
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 

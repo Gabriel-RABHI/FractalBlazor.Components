@@ -72,6 +72,10 @@ pre, code {
 }
 
 /* 1. Scale */
+.fb-t-xs {
+    font-size: calc(var(--fb-txt-base-size) * var(--fb-txt-xs-coef));
+}
+
 .fb-t-s {
     font-size: calc(var(--fb-txt-base-size) * var(--fb-txt-s-coef));
 }
@@ -84,10 +88,14 @@ pre, code {
     font-size: calc(var(--fb-txt-base-size) * var(--fb-txt-l-coef));
 }
 /* ~16px */
-.fb-t-x {
-    font-size: calc(var(--fb-txt-base-size) * var(--fb-txt-x-coef));
+.fb-t-xl {
+    font-size: calc(var(--fb-txt-base-size) * var(--fb-txt-xl-coef));
 }
 /* ~20px */
+
+.fb-t-xxl {
+    font-size: calc(var(--fb-txt-base-size) * var(--fb-txt-xxl-coef));
+}
 
 /* 2. Weight */
 .fb-t-t {

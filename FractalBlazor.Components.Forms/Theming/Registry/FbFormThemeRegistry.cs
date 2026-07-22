@@ -123,10 +123,12 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
             CodeFontFamily = Required(FindThemeValue(theme, value => value.Typography?.CodeFontFamily), "Typography.CodeFontFamily"),
             FontSizeBase = Required(FindThemeValue(theme, value => value.Typography?.FontSizeBase), "Typography.FontSizeBase"),
             LineHeight = Required(FindThemeValue(theme, value => value.Typography?.LineHeight), "Typography.LineHeight"),
+            ExtraSmallCoef = Required(FindThemeValue(theme, value => value.Typography?.ExtraSmallCoef), "Typography.ExtraSmallCoef"),
             SmallCoef = Required(FindThemeValue(theme, value => value.Typography?.SmallCoef), "Typography.SmallCoef"),
             MediumCoef = Required(FindThemeValue(theme, value => value.Typography?.MediumCoef), "Typography.MediumCoef"),
             LargeCoef = Required(FindThemeValue(theme, value => value.Typography?.LargeCoef), "Typography.LargeCoef"),
             ExtraLargeCoef = Required(FindThemeValue(theme, value => value.Typography?.ExtraLargeCoef), "Typography.ExtraLargeCoef"),
+            ExtraExtraLargeCoef = Required(FindThemeValue(theme, value => value.Typography?.ExtraExtraLargeCoef), "Typography.ExtraExtraLargeCoef"),
             ThinWeight = Required(FindThemeValue(theme, value => value.Typography?.ThinWeight), "Typography.ThinWeight"),
             DefaultWeight = Required(FindThemeValue(theme, value => value.Typography?.DefaultWeight), "Typography.DefaultWeight"),
             BoldWeight = Required(FindThemeValue(theme, value => value.Typography?.BoldWeight), "Typography.BoldWeight"),
@@ -377,7 +379,7 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
         => Validate(value is null ? [] : [value.DefaultHighMix, value.SubtleHighMix, value.MutedHighMix, value.HighlightHighMix]);
     
     private static void ValidateValues(FbThemeFormTypography? value)
-        => Validate(value is null ? [] : [value.TextFontFamily, value.CodeFontFamily, value.FontSizeBase, value.LineHeight, value.SmallCoef, value.MediumCoef, value.LargeCoef, value.ExtraLargeCoef, value.ThinWeight, value.DefaultWeight, value.BoldWeight, value.ExtraBoldWeight]);
+        => Validate(value is null ? [] : [value.TextFontFamily, value.CodeFontFamily, value.FontSizeBase, value.LineHeight, value.ExtraSmallCoef, value.SmallCoef, value.MediumCoef, value.LargeCoef, value.ExtraLargeCoef, value.ExtraExtraLargeCoef, value.ThinWeight, value.DefaultWeight, value.BoldWeight, value.ExtraBoldWeight]);
 
     private static void Validate(IEnumerable<string?> values)
     {

@@ -14,6 +14,10 @@ namespace FractalBlazor.Components.Forms.Display
         /// </summary>
         None,
         /// <summary>
+        /// Extra small
+        /// </summary>
+        XS,
+        /// <summary>
         /// Small
         /// </summary>
         S,
@@ -22,13 +26,17 @@ namespace FractalBlazor.Components.Forms.Display
         /// </summary>
         M,
         /// <summary>
-        /// Large
+        /// Large (H3)
         /// </summary>
         L,
         /// <summary>
-        /// Extra large
+        /// Extra large (H2)
         /// </summary>
-        X
+        XL,
+        /// <summary>
+        /// Extra extra large (H1)
+        /// </summary>
+        XXL
     }
 
     public enum FbTextWeight : byte
@@ -55,7 +63,7 @@ namespace FractalBlazor.Components.Forms.Display
 
     public class FbText : FbComponentBase
     {
-        private static string[] FbTextSizeClasses = { "", "fb-t-s ", "fb-t-m ", "fb-t-l ", "fb-t-x " };
+        private static string[] FbTextSizeClasses = { "", "fb-t-xs ", "fb-t-s ", "fb-t-m ", "fb-t-l ", "fb-t-xl ", "fb-t-xxl " };
         private static string[] FbTextWeightClasses = { "", "fb-t-t ", "fb-t-b ", "fb-t-xb " };
         private static string[] FbTextIntentClasses = { "", "fb-fg-subtle ", "fb-fg-muted ", "fb-fg-highlight " };
         private static string[] FbTextModifiersClasses = { "", "fb-t-nw ", "fb-t-tr " };
@@ -69,6 +77,9 @@ namespace FractalBlazor.Components.Forms.Display
 
         // -------- Scale
         [Parameter]
+        public bool XS { get => _size == FbTextSize.XS; set { if (value) _size = FbTextSize.XS; } }
+
+        [Parameter]
         public bool S { get => _size == FbTextSize.S; set { if (value) _size = FbTextSize.S; } }
 
         [Parameter]
@@ -78,7 +89,10 @@ namespace FractalBlazor.Components.Forms.Display
         public bool L { get => _size == FbTextSize.L; set { if (value) _size = FbTextSize.L; } }
 
         [Parameter]
-        public bool X { get => _size == FbTextSize.X; set { if (value) _size = FbTextSize.X; } }
+        public bool XL { get => _size == FbTextSize.XL; set { if (value) _size = FbTextSize.XL; } }
+
+        [Parameter]
+        public bool XXL { get => _size == FbTextSize.XXL; set { if (value) _size = FbTextSize.XXL; } }
 
         // -------- Weight
         [Parameter]

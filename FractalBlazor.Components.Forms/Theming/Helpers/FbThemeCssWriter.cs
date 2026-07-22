@@ -34,10 +34,12 @@ public static class FbThemeCssWriter
         Append(builder, "--fb-txt-base-size", theme.Typography.FontSizeBase);
         Append(builder, "--fb-txt-base-weight", theme.Typography.DefaultWeight);
         Append(builder, "--fb-txt-base-line-height", theme.Typography.LineHeight);
+        Append(builder, "--fb-txt-xs-coef", theme.Typography.ExtraSmallCoef);
         Append(builder, "--fb-txt-s-coef", theme.Typography.SmallCoef);
         Append(builder, "--fb-txt-m-coef", theme.Typography.MediumCoef);
         Append(builder, "--fb-txt-l-coef", theme.Typography.LargeCoef);
-        Append(builder, "--fb-txt-x-coef", theme.Typography.ExtraLargeCoef);
+        Append(builder, "--fb-txt-xl-coef", theme.Typography.ExtraLargeCoef);
+        Append(builder, "--fb-txt-xxl-coef", theme.Typography.ExtraExtraLargeCoef);
         Append(builder, "--fb-txt-t-weight", theme.Typography.ThinWeight);
         Append(builder, "--fb-txt-b-weight", theme.Typography.BoldWeight);
         Append(builder, "--fb-txt-xb-weight", theme.Typography.ExtraBoldWeight);
