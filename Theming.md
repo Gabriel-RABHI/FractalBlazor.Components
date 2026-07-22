@@ -64,7 +64,7 @@ public sealed class FbThemeLayoutCorners
     public string? X { get; init; }
 }
 
-public sealed class FbThemeLayoutBorders
+public sealed class FbThemeLayoutBordersMix
 {
     public string? LightMix { get; init; }
     public string? MediumMix { get; init; }
@@ -74,11 +74,20 @@ public sealed class FbThemeLayoutBorders
 public sealed class FbThemeLayoutColors
 {
     public string? LowAnchor { get; init; }
-    public string? Tint { get; init; }
     public string? HighAnchor { get; init; }
+}
+
+public sealed class FbThemeLayoutSurfaceMix
+{
     public string? SurfaceMix { get; init; }
     public string? AccentOffset { get; init; }
     public string? HighlightOffset { get; init; }
+}
+
+public sealed class FbThemeMasterTint
+{
+    public string? ColorTint { get; init; }
+    public int TintPercent { get; init; }
 }
 ```
 
@@ -135,10 +144,10 @@ Un thème Forms possède trois couches strictes.
 | Couche | Contenu | Portée |
 | --- | --- | --- |
 | Main | `Spacings`, `Corners`, `Typography` | Commun à toutes les branches et variantes du thème |
-| Branch | `TextVariant` | Propre à une branche, par exemple `Dark` ou `Light` |
-| Variant | `LayoutColors`, `FormColors`, `Borders` | Propre à un état visuel local |
+| Branch | `MasterTint`, `TextVariant`, `BordersMix`, `SurfaceMix` | Propre à une branche Dark/Light |
+| Variant | `LayoutColors`, `FormColors` | Propre à un état visuel local |
 
-La couche Main ne contient pas les couleurs. Une branche choisit les intensités de texte adaptées à son contraste. Chaque variante fournit ensuite les ancres de fond, les ancres de premier plan et les frames correspondant à cette branche.
+La couche Main ne contient pas les couleurs. Une branche choisit la teinte maître d’échantillonnage ainsi que les mélanges de texte, de surface et de frame adaptés à son contraste. Chaque variante fournit ensuite uniquement les ancres de fond et de premier plan.
 
 Cette séparation permet à `Error` d'avoir des couleurs différentes en `Dark` et en `Light`, tout en partageant les mêmes espacements, rayons et règles typographiques.
 
@@ -172,7 +181,10 @@ public sealed class FbThemeBranch
     public string Name { get; }
 
     // Branch
+    public FbThemeMasterTint? MasterTint { get; init; }
     public FbThemeFormTextVariant? TextVariant { get; init; }
+    public FbThemeLayoutBordersMix? BordersMix { get; init; }
+    public FbThemeLayoutSurfaceMix? SurfaceMix { get; init; }
 
     public IReadOnlyList<FbThemeVariant> Variants { get; init; }
         = Array.Empty<FbThemeVariant>();
@@ -187,7 +199,6 @@ public sealed class FbThemeVariant
     // Variant
     public FbThemeLayoutColors? LayoutColors { get; init; }
     public FbThemeFormColors? FormColors { get; init; }
-    public FbThemeLayoutBorders? Borders { get; init; }
 }
 ```
 
@@ -235,6 +246,7 @@ Il respecte les invariants suivants :
 - les groupes Main sont entièrement renseignés ;
 - il contient les branches `Dark` et `Light` ;
 - chaque branche contient les variantes `Default`, `Selected`, `Error`, `Warning`, `Disabled`, `Success` et `Info` ;
+- toutes les ancres du thème par défaut sont échantillonnées depuis `FbThemeBaseColors` avec le `MasterTint` de leur branche ;
 - chaque valeur terminale est non null après résolution.
 
 Le constructeur sans argument ne doit pas créer implicitement ce thème. La fabrique rend l'intention explicite et évite de fabriquer plusieurs racines indépendantes par erreur.
@@ -351,7 +363,6 @@ var brandTheme = new FbThemeSetup("Brand", registry.Default)
                     LayoutColors = new FbThemeLayoutColors
                     {
                         LowAnchor = "#fff4f5",
-                        Tint = "#ffd9dd",
                         HighAnchor = "#701824"
                     },
                     FormColors = new FbThemeFormColors
@@ -366,7 +377,7 @@ var brandTheme = new FbThemeSetup("Brand", registry.Default)
 };
 ```
 
-Les mixes et les frames non renseignés sont hérités de `Default/Light/Error`.
+Les ancres non renseignées sont héritées de `Default/Light/Error`. Les mélanges de surface et de frame sont hérités au niveau de `Default/Light`.
 
 ## Presets
 
@@ -415,18 +426,13 @@ La variante fait partie du nom de la variable :
 
 ```css
 --fb-default-bg-low-anchor: #111113;
---fb-default-bg-tint: #34343a;
 --fb-default-bg-high-anchor: #f7f7f8;
---fb-default-bg-surface-mix: 8%;
---fb-default-bg-accent-offset: 10%;
---fb-default-bg-highlight-offset: 18%;
 
 --fb-error-bg-low-anchor: #2a0f14;
---fb-error-bg-tint: #4a1820;
 --fb-error-bg-high-anchor: #fff5f6;
---fb-error-bg-surface-mix: 10%;
---fb-error-bg-accent-offset: 12%;
---fb-error-bg-highlight-offset: 22%;
+--fb-bg-surface-mix: 8%;
+--fb-bg-accent-offset: 10%;
+--fb-bg-highlight-offset: 18%;
 ```
 
 Le même principe s'applique aux couleurs de premier plan et aux frames :
@@ -434,11 +440,12 @@ Le même principe s'applique aux couleurs de premier plan et aux frames :
 ```css
 --fb-default-fg-low-anchor
 --fb-default-fg-high-anchor
---fb-default-frame-light-mix
 
 --fb-error-fg-low-anchor
 --fb-error-fg-high-anchor
---fb-error-frame-light-mix
+--fb-frame-light-mix
+--fb-frame-medium-mix
+--fb-frame-strong-mix
 ```
 
 Ces variables sont des valeurs sources. Elles ne sont jamais consommées directement par les classes CSS des composants.
@@ -493,11 +500,7 @@ Les classes CSS statiques ne consomment que les variables actives. Dans le bloc 
 --fb-radius-s: var(--fb-default-radius-s);
 
 --fb-bg-low-anchor: var(--fb-default-bg-low-anchor);
---fb-bg-tint: var(--fb-default-bg-tint);
 --fb-bg-high-anchor: var(--fb-default-bg-high-anchor);
---fb-bg-surface-mix: var(--fb-default-bg-surface-mix);
---fb-bg-accent-offset: var(--fb-default-bg-accent-offset);
---fb-bg-highlight-offset: var(--fb-default-bg-highlight-offset);
 
 --fb-fg-low-anchor: var(--fb-default-fg-low-anchor);
 --fb-fg-high-anchor: var(--fb-default-fg-high-anchor);
@@ -506,27 +509,23 @@ Les classes CSS statiques ne consomment que les variables actives. Dans le bloc 
 --fb-fg-muted-high-mix: var(--fb-default-fg-muted-high-mix);
 --fb-fg-highlight-high-mix: var(--fb-default-fg-highlight-high-mix);
 
---fb-frame-light-mix: var(--fb-default-frame-light-mix);
---fb-frame-medium-mix: var(--fb-default-frame-medium-mix);
---fb-frame-strong-mix: var(--fb-default-frame-strong-mix);
+--fb-bg-surface-mix: 8%;
+--fb-bg-accent-offset: 10%;
+--fb-bg-highlight-offset: 18%;
+--fb-frame-light-mix: 8%;
+--fb-frame-medium-mix: 14%;
+--fb-frame-strong-mix: 28%;
 ```
 
 Une variante ne change jamais les classes CSS. Elle redéfinit localement les mêmes variables actives pour les faire pointer vers un autre préfixe :
 
 ```css
 --fb-bg-low-anchor: var(--fb-error-bg-low-anchor);
---fb-bg-tint: var(--fb-error-bg-tint);
 --fb-bg-high-anchor: var(--fb-error-bg-high-anchor);
---fb-bg-surface-mix: var(--fb-error-bg-surface-mix);
---fb-bg-accent-offset: var(--fb-error-bg-accent-offset);
---fb-bg-highlight-offset: var(--fb-error-bg-highlight-offset);
 
 --fb-fg-low-anchor: var(--fb-error-fg-low-anchor);
 --fb-fg-high-anchor: var(--fb-error-fg-high-anchor);
 
---fb-frame-light-mix: var(--fb-error-frame-light-mix);
---fb-frame-medium-mix: var(--fb-error-frame-medium-mix);
---fb-frame-strong-mix: var(--fb-error-frame-strong-mix);
 ```
 
 Les valeurs sources de chaque variante sont complètes après résolution C#. Les redirections ne nécessitent donc ni valeur en dur, ni fallback, ni calcul de thème dans `FbVariant`.
@@ -564,7 +563,7 @@ Les formules existantes en `oklab` restent statiques et relatives aux variables 
 --fb-bg-surface: color-mix(
     in oklab,
     var(--fb-bg-low-anchor),
-    var(--fb-bg-tint) var(--fb-current-bg-surface-mix)
+    var(--fb-bg-high-anchor) var(--fb-current-bg-surface-mix)
 );
 
 --fb-bg-accent: color-mix(
@@ -621,33 +620,23 @@ Avec le sélecteur par défaut, le DOM produit est de la forme :
         --fb-default-space-m: 0.5rem;
 
         --fb-default-bg-low-anchor: #f7f7f8;
-        --fb-default-bg-tint: #d8dae0;
         --fb-default-bg-high-anchor: #111113;
-        --fb-default-bg-surface-mix: 8%;
-        --fb-default-bg-accent-offset: 8%;
-        --fb-default-bg-highlight-offset: 16%;
 
         --fb-error-bg-low-anchor: #fff4f5;
-        --fb-error-bg-tint: #ffd9dd;
         --fb-error-bg-high-anchor: #701824;
-        --fb-error-bg-surface-mix: 10%;
-        --fb-error-bg-accent-offset: 12%;
-        --fb-error-bg-highlight-offset: 22%;
 
         --fb-error-fg-low-anchor: #701824;
         --fb-error-fg-high-anchor: #ffffff;
-        --fb-error-frame-light-mix: 14%;
 
         --fb-bg-low-anchor: var(--fb-default-bg-low-anchor);
-        --fb-bg-tint: var(--fb-default-bg-tint);
         --fb-bg-high-anchor: var(--fb-default-bg-high-anchor);
-        --fb-bg-surface-mix: var(--fb-default-bg-surface-mix);
-        --fb-bg-accent-offset: var(--fb-default-bg-accent-offset);
-        --fb-bg-highlight-offset: var(--fb-default-bg-highlight-offset);
+        --fb-bg-surface-mix: 8%;
+        --fb-bg-accent-offset: 10%;
+        --fb-bg-highlight-offset: 18%;
 
         --fb-fg-low-anchor: var(--fb-default-fg-low-anchor);
         --fb-fg-high-anchor: var(--fb-default-fg-high-anchor);
-        --fb-frame-light-mix: var(--fb-default-frame-light-mix);
+        --fb-frame-light-mix: 8%;
     }
 </style>
 ```
@@ -678,22 +667,15 @@ ActiveReference("Error", "bg-low-anchor");
 // --fb-bg-low-anchor:var(--fb-error-bg-low-anchor);
 ```
 
-La liste des tokens Variant est centralisée et partagée par le générateur du thème et par `FbVariant`. Ainsi, une propriété ajoutée à `FbThemeLayoutColors`, `FbThemeFormColors` ou `FbThemeLayoutBorders` est nécessairement définie dans le `<style>` et redirigée dans le scope local.
+La liste des tokens Variant est centralisée et partagée par le générateur du thème et par `FbVariant`. Elle contient uniquement les ancres de `FbThemeLayoutColors` et `FbThemeFormColors`. Les mélanges de surface et de frame restent au niveau de la branche.
 
 La liste initiale est :
 
 ```text
 bg-low-anchor
-bg-tint
 bg-high-anchor
-bg-surface-mix
-bg-accent-offset
-bg-highlight-offset
 fg-low-anchor
 fg-high-anchor
-frame-light-mix
-frame-medium-mix
-frame-strong-mix
 ```
 
 Les filets ont une épaisseur fixe de `1px`. Leur force visuelle dépend uniquement des tokens `frame-*-mix`.
@@ -765,16 +747,14 @@ Pour `Error`, le rendu est de la forme :
 ```html
 <div class="fb-theme-scope"
      style="--fb-bg-low-anchor:var(--fb-error-bg-low-anchor);
-            --fb-bg-tint:var(--fb-error-bg-tint);
             --fb-bg-high-anchor:var(--fb-error-bg-high-anchor);
             --fb-fg-low-anchor:var(--fb-error-fg-low-anchor);
-            --fb-fg-high-anchor:var(--fb-error-fg-high-anchor);
-            --fb-frame-light-mix:var(--fb-error-frame-light-mix);">
+            --fb-fg-high-anchor:var(--fb-error-fg-high-anchor);">
     ...
 </div>
 ```
 
-Le rendu réel contient la redirection de tous les tokens de `LayoutColors`, `FormColors` et `Borders`. Il ne contient aucune valeur calculée en C# et aucune classe propre à `Error`.
+Le rendu réel contient la redirection de tous les tokens de `LayoutColors` et `FormColors`. Il ne contient aucune valeur calculée en C# et aucune classe propre à `Error`.
 
 Une erreur de thème, de branche ou de variante doit produire une exception explicite en développement. Une stratégie de fallback vers `Default` peut être configurable pour la production, mais ne doit pas masquer silencieusement une faute de configuration pendant le développement.
 
@@ -826,6 +806,9 @@ public sealed class FbLayoutThemeSetup
     // Main
     public FbThemeLayoutSpacings? Spacings { get; init; }
     public FbThemeLayoutCorners? Corners { get; init; }
+    public FbThemeMasterTint? MasterTint { get; init; }
+    public FbThemeLayoutBordersMix? BordersMix { get; init; }
+    public FbThemeLayoutSurfaceMix? SurfaceMix { get; init; }
 
     public IReadOnlyList<FbLayoutThemeVariant> Variants { get; init; }
         = Array.Empty<FbLayoutThemeVariant>();
@@ -837,11 +820,10 @@ public sealed class FbLayoutThemeVariant
 
     public string Name { get; }
     public FbThemeLayoutColors? LayoutColors { get; init; }
-    public FbThemeLayoutBorders? Borders { get; init; }
 }
 ```
 
-La résolution suit les mêmes règles que le thème Forms, sans niveau Branch. `FbLayoutTheme` génère une balise `<style>` contenant la variante `Default`, toutes les variantes Layout résolues et les alias actifs. `FbLayoutVariant` rend une div neutre dont l'attribut `style` redirige les variables actives de fond et de frame vers le préfixe choisi.
+La résolution suit les mêmes règles que le thème Forms, sans niveau Branch. `FbLayoutTheme` génère une balise `<style>` contenant la variante `Default`, toutes les variantes Layout résolues et les alias actifs. `FbLayoutVariant` rend une div neutre dont l'attribut `style` redirige les ancres de fond vers le préfixe choisi ; les mélanges de surface et de frame restent communs au thème Layout.
 
 Aucune classe propre à un thème ou à une variante Layout n'est générée.
 
@@ -859,11 +841,11 @@ Les règles à suivre sont :
 - faire consommer à chaque taille son coefficient XS/S/M/L/XL/XXL ;
 - ajouter les variables de familles de fontes au lieu de coder `text-font` et `code-font` directement dans les règles ;
 - retirer toute logique de thème ou de variante des classes CSS statiques ;
-- garantir que le bloc `<style>` définit aussi `Tint`, `SurfaceMix` et les mixes de frame pour chaque variante ;
+- garantir que le bloc `<style>` définit les ancres de chaque variante et les mixes de surface et de frame de la branche ;
 - garantir que `FbVariant` redirige exactement la même liste de tokens que celle émise par `FbTheme` ;
 - centraliser la création des noms de variables pour que Layout, Forms, `FbTheme` et `FbVariant` produisent exactement la même nomenclature.
 
-La classe statique actuellement nommée `FbTheme` est supprimée ; ce nom est ensuite attribué au composant `<FbTheme>`. Les anciens helpers de palettes, alias de propriétés et variantes orthographiées incorrectement ne sont pas conservés.
+La classe statique actuellement nommée `FbTheme` est supprimée ; ce nom est ensuite attribué au composant `<FbTheme>`. `FbThemeBaseColors` devient l’unique source de couleurs du thème par défaut ; les alias de propriétés et variantes orthographiées incorrectement ne sont pas conservés.
 
 Les composants de configuration séparés du socle sont remplacés par la nouvelle architecture :
 

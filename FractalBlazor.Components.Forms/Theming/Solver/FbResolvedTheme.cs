@@ -12,7 +12,10 @@ public sealed class FbResolvedTheme
         FbThemeLayoutSpacings spacings,
         FbThemeLayoutCorners corners,
         FbThemeFormTypography typography,
-        FbThemeFormTextVariant textVariant,
+        FbThemeMasterTint masterTint,
+        FbThemeFormTextVariantMix textVariant,
+        FbThemeLayoutBordersMix bordersMix,
+        FbThemeLayoutSurfaceMix surfaceMix,
         IReadOnlyDictionary<string, FbResolvedThemeVariant> variants,
         IReadOnlyList<string> variantOrder)
     {
@@ -21,7 +24,10 @@ public sealed class FbResolvedTheme
         Spacings = spacings;
         Corners = corners;
         Typography = typography;
+        MasterTint = masterTint;
         TextVariant = textVariant;
+        BordersMix = bordersMix;
+        SurfaceMix = surfaceMix;
         Variants = variants;
         VariantOrder = variantOrder;
     }
@@ -36,7 +42,13 @@ public sealed class FbResolvedTheme
 
     public FbThemeFormTypography Typography { get; }
 
-    public FbThemeFormTextVariant TextVariant { get; }
+    public FbThemeMasterTint MasterTint { get; }
+
+    public FbThemeFormTextVariantMix TextVariant { get; }
+
+    public FbThemeLayoutBordersMix BordersMix { get; }
+
+    public FbThemeLayoutSurfaceMix SurfaceMix { get; }
 
     public IReadOnlyDictionary<string, FbResolvedThemeVariant> Variants { get; }
 

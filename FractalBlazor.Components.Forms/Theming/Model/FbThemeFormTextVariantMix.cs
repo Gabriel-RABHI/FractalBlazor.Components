@@ -1,6 +1,6 @@
 namespace FractalBlazor.Components.Forms.Theming.Model;
 
-public sealed class FbThemeFormTextVariant
+public sealed class FbThemeFormTextVariantMix
 {
     public string? DefaultHighMix { get; init; }
 

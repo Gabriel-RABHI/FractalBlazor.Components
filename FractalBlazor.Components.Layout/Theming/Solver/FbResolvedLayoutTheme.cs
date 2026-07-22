@@ -9,12 +9,18 @@ public sealed class FbResolvedLayoutTheme
         string name,
         FbThemeLayoutSpacings spacings,
         FbThemeLayoutCorners corners,
+        FbThemeMasterTint masterTint,
+        FbThemeLayoutBordersMix bordersMix,
+        FbThemeLayoutSurfaceMix surfaceMix,
         IReadOnlyDictionary<string, FbResolvedLayoutThemeVariant> variants,
         IReadOnlyList<string> variantOrder)
     {
         Name = name;
         Spacings = spacings;
         Corners = corners;
+        MasterTint = masterTint;
+        BordersMix = bordersMix;
+        SurfaceMix = surfaceMix;
         Variants = variants;
         VariantOrder = variantOrder;
     }
@@ -24,6 +30,12 @@ public sealed class FbResolvedLayoutTheme
     public FbThemeLayoutSpacings Spacings { get; }
 
     public FbThemeLayoutCorners Corners { get; }
+
+    public FbThemeMasterTint MasterTint { get; }
+
+    public FbThemeLayoutBordersMix BordersMix { get; }
+
+    public FbThemeLayoutSurfaceMix SurfaceMix { get; }
 
     public IReadOnlyDictionary<string, FbResolvedLayoutThemeVariant> Variants { get; }
 

@@ -19,5 +19,11 @@ public sealed class FbLayoutThemeSetup
 
     public FbThemeLayoutCorners? Corners { get; init; }
 
+    public FbThemeMasterTint? MasterTint { get; init; }
+
+    public FbThemeLayoutBordersMix? BordersMix { get; init; }
+
+    public FbThemeLayoutSurfaceMix? SurfaceMix { get; init; }
+
     public IReadOnlyList<FbLayoutThemeVariant> Variants { get; init; } = [];
 }

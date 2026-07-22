@@ -50,19 +50,10 @@ namespace FractalBlazor.Components.Forms.Inputs
                 _currentInputValue = Value;
         }
 
-        private string CurrentVarient => _hasFocus ? FbThemeVariants.Default : FbThemeVariants.Default;
 
         // --- Rendering ---
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
-        {
-            builder.OpenComponent<FbVariant>(0);
-            builder.AddAttribute( 1, nameof(FbVariant.Variant), CurrentVarient);
-            builder.AddAttribute( 2, nameof(FbVariant.ChildContent), (RenderFragment)BuildVariantContent);
-            builder.CloseComponent();
-        }
-
-        private void BuildVariantContent(RenderTreeBuilder builder)
         {
             builder.OpenComponent<FbRow>(0);
             builder.AddAttribute(1, nameof(FbRow.JVC), true);

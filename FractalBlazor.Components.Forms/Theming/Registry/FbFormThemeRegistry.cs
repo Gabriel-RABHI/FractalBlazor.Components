@@ -135,12 +135,34 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
             ExtraBoldWeight = Required(FindThemeValue(theme, value => value.Typography?.ExtraBoldWeight), "Typography.ExtraBoldWeight")
         };
 
-        var textVariant = new FbThemeFormTextVariant
+        var textVariant = new FbThemeFormTextVariantMix
         {
-            DefaultHighMix = Required(FindBranchValue(theme, branchName, value => value.TextVariant?.DefaultHighMix), $"{branchName}.TextVariant.DefaultHighMix"),
-            SubtleHighMix = Required(FindBranchValue(theme, branchName, value => value.TextVariant?.SubtleHighMix), $"{branchName}.TextVariant.SubtleHighMix"),
-            MutedHighMix = Required(FindBranchValue(theme, branchName, value => value.TextVariant?.MutedHighMix), $"{branchName}.TextVariant.MutedHighMix"),
-            HighlightHighMix = Required(FindBranchValue(theme, branchName, value => value.TextVariant?.HighlightHighMix), $"{branchName}.TextVariant.HighlightHighMix")
+            DefaultHighMix = Required(FindBranchValue(theme, branchName, value => value.TextVariantMix?.DefaultHighMix), $"{branchName}.TextVariant.DefaultHighMix"),
+            SubtleHighMix = Required(FindBranchValue(theme, branchName, value => value.TextVariantMix?.SubtleHighMix), $"{branchName}.TextVariant.SubtleHighMix"),
+            MutedHighMix = Required(FindBranchValue(theme, branchName, value => value.TextVariantMix?.MutedHighMix), $"{branchName}.TextVariant.MutedHighMix"),
+            HighlightHighMix = Required(FindBranchValue(theme, branchName, value => value.TextVariantMix?.HighlightHighMix), $"{branchName}.TextVariant.HighlightHighMix")
+        };
+
+        var masterTintDefinition = FindBranchSetting(theme, branchName, value => value.MasterTint)
+            ?? throw new InvalidOperationException($"The value '{branchName}.MasterTint' is not resolved.");
+        var masterTint = new FbThemeMasterTint
+        {
+            ColorTint = Required(masterTintDefinition.ColorTint, $"{branchName}.MasterTint.ColorTint"),
+            TintPercent = masterTintDefinition.TintPercent
+        };
+
+        var bordersMix = new FbThemeLayoutBordersMix
+        {
+            LightMix = Required(FindBranchValue(theme, branchName, value => value.BordersMix?.LightMix), $"{branchName}.BordersMix.LightMix"),
+            MediumMix = Required(FindBranchValue(theme, branchName, value => value.BordersMix?.MediumMix), $"{branchName}.BordersMix.MediumMix"),
+            StrongMix = Required(FindBranchValue(theme, branchName, value => value.BordersMix?.StrongMix), $"{branchName}.BordersMix.StrongMix")
+        };
+
+        var surfaceMix = new FbThemeLayoutSurfaceMix
+        {
+            SurfaceMix = Required(FindBranchValue(theme, branchName, value => value.SurfaceMix?.SurfaceMix), $"{branchName}.SurfaceMix.SurfaceMix"),
+            AccentOffset = Required(FindBranchValue(theme, branchName, value => value.SurfaceMix?.AccentOffset), $"{branchName}.SurfaceMix.AccentOffset"),
+            HighlightOffset = Required(FindBranchValue(theme, branchName, value => value.SurfaceMix?.HighlightOffset), $"{branchName}.SurfaceMix.HighlightOffset")
         };
 
         var variantNames = GetVariantNames(theme, branchName);
@@ -155,7 +177,10 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
             spacings,
             corners,
             typography,
+            masterTint,
             textVariant,
+            bordersMix,
+            surfaceMix,
             new ReadOnlyDictionary<string, FbResolvedThemeVariant>(variants),
             variantNames.AsReadOnly());
     }
@@ -166,18 +191,14 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
         if (!variantName.Equals(FbThemeVariants.Default, StringComparison.OrdinalIgnoreCase))
             defaultVariant = ResolveVariant(theme, branchName, FbThemeVariants.Default);
 
-        string Pick(Func<FbThemeVariant, string?> selector, Func<FbResolvedThemeVariant, string?> fallback, string name)
+        string Pick(Func<FbThemeColorVariant, string?> selector, Func<FbResolvedThemeVariant, string?> fallback, string name)
             => Required(FindVariantValue(theme, branchName, variantName, selector) ??
                         (defaultVariant is null ? null : fallback(defaultVariant)), name);
 
         var layoutColors = new FbThemeLayoutColors
         {
             LowAnchor = Pick(value => value.LayoutColors?.LowAnchor, value => value.LayoutColors.LowAnchor, $"{branchName}.{variantName}.LayoutColors.LowAnchor"),
-            Tint = Pick(value => value.LayoutColors?.Tint, value => value.LayoutColors.Tint, $"{branchName}.{variantName}.LayoutColors.Tint"),
-            HighAnchor = Pick(value => value.LayoutColors?.HighAnchor, value => value.LayoutColors.HighAnchor, $"{branchName}.{variantName}.LayoutColors.HighAnchor"),
-            SurfaceMix = Pick(value => value.LayoutColors?.SurfaceMix, value => value.LayoutColors.SurfaceMix, $"{branchName}.{variantName}.LayoutColors.SurfaceMix"),
-            AccentOffset = Pick(value => value.LayoutColors?.AccentOffset, value => value.LayoutColors.AccentOffset, $"{branchName}.{variantName}.LayoutColors.AccentOffset"),
-            HighlightOffset = Pick(value => value.LayoutColors?.HighlightOffset, value => value.LayoutColors.HighlightOffset, $"{branchName}.{variantName}.LayoutColors.HighlightOffset")
+            HighAnchor = Pick(value => value.LayoutColors?.HighAnchor, value => value.LayoutColors.HighAnchor, $"{branchName}.{variantName}.LayoutColors.HighAnchor")
         };
 
         var formColors = new FbThemeFormColors
@@ -186,14 +207,7 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
             HighAnchor = Pick(value => value.FormColors?.HighAnchor, value => value.FormColors.HighAnchor, $"{branchName}.{variantName}.FormColors.HighAnchor")
         };
 
-        var borders = new FbThemeLayoutBordersMix
-        {
-            LightMix = Pick(value => value.Borders?.LightMix, value => value.Borders.LightMix, $"{branchName}.{variantName}.Borders.LightMix"),
-            MediumMix = Pick(value => value.Borders?.MediumMix, value => value.Borders.MediumMix, $"{branchName}.{variantName}.Borders.MediumMix"),
-            StrongMix = Pick(value => value.Borders?.StrongMix, value => value.Borders.StrongMix, $"{branchName}.{variantName}.Borders.StrongMix")
-        };
-
-        return new FbResolvedThemeVariant(variantName, layoutColors, formColors, borders);
+        return new FbResolvedThemeVariant(variantName, layoutColors, formColors);
     }
 
     private static List<string> GetBranchNames(FbThemeSetup theme)
@@ -270,11 +284,28 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
         return null;
     }
 
+    private static T? FindBranchSetting<T>(FbThemeSetup theme, string branchName, Func<FbThemeBranch, T?> selector)
+        where T : class
+    {
+        for (var current = theme; current is not null; current = current.Parent)
+        {
+            var branch = current.Branches.FirstOrDefault(value => value.Name.Equals(branchName, StringComparison.OrdinalIgnoreCase));
+            if (branch is null)
+                continue;
+
+            var value = selector(branch);
+            if (value is not null)
+                return value;
+        }
+
+        return null;
+    }
+
     private static string? FindVariantValue(
         FbThemeSetup theme,
         string branchName,
         string variantName,
-        Func<FbThemeVariant, string?> selector)
+        Func<FbThemeColorVariant, string?> selector)
     {
         for (var current = theme; current is not null; current = current.Parent)
         {
@@ -301,7 +332,7 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
         return null;
     }
 
-    private static FbThemeVariant? FindVariant(FbThemeSetup theme, string branchName, string variantName)
+    private static FbThemeColorVariant? FindVariant(FbThemeSetup theme, string branchName, string variantName)
     {
         for (var current = theme; current is not null; current = current.Parent)
         {
@@ -349,10 +380,12 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
 
                 ValidateValues(variant.LayoutColors);
                 ValidateValues(variant.FormColors);
-                ValidateValues(variant.Borders);
             }
 
-            ValidateValues(branch.TextVariant);
+            ValidateValues(branch.MasterTint);
+            ValidateValues(branch.TextVariantMix);
+            ValidateValues(branch.BordersMix);
+            ValidateValues(branch.SurfaceMix);
         }
 
         ValidateValues(theme.Spacings);
@@ -367,15 +400,28 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
         => Validate(value is null ? [] : [value.S, value.M, value.L, value.X]);
 
     private static void ValidateValues(FbThemeLayoutColors? value)
-        => Validate(value is null ? [] : [value.LowAnchor, value.Tint, value.HighAnchor, value.SurfaceMix, value.AccentOffset, value.HighlightOffset]);
+        => Validate(value is null ? [] : [value.LowAnchor, value.HighAnchor]);
+
+    private static void ValidateValues(FbThemeMasterTint? value)
+    {
+        if (value is null)
+            return;
+
+        Validate([value.ColorTint]);
+        if (value.TintPercent is < 0 or > 100)
+            throw new InvalidOperationException("MasterTint.TintPercent must be between 0 and 100.");
+    }
     
     private static void ValidateValues(FbThemeLayoutBordersMix? value)
         => Validate(value is null ? [] : [value.LightMix, value.MediumMix, value.StrongMix]);
+
+    private static void ValidateValues(FbThemeLayoutSurfaceMix? value)
+        => Validate(value is null ? [] : [value.SurfaceMix, value.AccentOffset, value.HighlightOffset]);
     
     private static void ValidateValues(FbThemeFormColors? value)
         => Validate(value is null ? [] : [value.LowAnchor, value.HighAnchor]);
     
-    private static void ValidateValues(FbThemeFormTextVariant? value)
+    private static void ValidateValues(FbThemeFormTextVariantMix? value)
         => Validate(value is null ? [] : [value.DefaultHighMix, value.SubtleHighMix, value.MutedHighMix, value.HighlightHighMix]);
     
     private static void ValidateValues(FbThemeFormTypography? value)

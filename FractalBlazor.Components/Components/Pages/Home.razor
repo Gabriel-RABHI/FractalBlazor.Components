@@ -9,15 +9,18 @@
 @using FractalBlazor.Components.Forms.Theming
 @using FractalBlazor.Components.Layout
 @using FractalBlazor.Components.Forms.Theming.Constants
+@using FractalBlazor.Components.Layout.Colors
 
 
 <FbStack MS PL GL WRX WFS WBS>
     <FbRow GL WFM WSS WRL PL WBA>
         <FbRow GL WFL PL WBH WRM Hover>
+            <FbText XS T>Home</FbText>
             <FbText S T>Home</FbText>
             <FbText M T>Home</FbText>
             <FbText L T>Home</FbText>
             <FbText XL T>Home</FbText>
+            <FbText XXL T>Home</FbText>
         </FbRow>
         <FbRow GL WFS PM WBS SJVS>
             <FbText S>Home</FbText>
@@ -66,11 +69,60 @@
     </FbRow>
     <FbRow GL WGM PM>
         <FbVariant Variant="@FbThemeVariants.Selected">
-            <FbRow GL WGM PM WBA WFL>
-                <FbText S Highlight>Home</FbText>
-                <FbText M Highlight>Home</FbText>
-                <FbText L Highlight>Home</FbText>
-                <FbText XL Highlight>Home</FbText>
+            <FbRow GL PM WGM>
+                <FbText S Subtle>Select No back</FbText>
+            </FbRow>
+            <FbRow GL PM WGM WBS>
+                <FbText S Muted>Surface</FbText>
+            </FbRow>
+            <FbRow GL PM WGM WBA>
+                <FbText S>Accent</FbText>
+            </FbRow>
+            <FbRow GL PM WGM WBH>
+                <FbText S Highlight>Highlight</FbText>
+            </FbRow>
+        </FbVariant>
+        <FbVariant Variant="@FbThemeVariants.Error">
+            <FbRow GL PM WGM>
+                <FbText S Subtle>Error No back</FbText>
+            </FbRow>
+            <FbRow GL PM WGM WBS>
+                <FbText S Muted>Surface</FbText>
+            </FbRow>
+            <FbRow GL PM WGM WBA>
+                <FbText S>Accent</FbText>
+            </FbRow>
+            <FbRow GL PM WGM WBH>
+                <FbText S Highlight>Highlight</FbText>
+            </FbRow>
+        </FbVariant>
+        <FbVariant Variant="@FbThemeVariants.Disabled">
+            <FbRow GL PM WGM>
+                <FbText S Subtle>Disabled No back</FbText>
+            </FbRow>
+            <FbRow GL PM WGM WBS>
+                <FbText S Muted>Surface</FbText>
+            </FbRow>
+            <FbRow GL PM WGM WBA>
+                <FbText S>Accent</FbText>
+            </FbRow>
+            <FbRow GL PM WGM WBH>
+                <FbText S Highlight>Highlight</FbText>
+            </FbRow>
+        </FbVariant>
+        
+        <FbVariant Variant="@FbThemeVariants.Success">
+            <FbRow GL PM WGM>
+                <FbText S Subtle>Success No back</FbText>
+            </FbRow>
+            <FbRow GL PM WGM WBS>
+                <FbText S Muted>Surface</FbText>
+            </FbRow>
+            <FbRow GL PM WGM WBA>
+                <FbText S>Accent</FbText>
+            </FbRow>
+            <FbRow GL PM WGM WBH>
+                <FbText S Highlight>Highlight</FbText>
             </FbRow>
         </FbVariant>
     </FbRow>
@@ -99,6 +151,13 @@
         <FbRowItem>
             <FbInputText Handler="this" TAction="ChangeFirstNameAction" Value="@FirstName"/>
         </FbRowItem>
+        <FbVariant Variant="@FbThemeVariants.Error">
+            <FbInputText Handler="this" TAction="ChangeFirstNameAction" Value="@FirstName">
+                <StartContent>
+                    <FbText M Subtle>Name</FbText>
+                </StartContent>
+            </FbInputText>
+        </FbVariant>
     </FbRow>
     <div>
         @((MarkupString)FbThemeBaseColors.HtmlView)

@@ -3,9 +3,9 @@ using FractalBlazor.Components.Layout.Theming.Model;
 
 namespace FractalBlazor.Components.Forms.Theming.Model;
 
-public sealed class FbThemeVariant
+public sealed class FbThemeColorVariant
 {
-    public FbThemeVariant(string name)
+    public FbThemeColorVariant(string name)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         Name = FbThemeVariants.Normalize(name);
@@ -16,6 +16,4 @@ public sealed class FbThemeVariant
     public FbThemeLayoutColors? LayoutColors { get; init; }
 
     public FbThemeFormColors? FormColors { get; init; }
-
-    public FbThemeLayoutBordersMix? Borders { get; init; }
 }

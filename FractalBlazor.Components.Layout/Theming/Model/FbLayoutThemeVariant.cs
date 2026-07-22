@@ -14,6 +14,4 @@ public sealed class FbLayoutThemeVariant
     public string Name { get; }
 
     public FbThemeLayoutColors? LayoutColors { get; init; }
-
-    public FbThemeLayoutBordersMix? Borders { get; init; }
 }

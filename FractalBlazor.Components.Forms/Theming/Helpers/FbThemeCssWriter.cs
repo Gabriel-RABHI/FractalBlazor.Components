@@ -29,6 +29,13 @@ public static class FbThemeCssWriter
         Append(builder, "--fb-default-fg-muted-high-mix", theme.TextVariant.MutedHighMix);
         Append(builder, "--fb-default-fg-highlight-high-mix", theme.TextVariant.HighlightHighMix);
 
+        Append(builder, "--fb-bg-surface-mix", theme.SurfaceMix.SurfaceMix);
+        Append(builder, "--fb-bg-accent-offset", theme.SurfaceMix.AccentOffset);
+        Append(builder, "--fb-bg-highlight-offset", theme.SurfaceMix.HighlightOffset);
+        Append(builder, "--fb-frame-light-mix", theme.BordersMix.LightMix);
+        Append(builder, "--fb-frame-medium-mix", theme.BordersMix.MediumMix);
+        Append(builder, "--fb-frame-strong-mix", theme.BordersMix.StrongMix);
+
         Append(builder, "--fb-txt-font-family", theme.Typography.TextFontFamily);
         Append(builder, "--fb-code-font-family", theme.Typography.CodeFontFamily);
         Append(builder, "--fb-txt-base-size", theme.Typography.FontSizeBase);
@@ -79,14 +86,7 @@ public static class FbThemeCssWriter
     {
         var name = variant.Name;
         AppendVariant(builder, name, "bg-low-anchor", variant.LayoutColors.LowAnchor);
-        AppendVariant(builder, name, "bg-tint", variant.LayoutColors.Tint);
         AppendVariant(builder, name, "bg-high-anchor", variant.LayoutColors.HighAnchor);
-        AppendVariant(builder, name, "bg-surface-mix", variant.LayoutColors.SurfaceMix);
-        AppendVariant(builder, name, "bg-accent-offset", variant.LayoutColors.AccentOffset);
-        AppendVariant(builder, name, "bg-highlight-offset", variant.LayoutColors.HighlightOffset);
-        AppendVariant(builder, name, "frame-light-mix", variant.Borders.LightMix);
-        AppendVariant(builder, name, "frame-medium-mix", variant.Borders.MediumMix);
-        AppendVariant(builder, name, "frame-strong-mix", variant.Borders.StrongMix);
         AppendVariant(builder, name, "fg-low-anchor", variant.FormColors.LowAnchor);
         AppendVariant(builder, name, "fg-high-anchor", variant.FormColors.HighAnchor);
     }

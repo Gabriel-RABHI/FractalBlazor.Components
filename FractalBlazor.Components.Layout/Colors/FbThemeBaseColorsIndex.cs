@@ -1,4 +1,4 @@
-﻿namespace FractalBlazor.Components.Forms.Theming.Constants
+﻿namespace FractalBlazor.Components.Layout.Colors
 {
     public enum FbThemeBaseColorsIndex : int
     {

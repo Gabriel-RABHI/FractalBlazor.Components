@@ -16,10 +16,19 @@ public static class FbLayoutThemeCssWriter
         Append(builder, "--fb-default-space-m", theme.Spacings.M);
         Append(builder, "--fb-default-space-l", theme.Spacings.L);
         Append(builder, "--fb-default-space-x", theme.Spacings.X);
+
         Append(builder, "--fb-default-radius-s", theme.Corners.S);
         Append(builder, "--fb-default-radius-m", theme.Corners.M);
         Append(builder, "--fb-default-radius-l", theme.Corners.L);
         Append(builder, "--fb-default-radius-x", theme.Corners.X);
+
+        Append(builder, "--fb-bg-surface-mix", theme.SurfaceMix.SurfaceMix);
+        Append(builder, "--fb-bg-accent-offset", theme.SurfaceMix.AccentOffset);
+        Append(builder, "--fb-bg-highlight-offset", theme.SurfaceMix.HighlightOffset);
+
+        Append(builder, "--fb-frame-light-mix", theme.BordersMix.LightMix);
+        Append(builder, "--fb-frame-medium-mix", theme.BordersMix.MediumMix);
+        Append(builder, "--fb-frame-strong-mix", theme.BordersMix.StrongMix);
 
         foreach (var variantName in theme.VariantOrder)
             AppendVariant(builder, theme.GetVariant(variantName));
@@ -28,6 +37,7 @@ public static class FbLayoutThemeCssWriter
         AppendReference(builder, "space-m", "default-space-m");
         AppendReference(builder, "space-l", "default-space-l");
         AppendReference(builder, "space-x", "default-space-x");
+
         AppendReference(builder, "radius-s", "default-radius-s");
         AppendReference(builder, "radius-m", "default-radius-m");
         AppendReference(builder, "radius-l", "default-radius-l");
@@ -52,14 +62,7 @@ public static class FbLayoutThemeCssWriter
     {
         var name = variant.Name;
         AppendVariant(builder, name, "bg-low-anchor", variant.LayoutColors.LowAnchor);
-        AppendVariant(builder, name, "bg-tint", variant.LayoutColors.Tint);
         AppendVariant(builder, name, "bg-high-anchor", variant.LayoutColors.HighAnchor);
-        AppendVariant(builder, name, "bg-surface-mix", variant.LayoutColors.SurfaceMix);
-        AppendVariant(builder, name, "bg-accent-offset", variant.LayoutColors.AccentOffset);
-        AppendVariant(builder, name, "bg-highlight-offset", variant.LayoutColors.HighlightOffset);
-        AppendVariant(builder, name, "frame-light-mix", variant.Borders.LightMix);
-        AppendVariant(builder, name, "frame-medium-mix", variant.Borders.MediumMix);
-        AppendVariant(builder, name, "frame-strong-mix", variant.Borders.StrongMix);
     }
 
     private static void AppendVariant(StringBuilder builder, string variant, string token, string? value)

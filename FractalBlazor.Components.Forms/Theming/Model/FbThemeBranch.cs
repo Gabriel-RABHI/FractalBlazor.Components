@@ -1,5 +1,7 @@
 namespace FractalBlazor.Components.Forms.Theming.Model;
 
+using FractalBlazor.Components.Layout.Theming.Model;
+
 public sealed class FbThemeBranch
 {
     public FbThemeBranch(string name)
@@ -10,7 +12,13 @@ public sealed class FbThemeBranch
 
     public string Name { get; }
 
-    public FbThemeFormTextVariant? TextVariant { get; init; }
+    public FbThemeMasterTint? MasterTint { get; init; }
 
-    public IReadOnlyList<FbThemeVariant> Variants { get; init; } = [];
+    public FbThemeFormTextVariantMix? TextVariantMix { get; init; }
+
+    public FbThemeLayoutBordersMix? BordersMix { get; init; }
+
+    public FbThemeLayoutSurfaceMix? SurfaceMix { get; init; }
+
+    public IReadOnlyList<FbThemeColorVariant> Variants { get; init; } = [];
 }

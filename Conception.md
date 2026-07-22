@@ -121,8 +121,8 @@ Pourquoi ? Parce qu’un texte `Default` qui passe très bien sur `Surface` peut
 Tes noms ABC, BBC, BFC, AFC sont logiques techniquement, mais je les trouve un peu difficiles à manipuler mentalement. Je proposerais plutôt :
 
 ```css
---ui-bg-anchor: ...;   /* ex: noir en dark, blanc en light */
---ui-bg-tint: ...;     /* ex: bleu, rouge, vert, neutre */
+--ui-bg-low-anchor: ...;  /* ex: noir en dark, blanc en light */
+--ui-bg-high-anchor: ...; /* ex: blanc en dark, noir en light */
 --ui-fg-tint: ...;     /* ex: vert, bleu, neutre */
 --ui-fg-anchor: ...;   /* ex: blanc en dark, noir en light */
 ```
@@ -146,16 +146,16 @@ Je ferais plutôt :
 
 ```css
 :root[data-theme="dark"] {
-  --ui-bg-anchor: oklch(12% 0.02 250);
-  --ui-bg-tint:   oklch(28% 0.08 250);
+  --ui-bg-low-anchor:  oklch(12% 0.02 250);
+  --ui-bg-high-anchor: oklch(98% 0 0);
 
   --ui-fg-tint:   oklch(72% 0.08 145);
   --ui-fg-anchor: oklch(98% 0 0);
 }
 
 :root[data-theme="light"] {
-  --ui-bg-anchor: oklch(98% 0 0);
-  --ui-bg-tint:   oklch(88% 0.05 250);
+  --ui-bg-low-anchor:  oklch(98% 0 0);
+  --ui-bg-high-anchor: oklch(12% 0.02 250);
 
   --ui-fg-tint:   oklch(34% 0.08 145);
   --ui-fg-anchor: oklch(12% 0.02 250);
@@ -185,20 +185,20 @@ Exemple de structure :
 
   --ui-bg-surface: color-mix(
     in oklch,
-    var(--ui-bg-anchor) calc(100% - var(--ui-bg-surface-mix)),
-    var(--ui-bg-tint) var(--ui-bg-surface-mix)
+    var(--ui-bg-low-anchor) calc(100% - var(--ui-bg-surface-mix)),
+    var(--ui-bg-high-anchor) var(--ui-bg-surface-mix)
   );
 
   --ui-bg-accent: color-mix(
     in oklch,
-    var(--ui-bg-anchor) calc(100% - var(--ui-bg-accent-mix)),
-    var(--ui-bg-tint) var(--ui-bg-accent-mix)
+    var(--ui-bg-low-anchor) calc(100% - var(--ui-bg-accent-mix)),
+    var(--ui-bg-high-anchor) var(--ui-bg-accent-mix)
   );
 
   --ui-bg-highlight: color-mix(
     in oklch,
-    var(--ui-bg-anchor) calc(100% - var(--ui-bg-highlight-mix)),
-    var(--ui-bg-tint) var(--ui-bg-highlight-mix)
+    var(--ui-bg-low-anchor) calc(100% - var(--ui-bg-highlight-mix)),
+    var(--ui-bg-high-anchor) var(--ui-bg-highlight-mix)
   );
 
   --ui-fg-default: color-mix(
@@ -295,7 +295,7 @@ Ton système est une très bonne base, mais je le formaliserais en 4 niveaux :
 
 ```text
 1. Primitive palette
-   bg-anchor, bg-tint, fg-tint, fg-anchor
+   bg-low-anchor, bg-high-anchor, fg-tint, fg-anchor
 
 2. Ramp tokens
    bg.surface, bg.accent, bg.highlight
@@ -717,8 +717,8 @@ Ou, pour un thème dynamique local :
 
 ```html
 <div class="fb-theme" style="
-  --fb-bg-anchor: ...;
-  --fb-bg-tint: ...;
+  --fb-bg-low-anchor: ...;
+  --fb-bg-high-anchor: ...;
   --fb-frame-light: ...;
 ">
     ...

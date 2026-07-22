@@ -30,15 +30,18 @@ public sealed class FbThemeLayoutCorners
 public sealed class FbThemeLayoutBordersMix
 {
     public string? LightMix { get; init; }
+
     public string? MediumMix { get; init; }
+
     public string? StrongMix { get; init; }
 }
 
-// NEW : tu use instead of FbThemeLayoutColors fields
 public sealed class FbThemeLayoutSurfaceMix
 {
     public string? SurfaceMix { get; init; }
+
     public string? AccentOffset { get; init; }
+
     public string? HighlightOffset { get; init; }
 }
 
@@ -46,12 +49,14 @@ public sealed class FbThemeLayoutColors
 {
     public string? LowAnchor { get; init; }
 
-    // To remove
-    public string? Tint { get; init; }
     public string? HighAnchor { get; init; }
-    public string? SurfaceMix { get; init; }
-    public string? AccentOffset { get; init; }
-    public string? HighlightOffset { get; init; }
+}
+
+public sealed class FbThemeMasterTint
+{
+    public string? ColorTint { get; init; }
+
+    public int TintPercent { get; init; }
 }
 
 public static class FbThemeCssNames
@@ -59,14 +64,7 @@ public static class FbThemeCssNames
     public static readonly IReadOnlyList<string> LayoutVariantTokens =
     [
         "bg-low-anchor",
-        "bg-tint",
-        "bg-high-anchor",
-        "bg-surface-mix",
-        "bg-accent-offset", 
-        "bg-highlight-offset",
-        "frame-light-mix",
-        "frame-medium-mix",
-        "frame-strong-mix"
+        "bg-high-anchor"
     ];
 
     public static string Normalize(string name)

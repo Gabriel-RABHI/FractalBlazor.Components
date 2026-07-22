@@ -1,3 +1,4 @@
+using FractalBlazor.Components.Layout.Colors;
 using FractalBlazor.Components.Layout.Theming.Contracts;
 using FractalBlazor.Components.Layout.Theming.Model;
 
@@ -7,68 +8,52 @@ public static class FbLayoutThemeDefaults
 {
     public static FbLayoutThemeSetup Create()
     {
-        var defaultBorders = new FbThemeLayoutBordersMix
+        var masterTint = new FbThemeMasterTint
         {
-            LightMix = "8%",
-            MediumMix = "14%",
-            StrongMix = "22%"
+            ColorTint = FbThemeBaseColors.GetColor(FbThemeBaseColorsIndex.Sky),
+            TintPercent = 5
         };
 
         return new FbLayoutThemeSetup("Default")
         {
             Spacings = FbThemeLayoutSpacings.Default,
             Corners = FbThemeLayoutCorners.Default,
+            MasterTint = masterTint,
+            BordersMix = new FbThemeLayoutBordersMix
+            {
+                LightMix = "8%",
+                MediumMix = "14%",
+                StrongMix = "28%"
+            },
+            SurfaceMix = new FbThemeLayoutSurfaceMix
+            {
+                SurfaceMix = "8%",
+                AccentOffset = "10%",
+                HighlightOffset = "18%"
+            },
             Variants =
             [
-                new(FbLayoutThemeVariants.Default)
-                {
-                    LayoutColors = Colors("#111113", "#34343a", "#f7f7f8"),
-                    Borders = defaultBorders
-                },
-                new(FbLayoutThemeVariants.Selected)
-                {
-                    LayoutColors = Colors("#0d1c31", "#214d82", "#eef6ff", "10%", "16%", "26%")
-                },
-                new(FbLayoutThemeVariants.Error)
-                {
-                    LayoutColors = Colors("#2a0f14", "#5c1c28", "#fff5f6", "10%", "12%", "22%"),
-                    Borders = new FbThemeLayoutBordersMix { LightMix = "14%", MediumMix = "24%", StrongMix = "38%" }
-                },
-                new(FbLayoutThemeVariants.Warning)
-                {
-                    LayoutColors = Colors("#2a1d08", "#6a4a10", "#fff8e1", "10%", "14%", "24%")
-                },
-                new(FbLayoutThemeVariants.Disabled)
-                {
-                    LayoutColors = Colors("#151517", "#303036", "#a5a5ad", "6%", "6%", "10%"),
-                    Borders = new FbThemeLayoutBordersMix { LightMix = "6%", MediumMix = "9%", StrongMix = "14%" }
-                },
-                new(FbLayoutThemeVariants.Success)
-                {
-                    LayoutColors = Colors("#0e2418", "#1d5a38", "#ecfff4", "10%", "12%", "22%")
-                },
-                new(FbLayoutThemeVariants.Info)
-                {
-                    LayoutColors = Colors("#0b2030", "#174f73", "#eef9ff", "10%", "12%", "22%")
-                }
+                Variant(FbLayoutThemeVariants.Default, FbThemeBaseColorsIndex.Zinc, masterTint),
+                Variant(FbLayoutThemeVariants.Selected, FbThemeBaseColorsIndex.Blue, masterTint),
+                Variant(FbLayoutThemeVariants.Error, FbThemeBaseColorsIndex.Rose, masterTint),
+                Variant(FbLayoutThemeVariants.Warning, FbThemeBaseColorsIndex.Amber, masterTint),
+                Variant(FbLayoutThemeVariants.Disabled, FbThemeBaseColorsIndex.Gray, masterTint),
+                Variant(FbLayoutThemeVariants.Success, FbThemeBaseColorsIndex.Emerald, masterTint),
+                Variant(FbLayoutThemeVariants.Info, FbThemeBaseColorsIndex.Sky, masterTint)
             ]
         };
     }
 
-    private static FbThemeLayoutColors Colors(
-        string low,
-        string tint,
-        string high,
-        string surface = "8%",
-        string accent = "10%",
-        string highlight = "18%")
-        => new()
+    private static FbLayoutThemeVariant Variant(
+        string name,
+        FbThemeBaseColorsIndex color,
+        FbThemeMasterTint masterTint)
+        => new(name)
         {
-            LowAnchor = low,
-            Tint = tint,
-            HighAnchor = high,
-            SurfaceMix = surface,
-            AccentOffset = accent,
-            HighlightOffset = highlight
+            LayoutColors = new FbThemeLayoutColors
+            {
+                LowAnchor = FbThemeBaseColors.GetColor(color, FbThemeBaseShadesIndex._950, masterTint),
+                HighAnchor = FbThemeBaseColors.GetColor(color, FbThemeBaseShadesIndex._50, masterTint)
+            }
         };
 }

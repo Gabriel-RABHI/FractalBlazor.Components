@@ -12,7 +12,7 @@
     --fb-current-frame-light-mix: var(--fb-frame-light-mix);
     --fb-current-frame-medium-mix: var(--fb-frame-medium-mix);
     --fb-current-frame-strong-mix: var(--fb-frame-strong-mix);
-    --fb-bg-surface: color-mix(in oklab, var(--fb-bg-low-anchor), var(--fb-bg-tint) var(--fb-current-bg-surface-mix));
+    --fb-bg-surface: color-mix(in oklab, var(--fb-bg-low-anchor), var(--fb-bg-high-anchor) var(--fb-current-bg-surface-mix));
     --fb-bg-accent: color-mix(in oklab, var(--fb-bg-surface), var(--fb-bg-high-anchor) var(--fb-current-bg-accent-offset));
     --fb-bg-highlight: color-mix(in oklab, var(--fb-bg-surface), var(--fb-bg-high-anchor) var(--fb-current-bg-highlight-offset));
     --fb-current-bg: var(--fb-bg-surface);
@@ -29,7 +29,7 @@
     --fb-current-frame-light-mix: clamp(0%, calc(var(--fb-frame-light-mix) + var(--fb-hover-mix-offset)), 100%);
     --fb-current-frame-medium-mix: clamp(0%, calc(var(--fb-frame-medium-mix) + var(--fb-hover-mix-offset)), 100%);
     --fb-current-frame-strong-mix: clamp(0%, calc(var(--fb-frame-strong-mix) + var(--fb-hover-mix-offset)), 100%);
-    --fb-bg-surface: color-mix(in oklab, var(--fb-bg-low-anchor), var(--fb-bg-tint) var(--fb-current-bg-surface-mix));
+    --fb-bg-surface: color-mix(in oklab, var(--fb-bg-low-anchor), var(--fb-bg-high-anchor) var(--fb-current-bg-surface-mix));
     --fb-bg-accent: color-mix(in oklab, var(--fb-bg-surface), var(--fb-bg-high-anchor) var(--fb-current-bg-accent-offset));
     --fb-bg-highlight: color-mix(in oklab, var(--fb-bg-surface), var(--fb-bg-high-anchor) var(--fb-current-bg-highlight-offset));
 }
