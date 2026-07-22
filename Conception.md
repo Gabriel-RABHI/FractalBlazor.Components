@@ -369,7 +369,6 @@ L'idée, c'est que les composants font appel à cette sémantique, mais que cell
 Le thème au niveau Layout n'a pas à supporter plus que les BackGround, Frames et éventuellement les Foreground colors. Au niveau Form, on doit supporter les Foreground complètement. Donc, faire descendre les Foreground au niveau layout, c'est peut être logique sur un plan technique, mais pas sur un plan logique. L'assembly Lyout doit pouvoir être utilisé avec n'importe quelle librairie de composants : MudBlazor, Radzen. En revanche, Forms doit implémenter la sémantique Foreground : Subtle, Muted, Default, Select.
 
 Egalement, le thème doit implémenter plusieurs autres sémantiques fonctionnelles, qui sont des "pointeurs" vers une sémantique de rendu :
-- Focused
 - Disabled
 - Selected
 - Error
@@ -562,7 +561,7 @@ Oui, je pense que ta séparation est cohérente — et même assez saine — à 
    Subtle, Muted, Default, Highlight
 
 3. Sémantique fonctionnelle
-   Focused, Disabled, Selected, Error, Success, Warning...
+   Disabled, Selected, Error, Success, Warning...
 ```
 
 Et surtout : la couche 3 ne doit pas être une nouvelle palette parallèle. Elle doit être une couche d’**alias** qui pointe vers la couche 1 ou 2.
@@ -909,7 +908,6 @@ public enum FbIntent : byte
 {
     None,
     Disabled,
-    Focused,
     Selected,
     Error,
     Success,
@@ -1205,7 +1203,6 @@ CSS:
 - --fb-fg-muted
 - --fb-fg-default
 - --fb-fg-highlight
-- --fb-state-focused-*
 - --fb-state-disabled-*
 - --fb-state-selected-*
 - --fb-state-error-*

@@ -210,7 +210,6 @@ public static class FbThemeVariants
 {
     public const string Default = "Default";
     public const string Selected = "Selected";
-    public const string Focused = "Focused";
     public const string Error = "Error";
     public const string Warning = "Warning";
     public const string Disabled = "Disabled";
@@ -235,7 +234,7 @@ Il respecte les invariants suivants :
 - son `Parent` est null ;
 - les groupes Main sont entièrement renseignés ;
 - il contient les branches `Dark` et `Light` ;
-- chaque branche contient les variantes `Default`, `Selected`, `Focused`, `Error`, `Warning`, `Disabled`, `Success` et `Info` ;
+- chaque branche contient les variantes `Default`, `Selected`, `Error`, `Warning`, `Disabled`, `Success` et `Info` ;
 - chaque valeur terminale est non null après résolution.
 
 Le constructeur sans argument ne doit pas créer implicitement ce thème. La fabrique rend l'intention explicite et évite de fabriquer plusieurs racines indépendantes par erreur.

@@ -29,10 +29,6 @@ public static class FbLayoutThemeDefaults
                 {
                     LayoutColors = Colors("#0d1c31", "#214d82", "#eef6ff", "10%", "16%", "26%")
                 },
-                new(FbLayoutThemeVariants.Focused)
-                {
-                    LayoutColors = Colors("#0b1d33", "#1f5f9f", "#f0f8ff", "10%", "18%", "28%")
-                },
                 new(FbLayoutThemeVariants.Error)
                 {
                     LayoutColors = Colors("#2a0f14", "#5c1c28", "#fff5f6", "10%", "12%", "22%"),
