@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-builder.Services.AddSingleton<IFbViewRegistry, FbViewRegistry>();
+builder.Services.AddSingleton<IFbViewRegistry<ViewSelector>, FbViewRegistry<ViewSelector>>();
 builder.Services.AddFractalBlazorTheming();
 var app = builder.Build();
 

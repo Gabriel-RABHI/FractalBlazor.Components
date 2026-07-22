@@ -6,7 +6,8 @@ using System.Text;
 namespace FractalBlazor.Components.Forms.Contracts
 {
 
-    public interface IFbViewRegistry
+    public interface IFbViewRegistry<TSelector>
+        where TSelector : Enum
     {
         void Register<TModel, TComponent>() where TComponent : IComponent;
 

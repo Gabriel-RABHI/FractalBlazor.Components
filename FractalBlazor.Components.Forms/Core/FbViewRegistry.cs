@@ -9,7 +9,8 @@ using System.Text;
 
 namespace FractalBlazor.Components.Forms.Core
 {
-    public class FbViewRegistry : IFbViewRegistry
+    public class FbViewRegistry<TSelector> : IFbViewRegistry<TSelector>
+        where TSelector : Enum
     {
         private readonly ConcurrentDictionary<Type, Type> _registry = new();
         private readonly HashSet<Assembly> _scannedAssemblies = new();
@@ -64,7 +65,7 @@ namespace FractalBlazor.Components.Forms.Core
 
                 foreach (var type in viewTypes)
                 {
-                    var attribute = type.GetCustomAttribute<ViewForAttribute>();
+                    var attribute = type.GetCustomAttribute<ViewForAttribute<TSelector>>();
                     if (attribute != null)
                     {
                         _registry.TryAdd(attribute.ModelType, type);

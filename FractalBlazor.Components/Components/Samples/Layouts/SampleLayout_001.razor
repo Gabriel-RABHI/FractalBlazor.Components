@@ -1,5 +1,9 @@
 @namespace FractalBlazor.Components.Components.Samples.Layouts
 
+@using FractalBlazor.Components.Forms.Attributes
+
+@attribute [ViewForAttribute<ViewSelector>(typeof(SampleState_001), ViewSelector.Viewer)]
+
 <style>
     .fb-sample-container {
         background-color: #0b0e11;

@@ -11,7 +11,7 @@ public static class FbThemeVariants
     public const string Info = "Info";
 
     public static readonly IReadOnlyList<string> Standard =
-    [Default, Selected, Error, Warning, Disabled, Success, Info];
+        [Default, Selected, Error, Warning, Disabled, Success, Info];
 
     public static string Normalize(string? variant)
         => string.IsNullOrWhiteSpace(variant) ? Default : variant.Trim();
