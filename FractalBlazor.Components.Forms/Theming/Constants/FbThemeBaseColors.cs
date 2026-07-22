@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace FractalBlazor.Components.Forms.Theming.Constants
@@ -124,12 +125,134 @@ namespace FractalBlazor.Components.Forms.Theming.Constants
         public static string GetColor(FbThemeBaseColorsIndex color, FbThemeBaseShadesIndex shade, double gamma, string tintColor, double tintCoef)
         {
             var sourceColor = GetColor(color, shade);
-            // Compute the corrected color :
-            // - First, the gamma is applied to color luminosity.
-            // - Then, the tintColor is applyed : the color luminosity do not change, the tint only is changed, mixed with tintCoef 
-            //   If the tintColor is simply a gray color, it desaturate the result color.
-            return sourceColor;
+
+            if (!double.IsFinite(gamma))
+                throw new ArgumentOutOfRangeException(nameof(gamma), gamma, "Gamma must be a finite number.");
+
+            if (!double.IsFinite(tintCoef))
+                throw new ArgumentOutOfRangeException(nameof(tintCoef), tintCoef, "The tint coefficient must be a finite number.");
+
+            var source = ToHsl(ParseHexColor(sourceColor, nameof(color)));
+            var tint = ToHsl(ParseHexColor(tintColor, nameof(tintColor)));
+            var coefficient = Math.Clamp(tintCoef, 0d, 1d);
+
+            // An achromatic color has no meaningful hue. Keeping the chromatic
+            // color's hue avoids an arbitrary detour through red while tinting.
+            double hue;
+            if (source.Saturation == 0d)
+                hue = tint.Hue;
+            else if (tint.Saturation == 0d)
+                hue = source.Hue;
+            else
+                hue = MixHue(source.Hue, tint.Hue, coefficient);
+
+            var saturation = Mix(source.Saturation, tint.Saturation, coefficient);
+            var lightness = Math.Clamp(GetGamma(source.Lightness, gamma), 0d, 1d);
+            var corrected = FromHsl(new HslColor(hue, saturation, lightness));
+
+            return $"#{corrected.Red:X2}{corrected.Green:X2}{corrected.Blue:X2}";
         }
+
+        private static RgbColor ParseHexColor(string value, string parameterName)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(value, parameterName);
+
+            ReadOnlySpan<char> hex = value.AsSpan().Trim();
+            if (hex[0] == '#')
+                hex = hex[1..];
+
+            if (hex.Length == 3)
+            {
+                return new RgbColor(
+                    ParseHexByte(stackalloc char[] { hex[0], hex[0] }, parameterName),
+                    ParseHexByte(stackalloc char[] { hex[1], hex[1] }, parameterName),
+                    ParseHexByte(stackalloc char[] { hex[2], hex[2] }, parameterName));
+            }
+
+            if (hex.Length == 6)
+            {
+                return new RgbColor(
+                    ParseHexByte(hex[..2], parameterName),
+                    ParseHexByte(hex.Slice(2, 2), parameterName),
+                    ParseHexByte(hex.Slice(4, 2), parameterName));
+            }
+
+            throw new ArgumentException("The color must use the #RGB or #RRGGBB hexadecimal format.", parameterName);
+        }
+
+        private static byte ParseHexByte(ReadOnlySpan<char> value, string parameterName)
+        {
+            if (byte.TryParse(value, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out var result))
+                return result;
+
+            throw new ArgumentException("The color contains an invalid hexadecimal digit.", parameterName);
+        }
+
+        private static HslColor ToHsl(RgbColor color)
+        {
+            var red = color.Red / 255d;
+            var green = color.Green / 255d;
+            var blue = color.Blue / 255d;
+            var maximum = Math.Max(red, Math.Max(green, blue));
+            var minimum = Math.Min(red, Math.Min(green, blue));
+            var chroma = maximum - minimum;
+            var lightness = (maximum + minimum) / 2d;
+
+            if (chroma == 0d)
+                return new HslColor(0d, 0d, lightness);
+
+            var saturation = chroma / (1d - Math.Abs((2d * lightness) - 1d));
+            double hue;
+
+            if (maximum == red)
+                hue = ((green - blue) / chroma) % 6d;
+            else if (maximum == green)
+                hue = ((blue - red) / chroma) + 2d;
+            else
+                hue = ((red - green) / chroma) + 4d;
+
+            hue *= 60d;
+            if (hue < 0d)
+                hue += 360d;
+
+            return new HslColor(hue, saturation, lightness);
+        }
+
+        private static RgbColor FromHsl(HslColor color)
+        {
+            var chroma = (1d - Math.Abs((2d * color.Lightness) - 1d)) * color.Saturation;
+            var hueSection = color.Hue / 60d;
+            var secondary = chroma * (1d - Math.Abs((hueSection % 2d) - 1d));
+
+            var (red, green, blue) = hueSection switch
+            {
+                < 1d => (chroma, secondary, 0d),
+                < 2d => (secondary, chroma, 0d),
+                < 3d => (0d, chroma, secondary),
+                < 4d => (0d, secondary, chroma),
+                < 5d => (secondary, 0d, chroma),
+                _ => (chroma, 0d, secondary)
+            };
+
+            var match = color.Lightness - (chroma / 2d);
+            return new RgbColor(ToByte(red + match), ToByte(green + match), ToByte(blue + match));
+        }
+
+        private static byte ToByte(double value)
+            => (byte)Math.Round(Math.Clamp(value, 0d, 1d) * 255d, MidpointRounding.AwayFromZero);
+
+        private static double Mix(double source, double target, double coefficient)
+            => source + ((target - source) * coefficient);
+
+        private static double MixHue(double source, double target, double coefficient)
+        {
+            var difference = ((target - source + 540d) % 360d) - 180d;
+            return (source + (difference * coefficient) + 360d) % 360d;
+        }
+
+        private readonly record struct RgbColor(byte Red, byte Green, byte Blue);
+
+        private readonly record struct HslColor(double Hue, double Saturation, double Lightness);
 
         public static double GetGamma(double x, double curvatur = 1)
         {
