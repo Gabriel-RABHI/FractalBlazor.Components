@@ -56,7 +56,7 @@ Chaque changement est vérifié contre ces règles. Une étape qui en viole une 
 
 ## Phase 3 — Couche Forms
 
-- [ ] **3.1 Base des champs.** Créer `FbInputBase<TValue, TAction>` : `Value`, `ValueChanged`, `Handler`, `Disabled`, `Variant`, et l'envoi d'action. Ajouter `FbSetValue<T>` et un répartiteur d'actions non générique pour les actions passées comme instances. Reconstruire `FbInputText` sur cette base.
+- [x] **3.1 Base des champs.** Créer `FbInputBase<TValue, TAction>` : `Value`, `ValueChanged`, `Handler`, `Disabled`, `Variant`, et l'envoi d'action. Ajouter `FbSetValue<T>` et un répartiteur d'actions non générique pour les actions passées comme instances. Reconstruire `FbInputText` sur cette base.
 - [ ] **3.2 Tokens de contrôle.** Définir dans le CSS Forms les tokens `--fb-control-*` (fond, survol, focus, bordure, placeholder, curseur, sélection), tous dérivés des variables existantes.
 - [ ] **3.3 API enum de `FbText`.** Ajouter `Size`, `Weight`, `Color` à côté des booléens, et rendre les modificateurs `NW` / `TR` cumulables.
 - [ ] **3.4 `FbIcon`.** Rendre une icône de `FbMaterialIcons` en SVG `currentColor`, tailles S / M / L / X.
