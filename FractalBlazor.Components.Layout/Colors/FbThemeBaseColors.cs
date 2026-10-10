@@ -102,6 +102,7 @@ namespace FractalBlazor.Components.Layout.Colors
         public static string GetColor(FbThemeBaseColorsIndex color, FbThemeBaseShadesIndex shade, double gamma, string tintColor, double tintCoef)
         {
             var sourceColor = GetColor(color, shade);
+            var normalizedLightness = GetNormalizedLightness(shade);
 
             if (!double.IsFinite(gamma))
                 throw new ArgumentOutOfRangeException(nameof(gamma), gamma, "Gamma must be a finite number.");
@@ -124,11 +125,28 @@ namespace FractalBlazor.Components.Layout.Colors
                 hue = MixHue(source.Hue, tint.Hue, coefficient);
 
             var saturation = Mix(source.Saturation, tint.Saturation, coefficient);
-            var lightness = Math.Clamp(GetGamma(source.Lightness, gamma), 0d, 1d);
+            var lightness = Math.Clamp(GetGamma(normalizedLightness, gamma), 0d, 1d);
             var corrected = FromHsl(new HslColor(hue, saturation, lightness));
 
             return $"#{corrected.Red:X2}{corrected.Green:X2}{corrected.Blue:X2}";
         }
+
+        private static double GetNormalizedLightness(FbThemeBaseShadesIndex shade)
+            => shade switch
+            {
+                FbThemeBaseShadesIndex._950 => 0.05d,
+                FbThemeBaseShadesIndex._900 => 0.10d,
+                FbThemeBaseShadesIndex._800 => 0.20d,
+                FbThemeBaseShadesIndex._700 => 0.30d,
+                FbThemeBaseShadesIndex._600 => 0.40d,
+                FbThemeBaseShadesIndex._500 => 0.50d,
+                FbThemeBaseShadesIndex._400 => 0.60d,
+                FbThemeBaseShadesIndex._300 => 0.70d,
+                FbThemeBaseShadesIndex._200 => 0.80d,
+                FbThemeBaseShadesIndex._100 => 0.90d,
+                FbThemeBaseShadesIndex._50 => 0.95d,
+                _ => throw new ArgumentOutOfRangeException(nameof(shade), shade, "The shade is not supported.")
+            };
 
         private static RgbColor ParseHexColor(string value, string parameterName)
         {

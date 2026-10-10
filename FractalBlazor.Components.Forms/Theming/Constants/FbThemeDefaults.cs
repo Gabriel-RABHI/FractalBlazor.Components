@@ -24,7 +24,7 @@ public static class FbThemeDefaults
         var masterTint = new FbThemeMasterTint
         {
             ColorTint = FbThemeBaseColors.GetColor(FbThemeBaseColorsIndex.Sky),
-            TintPercent = light ? 3 : 2
+            TintPercent = light ? 15 : 15
         };
 
         return new FbThemeBranch(name)
@@ -71,9 +71,9 @@ public static class FbThemeDefaults
         bool light,
         FbThemeMasterTint masterTint)
     {
-        var lighter = color <= FbThemeBaseColorsIndex.Slate ? FbThemeBaseShadesIndex._200 : FbThemeBaseShadesIndex._50;
-        var medium = color <= FbThemeBaseColorsIndex.Slate ? FbThemeBaseShadesIndex._600 : FbThemeBaseShadesIndex._400;
-        var darker = color <= FbThemeBaseColorsIndex.Slate ? FbThemeBaseShadesIndex._900 : FbThemeBaseShadesIndex._950;
+        var lighter = FbThemeBaseShadesIndex._50;
+        var medium = FbThemeBaseShadesIndex._500;
+        var darker = FbThemeBaseShadesIndex._950;
         // ------------------------ LIGHT ----- DARK -------------------------- //
         // BACKGROUND
         var lowShadeBg =    light ? lighter :   darker;
