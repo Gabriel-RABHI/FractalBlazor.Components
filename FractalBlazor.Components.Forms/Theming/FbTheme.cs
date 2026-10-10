@@ -1,6 +1,7 @@
 using FractalBlazor.Components.Forms.Contracts;
 using FractalBlazor.Components.Forms.Theming.Constants;
 using FractalBlazor.Components.Forms.Theming.Helpers;
+using FractalBlazor.Components.Forms.Theming.Registry;
 using FractalBlazor.Components.Forms.Theming.Solver;
 using FractalBlazor.Components.Layout.Abstracts;
 using FractalBlazor.Components.Layout.Theming.Model;
@@ -35,6 +36,7 @@ public sealed class FbTheme : FbComponentBase
     public RenderFragment? ChildContent { get; set; }
 
     private FbResolvedTheme? _resolved;
+    private FbThemeContext? _context;
     private string _variables = "";
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -44,6 +46,10 @@ public sealed class FbTheme : FbComponentBase
         {
             _resolved = resolved;
             _variables = FbThemeCssWriter.ToCssVariables(resolved);
+            if (_context is null)
+                _context = new FbThemeContext(resolved);
+            else
+                _context.Theme = resolved;
         }
 
         if (Scoped)
@@ -51,16 +57,28 @@ public sealed class FbTheme : FbComponentBase
             builder.OpenElement(0, "div");
             builder.AddAttribute(1, "class", "fb-theme-scope fb-theme");
             builder.AddAttribute(2, "style", _variables);
-            builder.AddContent(3, ChildContent);
+            BuildContent(builder);
             builder.CloseElement();
             return;
         }
 
         FbThemeCssNames.ValidateSelector(Selector);
-        builder.OpenElement(4, "style");
-        builder.AddMarkupContent(5, $"{Selector}{{{_variables}}}");
+        builder.OpenElement(3, "style");
+        builder.AddMarkupContent(4, $"{Selector}{{{_variables}}}");
         builder.CloseElement();
 
-        builder.AddContent(6, ChildContent);
+        BuildContent(builder);
+    }
+
+    private void BuildContent(RenderTreeBuilder builder)
+    {
+        if (ChildContent is null)
+            return;
+
+        builder.OpenComponent<CascadingValue<FbThemeContext>>(10);
+        builder.AddAttribute(11, "Value", _context);
+        builder.AddAttribute(12, "IsFixed", true);
+        builder.AddAttribute(13, "ChildContent", ChildContent);
+        builder.CloseComponent();
     }
 }

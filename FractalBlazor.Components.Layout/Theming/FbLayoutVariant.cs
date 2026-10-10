@@ -32,11 +32,11 @@ public sealed class FbLayoutVariant : FbComponentBase
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        if (ThemeContext is null)
-            throw new InvalidOperationException($"{nameof(FbLayoutVariant)} must be rendered inside {nameof(FbLayoutTheme)}.");
-
         var normalized = FbLayoutThemeVariants.Normalize(Variant);
-        ThemeContext.Theme.GetVariant(normalized);
+
+        // The context is absent across a render mode boundary (a static FbLayoutTheme around an
+        // interactive page): the variant is then trusted, as CSS falls back silently anyway.
+        ThemeContext?.Theme.GetVariant(normalized);
 
         builder.OpenElement(0, "div");
         builder.AddAttribute(1, "class", $"fb-theme-scope {Classes}".TrimEnd());

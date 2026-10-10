@@ -1,5 +1,6 @@
 using FractalBlazor.Components.Forms.Theming.Constants;
 using FractalBlazor.Components.Forms.Theming.Helpers;
+using FractalBlazor.Components.Forms.Theming.Registry;
 using FractalBlazor.Components.Layout.Abstracts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -8,6 +9,9 @@ namespace FractalBlazor.Components.Forms.Theming;
 
 public sealed class FbVariant : FbComponentBase
 {
+    [CascadingParameter]
+    public FbThemeContext? ThemeContext { get; set; }
+
     [Parameter]
     public string Variant { get; set; } = FbThemeVariants.Default;
 
@@ -36,6 +40,10 @@ public sealed class FbVariant : FbComponentBase
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         var normalized = FbThemeVariants.Normalize(Variant);
+
+        // The context is absent across a render mode boundary (a static FbTheme around an
+        // interactive page): the variant is then trusted, as CSS falls back silently anyway.
+        ThemeContext?.Theme.GetVariant(normalized);
 
         builder.OpenElement(0, "div");
         builder.AddAttribute(1, "class", $"fb-theme-scope {Classes}".TrimEnd());

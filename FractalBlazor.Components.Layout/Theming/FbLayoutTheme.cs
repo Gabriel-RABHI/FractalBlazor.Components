@@ -31,6 +31,7 @@ public sealed class FbLayoutTheme : FbComponentBase
     public RenderFragment? ChildContent { get; set; }
 
     private FbResolvedLayoutTheme? _resolved;
+    private FbLayoutThemeContext? _context;
     private string _variables = "";
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -40,6 +41,10 @@ public sealed class FbLayoutTheme : FbComponentBase
         {
             _resolved = resolved;
             _variables = FbLayoutThemeCssWriter.ToCssVariables(resolved);
+            if (_context is null)
+                _context = new FbLayoutThemeContext(resolved);
+            else
+                _context.Theme = resolved;
         }
 
         if (Scoped)
@@ -47,7 +52,7 @@ public sealed class FbLayoutTheme : FbComponentBase
             builder.OpenElement(0, "div");
             builder.AddAttribute(1, "class", "fb-theme-scope");
             builder.AddAttribute(2, "style", _variables);
-            BuildContent(builder, resolved);
+            BuildContent(builder);
             builder.CloseElement();
             return;
         }
@@ -57,17 +62,18 @@ public sealed class FbLayoutTheme : FbComponentBase
         builder.AddMarkupContent(4, $"{Selector}{{{_variables}}}");
         builder.CloseElement();
 
-        BuildContent(builder, resolved);
+        BuildContent(builder);
     }
 
-    private void BuildContent(RenderTreeBuilder builder, FbResolvedLayoutTheme resolved)
+    private void BuildContent(RenderTreeBuilder builder)
     {
         if (ChildContent is null)
             return;
 
         builder.OpenComponent<CascadingValue<FbLayoutThemeContext>>(10);
-        builder.AddAttribute(11, "Value", new FbLayoutThemeContext(resolved));
-        builder.AddAttribute(12, "ChildContent", ChildContent);
+        builder.AddAttribute(11, "Value", _context);
+        builder.AddAttribute(12, "IsFixed", true);
+        builder.AddAttribute(13, "ChildContent", ChildContent);
         builder.CloseComponent();
     }
 }
