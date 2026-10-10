@@ -30,7 +30,7 @@ Chaque changement est vérifié contre ces règles. Une étape qui en viole une 
 ## Phase 0 — Cadre
 
 - [x] **0.1 Branche et plan.** Créer `FinalizeLibrary` et ce document.
-- [ ] **0.2 Projet de tests.** Ajouter `FractalBlazor.Components.Tests` (xUnit + bUnit) à la solution, avec un test de fumée sur `FbRow` et sur la résolution du thème par défaut. Toutes les étapes suivantes ajoutent leurs tests ici.
+- [x] **0.2 Projet de tests.** Ajouter `FractalBlazor.Components.Tests` (xUnit + bUnit) à la solution, avec un test de fumée sur `FbRow` et sur la résolution du thème par défaut. Toutes les étapes suivantes ajoutent leurs tests ici.
 
 ## Phase 1 — Fiabiliser le socle
 
