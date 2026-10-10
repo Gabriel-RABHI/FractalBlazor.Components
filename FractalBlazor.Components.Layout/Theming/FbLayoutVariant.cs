@@ -21,6 +21,12 @@ public sealed class FbLayoutVariant : FbComponentBase
     [Parameter]
     public string Style { get; set; } = "";
 
+    /// <summary>
+    /// Swap -> Background: exchange the low and high background anchors (fills, frames).
+    /// </summary>
+    [Parameter]
+    public bool SB { get; set; }
+
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
@@ -34,7 +40,7 @@ public sealed class FbLayoutVariant : FbComponentBase
 
         builder.OpenElement(0, "div");
         builder.AddAttribute(1, "class", $"fb-theme-scope {Classes}".TrimEnd());
-        builder.AddAttribute(2, "style", FbLayoutThemeCssWriter.BuildVariantReferences(normalized) + Style);
+        builder.AddAttribute(2, "style", FbLayoutThemeCssWriter.BuildVariantReferences(normalized, SB) + Style);
         builder.AddContent(3, ChildContent);
         builder.CloseElement();
     }

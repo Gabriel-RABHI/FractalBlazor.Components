@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Text;
 
 namespace FractalBlazor.Components.Layout.Theming.Model;
@@ -61,11 +62,18 @@ public sealed class FbThemeMasterTint
 
 public static class FbThemeCssNames
 {
-    public static readonly IReadOnlyList<string> LayoutVariantTokens =
-    [
-        "bg-low-anchor",
-        "bg-high-anchor"
-    ];
+    /// <summary>
+    /// Anchor pair redirected by a Layout variant: <c>bg-low-anchor</c> and <c>bg-high-anchor</c>.
+    /// </summary>
+    public const string BackgroundAnchors = "bg";
+
+    /// <summary>
+    /// Anchor pair redirected by a Forms variant, on top of <see cref="BackgroundAnchors"/>.
+    /// </summary>
+    public const string ForegroundAnchors = "fg";
+
+    private const int ReferenceCacheCapacity = 256;
+    private static readonly ConcurrentDictionary<(string Variant, bool SwapBackground, bool SwapForeground, bool Foreground), string> _references = new();
 
     public static string Normalize(string name)
     {
@@ -102,7 +110,43 @@ public static class FbThemeCssNames
     public static string ActiveName(string token) => $"--fb-{token}";
 
     public static string ActiveReference(string variant, string token)
-        => $"{ActiveName(token)}:var({ValueName(variant, token)});";
+        => ActiveReference(variant, token, token);
+
+    /// <summary>
+    /// Points the active token <paramref name="token"/> at the value <paramref name="sourceToken"/> of a variant.
+    /// </summary>
+    public static string ActiveReference(string variant, string token, string sourceToken)
+        => $"{ActiveName(token)}:var({ValueName(variant, sourceToken)});";
+
+    /// <summary>
+    /// Builds the inline redirections that activate a variant: the background anchors, then,
+    /// when <paramref name="foreground"/> is set, the foreground anchors. A swapped pair points
+    /// the low anchor at the variant's high anchor and the other way round.
+    /// </summary>
+    public static string VariantReferences(string normalizedVariant, bool foreground, bool swapBackground, bool swapForeground)
+    {
+        var key = (normalizedVariant, swapBackground, swapForeground && foreground, foreground);
+        if (_references.TryGetValue(key, out var cached))
+            return cached;
+
+        var builder = new StringBuilder();
+        AppendAnchorReferences(builder, normalizedVariant, BackgroundAnchors, swapBackground);
+        if (foreground)
+            AppendAnchorReferences(builder, normalizedVariant, ForegroundAnchors, swapForeground);
+        var references = builder.ToString();
+
+        if (_references.Count < ReferenceCacheCapacity)
+            _references.TryAdd(key, references);
+        return references;
+    }
+
+    private static void AppendAnchorReferences(StringBuilder builder, string variant, string anchors, bool swap)
+    {
+        var low = $"{anchors}-low-anchor";
+        var high = $"{anchors}-high-anchor";
+        builder.Append(ActiveReference(variant, low, swap ? high : low));
+        builder.Append(ActiveReference(variant, high, swap ? low : high));
+    }
 
     public static void AppendDeclaration(StringBuilder builder, string name, string value)
     {

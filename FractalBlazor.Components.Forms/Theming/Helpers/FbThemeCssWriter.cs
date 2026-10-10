@@ -7,9 +7,6 @@ namespace FractalBlazor.Components.Forms.Theming.Helpers;
 
 public static class FbThemeCssWriter
 {
-    public static readonly IReadOnlyList<string> VariantTokens =
-    [.. FbThemeCssNames.LayoutVariantTokens, "fg-low-anchor", "fg-high-anchor"];
-
     public static string ToCssVariables(FbResolvedTheme theme)
     {
         ArgumentNullException.ThrowIfNull(theme);
@@ -71,16 +68,14 @@ public static class FbThemeCssWriter
         return builder.ToString();
     }
 
-    public static string BuildVariantReferences(string? variant)
-    {
-        var normalized = FbThemeCssNames.Normalize(FbThemeVariants.Normalize(variant));
-        var builder = new StringBuilder();
-
-        foreach (var token in VariantTokens)
-            builder.Append(FbThemeCssNames.ActiveReference(normalized, token));
-
-        return builder.ToString();
-    }
+    /// <summary>
+    /// Inline redirections that activate <paramref name="variant"/> on a DOM branch.
+    /// The swap flags exchange the low and high anchors of the background or foreground pair.
+    /// </summary>
+    public static string BuildVariantReferences(string? variant, bool swapBackground = false, bool swapForeground = false)
+        => FbThemeCssNames.VariantReferences(
+            FbThemeCssNames.Normalize(FbThemeVariants.Normalize(variant)),
+            foreground: true, swapBackground, swapForeground);
 
     private static void AppendVariant(StringBuilder builder, FbResolvedThemeVariant variant)
     {

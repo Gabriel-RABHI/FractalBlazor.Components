@@ -47,16 +47,14 @@ public static class FbLayoutThemeCssWriter
         return builder.ToString();
     }
 
-    public static string BuildVariantReferences(string? variant)
-    {
-        var normalized = FbThemeCssNames.Normalize(FbLayoutThemeVariants.Normalize(variant));
-        var builder = new StringBuilder();
-
-        foreach (var token in FbThemeCssNames.LayoutVariantTokens)
-            builder.Append(FbThemeCssNames.ActiveReference(normalized, token));
-
-        return builder.ToString();
-    }
+    /// <summary>
+    /// Inline redirections that activate <paramref name="variant"/> on a DOM branch.
+    /// <paramref name="swapBackground"/> exchanges its low and high background anchors.
+    /// </summary>
+    public static string BuildVariantReferences(string? variant, bool swapBackground = false)
+        => FbThemeCssNames.VariantReferences(
+            FbThemeCssNames.Normalize(FbLayoutThemeVariants.Normalize(variant)),
+            foreground: false, swapBackground, swapForeground: false);
 
     private static void AppendVariant(StringBuilder builder, FbResolvedLayoutThemeVariant variant)
     {
