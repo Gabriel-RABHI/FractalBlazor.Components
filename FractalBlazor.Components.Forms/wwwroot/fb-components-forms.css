@@ -36,6 +36,35 @@
     cursor: not-allowed;
 }
 
+/**********************************************************************************/
+/* ICONS */
+/* Sized relative to the surrounding text, painted with currentColor. */
+.fb-icon {
+    display: inline-block;
+    flex: none;
+    width: 1.25em;
+    height: 1.25em;
+    vertical-align: -0.25em;
+}
+
+.fb-icon-s {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+}
+
+.fb-icon-l {
+    width: 1.5em;
+    height: 1.5em;
+    vertical-align: -0.375em;
+}
+
+.fb-icon-x {
+    width: 2em;
+    height: 2em;
+    vertical-align: -0.5em;
+}
+
 :root,
 .fb-theme-scope {
     color: var(--fb-fg-default);
