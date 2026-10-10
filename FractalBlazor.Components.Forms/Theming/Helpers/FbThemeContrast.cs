@@ -73,7 +73,11 @@ public sealed class FbContrastReport
 /// </summary>
 public static class FbThemeContrast
 {
-    public static FbContrastReport Analyze(FbResolvedTheme theme)
+    /// <param name="inverted">
+    /// Analyze the variants as <c>&lt;FbVariant Invert&gt;</c> renders them: background and
+    /// foreground anchors exchanged.
+    /// </param>
+    public static FbContrastReport Analyze(FbResolvedTheme theme, bool inverted = false)
     {
         ArgumentNullException.ThrowIfNull(theme);
 
@@ -99,6 +103,8 @@ public static class FbThemeContrast
             var bgHigh = variant.LayoutColors.HighAnchor;
             var fgLow = variant.FormColors.LowAnchor;
             var fgHigh = variant.FormColors.HighAnchor;
+            if (inverted)
+                (bgLow, bgHigh, fgLow, fgHigh) = (fgHigh, fgLow, bgHigh, bgLow);
 
             if (!FbColorMath.IsHexColor(bgLow) || !FbColorMath.IsHexColor(bgHigh)
                 || !FbColorMath.IsHexColor(fgLow) || !FbColorMath.IsHexColor(fgHigh))

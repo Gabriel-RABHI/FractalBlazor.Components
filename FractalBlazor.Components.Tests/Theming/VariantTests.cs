@@ -22,23 +22,28 @@ public sealed class VariantTests : BunitContext
     }
 
     [Fact]
-    public void Swap_background_exchanges_the_background_anchors_only()
+    public void Invert_exchanges_the_background_and_foreground_anchors()
     {
-        var style = StyleOf(p => p.Add(x => x.Variant, FbThemeVariants.Error).Add(x => x.SB, true));
+        var style = StyleOf(p => p.Add(x => x.Variant, FbThemeVariants.Error).Add(x => x.Invert, true));
 
-        Assert.Contains("--fb-bg-low-anchor:var(--fb-error-bg-high-anchor);", style);
-        Assert.Contains("--fb-bg-high-anchor:var(--fb-error-bg-low-anchor);", style);
-        Assert.Contains("--fb-fg-low-anchor:var(--fb-error-fg-low-anchor);", style);
+        Assert.Equal(
+            "--fb-bg-low-anchor:var(--fb-error-fg-high-anchor);" +
+            "--fb-bg-high-anchor:var(--fb-error-fg-low-anchor);" +
+            "--fb-fg-low-anchor:var(--fb-error-bg-high-anchor);" +
+            "--fb-fg-high-anchor:var(--fb-error-bg-low-anchor);",
+            style);
     }
 
     [Fact]
-    public void Swap_foreground_exchanges_the_foreground_anchors_only()
+    public void Layout_invert_exchanges_the_background_anchors()
     {
-        var style = StyleOf(p => p.Add(x => x.SF, true));
+        var style = Render<FractalBlazor.Components.Layout.Theming.FbLayoutVariant>(p => p.Add(x => x.Invert, true))
+            .Find("div").GetAttribute("style");
 
-        Assert.Contains("--fb-bg-low-anchor:var(--fb-default-bg-low-anchor);", style);
-        Assert.Contains("--fb-fg-low-anchor:var(--fb-default-fg-high-anchor);", style);
-        Assert.Contains("--fb-fg-high-anchor:var(--fb-default-fg-low-anchor);", style);
+        Assert.Equal(
+            "--fb-bg-low-anchor:var(--fb-default-bg-high-anchor);" +
+            "--fb-bg-high-anchor:var(--fb-default-bg-low-anchor);",
+            style);
     }
 
     [Fact]

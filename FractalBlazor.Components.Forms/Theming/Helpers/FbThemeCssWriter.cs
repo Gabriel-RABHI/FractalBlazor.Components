@@ -72,12 +72,13 @@ public static class FbThemeCssWriter
 
     /// <summary>
     /// Inline redirections that activate <paramref name="variant"/> on a DOM branch.
-    /// The swap flags exchange the low and high anchors of the background or foreground pair.
+    /// <paramref name="invert"/> exchanges the background and foreground anchors: a dark
+    /// variant renders light, and the other way round.
     /// </summary>
-    public static string BuildVariantReferences(string? variant, bool swapBackground = false, bool swapForeground = false)
+    public static string BuildVariantReferences(string? variant, bool invert = false)
         => FbThemeCssNames.VariantReferences(
             FbThemeCssNames.Normalize(FbThemeVariants.Normalize(variant)),
-            foreground: true, swapBackground, swapForeground);
+            foreground: true, invert);
 
     private static void AppendVariant(StringBuilder builder, FbResolvedThemeVariant variant)
     {

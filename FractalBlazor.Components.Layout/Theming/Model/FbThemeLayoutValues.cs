@@ -74,7 +74,7 @@ public static class FbThemeCssNames
     public const string ForegroundAnchors = "fg";
 
     private const int ReferenceCacheCapacity = 256;
-    private static readonly ConcurrentDictionary<(string Variant, bool SwapBackground, bool SwapForeground, bool Foreground), string> _references = new();
+    private static readonly ConcurrentDictionary<(string Variant, bool Foreground, bool Invert), string> _references = new();
 
     public static string Normalize(string name)
     {
@@ -121,32 +121,49 @@ public static class FbThemeCssNames
 
     /// <summary>
     /// Builds the inline redirections that activate a variant: the background anchors, then,
-    /// when <paramref name="foreground"/> is set, the foreground anchors. A swapped pair points
-    /// the low anchor at the variant's high anchor and the other way round.
+    /// when <paramref name="foreground"/> is set, the foreground anchors.
     /// </summary>
-    public static string VariantReferences(string normalizedVariant, bool foreground, bool swapBackground, bool swapForeground)
+    /// <param name="invert">
+    /// Turns a dark variant into a light one and the other way round, as <c>Conception.md</c>
+    /// describes: with foreground anchors, the background anchors take the foreground ones
+    /// (the absolute foreground becomes the absolute background) and the other way round;
+    /// with background anchors only, the low and high anchors are exchanged.
+    /// </param>
+    public static string VariantReferences(string normalizedVariant, bool foreground, bool invert)
     {
-        var key = (normalizedVariant, swapBackground, swapForeground && foreground, foreground);
+        var key = (normalizedVariant, foreground, invert);
         if (_references.TryGetValue(key, out var cached))
             return cached;
 
+        const string bgLow = "bg-low-anchor", bgHigh = "bg-high-anchor", fgLow = "fg-low-anchor", fgHigh = "fg-high-anchor";
         var builder = new StringBuilder();
-        AppendAnchorReferences(builder, normalizedVariant, BackgroundAnchors, swapBackground);
-        if (foreground)
-            AppendAnchorReferences(builder, normalizedVariant, ForegroundAnchors, swapForeground);
+        if (!invert)
+        {
+            builder.Append(ActiveReference(normalizedVariant, bgLow));
+            builder.Append(ActiveReference(normalizedVariant, bgHigh));
+            if (foreground)
+            {
+                builder.Append(ActiveReference(normalizedVariant, fgLow));
+                builder.Append(ActiveReference(normalizedVariant, fgHigh));
+            }
+        }
+        else if (foreground)
+        {
+            builder.Append(ActiveReference(normalizedVariant, bgLow, fgHigh));
+            builder.Append(ActiveReference(normalizedVariant, bgHigh, fgLow));
+            builder.Append(ActiveReference(normalizedVariant, fgLow, bgHigh));
+            builder.Append(ActiveReference(normalizedVariant, fgHigh, bgLow));
+        }
+        else
+        {
+            builder.Append(ActiveReference(normalizedVariant, bgLow, bgHigh));
+            builder.Append(ActiveReference(normalizedVariant, bgHigh, bgLow));
+        }
         var references = builder.ToString();
 
         if (_references.Count < ReferenceCacheCapacity)
             _references.TryAdd(key, references);
         return references;
-    }
-
-    private static void AppendAnchorReferences(StringBuilder builder, string variant, string anchors, bool swap)
-    {
-        var low = $"{anchors}-low-anchor";
-        var high = $"{anchors}-high-anchor";
-        builder.Append(ActiveReference(variant, low, swap ? high : low));
-        builder.Append(ActiveReference(variant, high, swap ? low : high));
     }
 
     /// <summary>

@@ -674,9 +674,9 @@ bg-low-anchor   bg-high-anchor    // Layout et Forms
 fg-low-anchor   fg-high-anchor    // Forms uniquement
 ```
 
-Une paire peut être inversée : l'ancre basse active pointe alors vers l'ancre haute de la variante, et l'inverse. C'est ce que font `SB` (fond) et `SF` (premier plan) ; l'inversion reste une redirection, sans aucune valeur calculée en C#.
+Une variante peut être inversée (`Invert`) : les ancres de fond pointent vers les ancres de premier plan de la variante, et l'inverse. L'ancre absolue du premier plan devient celle du fond, ce qui transforme une variante sombre en variante claire, comme le prévoit `Conception.md`. L'inversion reste une redirection, sans aucune valeur calculée en C#.
 
-Les chaînes de redirection sont construites une fois par combinaison (variante, inversions) puis mises en cache, dans une limite de 256 entrées.
+Les chaînes de redirection sont construites une fois par combinaison (variante, inversion) puis mises en cache, dans une limite de 256 entrées.
 
 Les filets ont une épaisseur fixe de `1px`. Leur force visuelle dépend uniquement des tokens `frame-*-mix`.
 
@@ -756,7 +756,7 @@ Le composant :
 
 1. normalise la variante vide en `Default` ;
 2. vérifie, via le contexte fourni par `FbTheme`, que la variante existe ;
-3. génère par simple concaténation les redirections des tokens Variant, inversées par paire si `SB` ou `SF` est posé ;
+3. génère par simple concaténation les redirections des tokens Variant, inversées si `Invert` est posé ;
 4. rend un `<div class="fb-theme-scope">` visuellement neutre (`display: contents`) : ses enfants participent directement à la mise en page du parent ;
 5. place les redirections dans l'attribut `style` de cette div ;
 6. rend son `ChildContent` dans ce scope.
@@ -781,22 +781,25 @@ Un thème ou une branche inconnus lèvent une exception explicite dans `FbTheme`
 
 #### Inversion locale
 
-`SB` inverse les ancres de fond et `SF` celles du premier plan :
+`Invert` échange les ancres de fond et celles du premier plan :
 
 ```razor
-<FbVariant SB>
+<FbVariant Invert>
     <FbStack WBS PL>Carte claire dans une branche sombre</FbStack>
 </FbVariant>
 ```
 
 ```html
 <div class="fb-theme-scope"
-     style="--fb-bg-low-anchor:var(--fb-default-bg-high-anchor);
-            --fb-bg-high-anchor:var(--fb-default-bg-low-anchor);
-            ...">
+     style="--fb-bg-low-anchor:var(--fb-default-fg-high-anchor);
+            --fb-bg-high-anchor:var(--fb-default-fg-low-anchor);
+            --fb-fg-low-anchor:var(--fb-default-bg-high-anchor);
+            --fb-fg-high-anchor:var(--fb-default-bg-low-anchor);">
 ```
 
-`FbLayoutVariant` accepte `SB` ; il n'a pas de premier plan à inverser.
+Échanger seulement les deux ancres d'une même paire ne suffit pas : avec le thème par défaut, l'ancre haute du fond est une nuance 500, si bien que le fond obtenu est un gris moyen sur lequel le texte devient illisible. `FbThemeContrast.Analyze(theme, inverted: true)` vérifie les variantes inversées.
+
+`FbLayoutVariant` accepte aussi `Invert`. Sans premier plan, il échange les ancres basse et haute du fond, qui sont déjà les deux extrêmes de la rampe Layout.
 
 ### Imbrication et retour au défaut
 

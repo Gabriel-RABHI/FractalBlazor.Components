@@ -47,8 +47,16 @@ public sealed class ContrastTests(ITestOutputHelper output)
     [InlineData(FbThemeBranches.Dark)]
     [InlineData(FbThemeBranches.Light)]
     public void Default_theme_readable_text_meets_wcag_aa(string branch)
+        => AssertReadableTextMeetsAA(FbThemeContrast.Analyze(new FbFormThemeRegistry().Resolve("Default", branch)));
+
+    [Theory]
+    [InlineData(FbThemeBranches.Dark)]
+    [InlineData(FbThemeBranches.Light)]
+    public void Inverted_default_theme_readable_text_meets_wcag_aa(string branch)
+        => AssertReadableTextMeetsAA(FbThemeContrast.Analyze(new FbFormThemeRegistry().Resolve("Default", branch), inverted: true));
+
+    private static void AssertReadableTextMeetsAA(FbContrastReport report)
     {
-        var report = FbThemeContrast.Analyze(new FbFormThemeRegistry().Resolve("Default", branch));
 
         var failing = report.Entries
             .Where(entry => entry.Text is not FbContrastText.Subtle && !entry.MeetsAA)

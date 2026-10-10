@@ -22,17 +22,11 @@ public sealed class FbVariant : FbComponentBase
     public string Style { get; set; } = "";
 
     /// <summary>
-    /// Swap -> Background: exchange the low and high background anchors (fills, frames).
-    /// A light card inside a dark page, without a new branch.
+    /// Exchanges the background and foreground anchors of the variant: a dark variant renders
+    /// light and the other way round. A light card inside a dark page, without a new branch.
     /// </summary>
     [Parameter]
-    public bool SB { get; set; }
-
-    /// <summary>
-    /// Swap -> Foreground: exchange the low and high foreground anchors (text, icons).
-    /// </summary>
-    [Parameter]
-    public bool SF { get; set; }
+    public bool Invert { get; set; }
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
@@ -47,7 +41,7 @@ public sealed class FbVariant : FbComponentBase
 
         builder.OpenElement(0, "div");
         builder.AddAttribute(1, "class", $"fb-theme-scope {Classes}".TrimEnd());
-        builder.AddAttribute(2, "style", FbThemeCssWriter.BuildVariantReferences(normalized, SB, SF) + Style);
+        builder.AddAttribute(2, "style", FbThemeCssWriter.BuildVariantReferences(normalized, Invert) + Style);
         builder.AddContent(3, ChildContent);
         builder.CloseElement();
     }
