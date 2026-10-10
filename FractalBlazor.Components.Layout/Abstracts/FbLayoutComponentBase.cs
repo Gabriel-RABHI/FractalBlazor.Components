@@ -414,7 +414,7 @@ namespace FractalBlazor.Components.Layout.Abstracts
         public bool VO_XS { get => ResponsiveBreakpoint == FbBreaks.XS && !_state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbBreaks.XS; _state._responsiveUnder = false; } } }
 
         /// <summary>
-        /// Visible -> Under -> XS (width < 512px)
+        /// Visible -> Under -> XS (width &lt; 512px)
         /// </summary>
         [Parameter]
         public bool VU_XS { get => ResponsiveBreakpoint == FbBreaks.XS && _state._responsiveUnder; set { if (value) { ResponsiveBreakpoint = FbBreaks.XS; _state._responsiveUnder = true; } } }

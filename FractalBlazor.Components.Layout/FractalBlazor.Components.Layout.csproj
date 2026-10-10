@@ -4,6 +4,10 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Description>Ultra-light Blazor layout components (Row, Stack, Grid) themed through CSS variables, usable next to any component library.</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- CS1591: not every public member is documented yet; the DSL flags are. -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
     <!-- BL0007: the boolean DSL is made of parameters with logic, each flag writing into packed state. -->
     <NoWarn>$(NoWarn);BL0007</NoWarn>
   </PropertyGroup>

@@ -123,6 +123,8 @@ public static class FbThemeCssNames
     /// Builds the inline redirections that activate a variant: the background anchors, then,
     /// when <paramref name="foreground"/> is set, the foreground anchors.
     /// </summary>
+    /// <param name="normalizedVariant">Variant name, already normalized for CSS.</param>
+    /// <param name="foreground">Also redirect the foreground anchors (Forms).</param>
     /// <param name="invert">
     /// Turns a dark variant into a light one and the other way round, as <c>Conception.md</c>
     /// describes: with foreground anchors, the background anchors take the foreground ones

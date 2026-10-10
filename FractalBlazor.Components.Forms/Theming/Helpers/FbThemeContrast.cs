@@ -73,6 +73,7 @@ public sealed class FbContrastReport
 /// </summary>
 public static class FbThemeContrast
 {
+    /// <param name="theme">Resolved theme, as <c>IFbFormThemeRegistry.Resolve</c> returns it.</param>
     /// <param name="inverted">
     /// Analyze the variants as <c>&lt;FbVariant Invert&gt;</c> renders them: background and
     /// foreground anchors exchanged.

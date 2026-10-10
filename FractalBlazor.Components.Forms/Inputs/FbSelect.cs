@@ -31,7 +31,7 @@ namespace FractalBlazor.Components.Forms.Inputs
         public Func<TValue, string>? ItemText { get; set; }
 
         /// <summary>
-        /// Text of an empty first option, shown while <see cref="Value"/> is not one of the items.
+        /// Text of an empty first option, shown while the value is not one of the items.
         /// </summary>
         [Parameter]
         public string? Placeholder { get; set; }

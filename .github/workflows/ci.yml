@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore FractalBlazor.Components.slnx
+
+      - name: Build
+        run: dotnet build FractalBlazor.Components.slnx --configuration Release --no-restore -warnaserror
+
+      - name: Test
+        run: dotnet test --project FractalBlazor.Components.Tests/FractalBlazor.Components.Tests.csproj --configuration Release --no-build
+
+      - name: Pack
+        run: |
+          dotnet pack FractalBlazor.Components.Common/FractalBlazor.Components.Common.csproj --configuration Release --no-build --output artifacts
+          dotnet pack FractalBlazor.Components.Layout/FractalBlazor.Components.Layout.csproj --configuration Release --no-build --output artifacts
+          dotnet pack FractalBlazor.Components.Forms/FractalBlazor.Components.Forms.csproj --configuration Release --no-build --output artifacts
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: artifacts/*.nupkg
