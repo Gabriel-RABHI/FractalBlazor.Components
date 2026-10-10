@@ -45,6 +45,17 @@
     cursor: pointer;
 }
 
+/* The select is transparent, so browsers that draw the list from it (Chromium on Windows)
+   fall back to a white list. Options carry the fill of the field and the control text. */
+.fb-select option {
+    background-color: var(--fb-current-bg);
+    color: var(--fb-control-fg);
+}
+
+.fb-select option:disabled {
+    color: var(--fb-control-placeholder);
+}
+
 .fb-select-field:focus-within {
     outline: var(--fb-outline-size) solid var(--fb-frame-border-color);
     --fb-current-frame-medium-mix: var(--fb-frame-strong-mix);
