@@ -7,8 +7,11 @@
     color: var(--fb-control-fg);
 }
 
+/* Full width including padding and frame, so a field never overflows its parent. */
 .fb-field {
     width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .fb-control-input {
