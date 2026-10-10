@@ -4,6 +4,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <!-- BL0007: the boolean DSL is made of parameters with logic, each flag writing into packed state. -->
+    <NoWarn>$(NoWarn);BL0007</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

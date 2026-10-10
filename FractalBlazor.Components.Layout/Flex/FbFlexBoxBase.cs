@@ -269,7 +269,7 @@ namespace FractalBlazor.Components.Layout.Flex
         }
 
         // -------- Value assignation
-        protected string MinWidth { get; set; }
+        protected string? MinWidth { get; set; }
 
         protected bool MinWidthMaxContent { get => _state._minWithSize == FbFlexSize.MaxContent; set { if (value) _state._minWithSize = FbFlexSize.MaxContent; } }
 
@@ -295,7 +295,7 @@ namespace FractalBlazor.Components.Layout.Flex
         }
 
         // -------- Value assignation
-        protected string MinHeight { get; set; }
+        protected string? MinHeight { get; set; }
 
         protected bool MinHeightMaxContent { get => _state._minHeightSize == FbFlexSize.MaxContent; set { if (value) _state._minHeightSize = FbFlexSize.MaxContent; } }
 
@@ -321,7 +321,7 @@ namespace FractalBlazor.Components.Layout.Flex
         }
 
         // -------- Value assignation
-        protected string MaxHeight { get; set; }
+        protected string? MaxHeight { get; set; }
 
         protected bool MaxHeightMaxContent { get => _state._maxHeightSize == FbFlexSize.MaxContent; set { if (value) _state._maxHeightSize = FbFlexSize.MaxContent; } }
 
@@ -384,7 +384,7 @@ namespace FractalBlazor.Components.Layout.Flex
         /// Flex grow factor
         /// </summary>
         [Parameter]
-        public int Flex {
+        public new int Flex {
             get => base.Flex;
             set {
                 if (!IsFlex && !IsInlineFlex)
@@ -397,7 +397,7 @@ namespace FractalBlazor.Components.Layout.Flex
         /// Disable flex grow/shrink
         /// </summary>
         [Parameter]
-        public bool NoFlex {
+        public new bool NoFlex {
             get => base.Flex == int.MinValue;
             set { if (value) base.Flex = int.MinValue; }
         }
@@ -406,7 +406,7 @@ namespace FractalBlazor.Components.Layout.Flex
         /// Flex basis width
         /// </summary>
         [Parameter]
-        public string FlexBasis {
+        public new string FlexBasis {
             get => base.FlexBasis;
             set {
                 base.FlexBasis = value;
@@ -419,19 +419,19 @@ namespace FractalBlazor.Components.Layout.Flex
         /// Child content
         /// </summary>
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        public RenderFragment? ChildContent { get; set; }
 
         /// <summary>
         /// Width master identifier
         /// </summary>
         [Parameter]
-        public string WidthMasterId { get; set; }
+        public string? WidthMasterId { get; set; }
 
         /// <summary>
         /// Width slave identifier
         /// </summary>
         [Parameter]
-        public string WidthSlaveId { get; set; }
+        public string? WidthSlaveId { get; set; }
 
         /// <summary>
         /// Scrollable setting

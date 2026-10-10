@@ -12,87 +12,86 @@ namespace FractalBlazor.Components.Layout
 
         private bool _visible = false;
         private bool _auto = true;
-        private bool _oldShowState = true;
 
-        private string _topLeftOffset = null;
-        private string _topCenterOffset = null;
-        private string _topRightOffset = null;
+        private string? _topLeftOffset = null;
+        private string? _topCenterOffset = null;
+        private string? _topRightOffset = null;
 
-        private string _leftOffset = null;
-        private string _rightOffset = null;
+        private string? _leftOffset = null;
+        private string? _rightOffset = null;
 
-        private string _bottomLeftOffset = null;
-        private string _bottomCenterOffset = null;
-        private string _bottomRightOffset = null;
+        private string? _bottomLeftOffset = null;
+        private string? _bottomCenterOffset = null;
+        private string? _bottomRightOffset = null;
 
         /// <summary>
         /// Child content
         /// </summary>
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        public RenderFragment? ChildContent { get; set; }
 
         // -------- Top
         /// <summary>
         /// Top Left Content
         /// </summary>
         [Parameter]
-        public RenderFragment TopLeftContent { get; set; }
+        public RenderFragment? TopLeftContent { get; set; }
 
         /// <summary>
         /// Top Center Content
         /// </summary>
         [Parameter]
-        public RenderFragment TopCenterContent { get; set; }
+        public RenderFragment? TopCenterContent { get; set; }
 
         /// <summary>
         /// Top Right Content
         /// </summary>
         [Parameter]
-        public RenderFragment TopRightContent { get; set; }
+        public RenderFragment? TopRightContent { get; set; }
 
         // -------- Center
         /// <summary>
         /// Left Content
         /// </summary>
         [Parameter]
-        public RenderFragment LeftContent { get; set; }
+        public RenderFragment? LeftContent { get; set; }
 
         /// <summary>
         /// Center Content
         /// </summary>
         [Parameter]
-        public RenderFragment CenterContent { get; set; }
+        public RenderFragment? CenterContent { get; set; }
 
         /// <summary>
         /// Right Content
         /// </summary>
         [Parameter]
-        public RenderFragment RightContent { get; set; }
+        public RenderFragment? RightContent { get; set; }
 
         // -------- Bottom
         /// <summary>
         /// Bottom Left Content
         /// </summary>
         [Parameter]
-        public RenderFragment BottomLeftContent { get; set; }
+        public RenderFragment? BottomLeftContent { get; set; }
 
         /// <summary>
         /// Bottom Center Content
         /// </summary>
         [Parameter]
-        public RenderFragment BottomCenterContent { get; set; }
+        public RenderFragment? BottomCenterContent { get; set; }
 
         /// <summary>
         /// Bottom Right Content
         /// </summary>
         [Parameter]
-        public RenderFragment BottomRightContent { get; set; }
+        public RenderFragment? BottomRightContent { get; set; }
 
         /// <summary>
         /// Offsets size
         /// </summary>
         [Parameter]
-        public string Offsets
+        public string? Offsets
         {
             get => _topLeftOffset;
             set
@@ -107,49 +106,49 @@ namespace FractalBlazor.Components.Layout
         /// Top Left Offset
         /// </summary>
         [Parameter]
-        public string TopLeftOffset { get => _topLeftOffset; set => _topLeftOffset = value; }
+        public string? TopLeftOffset { get => _topLeftOffset; set => _topLeftOffset = value; }
 
         /// <summary>
         /// Top Center Offset
         /// </summary>
         [Parameter]
-        public string TopCenterOffset { get => _topCenterOffset; set => _topCenterOffset = value; }
+        public string? TopCenterOffset { get => _topCenterOffset; set => _topCenterOffset = value; }
 
         /// <summary>
         /// Top Right Offset
         /// </summary>
         [Parameter]
-        public string TopRightOffset { get => _topRightOffset; set => _topRightOffset = value; }
+        public string? TopRightOffset { get => _topRightOffset; set => _topRightOffset = value; }
 
         /// <summary>
         /// Left Offset
         /// </summary>
         [Parameter]
-        public string LeftOffset { get => _leftOffset; set => _leftOffset = value; }
+        public string? LeftOffset { get => _leftOffset; set => _leftOffset = value; }
 
         /// <summary>
         /// Right Offset
         /// </summary>
         [Parameter]
-        public string RightOffset { get => _rightOffset; set => _rightOffset = value; }
+        public string? RightOffset { get => _rightOffset; set => _rightOffset = value; }
 
         /// <summary>
         /// Bottom Left Offset
         /// </summary>
         [Parameter]
-        public string BottomLeftOffset { get => _bottomLeftOffset; set => _bottomLeftOffset = value; }
+        public string? BottomLeftOffset { get => _bottomLeftOffset; set => _bottomLeftOffset = value; }
 
         /// <summary>
         /// Bottom Center Offset
         /// </summary>
         [Parameter]
-        public string BottomCenterOffset { get => _bottomCenterOffset; set => _bottomCenterOffset = value; }
+        public string? BottomCenterOffset { get => _bottomCenterOffset; set => _bottomCenterOffset = value; }
 
         /// <summary>
         /// Bottom Right Offset
         /// </summary>
         [Parameter]
-        public string BottomRightOffset { get => _bottomRightOffset; set => _bottomRightOffset = value; }
+        public string? BottomRightOffset { get => _bottomRightOffset; set => _bottomRightOffset = value; }
 
         /// <summary>
         /// Automatic visibility

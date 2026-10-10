@@ -10,7 +10,7 @@ namespace FractalBlazor.Components.Layout
     public class FbShowWhenOverPerformance : FbAfterRenderComponentBase, IAsyncDisposable
     {
         [Inject]
-        public IJSRuntime JS { get; set; }
+        public IJSRuntime JS { get; set; } = default!;
 
         /// <summary>
         /// Verification delay in milliseconds
@@ -22,13 +22,13 @@ namespace FractalBlazor.Components.Layout
         /// Scroll parent element ID
         /// </summary>
         [Parameter]
-        public string ScrollParentID { get; set; }
+        public string? ScrollParentID { get; set; }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                await JS.InvokeVoidAsync("runFbShowOnOverPerformance", new object[] { ScrollParentID, VerificationDelay });
+                await JS.InvokeVoidAsync("runFbShowOnOverPerformance", new object?[] { ScrollParentID, VerificationDelay });
             }
         }
 

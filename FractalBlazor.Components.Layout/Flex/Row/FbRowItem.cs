@@ -60,7 +60,7 @@ namespace FractalBlazor.Components.Layout
         /// Child content
         /// </summary>
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        public RenderFragment? ChildContent { get; set; }
         
         /// <summary>
         /// On click event callback

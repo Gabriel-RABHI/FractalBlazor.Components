@@ -30,7 +30,7 @@ public class FbGridContainer : FbLayoutSurfaceComponentBase
         }
     }
 
-    protected string AggregatedClasses {
+    protected new string AggregatedClasses {
         get {
             return $"{base.AggregatedClasses} {SeparatorClass}";
         }

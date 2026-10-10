@@ -10,19 +10,19 @@ namespace FractalBlazor.Components.Layout
     public class FbDropDown : FbAfterRenderComponentBase, IAsyncDisposable
     {
         [Inject]
-        public IJSRuntime JS { get; set; }
+        public IJSRuntime JS { get; set; } = default!;
 
         /// <summary>
         /// Child content acting as the anchor component/element (e.g. input, button, select box).
         /// </summary>
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        public RenderFragment? ChildContent { get; set; }
 
         /// <summary>
         /// The content of the dropdown menu/zone.
         /// </summary>
         [Parameter]
-        public RenderFragment DropDownContent { get; set; }
+        public RenderFragment? DropDownContent { get; set; }
 
         /// <summary>
         /// Gets or sets if the dropdown is currently open.

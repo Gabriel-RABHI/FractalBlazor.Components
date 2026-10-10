@@ -7,6 +7,8 @@
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <!-- BL0005: style tests set parameters on bare instances to inspect the computed styles. -->
+    <NoWarn>$(NoWarn);BL0005</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

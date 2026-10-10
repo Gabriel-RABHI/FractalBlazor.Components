@@ -12,7 +12,7 @@ namespace  FractalBlazor.Components.Layout.Utilities
         private static object _locker = new object();
         private static List<WeakReference<FbUpdatable>> _updatableComponents { get; } = new List<WeakReference<FbUpdatable>>();
 
-        private static Timer timer;
+        private static Timer? timer;
 
         static BackgroundProcess()
         {
@@ -48,7 +48,7 @@ namespace  FractalBlazor.Components.Layout.Utilities
                     // -------- Update permanents
                     lock (_locker)
                     {
-                        List<WeakReference<FbUpdatable>> _toRemove = null;
+                        List<WeakReference<FbUpdatable>>? _toRemove = null;
                         foreach (var wr in _updatableComponents)
                         {
                             if (wr.TryGetTarget(out var target))

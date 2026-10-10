@@ -11,12 +11,12 @@ namespace FractalBlazor.Demo.States
         public sealed record SetName(string Value) : IStateAction<string>;
         public sealed record SetAge(int Value) : IStateAction<int>;
         public sealed record SetBirth(DateOnly? Value) : IStateAction<DateOnly?>;
-        public sealed record SetCountry(string? Value) : IStateAction<string?>;
+        public sealed record SetCountry(string Value) : IStateAction<string>;
         public sealed record SetNewsletter(bool Value) : IStateAction<bool>;
         public sealed record SetPremium(bool Value) : IStateAction<bool>;
         public sealed record Reset : IStateAction;
 
-        public static IReadOnlyList<string?> Countries { get; } = ["France", "Japon", "Canada", "Brésil"];
+        public static IReadOnlyList<string> Countries { get; } = ["France", "Japon", "Canada", "Brésil"];
 
         public string Name { get; private set; } = "";
 

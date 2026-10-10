@@ -19,7 +19,7 @@
         <StartContent><FbText S Subtle>Naissance</FbText></StartContent>
     </FbInputDate>
 
-    <FbSelect TValue="string" TAction="ContactState.SetCountry" Handler="Item" Value="@Item.Country"
+    <FbSelect TValue="string" TAction="ContactState.SetCountry" Handler="Item" Value="@(Item.Country ?? string.Empty)"
               Items="ContactState.Countries" Placeholder="Pays">
         <StartContent><FbText S Subtle>Pays</FbText></StartContent>
     </FbSelect>
