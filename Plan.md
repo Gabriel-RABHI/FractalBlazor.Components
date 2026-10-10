@@ -69,7 +69,7 @@ Chaque changement est vérifié contre ces règles. Une étape qui en viole une 
 ## Phase 4 — Qualité, mesure et publication
 
 - [x] **4.1 Avertissements.** Supprimer explicitement BL0007 dans les bibliothèques (inhérent au DSL booléen), corriger les autres avertissements. Objectif : zéro avertissement dans les bibliothèques.
-- [ ] **4.2 Dépendances.** Mettre à jour SixLabors.ImageSharp dans `Tools` vers une version sans vulnérabilité connue.
+- [x] **4.2 Dépendances.** Retirer SixLabors.ImageSharp de `Tools`. Les versions corrigées restaient vulnérables (3.2.0) ou imposaient une licence commerciale aux builds Release ; un lecteur PNG minimal fondé sur `ZLibStream` produit exactement la même palette.
 - [ ] **4.3 JS regroupé.** Regrouper les fonctions JS sous l'objet global `FractalBlazor` et mettre à jour les appels d'interop.
 - [ ] **4.4 Mesure.** Ajouter un projet BenchmarkDotNet qui compare le rendu de N `FbRow` à un équivalent fondé sur `ComponentBase`, et noter les résultats dans le README.
 - [ ] **4.5 Publication.** README complet, README de Grid corrigé, licence renseignée, métadonnées NuGet, workflow CI (build et tests).

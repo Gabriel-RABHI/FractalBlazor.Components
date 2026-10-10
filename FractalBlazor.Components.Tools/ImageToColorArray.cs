@@ -1,7 +1,5 @@
 using System.Globalization;
 using System.Text;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 
 namespace FractalBlazor.Components.Tools
 {
@@ -46,7 +44,7 @@ namespace FractalBlazor.Components.Tools
 
             string resolvedFilePath = FindFile(filePath, searchLimit);
 
-            using Image<Rgba32> image = Image.Load<Rgba32>(resolvedFilePath);
+            PngReader image = PngReader.Load(resolvedFilePath);
 
             if (image.Width % squareSize != 0 || image.Height % squareSize != 0)
             {
@@ -71,7 +69,7 @@ namespace FractalBlazor.Components.Tools
 
                 for (int column = 0; column < columnCount; column++)
                 {
-                    Rgba32 color = image[column * squareSize + centerOffset, row * squareSize + centerOffset];
+                    var color = image[column * squareSize + centerOffset, row * squareSize + centerOffset];
 
                     if (column > 0)
                     {
