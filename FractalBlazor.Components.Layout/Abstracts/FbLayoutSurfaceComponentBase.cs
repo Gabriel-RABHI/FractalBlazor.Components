@@ -35,28 +35,13 @@ namespace FractalBlazor.Components.Layout.Abstracts
 
         private FbSpacing Radius { get => _radius; set => _radius = value; }
 
-        private string FrameClass {
-            get {
-                string baseClasse = "fb-framed";
-
-                if (_frame is FbFrame.Light)
-                    return $"{baseClasse} {baseClasse}-light";
-                else if (_frame is FbFrame.Medium)
-                    return $"{baseClasse} {baseClasse}-medium";
-                else if (_frame is FbFrame.Strong)
-                    return $"{baseClasse} {baseClasse}-strong";
-                else
-                    return "";
-            }
-        }
-
-        private string ComputedFrameClasses {
-            get {
-                if (FrameClass != "")
-                    return $"{FrameClass}";
-                return "";
-            }
-        }
+        private string FrameClass => _frame switch
+        {
+            FbFrame.Light => "fb-framed fb-framed-light",
+            FbFrame.Medium => "fb-framed fb-framed-medium",
+            FbFrame.Strong => "fb-framed fb-framed-strong",
+            _ => ""
+        };
 
         private string BackgroundClasses {
             get {
@@ -101,7 +86,33 @@ namespace FractalBlazor.Components.Layout.Abstracts
                (Radius != FbSpacing.None ? $"border-radius:{FbLayoutHelper.ToRadiusCss(Radius)};" : "");
 
         // -------------------------------- LEVEL AGGREGATES -------------------------------- //
-        protected new string AggregatedClasses => $"{base.AggregatedClasses} {BackgroundClasses} {ComputedFrameClasses} {HoverClassString} {OutlineClassString}".Trim();
+        protected new string AggregatedClasses
+            => ResolveClasses(SurfaceClassKeyValue, static component => ((FbLayoutSurfaceComponentBase)component).BuildSurfaceClasses());
+
+        /// <summary>
+        /// Class cache key of this level: the layout key plus fill, frame, hover and outline.
+        /// </summary>
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
+        internal struct SurfaceClassKey
+        {
+            public LayoutClassKey Layout;
+            public FbBackground Background;
+            public FbFrame Frame;
+            public bool Hover;
+            public bool Outline;
+        }
+
+        internal SurfaceClassKey SurfaceClassKeyValue => new()
+        {
+            Layout = LayoutClassKeyValue,
+            Background = _background,
+            Frame = _frame,
+            Hover = Hover || !string.IsNullOrWhiteSpace(HoverMixOffset),
+            Outline = _outline
+        };
+
+        private protected string BuildSurfaceClasses()
+            => FbClasses.Join(BuildLayoutClasses(), BackgroundClasses, FrameClass, HoverClassString, OutlineClassString);
 
         // ************************************************************************************************ //
         // **********************************    PUBLIC PARAMETERS    ************************************* //

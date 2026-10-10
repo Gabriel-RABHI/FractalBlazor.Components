@@ -93,6 +93,27 @@ namespace FractalBlazor.Components.Forms.Inputs
         [Parameter]
         public string? Title { get; set; }
 
+        private string? _surfaceClasses;
+        private string _buttonClasses = "";
+
+        /// <summary>
+        /// The surface classes come from a shared cache: the button prefix is only added again
+        /// when they change.
+        /// </summary>
+        private string ButtonClasses
+        {
+            get
+            {
+                var surfaceClasses = AggregatedClasses;
+                if (!ReferenceEquals(surfaceClasses, _surfaceClasses))
+                {
+                    _surfaceClasses = surfaceClasses;
+                    _buttonClasses = "fb-control fb-button " + surfaceClasses;
+                }
+                return _buttonClasses;
+            }
+        }
+
         protected override void BuildRenderTree(RenderTreeBuilder builder)
             => FbVariantScope.Build(builder, FbVariantScope.Effective(Variant, Disabled), ThemeContext, _button);
 
@@ -100,7 +121,7 @@ namespace FractalBlazor.Components.Forms.Inputs
         {
             builder.OpenElement(0, "button");
             builder.AddAttribute(1, "type", Submit ? "submit" : "button");
-            builder.AddAttribute(2, "class", $"fb-control fb-button {AggregatedClasses}");
+            builder.AddAttribute(2, "class", ButtonClasses);
             builder.AddAttribute(3, "style", AggregatedStyles);
             builder.AddAttribute(4, "disabled", Disabled);
             builder.AddAttribute(5, "title", Title);

@@ -8,6 +8,28 @@ public sealed class StyleCacheTests
     private sealed class ProbeRow : FbRow
     {
         public string Styles => AggregatedStyles;
+
+        public string SurfaceClasses => AggregatedClasses;
+    }
+
+    [Fact]
+    public void Identical_states_share_the_same_class_instance()
+    {
+        var first = new ProbeRow { WBA = true, WFM = true, Hover = true };
+        var second = new ProbeRow { WBA = true, WFM = true, Hover = true };
+
+        Assert.Same(first.SurfaceClasses, second.SurfaceClasses);
+        Assert.Equal("fb-bg-accent fb-framed fb-framed-medium fb-hover", first.SurfaceClasses);
+    }
+
+    [Fact]
+    public void Custom_classes_are_kept_and_never_shared()
+    {
+        var first = new ProbeRow { WBA = true, Classes = "custom" };
+        var second = new ProbeRow { WBA = true, Classes = "custom" };
+
+        Assert.Equal("custom fb-bg-accent", first.SurfaceClasses);
+        Assert.NotSame(first.SurfaceClasses, second.SurfaceClasses);
     }
 
     [Fact]

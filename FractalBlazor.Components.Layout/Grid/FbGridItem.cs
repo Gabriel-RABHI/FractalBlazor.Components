@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text;
 using FractalBlazor.Components.Layout.Abstracts;
+using FractalBlazor.Components.Layout.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
@@ -68,6 +69,16 @@ public sealed class FbGridItem : FbLayoutSurfaceComponentBase
     private FbGridItemJustify JustifySelf { get; set; } = FbGridItemJustify.Auto;
 
     private (FbGridItemAlignment AlignSelf, FbGridItemJustify JustifySelf) _defaults;
+
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
+    private struct ItemClassKey
+    {
+        public SurfaceClassKey Surface;
+    }
+
+    private string ItemClasses
+        => ResolveClasses(new ItemClassKey { Surface = SurfaceClassKeyValue },
+            static component => FbClasses.Join("fb-grid-item", ((FbGridItem)component).BuildSurfaceClasses()));
 
     protected override void CaptureParameterDefaults()
     {
@@ -197,7 +208,7 @@ public sealed class FbGridItem : FbLayoutSurfaceComponentBase
     {
         builder.OpenElement(0, "div");
         builder.AddMultipleAttributes(1, AdditionalAttributes);
-        builder.AddAttribute(2, "class", $"fb-grid-item {Classes.Trim()} {AggregatedClasses}");
+        builder.AddAttribute(2, "class", ItemClasses);
         builder.AddAttribute(3, "style", BuildStyle());
         builder.AddContent(4, ChildContent);
         builder.CloseElement();

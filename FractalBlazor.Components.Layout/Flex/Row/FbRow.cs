@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using FractalBlazor.Components.Layout.Flex;
+using FractalBlazor.Components.Layout.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
@@ -33,30 +34,26 @@ namespace FractalBlazor.Components.Layout
             _separator = _defaultSeparator;
         }
 
-        private string SeparatorClass
+        private string SeparatorClass => _separator switch
         {
-            get
-            {
-                string baseClasse = "fb-separated-row";
+            FbFrame.Light => "fb-separated-row fb-separated-row-light",
+            FbFrame.Medium => "fb-separated-row fb-separated-row-medium",
+            FbFrame.Strong => "fb-separated-row fb-separated-row-strong",
+            _ => ""
+        };
 
-                if (_separator is FbFrame.Light)
-                    return $"{baseClasse} {baseClasse}-light";
-                else if (_separator is FbFrame.Medium)
-                    return $"{baseClasse} {baseClasse}-medium";
-                else if (_separator is FbFrame.Strong)
-                    return $"{baseClasse} {baseClasse}-strong";
-                else
-                    return "";
-            }
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
+        private struct RowClassKey
+        {
+            public SurfaceClassKey Surface;
+            public FbFrame Separator;
         }
 
-        protected string ComputedRowClasses
-        {
-            get
-            {
-                return $"{base.AggregatedClasses} {SeparatorClass}";
-            }
-        }
+        private string RowClasses
+            => ResolveClasses(new RowClassKey { Surface = SurfaceClassKeyValue, Separator = _separator },
+                static component => ((FbRow)component).BuildRowClasses());
+
+        private string BuildRowClasses() => FbClasses.Join("fb-row", BuildSurfaceClasses(), SeparatorClass);
         #endregion
 
         // ************************************************************************************************ //
@@ -263,7 +260,7 @@ namespace FractalBlazor.Components.Layout
         {
             builder.OpenElement(0, "div");
             builder.AddAttribute(2, "style", AggregatedStyles);
-            builder.AddAttribute(3, "class", $"fb-row {ComputedRowClasses}");
+            builder.AddAttribute(3, "class", RowClasses);
             if (OnClick.HasDelegate)
                 builder.AddAttribute(4, "onclick", OnClick);
             builder.AddContent(7, ChildContent);

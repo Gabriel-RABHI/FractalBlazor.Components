@@ -15,26 +15,26 @@ public class FbGridContainer : FbLayoutSurfaceComponentBase
     #region HIDDEN
     private FbFrame _separator = FbFrame.None;
 
-    private string SeparatorClass {
-        get {
-            string baseClasse = "fb-separated-row";
+    private string SeparatorClass => _separator switch
+    {
+        FbFrame.Light => "fb-separated-row fb-separated-row-light",
+        FbFrame.Medium => "fb-separated-row fb-separated-row-medium",
+        FbFrame.Strong => "fb-separated-row fb-separated-row-strong",
+        _ => ""
+    };
 
-            if (_separator is FbFrame.Light)
-                return $"{baseClasse} {baseClasse}-light";
-            else if (_separator is FbFrame.Medium)
-                return $"{baseClasse} {baseClasse}-medium";
-            else if (_separator is FbFrame.Strong)
-                return $"{baseClasse} {baseClasse}-strong";
-            else
-                return "";
-        }
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
+    private struct GridClassKey
+    {
+        public SurfaceClassKey Surface;
+        public FbFrame Separator;
     }
 
-    protected new string AggregatedClasses {
-        get {
-            return $"{base.AggregatedClasses} {SeparatorClass}";
-        }
-    }
+    private string GridClasses
+        => ResolveClasses(new GridClassKey { Surface = SurfaceClassKeyValue, Separator = _separator },
+            static component => ((FbGridContainer)component).BuildGridClasses());
+
+    private string BuildGridClasses() => FbClasses.Join("fb-grid-container", BuildSurfaceClasses(), SeparatorClass);
 
     public FbGridContainer()
     {
@@ -437,7 +437,7 @@ public class FbGridContainer : FbLayoutSurfaceComponentBase
     {
         builder.OpenElement(0, "div");
         builder.AddMultipleAttributes(1, AdditionalAttributes);
-        builder.AddAttribute(2, "class", JoinClasses("fb-grid-container", $"{AggregatedClasses}"));
+        builder.AddAttribute(2, "class", GridClasses);
         builder.AddAttribute(3, "style", BuildStyle());
 
         builder.OpenElement(4, "div");
@@ -513,9 +513,6 @@ public class FbGridContainer : FbLayoutSurfaceComponentBase
 
     private static void Add(StringBuilder css, string property, string value) =>
         css.Append(property).Append(':').Append(value).Append(';');
-
-    private static string JoinClasses(string required, string optional) =>
-        string.IsNullOrWhiteSpace(optional) ? required : $"{required} {optional.Trim()}";
 
     private static void ValidateRange(int? value, string parameterName)
     {

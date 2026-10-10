@@ -13,6 +13,19 @@ namespace FractalBlazor.Components.Layout.Abstracts
     {
         #region HIDDEN
         private FbStyleMemo _styleMemo;
+        private FbStyleMemo _classMemo;
+
+        /// <summary>
+        /// Every value that shapes the layout classes, except the free-form <c>Classes</c>.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct LayoutClassKey
+        {
+            public bool NoWrap;
+            public bool ResponsiveContainer;
+            public FbBreaks Breakpoint;
+            public bool Under;
+        }
 
         /// <summary>
         /// Every parameter that shapes the layout inline style, except free-form strings.
@@ -206,20 +219,33 @@ namespace FractalBlazor.Components.Layout.Abstracts
         /// </summary>
         private protected string ResolveStyle<TKey>(in TKey key, in FbStyleInputs inputs, Func<FbLayoutComponentBase, string> build)
             where TKey : unmanaged
+            => Resolve(ref _styleMemo, in key, in inputs, build);
+
+        /// <summary>
+        /// Same as <see cref="ResolveStyle"/> for the <c>class</c> attribute, whose only
+        /// free-form input is <see cref="Classes"/>. Each key type must always produce the
+        /// same classes: a component that adds its own class uses its own key type.
+        /// </summary>
+        private protected string ResolveClasses<TKey>(in TKey key, Func<FbLayoutComponentBase, string> build)
+            where TKey : unmanaged
+            => Resolve(ref _classMemo, in key, new FbStyleInputs(Classes, null), build);
+
+        private string Resolve<TKey>(ref FbStyleMemo memo, in TKey key, in FbStyleInputs inputs, Func<FbLayoutComponentBase, string> build)
+            where TKey : unmanaged
         {
-            if (_styleMemo.TryGet(in key, in inputs, out var style))
-                return style;
+            if (memo.TryGet(in key, in inputs, out var value))
+                return value;
 
             var shareable = inputs.IsEmpty;
-            if (!shareable || !FbStyleCache<TKey>.TryGet(in key, out style))
+            if (!shareable || !FbStyleCache<TKey>.TryGet(in key, out value))
             {
-                style = build(this);
+                value = build(this);
                 if (shareable)
-                    style = FbStyleCache<TKey>.Add(in key, style);
+                    value = FbStyleCache<TKey>.Add(in key, value);
             }
 
-            _styleMemo.Set(in key, in inputs, style);
-            return style;
+            memo.Set(in key, in inputs, value);
+            return value;
         }
 
         private protected string BuildLayoutStyle()
@@ -246,7 +272,18 @@ namespace FractalBlazor.Components.Layout.Abstracts
         }
 
         // -------------------------------- LEVEL AGGREGATES -------------------------------- //
-        protected string AggregatedClasses => $"{Classes} {WrapClassString} {ResponsiveClassString}".Trim();
+        protected string AggregatedClasses
+            => ResolveClasses(LayoutClassKeyValue, static component => component.BuildLayoutClasses());
+
+        internal LayoutClassKey LayoutClassKeyValue => new()
+        {
+            NoWrap = _state._noWrap,
+            ResponsiveContainer = ResponsiveContainer,
+            Breakpoint = _state.ResponsiveBreakpoint,
+            Under = _state._responsiveUnder
+        };
+
+        private protected string BuildLayoutClasses() => FbClasses.Join(Classes, WrapClassString, ResponsiveClassString);
 
         #endregion
 
