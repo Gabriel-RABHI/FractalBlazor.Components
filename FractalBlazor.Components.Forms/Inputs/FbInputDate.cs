@@ -1,5 +1,5 @@
 using System.Globalization;
-using FractalBlazor.Components.Forms.Contracts;
+using FractalBlazor.Components.Common.Contracts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 

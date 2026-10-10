@@ -1,4 +1,4 @@
-using FractalBlazor.Components.Forms.Contracts;
+using FractalBlazor.Components.Common.Contracts;
 using FractalBlazor.Components.Forms.Core;
 using FractalBlazor.Components.Forms.Theming.Constants;
 using FractalBlazor.Components.Forms.Theming.Helpers;

@@ -1,6 +1,16 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 
-@Body
+<FbStack PL GL>
+    <FbRow GL JVC WBA WFL WRL PHL PVM NoFlex>
+        <FbIcon Icon="@FbMaterialIcons.ViewQuilt" L Highlight />
+        <FbText L B>FractalBlazor</FbText>
+        <FbRowSpacer />
+        <NavLink class="fb-demo-nav" href="" Match="NavLinkMatch.All">Layout et theming</NavLink>
+        <NavLink class="fb-demo-nav" href="forms">Formulaires</NavLink>
+        <NavLink class="fb-demo-nav" href="state">State-first</NavLink>
+    </FbRow>
+    @Body
+</FbStack>
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.

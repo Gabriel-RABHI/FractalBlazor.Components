@@ -1,4 +1,4 @@
-﻿using FractalBlazor.Components.Forms.Contracts;
+using FractalBlazor.Components.Common.Contracts;
 using System.Linq.Expressions;
 
 namespace FractalBlazor.Components.Forms.Core

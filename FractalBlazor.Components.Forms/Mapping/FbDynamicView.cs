@@ -1,61 +1,55 @@
-﻿using FractalBlazor.Components.Forms.Contracts;
+using FractalBlazor.Components.Common.Contracts;
+using FractalBlazor.Components.Forms.Contracts;
 using FractalBlazor.Components.Layout.Abstracts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Forms.Mapping
 {
+    /// <summary>
+    /// Renders the view registered for the run-time type of <see cref="Item"/> and for
+    /// <see cref="Selector"/>, and passes it the item as its <c>Item</c> parameter. When the
+    /// item implements <see cref="INotifyStateChanged"/>, the view is re-rendered on each
+    /// notification: the state drives the interface.
+    /// </summary>
     public class FbDynamicView<TSelector> : FbComponentBase, IDisposable
-        where TSelector : Enum
+        where TSelector : struct, Enum
     {
-        private Type? _currentObjectType;
         private Type? _viewType;
-
-        // --- Services ---
+        private INotifyStateChanged? _subscribedState;
 
         [Inject]
         public IFbViewRegistry<TSelector> Registry { get; set; } = default!;
 
-        // --- Parameters ---
-
         [Parameter, EditorRequired]
         public object? Item { get; set; }
 
-        private INotifyStateChanged? _subscribedState;
+        /// <summary>
+        /// Which view of the item to render: <c>Viewer</c>, <c>Summary</c>, <c>Editor</c>…
+        /// </summary>
+        [Parameter]
+        public TSelector Selector { get; set; }
 
+        /// <summary>
+        /// Extra parameters passed to the view.
+        /// </summary>
         [Parameter(CaptureUnmatchedValues = true)]
         public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 
-        // --- Lifecycle ---
-
         protected override void OnParametersSet()
         {
-            if (Item is not null)
+            if (!ReferenceEquals(Item, _subscribedState))
             {
-                if (!ReferenceEquals(Item, _subscribedState))
+                Unsubscribe();
+                if (Item is INotifyStateChanged state)
                 {
-                    Unsubscribe();
-                    if (Item is INotifyStateChanged newState)
-                    {
-                        _subscribedState = newState;
-                        _subscribedState.OnStateChanged += HandleStateChanged;
-                    }
+                    _subscribedState = state;
+                    state.OnStateChanged += HandleStateChanged;
                 }
-
-                var newType = Item.GetType();
-                if (_currentObjectType != newType)
-                {
-                    _currentObjectType = newType;
-                    _viewType = Registry.GetViewType(_currentObjectType);
-                }
-            } else
-            {
-                _currentObjectType = null;
-                _viewType = null;
             }
-        }
 
-        // --- Rendering ---
+            _viewType = Item is null ? null : Registry.GetViewType(Item.GetType(), Selector);
+        }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
@@ -64,15 +58,14 @@ namespace FractalBlazor.Components.Forms.Mapping
                 builder.OpenComponent(0, _viewType);
                 builder.AddAttribute(1, "Item", Item);
                 if (AdditionalAttributes is not null)
-                {
                     builder.AddMultipleAttributes(2, AdditionalAttributes);
-                }
                 builder.CloseComponent();
-            } else if (Item is not null)
+            }
+            else if (Item is not null)
             {
                 builder.OpenElement(3, "div");
                 builder.AddAttribute(4, "class", "fb-missing-view");
-                builder.AddContent(5, $"No view registered for type {_currentObjectType?.Name}");
+                builder.AddContent(5, $"No {Selector} view registered for type {Item.GetType().Name}");
                 builder.CloseElement();
             }
         }
@@ -83,11 +76,11 @@ namespace FractalBlazor.Components.Forms.Mapping
 
         private void Unsubscribe()
         {
-            if (_subscribedState != null)
-            {
-                _subscribedState.OnStateChanged -= HandleStateChanged;
-                _subscribedState = null;
-            }
+            if (_subscribedState is null)
+                return;
+
+            _subscribedState.OnStateChanged -= HandleStateChanged;
+            _subscribedState = null;
         }
     }
 }

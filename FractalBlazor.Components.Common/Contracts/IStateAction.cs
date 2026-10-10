@@ -1,4 +1,4 @@
-namespace FractalBlazor.Components.Forms.Contracts
+namespace FractalBlazor.Components.Common.Contracts
 {
     /// <summary>
     /// An action sent by a field to its state object. The state handles it with a public

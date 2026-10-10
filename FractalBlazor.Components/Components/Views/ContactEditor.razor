@@ -1,0 +1,48 @@
+@attribute [ViewFor<ViewSelector>(typeof(ContactState), ViewSelector.Editor)]
+
+<FbStack GM PL WBS WFM WRL MinWidth="20rem">
+    <FbText L B>Édition</FbText>
+
+    <FbInputText TAction="ContactState.SetName" Handler="Item" Value="@Item.Name" Immediate
+                 Placeholder="Au moins deux caractères"
+                 Variant="@(Item.NameIsValid ? null : FbThemeVariants.Error)">
+        <StartContent>
+            <FbIcon Icon="@FbMaterialIcons.Person" Subtle />
+        </StartContent>
+    </FbInputText>
+
+    <FbInputNumber TValue="int" TAction="ContactState.SetAge" Handler="Item" Value="@Item.Age" Min="0" Max="120">
+        <StartContent><FbText S Subtle>Âge</FbText></StartContent>
+    </FbInputNumber>
+
+    <FbInputDate TAction="ContactState.SetBirth" Handler="Item" Value="@Item.Birth">
+        <StartContent><FbText S Subtle>Naissance</FbText></StartContent>
+    </FbInputDate>
+
+    <FbSelect TValue="string" TAction="ContactState.SetCountry" Handler="Item" Value="@Item.Country"
+              Items="ContactState.Countries" Placeholder="Pays">
+        <StartContent><FbText S Subtle>Pays</FbText></StartContent>
+    </FbSelect>
+
+    <FbCheckbox TAction="ContactState.SetNewsletter" Handler="Item" Value="@Item.Newsletter">
+        <FbText S>Recevoir la newsletter</FbText>
+    </FbCheckbox>
+
+    <FbSwitch TAction="ContactState.SetPremium" Handler="Item" Value="@Item.Premium">
+        <FbText S>Compte premium</FbText>
+    </FbSwitch>
+
+    <FbRow GS JHE>
+        <FbButton Handler="Item" Action="@(new ContactState.Reset())" Icon="@FbMaterialIcons.RestartAlt" WBN>
+            <FbText S>Réinitialiser</FbText>
+        </FbButton>
+        <FbButton Variant="@FbThemeVariants.Selected" Icon="@FbMaterialIcons.Save" Disabled="@(!Item.IsComplete)">
+            <FbText S>Enregistrer</FbText>
+        </FbButton>
+    </FbRow>
+</FbStack>
+
+@code {
+    [Parameter]
+    public ContactState Item { get; set; } = default!;
+}

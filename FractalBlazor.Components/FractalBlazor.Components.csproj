@@ -5,15 +5,13 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FractalBlazor.Components.Forms\FractalBlazor.Components.Forms.csproj" />
     <ProjectReference Include="..\FractalBlazor.Components.Layout\FractalBlazor.Components.Layout.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Components\Views\" />
+    <ProjectReference Include="..\FractalBlazor.Demo.States\FractalBlazor.Demo.States.csproj" />
   </ItemGroup>
 
 </Project>

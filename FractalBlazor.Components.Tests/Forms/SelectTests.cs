@@ -1,4 +1,4 @@
-using FractalBlazor.Components.Forms.Contracts;
+using FractalBlazor.Components.Common.Contracts;
 using FractalBlazor.Components.Forms.Inputs;
 
 namespace FractalBlazor.Components.Tests.Forms;

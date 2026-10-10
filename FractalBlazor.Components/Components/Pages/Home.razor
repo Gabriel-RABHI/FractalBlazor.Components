@@ -1,18 +1,12 @@
 @page "/"
 @rendermode InteractiveServer
 
-@using FractalBlazor.Components
-@using FractalBlazor.Components.Components.Samples.Layouts
-@using FractalBlazor.Components.Forms.Contracts
-@using FractalBlazor.Components.Forms.Display
-@using FractalBlazor.Components.Forms.Inputs
-@using FractalBlazor.Components.Forms.Theming
-@using FractalBlazor.Components.Layout
-@using FractalBlazor.Components.Forms.Theming.Constants
 @using FractalBlazor.Components.Layout.Colors
 
+<PageTitle>Layout et theming</PageTitle>
 
-<FbStack MS PL GL WRX WFS WBS>
+<FbStack GL>
+    <FbText XL B>Surfaces et frames</FbText>
     <FbRow GL WFM WSS WRL PL WBA>
         <FbRow GL WFL PL WBH WRM Hover>
             <FbText XS T>Home</FbText>
@@ -32,211 +26,82 @@
             <FbText S B>Home</FbText>
             <FbText M B>Home</FbText>
             <FbText L B>Home</FbText>
-            <FbRowItem SJVBL>
+            <FbRowItem SJVBl>
                 <FbText XL B>Home</FbText>
             </FbRowItem>
         </FbRow>
-        <FbRow GL PM SJVSt WSM JVSt WFS>
-            <FbRowItem PHM SJVBl>
-                <FbText S XB>Home 1</FbText>
-            </FbRowItem>
-            <FbRowItem PHM SJVBl>
-                <FbText M XB>Home 2</FbText>
-            </FbRowItem>
-            <FbRowItem PHM>
-                <FbText L XB>Home 3</FbText>
-            </FbRowItem>
-            <FbRowItem PHM>
-                <FbText XL XB>Home 4</FbText>
-            </FbRowItem>
-        </FbRow>
     </FbRow>
+
+    <FbText XL B>Couleurs de texte</FbText>
     <FbRow GL WGM PM>
-        <FbRow GL WGM PM>
-            <FbText S Subtle>Home</FbText>
-            <FbText M Subtle>Home</FbText>
-            <FbText L Subtle>Home</FbText>
-            <FbText XL Subtle>Home</FbText>
-        </FbRow>
+        <FbText M Subtle>Subtle</FbText>
+        <FbText M Muted>Muted</FbText>
+        <FbText M>Default</FbText>
+        <FbText M Highlight>Highlight</FbText>
     </FbRow>
-    <FbRow GL WGM PM>
-        <FbRow GL WGM PM>
-            <FbText S Muted>Home</FbText>
-            <FbText M Muted>Home</FbText>
-            <FbText L Muted>Home</FbText>
-            <FbText XL Muted>Home</FbText>
-        </FbRow>
+
+    <FbText XL B>Variantes</FbText>
+    <FbRow GL WGM PM MultiLine>
+        @foreach (var variant in FbThemeVariants.Standard)
+        {
+            <FbVariant Variant="@variant">
+                <FbRow GM PM WGM WRM NoFlex>
+                    <FbText S Subtle>@variant</FbText>
+                </FbRow>
+                <FbRow GM PM WGM WRM NoFlex WBS>
+                    <FbText S Muted>Surface</FbText>
+                </FbRow>
+                <FbRow GM PM WGM WRM NoFlex WBA>
+                    <FbText S>Accent</FbText>
+                </FbRow>
+                <FbRow GM PM WGM WRM NoFlex WBH>
+                    <FbText S Highlight>Highlight</FbText>
+                </FbRow>
+            </FbVariant>
+        }
     </FbRow>
-    <FbRow GL WGM PM>
-        <FbVariant Variant="@FbThemeVariants.Selected">
-            <FbRow GL PM WGM>
-                <FbText S Subtle>Select No back</FbText>
-            </FbRow>
-            <FbRow GL PM WGM WBS>
-                <FbText S Muted>Surface</FbText>
-            </FbRow>
-            <FbRow GL PM WGM WBA>
-                <FbText S>Accent</FbText>
-            </FbRow>
-            <FbRow GL PM WGM WBH>
-                <FbText S Highlight>Highlight</FbText>
-            </FbRow>
+
+    <FbText XL B>Inversion locale et thème local</FbText>
+    <FbRow GL>
+        <FbVariant SB SF>
+            <FbStack GS PL WBS WFM WRL>
+                <FbText L B>Inversion SB SF</FbText>
+                <FbText M Muted>Les ancres de la variante sont inversées : la carte passe au clair sans nouvelle branche.</FbText>
+                <FbCircularProgress />
+            </FbStack>
         </FbVariant>
-        <FbVariant Variant="@FbThemeVariants.Error">
-            <FbRow GL PM WGM>
-                <FbText S Subtle>Error No back</FbText>
-            </FbRow>
-            <FbRow GL PM WGM WBS>
-                <FbText S Muted>Surface</FbText>
-            </FbRow>
-            <FbRow GL PM WGM WBA>
-                <FbText S>Accent</FbText>
-            </FbRow>
-            <FbRow GL PM WGM WBH>
-                <FbText S Highlight>Highlight</FbText>
-            </FbRow>
-        </FbVariant>
-        <FbVariant Variant="@FbThemeVariants.Disabled">
-            <FbRow GL PM WGM>
-                <FbText S Subtle>Disabled No back</FbText>
-            </FbRow>
-            <FbRow GL PM WGM WBS>
-                <FbText S Muted>Surface</FbText>
-            </FbRow>
-            <FbRow GL PM WGM WBA>
-                <FbText S>Accent</FbText>
-            </FbRow>
-            <FbRow GL PM WGM WBH>
-                <FbText S Highlight>Highlight</FbText>
-            </FbRow>
-        </FbVariant>
-        
-        <FbVariant Variant="@FbThemeVariants.Success">
-            <FbRow GL PM WGM>
-                <FbText S Subtle>Success No back</FbText>
-            </FbRow>
-            <FbRow GL PM WGM WBS>
-                <FbText S Muted>Surface</FbText>
-            </FbRow>
-            <FbRow GL PM WGM WBA>
-                <FbText S>Accent</FbText>
-            </FbRow>
-            <FbRow GL PM WGM WBH>
-                <FbText S Highlight>Highlight</FbText>
-            </FbRow>
-        </FbVariant>
+        <FbTheme Branch="@FbThemeBranches.Light" Scoped>
+            <FbStack GS PL WBS WFM WRL>
+                <FbText L B>Îlot Light</FbText>
+                <FbText M Muted>Un FbTheme Scoped pose la branche Light sur ce seul sous-arbre.</FbText>
+                <FbVariant Variant="@FbThemeVariants.Error">
+                    <FbRow GS PM WBA WFM WRM>
+                        <FbIcon Icon="@FbMaterialIcons.Info" />
+                        <FbText S>Variante Error dans l’îlot</FbText>
+                    </FbRow>
+                </FbVariant>
+            </FbStack>
+        </FbTheme>
     </FbRow>
-    <FbGridContainer ColumnsXS="4" ColumnsS="6" ColumnsM="8" GM PL>
-        <FbGridItem ColumnSpanXS="2" ColumnSpanS="4" ColumnSpanM="4" Style="background:#800">
-            <FbText S Muted>Home of the layout and form library</FbText>
+
+    <FbText XL B>Grille responsive</FbText>
+    <FbGridContainer Columns="4" ColumnsS="6" ColumnsM="8" GM>
+        <FbGridItem ColumnSpan="4" ColumnSpanS="4" ColumnSpanM="4" WBA WFM WRM PM>
+            <FbText S Muted>4 colonnes, puis 4 sur 6, puis 4 sur 8</FbText>
         </FbGridItem>
-        <FbGridItem ColumnSpanXS="2" ColumnSpanS="4" ColumnSpanM="2" Style="background:#080">
-            <FbText M Muted>Home of the layout and form library</FbText>
+        <FbGridItem ColumnSpan="2" ColumnSpanS="2" ColumnSpanM="2" WBA WFM WRM PM>
+            <FbText M Muted>2 colonnes</FbText>
         </FbGridItem>
-        <FbGridItem ColumnSpanXS="2" ColumnSpanS="4" ColumnSpanM="1" Style="background:#088" PM VO_M>
-            <FbText L Muted>Home of the layout and form library</FbText>
+        <FbGridItem ColumnSpan="2" ColumnSpanS="3" ColumnSpanM="1" WBH WFM WRM PM>
+            <FbText M Muted>Item</FbText>
         </FbGridItem>
-        <FbGridItem ColumnSpanXS="2" ColumnSpanS="6" ColumnSpanM="1" Style="background:#08F">
-            <FbText XL Muted>Home_of_the_layout_and_form_library</FbText>
+        <FbGridItem ColumnSpan="2" ColumnSpanS="3" ColumnSpanM="1" WBH WFM WRM PM>
+            <FbText M Muted>Item</FbText>
         </FbGridItem>
     </FbGridContainer>
-    <FbRow GM PL>
-        <FbRowItem>
-        <FbInputText Handler="this" TAction="ChangeFirstNameAction" Value="@FirstName">
-            <StartContent>
-                <FbText M Subtle>Name</FbText>
-            </StartContent>
-        </FbInputText>
-        </FbRowItem>
-        <FbRowItem>
-            <FbInputText Handler="this" TAction="ChangeFirstNameAction" Value="@FirstName"/>
-        </FbRowItem>
-        <FbVariant Variant="@FbThemeVariants.Error">
-            <FbInputText Handler="this" TAction="ChangeFirstNameAction" Value="@FirstName">
-                <StartContent>
-                    <FbText M Subtle>Name</FbText>
-                </StartContent>
-            </FbInputText>
-        </FbVariant>
-    </FbRow>
+
+    <FbText XL B>Palette de base</FbText>
     <div>
         @((MarkupString)FbThemeBaseColors.HtmlView)
     </div>
 </FbStack>
-
-@code {
-    public record ChangeFirstNameAction(string NewValue) : IStateAction<string>;
-
-    public void Handle(ChangeFirstNameAction a) => FirstName = a.NewValue;
-
-    public string FirstName { get; set; } = "Toto";
-
-    private bool _isOpen1;
-    public bool IsOpen1
-    {
-        get => _isOpen1;
-        set => _isOpen1 = value;
-    }
-
-    private bool _isOpen2;
-    private string _selectedOption1 = "";
-    private string _selectedOption2 = "";
-    private string _searchQuery = "";
-
-    private string _defaultBg = "#ffffff";
-    private string _accentBg = "#fafafa";
-    private string _highlightBg = "#e8f3ff";
-
-    private string _smallFrameSize = "0.07rem";
-    private string _smallFrameColor = "#e2e2e2";
-
-    private string _mediumFrameSize = "0.07rem";
-    private string _mediumFrameColor = "#cecece";
-
-    private string _largeFrameSize = "0.14rem";
-    private string _largeFrameColor = "#e2e2e2";
-
-    private void ResetTheme()
-    {
-        _defaultBg = "#ffffff";
-        _accentBg = "#fafafa";
-        _highlightBg = "#e8f3ff";
-
-        _smallFrameSize = "0.07rem";
-        _smallFrameColor = "#e2e2e2";
-
-        _mediumFrameSize = "0.07rem";
-        _mediumFrameColor = "#cecece";
-
-        _largeFrameSize = "0.14rem";
-        _largeFrameColor = "#e2e2e2";
-    }
-
-    private readonly string[] Users = { "Gabriel", "Alice", "Bob", "Charlie", "David", "Emma", "Frank", "Grace" };
-
-    private System.Collections.Generic.IEnumerable<string> FilteredUsers => 
-        string.IsNullOrWhiteSpace(_searchQuery) 
-            ? Users 
-            : System.Linq.Enumerable.Where(Users, u => u.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase));
-
-    private void OnSearchInput(ChangeEventArgs e)
-    {
-        _searchQuery = e.Value?.ToString() ?? "";
-        _isOpen2 = true;
-    }
-
-    private void SelectOption(int dropdownNum, string option)
-    {
-        if (dropdownNum == 1)
-        {
-            _selectedOption1 = option;
-            _isOpen1 = false;
-        }
-        else if (dropdownNum == 2)
-        {
-            _selectedOption2 = option;
-            _searchQuery = option;
-            _isOpen2 = false;
-        }
-    }
-}

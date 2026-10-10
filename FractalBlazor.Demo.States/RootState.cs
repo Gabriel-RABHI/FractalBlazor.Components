@@ -1,4 +1,4 @@
-﻿using FractalBlazor.Components.Forms.Contracts;
+using FractalBlazor.Components.Common.Contracts;
 
 namespace FractalBlazor.Demo.States
 {
@@ -20,21 +20,26 @@ namespace FractalBlazor.Demo.States
         // The root menu items
         public IReadOnlyList<MainMenuItem> MenuItems { get; }
 
+        public ContactState Contact { get; } = new();
+
         public RootState()
         {
             TopBar = new TopBarState(this);
 
-            // Example initialization
             MenuItems = new List<MainMenuItem>
             {
                 new MenuLinkItemState(null, MenuItemIntent.Introduction),
-                new MainMenuGroupState(null, MenuItemIntent.QuickStart, isOpened: false)
-                // ... add children to the group
+                new MainMenuGroupState(null, MenuItemIntent.QuickStart, isOpened: false, group =>
+                [
+                    new MenuLinkItemState(group, MenuItemIntent.Principles),
+                    new MenuSeparatorItemState(group),
+                    new MenuLinkItemState(group, MenuItemIntent.Forms)
+                ])
             };
         }
     }
 
-    public enum MenuItemIntent { Introduction, QuickStart, Principles }
+    public enum MenuItemIntent { Introduction, QuickStart, Principles, Forms }
 
     // 1. The Base Item
     public abstract class MainMenuItem
@@ -75,28 +80,28 @@ namespace FractalBlazor.Demo.States
     }
 
     // 5. The Group Node
-    public class MainMenuGroupState : MenuIntentItem
+    public class MainMenuGroupState : MenuIntentItem, INotifyStateChanged
     {
         public bool IsOpened { get; private set; }
 
-        // The missing piece: A group must hold its children!
         public IReadOnlyList<MainMenuItem> Children { get; }
 
         // The single-line Action
         public record ToggleGroupAction(bool IsOpened) : IStateAction<bool>;
 
-        // Optional event to notify the Blazor UI to re-render just this group
+        // Re-renders the views of this group only
         public event Action? OnStateChanged;
 
+        /// <param name="children">Builds the children with this group as their parent.</param>
         public MainMenuGroupState(
             MainMenuGroupState? parent,
             MenuItemIntent intent,
             bool isOpened,
-            IEnumerable<MainMenuItem>? children = null)
+            Func<MainMenuGroupState, IEnumerable<MainMenuItem>>? children = null)
             : base(parent, intent)
         {
             IsOpened = isOpened;
-            Children = children?.ToList().AsReadOnly() ?? new List<MainMenuItem>().AsReadOnly();
+            Children = children?.Invoke(this).ToList().AsReadOnly() ?? new List<MainMenuItem>().AsReadOnly();
         }
 
         public void Handle(ToggleGroupAction action)

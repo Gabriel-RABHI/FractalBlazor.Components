@@ -1,0 +1,42 @@
+@* Views of the menu states. One component handles every menu item type: the registry maps
+   each type to it, and it renders the right markup for the item it receives. *@
+@attribute [ViewFor<ViewSelector>(typeof(MenuLinkItemState), ViewSelector.Viewer)]
+@attribute [ViewFor<ViewSelector>(typeof(MenuSeparatorItemState), ViewSelector.Viewer)]
+@attribute [ViewFor<ViewSelector>(typeof(MainMenuGroupState), ViewSelector.Viewer)]
+
+@switch (Item)
+{
+    case MainMenuGroupState group:
+        <FbStack GS>
+            <FbButton WBN WFN PHS Style="justify-content:flex-start" Handler="group" Action="@(new MainMenuGroupState.ToggleGroupAction(!group.IsOpened))"
+                      Icon="@(group.IsOpened ? FbMaterialIcons.ExpandMore : FbMaterialIcons.ChevronRight)">
+                <FbText M B>@group.Intent</FbText>
+            </FbButton>
+            @if (group.IsOpened)
+            {
+                <FbStack GS PLL>
+                    @foreach (var child in group.Children)
+                    {
+                        <FbDynamicView TSelector="ViewSelector" Item="child" Selector="ViewSelector.Viewer" />
+                    }
+                </FbStack>
+            }
+        </FbStack>
+        break;
+
+    case MenuLinkItemState link:
+        <FbRow GS PHS PVS WRM Hover>
+            <FbIcon Icon="@FbMaterialIcons.Home" Subtle />
+            <FbText M>@link.Intent</FbText>
+        </FbRow>
+        break;
+
+    case MenuSeparatorItemState:
+        <FbStackSeparator WFL />
+        break;
+}
+
+@code {
+    [Parameter]
+    public MainMenuItem Item { get; set; } = default!;
+}

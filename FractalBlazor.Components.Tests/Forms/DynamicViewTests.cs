@@ -1,5 +1,6 @@
-using FractalBlazor.Components.Forms.Attributes;
+using FractalBlazor.Components.Common.Attributes;
 using FractalBlazor.Components.Forms.Contracts;
+using FractalBlazor.Components.Common.Contracts;
 using FractalBlazor.Components.Forms.Core;
 using FractalBlazor.Components.Forms.Mapping;
 using FractalBlazor.Components.Layout.Abstracts;
@@ -11,7 +12,44 @@ namespace FractalBlazor.Components.Tests.Forms;
 
 public enum TestSelector
 {
-    Viewer
+    Viewer,
+    Summary
+}
+
+public class AnimalState
+{
+}
+
+public sealed class CatState : AnimalState
+{
+}
+
+[ViewFor<TestSelector>(typeof(AnimalState), TestSelector.Viewer)]
+public sealed class AnimalView : FbComponentBase
+{
+    [Parameter]
+    public object? Item { get; set; }
+
+    protected override void BuildRenderTree(RenderTreeBuilder builder)
+    {
+        builder.OpenElement(0, "span");
+        builder.AddAttribute(1, "class", "animal");
+        builder.CloseElement();
+    }
+}
+
+[ViewFor<TestSelector>(typeof(CounterState), TestSelector.Summary)]
+public sealed class CounterSummary : FbComponentBase
+{
+    [Parameter]
+    public object? Item { get; set; }
+
+    protected override void BuildRenderTree(RenderTreeBuilder builder)
+    {
+        builder.OpenElement(0, "span");
+        builder.AddAttribute(1, "class", "summary");
+        builder.CloseElement();
+    }
 }
 
 public sealed class CounterState : INotifyStateChanged
@@ -65,6 +103,34 @@ public sealed class DynamicViewTests : BunitContext
         var cut = Render<FbDynamicView<TestSelector>>(p => p.Add(x => x.Item, state));
 
         Assert.Equal("0", cut.Find(".counter").TextContent);
+    }
+
+    [Fact]
+    public void Selector_picks_another_view_of_the_same_state()
+    {
+        var cut = Render<FbDynamicView<TestSelector>>(p => p
+            .Add(x => x.Item, new CounterState())
+            .Add(x => x.Selector, TestSelector.Summary));
+
+        Assert.NotNull(cut.Find(".summary"));
+    }
+
+    [Fact]
+    public void View_declared_for_a_base_type_displays_derived_types()
+    {
+        var cut = Render<FbDynamicView<TestSelector>>(p => p.Add(x => x.Item, new CatState()));
+
+        Assert.NotNull(cut.Find(".animal"));
+    }
+
+    [Fact]
+    public void Missing_view_is_reported()
+    {
+        var cut = Render<FbDynamicView<TestSelector>>(p => p
+            .Add(x => x.Item, new CatState())
+            .Add(x => x.Selector, TestSelector.Summary));
+
+        Assert.Contains("No Summary view registered for type CatState", cut.Find(".fb-missing-view").TextContent);
     }
 
     [Fact]

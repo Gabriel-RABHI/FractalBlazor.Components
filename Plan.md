@@ -64,7 +64,7 @@ Chaque changement est vérifié contre ces règles. Une étape qui en viole une 
 - [x] **3.6 `FbCheckbox` et `FbSwitch`.** Champs booléens state-first.
 - [x] **3.7 `FbInputNumber` et `FbInputDate`.** Nombre générique (`INumber<T>`) et date (`DateOnly`) sur les contrôles natifs du navigateur.
 - [x] **3.8 `FbSelect`.** Liste d'options typée sur `<select>` natif.
-- [ ] **3.9 Démo state-first.** Brancher `FractalBlazor.Demo.States` sur la démo, montrer `FbDynamicView` de bout en bout et une page de formulaires. Ranger les namespaces de `Common` (`FractalBlazor.Components.Common.*`).
+- [x] **3.9 Démo state-first.** Brancher `FractalBlazor.Demo.States` sur la démo, montrer `FbDynamicView` de bout en bout et une page de formulaires. Ranger les namespaces de `Common` (`FractalBlazor.Components.Common.*`).
 
 ## Phase 4 — Qualité, mesure et publication
 

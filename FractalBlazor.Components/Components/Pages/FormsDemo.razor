@@ -1,0 +1,17 @@
+@page "/forms"
+@rendermode InteractiveServer
+@inject RootState Root
+
+<PageTitle>Formulaires</PageTitle>
+
+<FbStack GL>
+    <FbText XL B>Formulaire state-first</FbText>
+    <FbText M Muted>
+        Les deux panneaux affichent le même ContactState avec deux vues différentes. Chaque champ
+        envoie une action à l’état, l’état notifie, et les deux vues se mettent à jour.
+    </FbText>
+    <FbRow GL JVS MultiLine>
+        <FbDynamicView TSelector="ViewSelector" Item="Root.Contact" Selector="ViewSelector.Editor" />
+        <FbDynamicView TSelector="ViewSelector" Item="Root.Contact" Selector="ViewSelector.Summary" />
+    </FbRow>
+</FbStack>

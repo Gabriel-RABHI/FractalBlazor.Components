@@ -1,5 +1,5 @@
 using System.Collections.Concurrent;
-using FractalBlazor.Components.Forms.Contracts;
+using FractalBlazor.Components.Common.Contracts;
 using System.Linq.Expressions;
 using System.Reflection;
 

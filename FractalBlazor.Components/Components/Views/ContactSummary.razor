@@ -1,0 +1,36 @@
+@attribute [ViewFor<ViewSelector>(typeof(ContactState), ViewSelector.Summary)]
+
+<FbStack GS PL WBA WFL WRL MinWidth="16rem">
+    <FbText L B>Résumé</FbText>
+    <FbRow GS JHS>
+        <FbText S Subtle>Nom</FbText>
+        <FbText S Highlight>@(string.IsNullOrWhiteSpace(Item.Name) ? "—" : Item.Name)</FbText>
+    </FbRow>
+    <FbRow GS JHS>
+        <FbText S Subtle>Âge</FbText>
+        <FbText S>@Item.Age</FbText>
+    </FbRow>
+    <FbRow GS JHS>
+        <FbText S Subtle>Naissance</FbText>
+        <FbText S>@(Item.Birth?.ToString("d") ?? "—")</FbText>
+    </FbRow>
+    <FbRow GS JHS>
+        <FbText S Subtle>Pays</FbText>
+        <FbText S>@(Item.Country ?? "—")</FbText>
+    </FbRow>
+    <FbRow GS JHS>
+        <FbText S Subtle>Options</FbText>
+        <FbText S>@(Item.Newsletter ? "newsletter" : "")@(Item.Newsletter && Item.Premium ? ", " : "")@(Item.Premium ? "premium" : "")</FbText>
+    </FbRow>
+    <FbVariant Variant="@(Item.IsComplete ? FbThemeVariants.Success : FbThemeVariants.Warning)">
+        <FbRow GS PS WBA WRM>
+            <FbIcon Icon="@(Item.IsComplete ? FbMaterialIcons.CheckCircle : FbMaterialIcons.Info)" />
+            <FbText S>@(Item.IsComplete ? "Prêt à enregistrer" : "Nom et pays requis")</FbText>
+        </FbRow>
+    </FbVariant>
+</FbStack>
+
+@code {
+    [Parameter]
+    public ContactState Item { get; set; } = default!;
+}
