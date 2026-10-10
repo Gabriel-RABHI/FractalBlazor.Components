@@ -25,6 +25,21 @@ namespace  FractalBlazor.Components.Layout.Utilities
                 _updatableComponents.Add(new WeakReference<FbUpdatable>(cpnt));
         }
 
+        public static void RemoveUpdatable(FbUpdatable cpnt)
+        {
+            lock (_locker)
+                _updatableComponents.RemoveAll(wr => !wr.TryGetTarget(out var target) || ReferenceEquals(target, cpnt));
+        }
+
+        internal static int Count
+        {
+            get
+            {
+                lock (_locker)
+                    return _updatableComponents.Count;
+            }
+        }
+
         private static void StartTimer()
         {
             if (timer == null)
@@ -48,6 +63,7 @@ namespace  FractalBlazor.Components.Layout.Utilities
                             {
                                 if (_toRemove == null)
                                     _toRemove = new List<WeakReference<FbUpdatable>>();
+                                _toRemove.Add(wr);
                             }
                         }
                         _toRemove?.ForEach(w => _updatableComponents.Remove(w));

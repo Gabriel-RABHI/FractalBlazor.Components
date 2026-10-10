@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Layout
 {
-    public class FbUpdatable : FbAfterRenderComponentBase
+    public class FbUpdatable : FbAfterRenderComponentBase, IDisposable
     {
         private bool _periodic = true;
         private TimeSpan _interval = new TimeSpan(0, 0, 1);
@@ -87,6 +87,8 @@ namespace FractalBlazor.Components.Layout
                 BackgroundProcess.AddUpdatable(this);
             base.OnAfterRender(firstRender);
         }
+
+        public void Dispose() => BackgroundProcess.RemoveUpdatable(this);
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {

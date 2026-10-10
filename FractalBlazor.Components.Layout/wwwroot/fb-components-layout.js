@@ -1,55 +1,22 @@
-// This is a JavaScript module that is loaded on demand. It can export any number of
-// functions, and may import other JavaScript modules if required.
+// FractalBlazor Layout interop. Every function lives under the single global
+// `FractalBlazor` object, so the page global scope stays clean.
+window.FractalBlazor = window.FractalBlazor || {};
 
-function isInViewport(el) {
-    var top = el.offsetTop;
-    var left = el.offsetLeft;
-    var width = el.offsetWidth;
-    var height = el.offsetHeight;
-
-    while (el.offsetParent) {
-        el = el.offsetParent;
-        top += el.offsetTop;
-        left += el.offsetLeft;
-    }
-
-    return (
-        top < (window.pageYOffset + window.innerHeight) &&
-        left < (window.pageXOffset + window.innerWidth) &&
-        (top + height) > window.pageYOffset &&
-        (left + width) > window.pageXOffset
-    );
-}
-
-function getAllElementsWithAttribute(attribute) {
-    var matchingElements = [];
-    var allElements = document.getElementsByTagName('*');
-    for (var i = 0, n = allElements.length; i < n; i++)
-        if (allElements[i].getAttribute(attribute) !== null)
-            matchingElements.push(allElements[i]);
-    return matchingElements;
-}
-
-window.setInterval(function () {
-    // -------- Visibility
-    var allVis = getAllElementsWithAttribute('data-fb-visibility-id');
-    for (var i = 0, n = allVis.length; i < n; i++) {
-        var el = allVis[i];
-        if (isInViewport(el)) {
-            var v = el.getAttribute('data-fb-visibility-id');
-            UpdateVisibilityMessageCallerJS(v);
-            var vreset = el.getAttribute('data-no-reset');
-            if (vreset !== "true")
-                el.removeAttribute('data-fb-visibility-id');
+/**
+ * Reports to .NET when `element` enters or leaves the viewport.
+ * Returns a handle whose `dispose()` stops the observation.
+ */
+window.FractalBlazor.observeVisibility = function (element, dotnet, keepObserving) {
+    const observer = new IntersectionObserver(entries => {
+        for (const entry of entries) {
+            dotnet.invokeMethodAsync('OnVisibilityChanged', entry.isIntersecting);
+            if (entry.isIntersecting && !keepObserving)
+                observer.disconnect();
         }
-    }
-}, 250);
-
-
-function UpdateVisibilityMessageCallerJS(cpntId) {
-    DotNet.invokeMethodAsync('FractalBlazor.Components.Layout', 'VisibilityChangedMessageCaller', cpntId);
-}
-
+    });
+    observer.observe(element);
+    return { dispose: () => observer.disconnect() };
+};
 
 let mouseX = 0, mouseY = 0;
 const elementsFbOver = new Set();

@@ -963,3 +963,11 @@ html {
     bottom: 100%;
     top: auto;
 }
+
+/**********************************************************************************/
+/* SHOW WHEN VISIBLE */
+.fb-show-when-visible-wait {
+    text-align: center;
+    padding: 1rem;
+    width: 100%;
+}

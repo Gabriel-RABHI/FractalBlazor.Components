@@ -39,7 +39,7 @@ Chaque changement est vérifié contre ces règles. Une étape qui en viole une 
   - Les paires de contournement devenues inutiles (`DOutline`) sont conservées seulement si elles gardent un sens propre.
 - [x] **1.2 Cache de styles sûr et borné.** Remplacer les dictionnaires statiques indexés par un hachage 32 bits par un cache dont la clé est la valeur complète de l'état (`struct` non managée comparée octet par octet, `Pack = 1`). Les chaînes libres (`Style`, `FlexBasis`, `MinWidth`…) contournent le cache partagé. Une capacité maximale protège la mémoire.
   - Critère : deux états différents ne partagent jamais une chaîne, deux états identiques la partagent, et un `Style` libre n'entre jamais dans le cache.
-- [ ] **1.3 Cycle de vie et ressources.**
+- [x] **1.3 Cycle de vie et ressources.**
   - `FbDynamicView` implémente `IDisposable` pour se désabonner de l'état.
   - `FbShowWhenVisible` est réécrit : un `IntersectionObserver` par instance, une `DotNetObjectReference`, `IAsyncDisposable`, plus aucun registre statique ni sondage du DOM. Le composant `FbCircularProgress` est réellement rendu.
 - [ ] **1.4 Rendu sobre.** N'attacher `onclick` que si un délégué existe (`FbRow`, `FbStack`, items). Supprimer l'attribut de debug `cpnt` et le paramètre `StoreId` qui ne servait qu'à lui. Corriger la duplication de `Classes` dans les items.

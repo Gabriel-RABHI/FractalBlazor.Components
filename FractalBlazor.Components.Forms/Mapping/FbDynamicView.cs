@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Forms.Mapping
 {
-    public class FbDynamicView<TSelector> : FbComponentBase
+    public class FbDynamicView<TSelector> : FbComponentBase, IDisposable
         where TSelector : Enum
     {
         private Type? _currentObjectType;
