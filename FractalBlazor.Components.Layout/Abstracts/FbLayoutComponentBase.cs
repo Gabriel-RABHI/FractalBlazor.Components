@@ -12,30 +12,14 @@ namespace FractalBlazor.Components.Layout.Abstracts
     public abstract class FbLayoutComponentBase : FbComponentBase
     {
         #region HIDDEN
-        internal static bool UseCaching { get; set; } = true;
+        private FbStyleMemo _styleMemo;
 
-        private static object _locker = new object();
-        private static Dictionary<int, string> _cache = new Dictionary<int, string>();
-
-        private int _hash = 0;
-        private string _style = null;
-
-        internal static int ComputeHash(string input, int hash = 17)
-        {
-            foreach (char c in input)
-                hash = hash * 31 + c;
-            return hash;
-        }
-
-        internal unsafe static int ComputeHash(byte* input, int size, int hash = 17)
-        {
-            for (int i = 0; i < size; i++)
-                hash = hash * 31 + input[i];
-            return hash;
-        }
-
-        [StructLayout(LayoutKind.Sequential, Pack = 0)]
-        private unsafe struct ComponentBaseState
+        /// <summary>
+        /// Every parameter that shapes the layout inline style, except free-form strings.
+        /// Its raw bytes are the style cache key, hence <c>Pack = 1</c>: no padding bytes.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct ComponentBaseState
         {
             public ComponentBaseState()
             {
@@ -47,6 +31,7 @@ namespace FractalBlazor.Components.Layout.Abstracts
             public bool _noSelect = false;
             public bool _canSelect = false;
             public bool _responsiveUnder = false;
+            public bool _hide = false;
             public FbBaseDisplayMode DisplayMode = FbBaseDisplayMode.None;
             public FbBreaks ResponsiveBreakpoint = FbBreaks.None;
             public FbSpacing Padding = FbSpacing.None;
@@ -76,7 +61,6 @@ namespace FractalBlazor.Components.Layout.Abstracts
             {
                 get
                 {
-                    GetHashCode();
                     switch (DisplayMode)
                     {
                         case FbBaseDisplayMode.Block: return "display:block;";
@@ -176,22 +160,10 @@ namespace FractalBlazor.Components.Layout.Abstracts
         // ************************************************************************************************ //
         // **********************************   PROTECTED PARAMETERS   ************************************ //
         // ************************************************************************************************ //
-        protected unsafe int CpntHash {
-            get {
-                var hash = 0;
-                fixed (ComponentBaseState* sptr = &_state)
-                {
-                    hash = ComputeHash((byte*)sptr, sizeof(ComponentBaseState));
-                    if (!string.IsNullOrWhiteSpace(FlexBasis))
-                        hash = ComputeHash(FlexBasis, hash);
-                    if (!string.IsNullOrWhiteSpace(Style))
-                        hash = ComputeHash(Style, hash);
-                    //if (Variables is not null)
-                    //    hash = ComputeHash(Variables.ToCssVariables(), hash);
-                    return hash;
-                }
-            }
-        }
+        /// <summary>
+        /// Style cache key of this level.
+        /// </summary>
+        internal ComponentBaseState LayoutStyleKey => _state;
 
         protected bool IsBlock { get => _state.IsBlock; set => _state.IsBlock = value; }
 
@@ -225,24 +197,36 @@ namespace FractalBlazor.Components.Layout.Abstracts
 
         // -------------------------------- LEVEL AGGREGATES -------------------------------- //
         protected string AggregatedStyles
+            => ResolveStyle(LayoutStyleKey, new FbStyleInputs(FlexBasis, Style), static component => component.BuildLayoutStyle());
+
+        /// <summary>
+        /// Returns the style for <paramref name="key"/>: from this component's last render when
+        /// nothing changed, then from the shared cache when no free-form string is involved,
+        /// and only otherwise from <paramref name="build"/>.
+        /// </summary>
+        private protected string ResolveStyle<TKey>(in TKey key, in FbStyleInputs inputs, Func<FbLayoutComponentBase, string> build)
+            where TKey : unmanaged
         {
-            get
+            if (_styleMemo.TryGet(in key, in inputs, out var style))
+                return style;
+
+            var shareable = inputs.IsEmpty;
+            if (!shareable || !FbStyleCache<TKey>.TryGet(in key, out style))
             {
-                var hash = CpntHash;
-                if (_hash == hash && _style != null)
-                    return _style;
-                _hash = hash;
-                lock (_locker)
-                {
-                    if (UseCaching && _cache.TryGetValue(hash, out var found))
-                    {
-                        _style = found;
-                        return _style;
-                    }
+                style = build(this);
+                if (shareable)
+                    style = FbStyleCache<TKey>.Add(in key, style);
+            }
 
-                    RenderingStatistics.AddComponentBaseStyleComputation();
+            _styleMemo.Set(in key, in inputs, style);
+            return style;
+        }
 
-                    var str = _state.DisplayModeString +
+        private protected string BuildLayoutStyle()
+        {
+            RenderingStatistics.AddComponentBaseStyleComputation();
+
+            return _state.DisplayModeString +
                             (Padding != FbSpacing.None ? $"padding:{FbLayoutHelper.ToSpacingCss(Padding)};" : "") +
                             (PaddingTop != FbSpacing.None ? $"padding-top:{FbLayoutHelper.ToSpacingCss(PaddingTop)};" : "") +
                             (PaddingBottom != FbSpacing.None ? $"padding-bottom:{FbLayoutHelper.ToSpacingCss(PaddingBottom)};" : "") +
@@ -256,17 +240,9 @@ namespace FractalBlazor.Components.Layout.Abstracts
                             (_state._flex != int.MinValue ? $"flex:{_state._flex};" : "") +
                             (_state._noSelect ? $"-webkit-user-select: none;user-select: none;" : "") +
                             (_state._canSelect ? $"-webkit-user-select: text;user-select: text;" : "") +
-                            (Hide ? "visibility:hidden;" : "");
-
-                    str +=  (string.IsNullOrWhiteSpace(FlexBasis) ? "" : $"flex-basis:{FlexBasis};") +
+                            (_state._hide ? "visibility:hidden;" : "") +
+                            (string.IsNullOrWhiteSpace(FlexBasis) ? "" : $"flex-basis:{FlexBasis};") +
                             (string.IsNullOrWhiteSpace(Style) ? "" : Style + ";");
-
-                    if (UseCaching && !_cache.ContainsKey(hash))
-                        _cache[hash] = str;
-                    _style = str;
-                    return _style;
-                }
-            }
         }
 
         // -------------------------------- LEVEL AGGREGATES -------------------------------- //
@@ -332,7 +308,7 @@ namespace FractalBlazor.Components.Layout.Abstracts
         /// Hide element using visibility hidden
         /// </summary>
         [Parameter]
-        public bool Hide { get; set; } = false;
+        public bool Hide { get => _state._hide; set => _state._hide = value; }
 
         /// <summary>
         /// Show when initialize container width ≥ 1536px

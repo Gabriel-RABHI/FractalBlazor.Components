@@ -68,15 +68,21 @@ namespace FractalBlazor.Components.Layout
         [Parameter]
         public EventCallback OnClick { get; set; }
 
-        private new string ComputedStyle
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
+        private struct ItemKey
         {
-            get
-            {
-                return AggregatedStyles +
-                        "flex-wrap: wrap;" +
-                        (_selfAlign != FbFlexItemSelfAlign.None ? $"align-self:{VerticalAlignString};" : "");
-            }
+            public SurfaceKey Surface;
+            public FbFlexItemSelfAlign SelfAlign;
         }
+
+        private string ComputedStyle
+            => ResolveStyle(new ItemKey { Surface = SurfaceStyleKey, SelfAlign = _selfAlign }, SurfaceStyleInputs,
+                static component => ((FbRowItem)component).BuildItemStyle());
+
+        private string BuildItemStyle()
+            => BuildSurfaceStyle() +
+               "flex-wrap: wrap;" +
+               (_selfAlign != FbFlexItemSelfAlign.None ? $"align-self:{VerticalAlignString};" : "");
 
         // -------- In Row
         /// <summary>

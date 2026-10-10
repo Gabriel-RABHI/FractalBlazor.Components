@@ -12,11 +12,8 @@ namespace FractalBlazor.Components.Layout.Flex
     public abstract class FbFlexBoxBase : FbLayoutSurfaceComponentBase
     {
         #region HIDDEN
-        private static object _locker = new object();
-        private static Dictionary<int, string> _cache = new Dictionary<int, string>();
-
-        [StructLayout(LayoutKind.Sequential, Pack = 0)]
-        private unsafe struct FbFlexBoxBaseState
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        private struct FbFlexBoxBaseState
         {
             public FbFlexBoxBaseState()
             {
@@ -50,8 +47,16 @@ namespace FractalBlazor.Components.Layout.Flex
 
         private FbFlexBoxBaseState _state = new FbFlexBoxBaseState();
         private FbFlexBoxBaseState _defaultState;
-        private int _hash = 0;
-        private string _style = null;
+
+        /// <summary>
+        /// Style cache key of this level: the surface key plus the flexbox state.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        private struct FlexKey
+        {
+            public SurfaceKey Surface;
+            public FbFlexBoxBaseState Flex;
+        }
 
         public FbFlexBoxBase()
         {
@@ -264,7 +269,7 @@ namespace FractalBlazor.Components.Layout.Flex
         }
 
         // -------- Value assignation
-        protected new string MinWidth { get; set; }
+        protected string MinWidth { get; set; }
 
         protected bool MinWidthMaxContent { get => _state._minWithSize == FbFlexSize.MaxContent; set { if (value) _state._minWithSize = FbFlexSize.MaxContent; } }
 
@@ -290,7 +295,7 @@ namespace FractalBlazor.Components.Layout.Flex
         }
 
         // -------- Value assignation
-        protected new string MinHeight { get; set; }
+        protected string MinHeight { get; set; }
 
         protected bool MinHeightMaxContent { get => _state._minHeightSize == FbFlexSize.MaxContent; set { if (value) _state._minHeightSize = FbFlexSize.MaxContent; } }
 
@@ -316,7 +321,7 @@ namespace FractalBlazor.Components.Layout.Flex
         }
 
         // -------- Value assignation
-        protected new string MaxHeight { get; set; }
+        protected string MaxHeight { get; set; }
 
         protected bool MaxHeightMaxContent { get => _state._maxHeightSize == FbFlexSize.MaxContent; set { if (value) _state._maxHeightSize = FbFlexSize.MaxContent; } }
 
@@ -341,44 +346,17 @@ namespace FractalBlazor.Components.Layout.Flex
             }
         }
 
-        protected unsafe int BoxHash
+        protected new string AggregatedStyles
+            => ResolveStyle(
+                new FlexKey { Surface = SurfaceStyleKey, Flex = _state },
+                new FbStyleInputs(FlexBasis, Style, HoverMixOffset, MinWidth, MinHeight, MaxHeight),
+                static component => ((FbFlexBoxBase)component).BuildFlexStyle());
+
+        private string BuildFlexStyle()
         {
-            get
-            {
-                var hash = CpntHash;
-                fixed (FbFlexBoxBaseState* sptr = &_state)
-                {
-                    hash = ComputeHash((byte*)sptr, sizeof(FbFlexBoxBaseState), hash);
-                    if (!string.IsNullOrWhiteSpace(MinWidth))
-                        hash = ComputeHash(MinWidth, hash);
-                    if (!string.IsNullOrWhiteSpace(MinHeight))
-                        hash = ComputeHash(MinHeight, hash);
-                    if (!string.IsNullOrWhiteSpace(MaxHeight))
-                        hash = ComputeHash(MaxHeight, hash);
-                    return hash;
-                }
-            }
-        }
+            RenderingStatistics.AddFlexBoxBaseStyleComputation();
 
-        protected new unsafe string AggregatedStyles
-        {
-            get
-            {
-                var hash = BoxHash;
-                if (_hash == hash && _style != null)
-                    return _style;
-                _hash = hash;
-                lock (_locker)
-                {
-                    if (UseCaching && _cache.TryGetValue(hash, out var found))
-                    {
-                        _style = found;
-                        return _style;
-                    }
-
-                    RenderingStatistics.AddFlexBoxBaseStyleComputation();
-
-                    var str = $"position: relative;" +
+            return $"position: relative;" +
                             (_state._selfAlign == FbFlexItemSelfAlign.None ? "" : $"align-self:{SelfAlignString};") +
                             $"flex-direction: {DirectionString}; flex-wrap: {WrapString}; justify-content: {JustifyString}; align-items: {AlignItemsString}; align-content: {AlignContentString}; " +
                             (PlaceItemsString != "" ? $"place-items: {PlaceItemsString};" : "") +
@@ -393,13 +371,7 @@ namespace FractalBlazor.Components.Layout.Flex
                             (MaxHeightString != "" ? $"max-height: {MaxHeightString};" : "") +
                             (ColumnDisplay ? "flex-flow : column;" : "") +
                             (Scrollable ? "overflow : scroll;" : "") +
-                            base.AggregatedStyles;
-                    if (UseCaching && !_cache.ContainsKey(hash))
-                        _cache[hash] = str;
-                    _style = str;
-                    return _style;
-                }
-            }
+                            BuildSurfaceStyle();
         }
         #endregion
 

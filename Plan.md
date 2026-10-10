@@ -37,7 +37,7 @@ Chaque changement est vérifié contre ces règles. Une étape qui en viole une 
 - [x] **1.1 Paramètres déclaratifs.** Ajouter à `FbComponentBase` deux points d'extension, `CaptureParameterDefaults()` au premier `SetParametersAsync` et `RestoreParameterDefaults()` aux suivants. Chaque couche qui stocke des paramètres dans des champs privés les implémente : `FbLayoutComponentBase`, `FbLayoutSurfaceComponentBase`, `FbFlexBoxBase`, `FbRow`, `FbStack`, items, séparateurs, breaks, Grid.
   - Critère : `<FbRow WBA="@flag">` perd sa classe de fond quand `flag` repasse à `false`, et les défauts posés par les constructeurs (`FbRow` : `JHSt`, `Flex = 1`) reviennent.
   - Les paires de contournement devenues inutiles (`DOutline`) sont conservées seulement si elles gardent un sens propre.
-- [ ] **1.2 Cache de styles sûr et borné.** Remplacer les dictionnaires statiques indexés par un hachage 32 bits par un cache dont la clé est la valeur complète de l'état (`struct` non managée comparée octet par octet, `Pack = 1`). Les chaînes libres (`Style`, `FlexBasis`, `MinWidth`…) contournent le cache partagé. Une capacité maximale protège la mémoire.
+- [x] **1.2 Cache de styles sûr et borné.** Remplacer les dictionnaires statiques indexés par un hachage 32 bits par un cache dont la clé est la valeur complète de l'état (`struct` non managée comparée octet par octet, `Pack = 1`). Les chaînes libres (`Style`, `FlexBasis`, `MinWidth`…) contournent le cache partagé. Une capacité maximale protège la mémoire.
   - Critère : deux états différents ne partagent jamais une chaîne, deux états identiques la partagent, et un `Style` libre n'entre jamais dans le cache.
 - [ ] **1.3 Cycle de vie et ressources.**
   - `FbDynamicView` implémente `IDisposable` pour se désabonner de l'état.

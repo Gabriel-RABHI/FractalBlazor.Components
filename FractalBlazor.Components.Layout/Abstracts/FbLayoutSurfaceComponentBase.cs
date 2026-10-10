@@ -78,15 +78,30 @@ namespace FractalBlazor.Components.Layout.Abstracts
         // ************************************************************************************************ //
 
         // -------------------------------- LEVEL AGGREGATES -------------------------------- //
-        protected string AggregatedStyles {
-            get {
-                return base.AggregatedStyles + (string.IsNullOrWhiteSpace(HoverMixOffset) ? "" : $"--fb-hover-mix-offset:{HoverMixOffset};") +
-                       (Radius != FbSpacing.None ? $"border-radius:{FbLayoutHelper.ToRadiusCss(Radius)};" : "");
-            }
+        protected new string AggregatedStyles
+            => ResolveStyle(SurfaceStyleKey, SurfaceStyleInputs, static component => ((FbLayoutSurfaceComponentBase)component).BuildSurfaceStyle());
+
+        /// <summary>
+        /// Style cache key of this level: the layout key plus the radius.
+        /// </summary>
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
+        internal struct SurfaceKey
+        {
+            public ComponentBaseState Layout;
+            public FbSpacing Radius;
         }
 
+        internal SurfaceKey SurfaceStyleKey => new() { Layout = LayoutStyleKey, Radius = _radius };
+
+        private protected FbStyleInputs SurfaceStyleInputs => new(FlexBasis, Style, HoverMixOffset);
+
+        private protected string BuildSurfaceStyle()
+            => BuildLayoutStyle() +
+               (string.IsNullOrWhiteSpace(HoverMixOffset) ? "" : $"--fb-hover-mix-offset:{HoverMixOffset};") +
+               (Radius != FbSpacing.None ? $"border-radius:{FbLayoutHelper.ToRadiusCss(Radius)};" : "");
+
         // -------------------------------- LEVEL AGGREGATES -------------------------------- //
-        protected string AggregatedClasses => $"{base.AggregatedClasses} {BackgroundClasses} {ComputedFrameClasses} {HoverClassString} {OutlineClassString}".Trim();
+        protected new string AggregatedClasses => $"{base.AggregatedClasses} {BackgroundClasses} {ComputedFrameClasses} {HoverClassString} {OutlineClassString}".Trim();
 
         // ************************************************************************************************ //
         // **********************************    PUBLIC PARAMETERS    ************************************* //
