@@ -110,7 +110,6 @@ namespace FractalBlazor.Components.Layout
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "div");
-            builder.AddAttribute(1, "cpnt", "row-separator");
             builder.AddAttribute(2, "style", $"display: flex; align-self: stretch;{(Margin != FbSpacing.None ? $"margin-left:{FbLayoutHelper.ToSpacingCss(Margin)};margin-right:{FbLayoutHelper.ToSpacingCss(Margin)};" : "")}");
             builder.AddAttribute(3, "class", ComputedRowSeparatorClasses);
             builder.CloseElement();

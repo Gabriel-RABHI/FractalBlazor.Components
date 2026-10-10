@@ -204,7 +204,6 @@ namespace FractalBlazor.Components.Layout
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "div");
-            builder.AddAttribute(1, "cpnt", $"show-when-over[{StoreId}]");
             builder.AddAttribute(2, "style", $"display: block; position: relative; {AggregatedStyles}");
             builder.AddAttribute(3, "class", Classes);
             builder.AddAttribute(4, "onmouseover", $"FbIsOver('{_id}', '{AutomaticTag}');");

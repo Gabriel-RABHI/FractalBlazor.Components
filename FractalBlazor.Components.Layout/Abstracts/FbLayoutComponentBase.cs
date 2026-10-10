@@ -717,11 +717,5 @@ namespace FractalBlazor.Components.Layout.Abstracts
         /// </summary>
         [Parameter]
         public bool MRX { get => MarginRight == FbSpacing.X; set { if (value) MarginRight = FbSpacing.X; } }
-
-        /// <summary>
-        /// Store identifier
-        /// </summary>
-        [Parameter]
-        public string StoreId { get; set; } = "";
     }
 }

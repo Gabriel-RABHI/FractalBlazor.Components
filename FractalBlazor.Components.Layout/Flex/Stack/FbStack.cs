@@ -237,10 +237,10 @@ namespace FractalBlazor.Components.Layout
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "div");
-            builder.AddAttribute(1, "cpnt", $"stack[{StoreId}]");
             builder.AddAttribute(2, "style", AggregatedStyles);
             builder.AddAttribute(3, "class", $"fb-stack {AggregatedClasses}");
-            builder.AddAttribute(4, "onclick", EventCallback.Factory.Create(this, () => OnClick.InvokeAsync()));
+            if (OnClick.HasDelegate)
+                builder.AddAttribute(4, "onclick", OnClick);
             builder.AddContent(5, ChildContent);
             builder.CloseElement();
         }

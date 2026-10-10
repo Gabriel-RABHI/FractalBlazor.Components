@@ -108,7 +108,6 @@ namespace FractalBlazor.Components.Layout
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "div");
-            builder.AddAttribute(1, "cpnt", "stack-break");
             builder.AddAttribute(2, "style", "width:0px; height:100%;");
             builder.AddAttribute(3, "class", ClassName);
             builder.CloseElement();
