@@ -37,6 +37,17 @@
 }
 
 /**********************************************************************************/
+/* SELECT */
+.fb-select {
+    cursor: pointer;
+}
+
+.fb-select-field:focus-within {
+    outline: var(--fb-outline-size) solid var(--fb-frame-border-color);
+    --fb-current-frame-medium-mix: var(--fb-frame-strong-mix);
+}
+
+/**********************************************************************************/
 /* BUTTON */
 /* Native button reset at zero specificity: the Layout fill and frame classes win. */
 :where(.fb-button) {
