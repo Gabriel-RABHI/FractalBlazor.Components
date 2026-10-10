@@ -42,6 +42,15 @@ public sealed partial class StylesheetConventionTests
         Assert.All(used, name => Assert.Contains(name, declared));
     }
 
+    [Theory]
+    [MemberData(nameof(Stylesheets))]
+    public void No_literal_color_bypasses_the_theme(string stylesheet)
+    {
+        var css = ReadWithoutCommentsAndUrls(stylesheet);
+
+        Assert.Empty(LiteralColor().Matches(css).Select(m => m.Value));
+    }
+
     private static string ReadWithoutCommentsAndUrls(string relativePath)
     {
         var css = File.ReadAllText(Path.Combine(RepositoryRoot(), relativePath));
@@ -68,6 +77,9 @@ public sealed partial class StylesheetConventionTests
 
     [GeneratedRegex(@"@keyframes\s+([\w-]+)")]
     private static partial Regex KeyframesDeclaration();
+
+    [GeneratedRegex(@"#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?|oklch|oklab|lab|lch)\(")]
+    private static partial Regex LiteralColor();
 
     [GeneratedRegex(@"animation\s*:\s*([\w-]+)")]
     private static partial Regex AnimationName();

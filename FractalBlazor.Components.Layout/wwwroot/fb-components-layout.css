@@ -785,14 +785,16 @@ html {
 }
 
 .fb-prog-path-back {
-    stroke: #BBB;
+    /* Track: the medium frame color of the current background. */
+    stroke: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-medium-mix));
 }
 
 .fb-prog-path {
     stroke-dasharray: 35,200;
     stroke-dashoffset: 0;
-    stroke: #4989E4;
-    animation: fb-dash 1.5s ease-in-out infinite, fb-color 6s ease-in-out infinite;
+    /* Arc: the high background anchor, so the spinner follows the active variant. */
+    stroke: var(--fb-bg-high-anchor);
+    animation: fb-dash 1.5s ease-in-out infinite;
     stroke-linecap: round;
 }
 
@@ -816,24 +818,6 @@ html {
     100% {
         stroke-dasharray: 45, 200;
         stroke-dashoffset: -62;
-    }
-}
-
-@keyframes fb-color {
-    100%, 0% {
-        stroke: #4989E4;
-    }
-
-    40% {
-        stroke: #27A444;
-    }
-
-    66% {
-        stroke: #DC7200;
-    }
-
-    80%, 90% {
-        stroke: #BA8AA4;
     }
 }
 
