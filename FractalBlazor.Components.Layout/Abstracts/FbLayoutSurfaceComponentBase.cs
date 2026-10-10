@@ -37,14 +37,14 @@ namespace FractalBlazor.Components.Layout.Abstracts
 
         private string FrameClass {
             get {
-                string baseClasse = "framed-stack";
+                string baseClasse = "fb-framed";
 
                 if (_frame is FbFrame.Light)
-                    return $"{baseClasse} {baseClasse}-light-frame";
+                    return $"{baseClasse} {baseClasse}-light";
                 else if (_frame is FbFrame.Medium)
-                    return $"{baseClasse} {baseClasse}-medium-frame";
+                    return $"{baseClasse} {baseClasse}-medium";
                 else if (_frame is FbFrame.Strong)
-                    return $"{baseClasse} {baseClasse}-strong-frame";
+                    return $"{baseClasse} {baseClasse}-strong";
                 else
                     return "";
             }

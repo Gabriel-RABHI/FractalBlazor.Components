@@ -23,11 +23,11 @@ public sealed class DeclarativeParametersTests : BunitContext
     public void Frame_flag_turned_off_removes_the_frame_class()
     {
         var cut = Render<FbStack>(p => p.Add(x => x.WFS, true));
-        Assert.Contains("framed-stack-strong-frame", cut.Find("div").ClassList);
+        Assert.Contains("fb-framed-strong", cut.Find("div").ClassList);
 
         cut.Render(p => p.Add(x => x.WFS, false));
 
-        Assert.DoesNotContain("framed-stack", cut.Find("div").ClassList);
+        Assert.DoesNotContain("fb-framed", cut.Find("div").ClassList);
     }
 
     [Fact]

@@ -37,14 +37,14 @@ namespace FractalBlazor.Components.Layout
         {
             get
             {
-                string baseClasse = "framed-separator-row";
+                string baseClasse = "fb-separated-row";
 
                 if (_separator is FbFrame.Light)
-                    return $"{baseClasse} {baseClasse}-light-frame";
+                    return $"{baseClasse} {baseClasse}-light";
                 else if (_separator is FbFrame.Medium)
-                    return $"{baseClasse} {baseClasse}-medium-frame";
+                    return $"{baseClasse} {baseClasse}-medium";
                 else if (_separator is FbFrame.Strong)
-                    return $"{baseClasse} {baseClasse}-strong-frame";
+                    return $"{baseClasse} {baseClasse}-strong";
                 else
                     return "";
             }

@@ -43,7 +43,7 @@ Chaque changement est vérifié contre ces règles. Une étape qui en viole une 
   - `FbDynamicView` implémente `IDisposable` pour se désabonner de l'état.
   - `FbShowWhenVisible` est réécrit : un `IntersectionObserver` par instance, une `DotNetObjectReference`, `IAsyncDisposable`, plus aucun registre statique ni sondage du DOM. Le composant `FbCircularProgress` est réellement rendu.
 - [x] **1.4 Rendu sobre.** N'attacher `onclick` que si un délégué existe (`FbRow`, `FbStack`, items). Supprimer l'attribut de debug `cpnt` et le paramètre `StoreId` qui ne servait qu'à lui. Corriger la duplication de `Classes` dans les items.
-- [ ] **1.5 Préfixe CSS.** Préfixer toutes les classes et `@keyframes` encore globales (`framed-*`, `row-break-*`, `column-break-*`, `rotate`, `dash`, `color`…) par `fb-`, et supprimer les classes mortes. `FbColumn` et `FbColumnContainner`, qui ne rendaient rien et que Grid remplace, sont supprimés dès l’étape 1.1.
+- [x] **1.5 Préfixe CSS.** Préfixer toutes les classes et `@keyframes` encore globales (`framed-*`, `row-break-*`, `column-break-*`, `rotate`, `dash`, `color`…) par `fb-`, et supprimer les classes mortes. `FbColumn` et `FbColumnContainner`, qui ne rendaient rien et que Grid remplace, sont supprimés dès l’étape 1.1.
 
 ## Phase 2 — Terminer le theming
 

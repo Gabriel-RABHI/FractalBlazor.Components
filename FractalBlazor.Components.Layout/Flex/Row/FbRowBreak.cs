@@ -16,19 +16,19 @@ namespace FractalBlazor.Components.Layout
                 switch (Break)
                 {
                     case FbBreaks.XS:
-                        return Under ? "row-break-under-xs" : "row-break-over-xs";
+                        return Under ? "fb-row-break-under-xs" : "fb-row-break-over-xs";
                     case FbBreaks.S:
-                        return Under ? "row-break-under-s" : "row-break-over-s";
+                        return Under ? "fb-row-break-under-s" : "fb-row-break-over-s";
                     case FbBreaks.M:
-                        return Under ? "row-break-under-m" : "row-break-over-m";
+                        return Under ? "fb-row-break-under-m" : "fb-row-break-over-m";
                     case FbBreaks.L:
-                        return Under ? "row-break-under-l" : "row-break-over-l";
+                        return Under ? "fb-row-break-under-l" : "fb-row-break-over-l";
                     case FbBreaks.XL:
-                        return Under ? "row-break-under-xl" : "row-break-over-xl";
+                        return Under ? "fb-row-break-under-xl" : "fb-row-break-over-xl";
                     case FbBreaks.XXL:
-                        return Under ? "row-break-under-xxl" : "row-break-over-xxl";
+                        return Under ? "fb-row-break-under-xxl" : "fb-row-break-over-xxl";
                 }
-                return "break-row-under-s";
+                return "fb-row-break-under-s";
             }
         }
         #endregion
