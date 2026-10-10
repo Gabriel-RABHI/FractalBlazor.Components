@@ -1,0 +1,32 @@
+@* Page theme with a Dark / Light switch. It owns the only FbTheme of the page: its style
+   block targets :root, so it themes the whole document wherever it sits. The choice is kept
+   in a cookie that MainLayout reads during the server render, so a reload never flashes. *@
+@inject IJSRuntime JS
+
+<FbTheme Theme="Default" Branch="@_branch" />
+
+<FbSwitch TAction="FbSetValue<bool>" Value="@IsLight" ValueChanged="SetLightAsync">
+    <FbIcon Icon="@(IsLight ? FbMaterialIcons.LightMode : FbMaterialIcons.DarkMode)" Muted Title="Thème clair" />
+</FbSwitch>
+
+@code {
+    public const string Cookie = "fb-branch";
+
+    private string _branch = FbThemeBranches.Dark;
+
+    /// <summary>
+    /// Branch read from the cookie by the server render.
+    /// </summary>
+    [Parameter]
+    public string InitialBranch { get; set; } = FbThemeBranches.Dark;
+
+    private bool IsLight => _branch == FbThemeBranches.Light;
+
+    protected override void OnInitialized() => _branch = InitialBranch;
+
+    private async Task SetLightAsync(bool light)
+    {
+        _branch = light ? FbThemeBranches.Light : FbThemeBranches.Dark;
+        await JS.InvokeVoidAsync("fbDemo.setCookie", Cookie, _branch);
+    }
+}
