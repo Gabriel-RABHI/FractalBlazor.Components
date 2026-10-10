@@ -1,177 +1,189 @@
 // FractalBlazor Layout interop. Every function lives under the single global
-// `FractalBlazor` object, so the page global scope stays clean.
+// `FractalBlazor` object, so the page global scope stays clean. The script is loaded
+// once by a <script> tag: components call it without importing a module each.
 window.FractalBlazor = window.FractalBlazor || {};
 
-/**
- * Reports to .NET when `element` enters or leaves the viewport.
- * Returns a handle whose `dispose()` stops the observation.
- */
-window.FractalBlazor.observeVisibility = function (element, dotnet, keepObserving) {
-    const observer = new IntersectionObserver(entries => {
-        for (const entry of entries) {
-            dotnet.invokeMethodAsync('OnVisibilityChanged', entry.isIntersecting);
-            if (entry.isIntersecting && !keepObserving)
-                observer.disconnect();
-        }
-    });
-    observer.observe(element);
-    return { dispose: () => observer.disconnect() };
-};
+(function (fb) {
 
-let mouseX = 0, mouseY = 0;
-const elementsFbOver = new Set();
-let mouseMoveListener;
-let onScrollListener;
-let onScrollEndListener;
-let intervalId;
-let didScroll = false;
-let performanceMode = false;
-let lastElementId;
+    //------ Visibility (FbShowWhenVisible) ------//
 
-function FbIsOver(id, automatic) {
-
-    lastElementId = id;
-
-    if (automatic == "AUTO" && !performanceMode) {
-        document.getElementById(id).style.visibility = "inherit";
-        document.getElementById(id).style.opacity = 1;
-    }
-    else if (automatic == "AUTO" && performanceMode && !didScroll) {
-        document.getElementById(id).style.visibility = "inherit";
-        document.getElementById(id).style.opacity = 1;
-        elementsFbOver.add(id);
-    }
-}
-function FbIsLeaving(id, automatic) {
-    if (automatic == "AUTO") {
-        var element = document.getElementById(id);
-        if (!element) return;
-
-        element.style.visibility = "collapse";
-        element.style.opacity = 0;
-
-        if (performanceMode)
-            elementsFbOver.delete(id);
-    }
-}
-function isMouseOverElement(id) {
-    var element = document.getElementById(id);
-    if (!element) return false;
-
-    var rect = element.getBoundingClientRect();
-
-    return mouseX >= rect.left &&
-        mouseX <= rect.right &&
-        mouseY >= rect.top &&
-        mouseY <= rect.bottom;
-}
-function ClearElementsInExcessOver(verificationDelay) {
-    intervalId = setInterval(() => {
-        didScroll = false;
-        elementsFbOver.forEach(id => {
-            if (!isMouseOverElement(id)) {
-                FbIsLeaving(id, "AUTO");
+    /**
+     * Reports to .NET when `element` enters or leaves the viewport.
+     * Returns a handle whose `dispose()` stops the observation.
+     */
+    fb.observeVisibility = function (element, dotnet, keepObserving) {
+        const observer = new IntersectionObserver(entries => {
+            for (const entry of entries) {
+                dotnet.invokeMethodAsync('OnVisibilityChanged', entry.isIntersecting);
+                if (entry.isIntersecting && !keepObserving)
+                    observer.disconnect();
             }
         });
-    }, verificationDelay);
-}
-
-function runFbShowOnOverPerformance(parentId, verificationDelay) {
-
-    performanceMode = true;
-    elementsFbOver.clear();
-    mouseMoveListener = function (event) {
-        mouseX = event.clientX;
-        mouseY = event.clientY;
+        observer.observe(element);
+        return { dispose: () => observer.disconnect() };
     };
-    onScrollListener = function () {
-        didScroll = true;
+
+    //------ Show when over (FbShowWhenOver, FbShowWhenOverPerformance) ------//
+
+    const over = {
+        mouseX: 0,
+        mouseY: 0,
+        elements: new Set(),
+        performanceMode: false,
+        didScroll: false,
+        lastElementId: null,
+        intervalId: null,
+        scrollTarget: null,
+        onMouseMove: null,
+        onScroll: null,
+        onScrollEnd: null
     };
-    onScrollEndListener = function () {
-        var lastElement = document.getElementById(lastElementId);
-        if (lastElement) {
-            lastElement.style.visibility = "inherit";
-            lastElement.style.opacity = 1;
-            elementsFbOver.add(lastElementId);
+
+    function show(element) {
+        element.style.visibility = "inherit";
+        element.style.opacity = 1;
+    }
+
+    function hide(element) {
+        element.style.visibility = "collapse";
+        element.style.opacity = 0;
+    }
+
+    fb.isOver = function (id, automatic) {
+        over.lastElementId = id;
+        if (automatic !== "AUTO" || (over.performanceMode && over.didScroll))
+            return;
+
+        const element = document.getElementById(id);
+        if (!element) return;
+
+        show(element);
+        if (over.performanceMode)
+            over.elements.add(id);
+    };
+
+    fb.isLeaving = function (id, automatic) {
+        if (automatic !== "AUTO") return;
+
+        const element = document.getElementById(id);
+        if (!element) return;
+
+        hide(element);
+        if (over.performanceMode)
+            over.elements.delete(id);
+    };
+
+    function isMouseOver(id) {
+        const element = document.getElementById(id);
+        if (!element) return false;
+
+        const rect = element.getBoundingClientRect();
+        return over.mouseX >= rect.left && over.mouseX <= rect.right
+            && over.mouseY >= rect.top && over.mouseY <= rect.bottom;
+    }
+
+    /**
+     * Performance mode: while scrolling, hovered elements are not shown; a periodic check
+     * hides those the mouse has left without a mouseout event.
+     */
+    fb.startShowOnOver = function (parentId, verificationDelay) {
+        fb.stopShowOnOver();
+
+        over.performanceMode = true;
+        over.onMouseMove = event => {
+            over.mouseX = event.clientX;
+            over.mouseY = event.clientY;
+        };
+        over.onScroll = () => over.didScroll = true;
+        over.onScrollEnd = () => {
+            const last = document.getElementById(over.lastElementId);
+            if (last) {
+                show(last);
+                over.elements.add(over.lastElementId);
+            }
+            over.didScroll = false;
+        };
+
+        document.addEventListener('mousemove', over.onMouseMove);
+        over.scrollTarget = document.getElementById(parentId) || window;
+        over.scrollTarget.addEventListener('scroll', over.onScroll);
+        over.scrollTarget.addEventListener('scrollend', over.onScrollEnd);
+
+        over.intervalId = setInterval(() => {
+            over.didScroll = false;
+            over.elements.forEach(id => {
+                if (!isMouseOver(id))
+                    fb.isLeaving(id, "AUTO");
+            });
+        }, verificationDelay);
+    };
+
+    fb.stopShowOnOver = function () {
+        clearInterval(over.intervalId);
+        over.intervalId = null;
+        over.elements.clear();
+        over.performanceMode = false;
+
+        if (over.onMouseMove)
+            document.removeEventListener('mousemove', over.onMouseMove);
+        if (over.scrollTarget) {
+            over.scrollTarget.removeEventListener('scroll', over.onScroll);
+            over.scrollTarget.removeEventListener('scrollend', over.onScrollEnd);
         }
-
-        didScroll = false;
+        over.scrollTarget = over.onMouseMove = over.onScroll = over.onScrollEnd = null;
     };
 
-    document.addEventListener('mousemove', mouseMoveListener);
+    //------ Dropdown positioning (FbDropDown) ------//
 
-    var parentCpnt = document.getElementById(parentId);
+    const dropdowns = new Map();
 
-    if (parentCpnt) {
-        parentCpnt.addEventListener('scroll', onScrollListener);
-        parentCpnt.addEventListener('scrollend', onScrollEndListener);
-    }
-    else {
-        window.addEventListener('scroll', onScrollListener);
-        window.addEventListener('scrollend', onScrollEndListener);
-    }
+    function alignDropdown(containerId, dropdownId) {
+        const container = document.getElementById(containerId);
+        const dropdown = document.getElementById(dropdownId);
+        if (!container || !dropdown) return;
 
-    ClearElementsInExcessOver(verificationDelay);
-}
+        dropdown.classList.remove('fb-dropdown-open-up');
+        dropdown.classList.add('fb-dropdown-open-down');
 
-function stopFbShowOnOverPerformance() {
-    clearInterval(intervalId);
-    elementsFbOver.clear();
-    performanceMode = false;
-    document.removeEventListener('mousemove', mouseMoveListener);
-    document.removeEventListener('scroll', mouseMoveListener);
-    document.removeEventListener('scrollend', mouseMoveListener);
-}
+        const rect = container.getBoundingClientRect();
+        const dropdownHeight = dropdown.offsetHeight;
+        const viewportHeight = window.innerHeight;
 
-//------ Dropdown Positioning & Tracking ------//
-
-let activeDropdowns = new Map();
-
-function fbAlignDropdown(containerId, dropdownId) {
-    const container = document.getElementById(containerId);
-    const dropdown = document.getElementById(dropdownId);
-    if (!container || !dropdown) return;
-
-    dropdown.classList.remove('fb-dropdown-open-up');
-    dropdown.classList.add('fb-dropdown-open-down');
-
-    const rect = container.getBoundingClientRect();
-    const dropdownHeight = dropdown.offsetHeight;
-    const viewportHeight = window.innerHeight;
-
-    if (rect.bottom + dropdownHeight > viewportHeight) {
-        if (rect.top > dropdownHeight || rect.top > viewportHeight - rect.bottom) {
+        if (rect.bottom + dropdownHeight > viewportHeight
+            && (rect.top > dropdownHeight || rect.top > viewportHeight - rect.bottom)) {
             dropdown.classList.remove('fb-dropdown-open-down');
             dropdown.classList.add('fb-dropdown-open-up');
         }
     }
-}
 
-function fbInitDropdown(containerId, dropdownId) {
-    let ticking = false;
-    const align = () => {
-        if (!ticking) {
+    /**
+     * Opens the dropdown downward, or upward when it does not fit below, and keeps it
+     * aligned while the page scrolls or resizes.
+     */
+    fb.initDropdown = function (containerId, dropdownId) {
+        let ticking = false;
+        const align = () => {
+            if (ticking) return;
+            ticking = true;
             window.requestAnimationFrame(() => {
-                fbAlignDropdown(containerId, dropdownId);
+                alignDropdown(containerId, dropdownId);
                 ticking = false;
             });
-            ticking = true;
-        }
+        };
+
+        alignDropdown(containerId, dropdownId);
+        window.addEventListener('scroll', align, true);
+        window.addEventListener('resize', align);
+        dropdowns.set(dropdownId, align);
     };
 
-    fbAlignDropdown(containerId, dropdownId);
+    fb.destroyDropdown = function (dropdownId) {
+        const align = dropdowns.get(dropdownId);
+        if (!align) return;
 
-    window.addEventListener('scroll', align, true);
-    window.addEventListener('resize', align);
+        window.removeEventListener('scroll', align, true);
+        window.removeEventListener('resize', align);
+        dropdowns.delete(dropdownId);
+    };
 
-    activeDropdowns.set(dropdownId, { align, rawAlign: () => fbAlignDropdown(containerId, dropdownId) });
-}
-
-function fbDestroyDropdown(dropdownId) {
-    const data = activeDropdowns.get(dropdownId);
-    if (data) {
-        window.removeEventListener('scroll', data.align, true);
-        window.removeEventListener('resize', data.align);
-        activeDropdowns.delete(dropdownId);
-    }
-}
+})(window.FractalBlazor);

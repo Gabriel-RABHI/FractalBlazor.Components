@@ -205,8 +205,8 @@ namespace FractalBlazor.Components.Layout
             builder.OpenElement(0, "div");
             builder.AddAttribute(2, "style", $"display: block; position: relative; {AggregatedStyles}");
             builder.AddAttribute(3, "class", Classes);
-            builder.AddAttribute(4, "onmouseover", $"FbIsOver('{_id}', '{AutomaticTag}');");
-            builder.AddAttribute(5, "onmouseout", $"FbIsLeaving('{_id}', '{AutomaticTag}');");
+            builder.AddAttribute(4, "onmouseover", $"FractalBlazor.isOver('{_id}', '{AutomaticTag}');");
+            builder.AddAttribute(5, "onmouseout", $"FractalBlazor.isLeaving('{_id}', '{AutomaticTag}');");
 
             builder.OpenElement(6, "div");
             builder.AddAttribute(7, "style", $"visibility: {(Show ? "inherit" : "collapse")}; opacity: {(Show ? "1" : "0")};");

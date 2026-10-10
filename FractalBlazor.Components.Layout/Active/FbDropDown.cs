@@ -103,7 +103,7 @@ namespace FractalBlazor.Components.Layout
                 _shouldInitDropdown = false;
                 try
                 {
-                    await JS.InvokeVoidAsync("fbInitDropdown", _containerId, _dropdownId);
+                    await JS.InvokeVoidAsync("FractalBlazor.initDropdown", _containerId, _dropdownId);
                 }
                 catch (Exception)
                 {
@@ -135,7 +135,7 @@ namespace FractalBlazor.Components.Layout
         {
             try
             {
-                await JS.InvokeVoidAsync("fbDestroyDropdown", _dropdownId);
+                await JS.InvokeVoidAsync("FractalBlazor.destroyDropdown", _dropdownId);
             }
             catch (Exception)
             {

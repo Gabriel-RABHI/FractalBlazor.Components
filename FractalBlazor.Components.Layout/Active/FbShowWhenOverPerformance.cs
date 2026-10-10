@@ -28,7 +28,7 @@ namespace FractalBlazor.Components.Layout
         {
             if (firstRender)
             {
-                await JS.InvokeVoidAsync("runFbShowOnOverPerformance", new object?[] { ScrollParentID, VerificationDelay });
+                await JS.InvokeVoidAsync("FractalBlazor.startShowOnOver", new object?[] { ScrollParentID, VerificationDelay });
             }
         }
 
@@ -36,7 +36,7 @@ namespace FractalBlazor.Components.Layout
         {
             try
             {
-                await JS.InvokeVoidAsync("stopFbShowOnOverPerformance");
+                await JS.InvokeVoidAsync("FractalBlazor.stopShowOnOver");
             }
             catch (JSDisconnectedException)
             { }
