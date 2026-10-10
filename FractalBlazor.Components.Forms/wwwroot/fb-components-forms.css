@@ -1,17 +1,39 @@
 /**********************************************************************************/
-/* UTILS */
+/* CONTROLS */
+/* Controls reuse the Layout grammar for fills and frames. The --fb-control-* tokens  */
+/* (declared below with the foreground colors) cover what Layout does not: text,      */
+/* placeholder, caret, selection and the accent of checked controls.                  */
+.fb-control {
+    color: var(--fb-control-fg);
+}
+
 .fb-input-text {
     width: 100%;
 }
 
-.fb-input-text__input {
+.fb-control-input {
     flex: 1 1 auto;
     min-width: 0;
     border: 0;
     outline: none;
     background: transparent;
-    color: inherit;
+    color: var(--fb-control-fg);
+    caret-color: var(--fb-control-caret);
     font: inherit;
+}
+
+.fb-control-input::placeholder {
+    color: var(--fb-control-placeholder);
+    opacity: 1;
+}
+
+.fb-control-input::selection {
+    background: var(--fb-control-selection);
+}
+
+.fb-control-input:disabled,
+.fb-control:has(:disabled) {
+    cursor: not-allowed;
 }
 
 :root,
@@ -25,6 +47,12 @@
     --fb-fg-subtle: color-mix(in oklab, var(--fb-fg-low-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-subtle-high-mix));
     --fb-fg-muted: color-mix(in oklab, var(--fb-fg-low-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-muted-high-mix));
     --fb-fg-highlight: color-mix(in oklab, var(--fb-fg-low-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-highlight-high-mix));
+    --fb-control-fg: var(--fb-fg-default);
+    --fb-control-placeholder: var(--fb-fg-subtle);
+    --fb-control-caret: var(--fb-fg-highlight);
+    --fb-control-selection: color-mix(in oklab, var(--fb-bg-high-anchor) 45%, transparent);
+    --fb-control-accent: var(--fb-bg-high-anchor);
+    --fb-control-accent-fg: var(--fb-bg-low-anchor);
 }
 
 .fb-hover:hover {

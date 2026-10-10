@@ -34,6 +34,19 @@ namespace FractalBlazor.Components.Layout.Colors
         }
 
         /// <summary>
+        /// True when white text reads better than black text on <paramref name="color"/>.
+        /// </summary>
+        public static bool IsDark(string color)
+            => ContrastRatio(color, "#FFFFFF") > ContrastRatio(color, "#000000");
+
+        /// <summary>
+        /// CSS <c>color-scheme</c> matching a page background, or <c>null</c> when the color
+        /// cannot be computed.
+        /// </summary>
+        public static string? ColorSchemeOf(string? background)
+            => IsHexColor(background) ? (IsDark(background!) ? "dark" : "light") : null;
+
+        /// <summary>
         /// Parses a CSS percentage such as <c>8%</c> or <c>12.5%</c>.
         /// </summary>
         public static bool TryParsePercent(string? value, out double percent)

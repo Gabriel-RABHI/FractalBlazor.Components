@@ -47,6 +47,16 @@ public sealed class ThemeScopeTests : BunitContext
             light.Find("div").GetAttribute("style"));
     }
 
+    [Theory]
+    [InlineData(FbThemeBranches.Dark, "color-scheme:dark;")]
+    [InlineData(FbThemeBranches.Light, "color-scheme:light;")]
+    public void Theme_declares_the_color_scheme_of_its_page_background(string branch, string expected)
+    {
+        var cut = Render<FbTheme>(p => p.Add(x => x.Branch, branch));
+
+        Assert.Contains(expected, cut.Find("style").TextContent);
+    }
+
     [Fact]
     public void Scoped_layout_theme_carries_its_variables_inline()
     {

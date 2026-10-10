@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Text;
+using FractalBlazor.Components.Layout.Colors;
 
 namespace FractalBlazor.Components.Layout.Theming.Model;
 
@@ -146,6 +147,18 @@ public static class FbThemeCssNames
         var high = $"{anchors}-high-anchor";
         builder.Append(ActiveReference(variant, low, swap ? high : low));
         builder.Append(ActiveReference(variant, high, swap ? low : high));
+    }
+
+    /// <summary>
+    /// Declares <c>color-scheme</c> from the page background, so native widgets (date picker,
+    /// select list, scrollbars) follow the theme. Nothing is written when the background is
+    /// not a hexadecimal color.
+    /// </summary>
+    public static void AppendColorScheme(StringBuilder builder, string? pageBackground)
+    {
+        var scheme = FbColorMath.ColorSchemeOf(pageBackground);
+        if (scheme is not null)
+            builder.Append("color-scheme:").Append(scheme).Append(';');
     }
 
     public static void AppendDeclaration(StringBuilder builder, string name, string value)

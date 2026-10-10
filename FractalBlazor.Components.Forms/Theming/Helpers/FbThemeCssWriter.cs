@@ -48,6 +48,8 @@ public static class FbThemeCssWriter
         Append(builder, "--fb-txt-b-weight", theme.Typography.BoldWeight);
         Append(builder, "--fb-txt-xb-weight", theme.Typography.ExtraBoldWeight);
 
+        FbThemeCssNames.AppendColorScheme(builder, theme.GetVariant(FbThemeVariants.Default).LayoutColors.LowAnchor);
+
         foreach (var variantName in theme.VariantOrder)
             AppendVariant(builder, theme.GetVariant(variantName));
 

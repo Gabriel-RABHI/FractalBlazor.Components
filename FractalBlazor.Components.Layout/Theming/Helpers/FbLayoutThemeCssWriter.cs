@@ -30,6 +30,8 @@ public static class FbLayoutThemeCssWriter
         Append(builder, "--fb-frame-medium-mix", theme.BordersMix.MediumMix);
         Append(builder, "--fb-frame-strong-mix", theme.BordersMix.StrongMix);
 
+        FbThemeCssNames.AppendColorScheme(builder, theme.GetVariant(FbLayoutThemeVariants.Default).LayoutColors.LowAnchor);
+
         foreach (var variantName in theme.VariantOrder)
             AppendVariant(builder, theme.GetVariant(variantName));
 
