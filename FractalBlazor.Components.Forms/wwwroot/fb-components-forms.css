@@ -16,7 +16,7 @@
 
 :root,
 .fb-theme-scope {
-    display: inherit;
+    color: var(--fb-fg-default);
     --fb-current-fg-default-high-mix: var(--fb-fg-default-high-mix);
     --fb-current-fg-subtle-high-mix: var(--fb-fg-subtle-high-mix);
     --fb-current-fg-muted-high-mix: var(--fb-fg-muted-high-mix);
@@ -53,6 +53,14 @@
 }
 
 html {
+    font-family: var(--fb-txt-font-family);
+    font-size: var(--fb-txt-base-size);
+    font-weight: var(--fb-txt-base-weight);
+    color: var(--fb-fg-default);
+}
+
+/* A scoped FbTheme restates what html receives for the page theme. */
+.fb-theme {
     font-family: var(--fb-txt-font-family);
     font-size: var(--fb-txt-base-size);
     font-weight: var(--fb-txt-base-weight);

@@ -48,7 +48,7 @@ Chaque changement est vérifié contre ces règles. Une étape qui en viole une 
 ## Phase 2 — Terminer le theming
 
 - [x] **2.1 Inversion locale des ancres.** Implémenter `SB` (inverser les ancres de fond) et `SF` (inverser les ancres de premier plan) dans `FbVariant`, et `SB` dans `FbLayoutVariant`. L'inversion reste une simple redirection de variables.
-- [ ] **2.2 Thème local.** Ajouter `Scoped` à `FbTheme` et `FbLayoutTheme` : le thème est alors posé en style inline sur une `div.fb-theme-scope` au lieu d'un `<style>` global. Une page peut ainsi contenir un îlot `Light` dans une page `Dark`.
+- [x] **2.2 Thème local.** Ajouter `Scoped` à `FbTheme` et `FbLayoutTheme` : le thème est alors posé en style inline sur une `div.fb-theme-scope` au lieu d'un `<style>` global. Une page peut ainsi contenir un îlot `Light` dans une page `Dark`.
 - [ ] **2.3 Validation des variantes sans coût.** `FbTheme` fournit, comme `FbLayoutTheme`, un contexte en cascade fixe (`IsFixed`) qui liste ses variantes. `FbVariant` et `FbLayoutVariant` valident le nom quand le contexte existe et n'échouent pas quand il est absent (frontière de mode de rendu interactif).
 - [ ] **2.4 Contrôle de contraste.** Ajouter un calcul C# des couleurs résolues, fidèle aux formules CSS (`color-mix` en oklab), et un rapport WCAG : chaque couleur de texte sur chaque fond, pour chaque branche et chaque variante. Tests : noir sur blanc = 21:1 ; rapport complet du thème par défaut.
 - [ ] **2.5 Couleurs codées en dur.** Le spinner `FbCircularProgress` consomme les variables du thème.

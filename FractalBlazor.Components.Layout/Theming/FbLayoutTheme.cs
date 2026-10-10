@@ -1,3 +1,4 @@
+using FractalBlazor.Components.Layout.Theming.Solver;
 using FractalBlazor.Components.Layout.Abstracts;
 using FractalBlazor.Components.Layout.Theming.Contracts;
 using FractalBlazor.Components.Layout.Theming.Helpers;
@@ -19,25 +20,54 @@ public sealed class FbLayoutTheme : FbComponentBase
     [Parameter]
     public string Selector { get; set; } = ":root";
 
+    /// <summary>
+    /// Applies the theme to the child content only, through a neutral <c>div.fb-theme-scope</c>
+    /// that carries the variables inline. <see cref="Selector"/> is then ignored.
+    /// </summary>
+    [Parameter]
+    public bool Scoped { get; set; }
+
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    private FbResolvedLayoutTheme? _resolved;
+    private string _variables = "";
+
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        FbThemeCssNames.ValidateSelector(Selector);
         var resolved = Registry.Resolve(Theme);
-        var variables = FbLayoutThemeCssWriter.ToCssVariables(resolved);
+        if (!ReferenceEquals(resolved, _resolved))
+        {
+            _resolved = resolved;
+            _variables = FbLayoutThemeCssWriter.ToCssVariables(resolved);
+        }
 
-        builder.OpenElement(0, "style");
-        builder.AddMarkupContent(1, $"{Selector}{{{variables}}}");
+        if (Scoped)
+        {
+            builder.OpenElement(0, "div");
+            builder.AddAttribute(1, "class", "fb-theme-scope");
+            builder.AddAttribute(2, "style", _variables);
+            BuildContent(builder, resolved);
+            builder.CloseElement();
+            return;
+        }
+
+        FbThemeCssNames.ValidateSelector(Selector);
+        builder.OpenElement(3, "style");
+        builder.AddMarkupContent(4, $"{Selector}{{{_variables}}}");
         builder.CloseElement();
 
+        BuildContent(builder, resolved);
+    }
+
+    private void BuildContent(RenderTreeBuilder builder, FbResolvedLayoutTheme resolved)
+    {
         if (ChildContent is null)
             return;
 
-        builder.OpenComponent<CascadingValue<FbLayoutThemeContext>>(2);
-        builder.AddAttribute(3, "Value", new FbLayoutThemeContext(resolved));
-        builder.AddAttribute(4, "ChildContent", ChildContent);
+        builder.OpenComponent<CascadingValue<FbLayoutThemeContext>>(10);
+        builder.AddAttribute(11, "Value", new FbLayoutThemeContext(resolved));
+        builder.AddAttribute(12, "ChildContent", ChildContent);
         builder.CloseComponent();
     }
 }

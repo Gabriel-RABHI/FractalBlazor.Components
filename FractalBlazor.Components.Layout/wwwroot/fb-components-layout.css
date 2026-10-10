@@ -878,3 +878,10 @@ html {
     padding: 1rem;
     width: 100%;
 }
+
+/**********************************************************************************/
+/* THEME SCOPES */
+/* A scope only carries variables: it produces no box, so it never alters the layout. */
+.fb-theme-scope {
+    display: contents;
+}
