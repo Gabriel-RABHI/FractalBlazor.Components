@@ -47,7 +47,11 @@ namespace FractalBlazor.Components.Forms.Display
         XB
     }
 
-    public enum FbTextIntent : byte
+    /// <summary>
+    /// Rendering color of a text, from the least to the most visible. It is a rendering
+    /// semantic: functional states (Error, Selected…) come from the enclosing variant.
+    /// </summary>
+    public enum FbTextColor : byte
     {
         Default = 0,
         Subtle = 1,
@@ -55,25 +59,54 @@ namespace FractalBlazor.Components.Forms.Display
         Highlight = 3
     }
 
+    [Flags]
     public enum FbTextModifiers : byte
     {
-        NoWrap,
-        Trim
+        None = 0,
+        /// <summary>
+        /// Keep the text on one line.
+        /// </summary>
+        NoWrap = 1,
+        /// <summary>
+        /// Keep the text on one line and end it with an ellipsis when it overflows.
+        /// </summary>
+        Trim = 2
     }
 
+    /// <summary>
+    /// Text with a size, a weight and a color from the theme. Boolean flags (<c>&lt;FbText S B Muted&gt;</c>)
+    /// cover static markup; <see cref="Size"/>, <see cref="Weight"/> and <see cref="Color"/>
+    /// cover values computed at run time.
+    /// </summary>
     public class FbText : FbComponentBase
     {
-        private static string[] FbTextSizeClasses = { "", "fb-t-xs ", "fb-t-s ", "fb-t-m ", "fb-t-l ", "fb-t-xl ", "fb-t-xxl " };
-        private static string[] FbTextWeightClasses = { "", "fb-t-t ", "fb-t-b ", "fb-t-xb " };
-        private static string[] FbTextIntentClasses = { "", "fb-fg-subtle ", "fb-fg-muted ", "fb-fg-highlight " };
-        private static string[] FbTextModifiersClasses = { "", "fb-t-nw ", "fb-t-tr " };
+        private const int SizeCount = 7, WeightCount = 4, ColorCount = 4, ModifierCount = 4;
 
-        private RenderHandle _renderHandle;
+        private static readonly string[] SizeClasses = { "", " fb-t-xs", " fb-t-s", " fb-t-m", " fb-t-l", " fb-t-xl", " fb-t-xxl" };
+        private static readonly string[] WeightClasses = { "", " fb-t-t", " fb-t-b", " fb-t-xb" };
+        private static readonly string[] ColorClasses = { "", " fb-fg-subtle", " fb-fg-muted", " fb-fg-highlight" };
+        private static readonly string[] ModifierClasses = { "", " fb-t-nw", " fb-t-tr", " fb-t-nw fb-t-tr" };
+
+        // Every combination is built once and shared by all instances.
+        private static readonly string?[] _classes = new string?[SizeCount * WeightCount * ColorCount * ModifierCount];
 
         private FbTextSize _size;
         private FbTextWeight _weight;
-        private FbTextIntent _intent;
+        private FbTextColor _color;
         private FbTextModifiers _modifiers;
+
+        // -------- Enum API
+        [Parameter]
+        public FbTextSize Size { get => _size; set => _size = value; }
+
+        [Parameter]
+        public FbTextWeight Weight { get => _weight; set => _weight = value; }
+
+        [Parameter]
+        public FbTextColor Color { get => _color; set => _color = value; }
+
+        [Parameter]
+        public FbTextModifiers Modifiers { get => _modifiers; set => _modifiers = value; }
 
         // -------- Scale
         [Parameter]
@@ -104,37 +137,41 @@ namespace FractalBlazor.Components.Forms.Display
         [Parameter]
         public bool XB { get => _weight == FbTextWeight.XB; set { if (value) _weight = FbTextWeight.XB; } }
 
-        // -------- Intent
+        // -------- Color
         [Parameter]
-        public bool Subtle { get => _intent == FbTextIntent.Subtle; set { if (value) _intent = FbTextIntent.Subtle; } }
+        public bool Subtle { get => _color == FbTextColor.Subtle; set { if (value) _color = FbTextColor.Subtle; } }
 
         [Parameter]
-        public bool Muted { get => _intent == FbTextIntent.Muted; set { if (value) _intent = FbTextIntent.Muted; } }
+        public bool Muted { get => _color == FbTextColor.Muted; set { if (value) _color = FbTextColor.Muted; } }
 
         [Parameter]
-        public bool Highlight { get => _intent == FbTextIntent.Highlight; set { if (value) _intent = FbTextIntent.Highlight; } }
+        public bool Highlight { get => _color == FbTextColor.Highlight; set { if (value) _color = FbTextColor.Highlight; } }
 
-        // -------- Modifiers
+        // -------- Modifiers (cumulative)
+        /// <summary>
+        /// No Wrap: keep the text on one line.
+        /// </summary>
         [Parameter]
-        public bool NW { get => _modifiers == FbTextModifiers.NoWrap; set { if (value) _modifiers = FbTextModifiers.NoWrap; } }
+        public bool NW { get => _modifiers.HasFlag(FbTextModifiers.NoWrap); set { if (value) _modifiers |= FbTextModifiers.NoWrap; } }
 
+        /// <summary>
+        /// Trim: end an overflowing line with an ellipsis.
+        /// </summary>
         [Parameter]
-        public bool TR { get => _modifiers == FbTextModifiers.Trim; set { if (value) _modifiers = FbTextModifiers.Trim; } }
+        public bool TR { get => _modifiers.HasFlag(FbTextModifiers.Trim); set { if (value) _modifiers |= FbTextModifiers.Trim; } }
 
         // -------- Content
         [Parameter]
-        public string Value { get; set; }
+        public string? Value { get; set; }
 
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
-
-        public void Attach(RenderHandle renderHandle) => _renderHandle = renderHandle;
+        public RenderFragment? ChildContent { get; set; }
 
         protected override void OnBeforeParametersSet()
         {
             _size = default;
             _weight = default;
-            _intent = default;
+            _color = default;
             _modifiers = default;
         }
 
@@ -142,7 +179,7 @@ namespace FractalBlazor.Components.Forms.Display
         {
             builder.OpenElement(0, "span");
 
-            builder.AddAttribute(1, "class", BuildCssClass());
+            builder.AddAttribute(1, "class", CssClass);
 
             if (Value != null)
                 builder.AddContent(2, Value);
@@ -152,14 +189,18 @@ namespace FractalBlazor.Components.Forms.Display
             builder.CloseElement();
         }
 
-        private string BuildCssClass()
+        private string CssClass
         {
-            string size = FbTextSizeClasses[(byte)_size];
-            string weight = FbTextWeightClasses[(byte)_weight];
-            string intent = FbTextIntentClasses[(byte)_intent];
-            string mod = FbTextModifiersClasses[(byte)_modifiers];
+            get
+            {
+                var size = Math.Min((int)_size, SizeCount - 1);
+                var weight = Math.Min((int)_weight, WeightCount - 1);
+                var color = Math.Min((int)_color, ColorCount - 1);
+                var modifiers = (int)_modifiers & (ModifierCount - 1);
+                var index = size + SizeCount * (weight + WeightCount * (color + ColorCount * modifiers));
 
-            return $"fb-txt {size}{weight}{intent}{mod}".TrimEnd();
+                return _classes[index] ??= "fb-txt" + SizeClasses[size] + WeightClasses[weight] + ColorClasses[color] + ModifierClasses[modifiers];
+            }
         }
     }
 }
