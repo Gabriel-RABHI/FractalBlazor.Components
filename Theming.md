@@ -96,7 +96,7 @@ Les espacements S/M/L/X alimentent les margins, paddings et gutters. Les rayons 
 ### Groupes Forms
 
 ```csharp
-public sealed class FbThemeFormTextVariant
+public sealed class FbThemeFormTextVariantMix
 {
     public string? DefaultHighMix { get; init; }
     public string? SubtleHighMix { get; init; }
@@ -144,7 +144,7 @@ Un thème Forms possède trois couches strictes.
 | Couche | Contenu | Portée |
 | --- | --- | --- |
 | Main | `Spacings`, `Corners`, `Typography` | Commun à toutes les branches et variantes du thème |
-| Branch | `MasterTint`, `TextVariant`, `BordersMix`, `SurfaceMix` | Propre à une branche Dark/Light |
+| Branch | `MasterTint`, `TextVariantMix`, `BordersMix`, `SurfaceMix` | Propre à une branche Dark/Light |
 | Variant | `LayoutColors`, `FormColors` | Propre à un état visuel local |
 
 La couche Main ne contient pas les couleurs. Une branche choisit la teinte maître d’échantillonnage ainsi que les mélanges de texte, de surface et de frame adaptés à son contraste. Chaque variante fournit ensuite uniquement les ancres de fond et de premier plan.
@@ -182,17 +182,17 @@ public sealed class FbThemeBranch
 
     // Branch
     public FbThemeMasterTint? MasterTint { get; init; }
-    public FbThemeFormTextVariant? TextVariant { get; init; }
+    public FbThemeFormTextVariantMix? TextVariantMix { get; init; }
     public FbThemeLayoutBordersMix? BordersMix { get; init; }
     public FbThemeLayoutSurfaceMix? SurfaceMix { get; init; }
 
-    public IReadOnlyList<FbThemeVariant> Variants { get; init; }
-        = Array.Empty<FbThemeVariant>();
+    public IReadOnlyList<FbThemeColorVariant> Variants { get; init; }
+        = Array.Empty<FbThemeColorVariant>();
 }
 
-public sealed class FbThemeVariant
+public sealed class FbThemeColorVariant
 {
-    public FbThemeVariant(string name) => Name = name;
+    public FbThemeColorVariant(string name) => Name = name;
 
     public string Name { get; }
 
@@ -286,7 +286,7 @@ L'enregistrement doit échouer immédiatement dans les cas suivants :
 Le registre est un singleton injecté par DI :
 
 ```csharp
-public interface IFbThemeRegistry
+public interface IFbFormThemeRegistry
 {
     FbThemeSetup Default { get; }
 
@@ -358,7 +358,7 @@ var brandTheme = new FbThemeSetup("Brand", registry.Default)
         {
             Variants =
             [
-                new FbThemeVariant(FbThemeVariants.Error)
+                new FbThemeColorVariant(FbThemeVariants.Error)
                 {
                     LayoutColors = new FbThemeLayoutColors
                     {
@@ -667,20 +667,20 @@ ActiveReference("Error", "bg-low-anchor");
 // --fb-bg-low-anchor:var(--fb-error-bg-low-anchor);
 ```
 
-La liste des tokens Variant est centralisée et partagée par le générateur du thème et par `FbVariant`. Elle contient uniquement les ancres de `FbThemeLayoutColors` et `FbThemeFormColors`. Les mélanges de surface et de frame restent au niveau de la branche.
-
-La liste initiale est :
+Les tokens Variant sont centralisés dans `FbThemeCssNames.VariantReferences`, partagé par le générateur du thème, `FbVariant` et `FbLayoutVariant`. Ils forment deux paires d'ancres : `bg` (`FbThemeLayoutColors`) et `fg` (`FbThemeFormColors`). Les mélanges de surface et de frame restent au niveau de la branche.
 
 ```text
-bg-low-anchor
-bg-high-anchor
-fg-low-anchor
-fg-high-anchor
+bg-low-anchor   bg-high-anchor    // Layout et Forms
+fg-low-anchor   fg-high-anchor    // Forms uniquement
 ```
+
+Une paire peut être inversée : l'ancre basse active pointe alors vers l'ancre haute de la variante, et l'inverse. C'est ce que font `SB` (fond) et `SF` (premier plan) ; l'inversion reste une redirection, sans aucune valeur calculée en C#.
+
+Les chaînes de redirection sont construites une fois par combinaison (variante, inversions) puis mises en cache, dans une limite de 256 entrées.
 
 Les filets ont une épaisseur fixe de `1px`. Leur force visuelle dépend uniquement des tokens `frame-*-mix`.
 
-Les composants dérivés de `FbLayoutSurfaceComponentBase` exposent le booléen `WOl` pour ajouter un outline utilisant la couleur calculée de la frame courante :
+Les composants dérivés de `FbLayoutSurfaceComponentBase` exposent le booléen `EOutline` pour ajouter un outline utilisant la couleur calculée de la frame courante :
 
 ```css
 outline: var(--fb-outline-size) solid var(--fb-frame-border-color);
@@ -709,9 +709,28 @@ Le composant :
 2. génère la balise `<style>` contenant le thème résolu et toutes ses variantes ;
 3. initialise les variables actives vers la variante `Default` ;
 4. rend ensuite son `ChildContent` ;
-5. peut fournir en cascade la liste des variantes disponibles pour la validation des composants descendants.
+5. fournit en cascade un `FbThemeContext` qui donne accès au thème résolu, pour la validation des variantes descendantes.
 
-Il ne génère aucune classe CSS et n'ajoute pas le nom du thème au DOM. Son `Selector` vaut `:root` par défaut.
+Il ne génère aucune classe CSS et n'ajoute pas le nom du thème au DOM. Son `Selector` vaut `:root` par défaut. Les variables ne sont sérialisées qu'au changement de thème ou de branche.
+
+Le contexte est cascadé avec `IsFixed="true"` et l'instance reste la même pendant toute la vie du composant ; seul son thème change. Les descendants ne s'abonnent donc jamais, ce qui préserve la légèreté des composants répétés.
+
+#### Thème local
+
+Avec `Scoped="true"`, `FbTheme` n'écrit aucun `<style>` global. Il rend une `div class="fb-theme-scope fb-theme"` qui porte toutes les variables en style inline, puis son contenu. `Selector` est alors ignoré.
+
+```razor
+<FbTheme Theme="Default" Branch="Dark">
+    ...
+    <FbTheme Theme="Default" Branch="Light" Scoped>
+        <FbStack WBS PL>Îlot clair dans une page sombre</FbStack>
+    </FbTheme>
+</FbTheme>
+```
+
+La classe `fb-theme` rétablit dans l'îlot la police, la taille et la couleur de texte que `html` reçoit pour le thème de page. `FbLayoutTheme` accepte le même paramètre.
+
+Deux `FbTheme` non locaux écrivent sur le même sélecteur et s'écrasent : une page n'en contient qu'un, les autres sont `Scoped`.
 
 Installation à la racine de l'application :
 
@@ -736,9 +755,9 @@ Installation à la racine de l'application :
 Le composant :
 
 1. normalise la variante vide en `Default` ;
-2. peut vérifier, via le contexte fourni par `FbTheme`, que la variante existe ;
-3. génère par simple concaténation les redirections des tokens Variant ;
-4. rend un `<div class="fb-theme-scope">` visuellement neutre ;
+2. vérifie, via le contexte fourni par `FbTheme`, que la variante existe ;
+3. génère par simple concaténation les redirections des tokens Variant, inversées par paire si `SB` ou `SF` est posé ;
+4. rend un `<div class="fb-theme-scope">` visuellement neutre (`display: contents`) : ses enfants participent directement à la mise en page du parent ;
 5. place les redirections dans l'attribut `style` de cette div ;
 6. rend son `ChildContent` dans ce scope.
 
@@ -756,7 +775,28 @@ Pour `Error`, le rendu est de la forme :
 
 Le rendu réel contient la redirection de tous les tokens de `LayoutColors` et `FormColors`. Il ne contient aucune valeur calculée en C# et aucune classe propre à `Error`.
 
-Une erreur de thème, de branche ou de variante doit produire une exception explicite en développement. Une stratégie de fallback vers `Default` peut être configurable pour la production, mais ne doit pas masquer silencieusement une faute de configuration pendant le développement.
+Le scope rétablit aussi `color: var(--fb-fg-default)`, si bien qu'un texte brut placé dans `Error` prend la couleur de la variante.
+
+Un thème ou une branche inconnus lèvent une exception explicite dans `FbTheme`. Une variante inconnue lève une `KeyNotFoundException` quand un `FbThemeContext` est présent. Le contexte est absent quand un `FbTheme` statique entoure une page interactive : les valeurs en cascade ne franchissent pas la frontière de mode de rendu. La variante est alors acceptée telle quelle.
+
+#### Inversion locale
+
+`SB` inverse les ancres de fond et `SF` celles du premier plan :
+
+```razor
+<FbVariant SB>
+    <FbStack WBS PL>Carte claire dans une branche sombre</FbStack>
+</FbVariant>
+```
+
+```html
+<div class="fb-theme-scope"
+     style="--fb-bg-low-anchor:var(--fb-default-bg-high-anchor);
+            --fb-bg-high-anchor:var(--fb-default-bg-low-anchor);
+            ...">
+```
+
+`FbLayoutVariant` accepte `SB` ; il n'a pas de premier plan à inverser.
 
 ### Imbrication et retour au défaut
 
@@ -827,6 +867,25 @@ La résolution suit les mêmes règles que le thème Forms, sans niveau Branch. 
 
 Aucune classe propre à un thème ou à une variante Layout n'est générée.
 
+## Contrôle de contraste
+
+Les pourcentages de mélange garantissent une palette cohérente, mais aucun contraste. `FbThemeContrast.Analyze` calcule donc en C# les couleurs que le navigateur peindra, avec les mêmes formules que les feuilles CSS :
+
+- `FbColorMath.Mix` reproduit `color-mix(in oklab, A, B p%)` ;
+- `FbColorMath.ContrastRatio` donne le ratio WCAG 2.2, de 1 à 21.
+
+```csharp
+var theme = registry.Resolve("MyTheme", FbThemeBranches.Light);
+var report = FbThemeContrast.Analyze(theme);
+
+foreach (var entry in report.Below(4.5))
+    Console.WriteLine(entry); // Error Muted on Highlight: #… on #… = 4.12:1
+```
+
+Le rapport couvre chaque texte (`Subtle`, `Muted`, `Default`, `Highlight`) sur chaque fond (`Surface`, `Accent`, `Highlight`) de chaque variante. `MeetsAA` vaut 4,5:1 (texte courant) et `MeetsAALarge` 3:1 (grand texte, contours de contrôles). Une variante dont une ancre n'est pas au format `#RGB` ou `#RRGGBB` apparaît dans `Skipped`.
+
+Les tests de la solution imposent l'AA à `Default`, `Muted` et `Highlight` pour les deux branches du thème par défaut. `Subtle` est réservé aux textes décoratifs (placeholders, indications désactivées) et n'est pas contraint.
+
 ## Adaptation des feuilles CSS
 
 L'implémentation doit réorganiser les déclarations existantes sans réécrire les formules de rendu.
@@ -850,7 +909,7 @@ La classe statique actuellement nommée `FbTheme` est supprimée ; ce nom est en
 Les composants de configuration séparés du socle sont remplacés par la nouvelle architecture :
 
 - `FbLayoutThemeStyle` est supprimé au profit du bloc `<style>` produit directement par `FbLayoutTheme` ;
-- les réglages de couleurs Forms alimentent `FbThemeFormColors` et `FbThemeFormTextVariant` ;
+- les réglages de couleurs Forms alimentent `FbThemeFormColors` et `FbThemeFormTextVariantMix` ;
 - les réglages de fontes alimentent `FbThemeFormTypography`.
 
 La bibliothèque étant nouvelle, aucun membre `[Obsolete]`, aucune façade de compatibilité et aucun ancien nom public ne doivent subsister dans l'implémentation finale.
