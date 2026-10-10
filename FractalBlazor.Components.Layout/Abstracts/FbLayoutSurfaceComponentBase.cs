@@ -120,6 +120,12 @@ namespace FractalBlazor.Components.Layout.Abstracts
         public string HoverMixOffset { get; set; } = "";
 
         /// <summary>
+        /// With -> Frame -> None: removes a frame set by the component defaults.
+        /// </summary>
+        [Parameter]
+        public bool WFN { get => _frame == FbFrame.None; set { if (value) _frame = FbFrame.None; } }
+
+        /// <summary>
         /// With -> Frame -> Light
         /// </summary>
         [Parameter]
@@ -144,6 +150,12 @@ namespace FractalBlazor.Components.Layout.Abstracts
         public bool EOutline { get => _outline; set { if (value) _outline = true; } }
 
         /// <summary>
+        /// With -> Radius -> None: square corners, even when the component defaults round them.
+        /// </summary>
+        [Parameter]
+        public bool WRN { get => Radius == FbSpacing.None; set { if (value) Radius = FbSpacing.None; } }
+
+        /// <summary>
         /// With -> Radius -> Small
         /// </summary>
         [Parameter]
@@ -166,6 +178,12 @@ namespace FractalBlazor.Components.Layout.Abstracts
         /// </summary>
         [Parameter]
         public bool WRX { get => Radius == FbSpacing.X; set { if (value) Radius = FbSpacing.X; } }
+
+        /// <summary>
+        /// With -> Background -> None: transparent, even when the component defaults paint a fill.
+        /// </summary>
+        [Parameter]
+        public bool WBN { get => _background == FbBackground.None; set { if (value) _background = FbBackground.None; } }
 
         /// <summary>
         /// With -> Background -> Surface

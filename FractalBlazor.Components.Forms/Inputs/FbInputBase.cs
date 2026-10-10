@@ -73,8 +73,7 @@ namespace FractalBlazor.Components.Forms.Inputs
         /// <summary>
         /// Variant actually applied, or <c>null</c> to inherit the parent one.
         /// </summary>
-        protected string? EffectiveVariant
-            => !string.IsNullOrWhiteSpace(Variant) ? Variant : Disabled ? FbThemeVariants.Disabled : null;
+        protected string? EffectiveVariant => FbVariantScope.Effective(Variant, Disabled);
 
         /// <summary>
         /// Sends <paramref name="value"/> to the state, then to <see cref="ValueChanged"/>.
@@ -98,17 +97,6 @@ namespace FractalBlazor.Components.Forms.Inputs
         protected abstract void BuildControl(RenderTreeBuilder builder);
 
         protected sealed override void BuildRenderTree(RenderTreeBuilder builder)
-        {
-            var variant = EffectiveVariant;
-            var normalized = variant is null ? null : FbThemeVariants.Normalize(variant);
-            if (normalized is not null)
-                ThemeContext?.Theme.GetVariant(normalized);
-
-            builder.OpenElement(0, "div");
-            builder.AddAttribute(1, "class", "fb-theme-scope");
-            builder.AddAttribute(2, "style", normalized is null ? null : FbThemeCssWriter.BuildVariantReferences(normalized));
-            builder.AddContent(3, _control);
-            builder.CloseElement();
-        }
+            => FbVariantScope.Build(builder, EffectiveVariant, ThemeContext, _control);
     }
 }
