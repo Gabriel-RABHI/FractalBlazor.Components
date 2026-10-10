@@ -15,6 +15,20 @@ namespace FractalBlazor.Components.Layout
 
         protected FbFrame Frame { get => _frame; set => _frame = value; }
 
+        private (FbFrame Frame, FbSpacing Margin) _defaults;
+
+        protected override void CaptureParameterDefaults()
+        {
+            base.CaptureParameterDefaults();
+            _defaults = (_frame, Margin);
+        }
+
+        protected override void RestoreParameterDefaults()
+        {
+            base.RestoreParameterDefaults();
+            (_frame, Margin) = _defaults;
+        }
+
         private string FrameClass
         {
             get

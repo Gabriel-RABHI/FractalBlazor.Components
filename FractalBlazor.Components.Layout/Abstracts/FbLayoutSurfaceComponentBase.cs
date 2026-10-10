@@ -9,6 +9,19 @@ namespace FractalBlazor.Components.Layout.Abstracts
         private FbBackground _background = FbBackground.None;
         private FbSpacing _radius = FbSpacing.None;
         private bool _outline;
+        private (FbFrame Frame, FbBackground Background, FbSpacing Radius, bool Outline) _defaults;
+
+        protected override void CaptureParameterDefaults()
+        {
+            base.CaptureParameterDefaults();
+            _defaults = (_frame, _background, _radius, _outline);
+        }
+
+        protected override void RestoreParameterDefaults()
+        {
+            base.RestoreParameterDefaults();
+            (_frame, _background, _radius, _outline) = _defaults;
+        }
 
         private string HoverClassString {
             get {
@@ -95,17 +108,7 @@ namespace FractalBlazor.Components.Layout.Abstracts
         /// With -> Frame -> Light
         /// </summary>
         [Parameter]
-        public bool WFL
-        {
-            get => _frame == FbFrame.Light;
-            set
-            {
-                if (value)
-                    _frame = FbFrame.Light;
-                else if (_frame == FbFrame.Light)
-                    _frame = FbFrame.None;
-            }
-        }
+        public bool WFL { get => _frame == FbFrame.Light; set { if (value) _frame = FbFrame.Light; } }
 
         /// <summary>
         /// With -> Frame -> Medium
@@ -124,12 +127,6 @@ namespace FractalBlazor.Components.Layout.Abstracts
         /// </summary>
         [Parameter]
         public bool EOutline { get => _outline; set { if (value) _outline = true; } }
-
-        /// <summary>
-        /// Disable -> Outline
-        /// </summary>
-        [Parameter]
-        public bool DOutline { get => _outline; set { if (value) _outline = false; } }
 
         /// <summary>
         /// With -> Radius -> Small

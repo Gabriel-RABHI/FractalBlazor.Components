@@ -94,8 +94,24 @@ namespace FractalBlazor.Components.Layout.Abstracts
         }
 
         private ComponentBaseState _state = new ComponentBaseState();
+        private ComponentBaseState _defaultState;
 
         private string _flexBasis = "";
+        private string _defaultFlexBasis = "";
+
+        protected override void CaptureParameterDefaults()
+        {
+            base.CaptureParameterDefaults();
+            _defaultState = _state;
+            _defaultFlexBasis = _flexBasis;
+        }
+
+        protected override void RestoreParameterDefaults()
+        {
+            base.RestoreParameterDefaults();
+            _state = _defaultState;
+            _flexBasis = _defaultFlexBasis;
+        }
 
         private FbBaseDisplayMode DisplayMode { get => _state.DisplayMode; set => _state.DisplayMode = value; }
 

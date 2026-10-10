@@ -10,10 +10,23 @@ namespace FractalBlazor.Components.Layout
     {
         #region HIDDEN
         private FbFlexItemSelfAlign _selfAlign = FbFlexItemSelfAlign.None;
+        private FbFlexItemSelfAlign _defaultSelfAlign;
 
         public FbRowItem()
         {
             IsFlex = true;
+        }
+
+        protected override void CaptureParameterDefaults()
+        {
+            base.CaptureParameterDefaults();
+            _defaultSelfAlign = _selfAlign;
+        }
+
+        protected override void RestoreParameterDefaults()
+        {
+            base.RestoreParameterDefaults();
+            _selfAlign = _defaultSelfAlign;
         }
 
         private string VerticalAlignString

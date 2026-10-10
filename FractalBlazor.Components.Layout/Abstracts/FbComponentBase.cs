@@ -17,6 +17,11 @@ namespace FractalBlazor.Components.Layout.Abstracts
 
         public virtual Task SetParametersAsync(ParameterView parameters)
         {
+            if (_initialized)
+                RestoreParameterDefaults();
+            else
+                CaptureParameterDefaults();
+
             OnBeforeParametersSet();
             parameters.SetParameterProperties(this);
 
@@ -29,6 +34,21 @@ namespace FractalBlazor.Components.Layout.Abstracts
             OnParametersSet();
             Render();
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Called once, before the first parameter assignment, after every constructor has run.
+        /// Components that keep parameter values in private fields snapshot them here.
+        /// </summary>
+        protected virtual void CaptureParameterDefaults() {
+        }
+
+        /// <summary>
+        /// Called before every later parameter assignment. Restoring the snapshot makes the
+        /// rendered state depend only on the parameters of the current render: a boolean
+        /// flag set to <c>false</c>, or no longer passed, falls back to its default.
+        /// </summary>
+        protected virtual void RestoreParameterDefaults() {
         }
 
         protected virtual void OnInitialized() {

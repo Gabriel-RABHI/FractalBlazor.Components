@@ -43,6 +43,20 @@ namespace FractalBlazor.Components.Layout
         [Parameter]
         public FbBreaks Break { get; set; } = FbBreaks.S;
 
+        private (FbBreaks Break, bool Under) _defaults;
+
+        protected override void CaptureParameterDefaults()
+        {
+            base.CaptureParameterDefaults();
+            _defaults = (Break, Under);
+        }
+
+        protected override void RestoreParameterDefaults()
+        {
+            base.RestoreParameterDefaults();
+            (Break, Under) = _defaults;
+        }
+
         /// <summary>
         /// Break -> Extra Small (512px)
         /// </summary>

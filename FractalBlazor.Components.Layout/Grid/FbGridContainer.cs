@@ -67,6 +67,22 @@ public class FbGridContainer : FbLayoutSurfaceComponentBase
     // justify-content : horizontal alignment
     private FbGridContainerContentAlignment JustifyContent { get; set; } = FbGridContainerContentAlignment.Normal;
 
+    private (FbFrame Separator, FbGridAutoFlow AutoFlow, FbSpacing Gap, FbSpacing RowGap, FbSpacing ColumnGap,
+        FbGridContainerItemAlignment AlignItems, FbGridContainerItemAlignment JustifyItems,
+        FbGridContainerContentAlignment AlignContent, FbGridContainerContentAlignment JustifyContent) _defaults;
+
+    protected override void CaptureParameterDefaults()
+    {
+        base.CaptureParameterDefaults();
+        _defaults = (_separator, AutoFlow, Gap, RowGap, ColumnGap, AlignItems, JustifyItems, AlignContent, JustifyContent);
+    }
+
+    protected override void RestoreParameterDefaults()
+    {
+        base.RestoreParameterDefaults();
+        (_separator, AutoFlow, Gap, RowGap, ColumnGap, AlignItems, JustifyItems, AlignContent, JustifyContent) = _defaults;
+    }
+
     #endregion
 
     // ************************************************************************************************ //

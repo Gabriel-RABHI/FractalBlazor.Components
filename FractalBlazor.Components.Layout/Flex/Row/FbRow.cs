@@ -10,6 +10,7 @@ namespace FractalBlazor.Components.Layout
     {
         #region HIDDEN
         private FbFrame _separator = FbFrame.None;
+        private FbFrame _defaultSeparator;
 
         public FbRow()
         {
@@ -18,6 +19,18 @@ namespace FractalBlazor.Components.Layout
             JHSt = true;
             IsFlex = true;
             Flex = 1;
+        }
+
+        protected override void CaptureParameterDefaults()
+        {
+            base.CaptureParameterDefaults();
+            _defaultSeparator = _separator;
+        }
+
+        protected override void RestoreParameterDefaults()
+        {
+            base.RestoreParameterDefaults();
+            _separator = _defaultSeparator;
         }
 
         private string SeparatorClass

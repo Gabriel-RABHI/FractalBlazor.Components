@@ -49,12 +49,25 @@ namespace FractalBlazor.Components.Layout.Flex
         }
 
         private FbFlexBoxBaseState _state = new FbFlexBoxBaseState();
+        private FbFlexBoxBaseState _defaultState;
         private int _hash = 0;
         private string _style = null;
 
         public FbFlexBoxBase()
         {
             IsFlex = true;
+        }
+
+        protected override void CaptureParameterDefaults()
+        {
+            base.CaptureParameterDefaults();
+            _defaultState = _state;
+        }
+
+        protected override void RestoreParameterDefaults()
+        {
+            base.RestoreParameterDefaults();
+            _state = _defaultState;
         }
         
         // -------------- As flex item ------------ //

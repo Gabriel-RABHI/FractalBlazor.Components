@@ -58,15 +58,8 @@ namespace FractalBlazor.Components.Forms.Inputs
             builder.OpenComponent<FbRow>(0);
             builder.AddAttribute(1, nameof(FbRow.JVC), true);
 
-            if (_hasFocus)
-            {
-                builder.AddAttribute(2, nameof(FbRow.EOutline), true);
-                builder.AddAttribute(3, nameof(FbRow.WFS), true);
-            } else
-            {
-                builder.AddAttribute(2, nameof(FbRow.DOutline), true);
-                builder.AddAttribute(3, nameof(FbRow.WFM), true);
-            }
+            builder.AddAttribute(2, nameof(FbRow.EOutline), _hasFocus);
+            builder.AddAttribute(3, _hasFocus ? nameof(FbRow.WFS) : nameof(FbRow.WFM), true);
 
             builder.AddAttribute(4, nameof(FbRow.GS), true);
             builder.AddAttribute(5, nameof(FbRow.PVS), true);

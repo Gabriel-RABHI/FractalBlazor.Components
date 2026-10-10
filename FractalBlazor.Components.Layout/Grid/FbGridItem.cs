@@ -12,8 +12,6 @@ namespace FractalBlazor.Components.Layout;
 /// </summary>
 public sealed class FbGridItem : FbLayoutSurfaceComponentBase
 {
-    private string _cachedStyle = null;
-
     public FbGridItem()
     {
         IsGrid = true;
@@ -68,6 +66,20 @@ public sealed class FbGridItem : FbLayoutSurfaceComponentBase
     private FbGridItemAlignment AlignSelf { get; set; } = FbGridItemAlignment.Auto;
 
     private FbGridItemJustify JustifySelf { get; set; } = FbGridItemJustify.Auto;
+
+    private (FbGridItemAlignment AlignSelf, FbGridItemJustify JustifySelf) _defaults;
+
+    protected override void CaptureParameterDefaults()
+    {
+        base.CaptureParameterDefaults();
+        _defaults = (AlignSelf, JustifySelf);
+    }
+
+    protected override void RestoreParameterDefaults()
+    {
+        base.RestoreParameterDefaults();
+        (AlignSelf, JustifySelf) = _defaults;
+    }
 
     // -------- In Column
     /// <summary>
