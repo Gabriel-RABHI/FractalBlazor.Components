@@ -1,6 +1,6 @@
 using FractalBlazor.Components.Common.Contracts;
 
-namespace FractalBlazor.Demo.States
+namespace FractalBlazor.WebSite.States
 {
     /// <summary>
     /// Opens sections and pages. Each area of the screen is its own state, so opening a page

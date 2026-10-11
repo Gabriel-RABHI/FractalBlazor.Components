@@ -1,6 +1,6 @@
 using FractalBlazor.Components.Common.Contracts;
 
-namespace FractalBlazor.Demo.States
+namespace FractalBlazor.WebSite.States
 {
     /// <summary>
     /// An entry of a menu. A menu is a polymorphic list: each entry is rendered by the view

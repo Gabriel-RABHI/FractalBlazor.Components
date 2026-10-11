@@ -1,12 +1,12 @@
-@* The interactive root of the demo. The whole application is RootState, rendered by the view
-   declared for its type. *@
+@* The interactive root of the site, the same for every host. The whole application is
+   RootState, rendered by the view declared for its type. *@
 @inject RootState Root
 
 <FbDynamicView TSelector="ViewSelector" Item="Root" Selector="ViewSelector.Viewer" />
 
 @code {
     /// <summary>
-    /// Mode read from the cookie by the server render: the first paint has the right theme.
+    /// Mode read from <see cref="ThemeCookie"/> by the host before the first render.
     /// </summary>
     [Parameter]
     public ThemeMode InitialMode { get; set; }

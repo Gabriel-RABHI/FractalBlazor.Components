@@ -7,7 +7,7 @@ using FractalBlazor.Components.Forms.Theming.Solver;
 using FractalBlazor.Components.Layout.Colors;
 using FractalBlazor.Components.Layout.Theming.Model;
 
-namespace FractalBlazor.Components.Components.ThemeEditor
+namespace FractalBlazor.WebSite.ThemeEditor
 {
     /// <summary>
     /// Values edited for one branch of the default theme. Every change bumps

@@ -2,7 +2,9 @@
 
 <PageTitle>FractalBlazor</PageTitle>
 
-<DemoApplication @rendermode="InteractiveServer" InitialMode="@InitialMode" />
+@* The whole site comes from FractalBlazor.WebSite; this host only reads the theme cookie
+   during its static render, so the first paint has the right theme. *@
+<WebSiteApplication @rendermode="InteractiveServer" InitialMode="@ThemeCookie.Parse(HttpContext?.Request.Cookies[ThemeCookie.Name])" />
 
 @code {
     /// <summary>
@@ -10,9 +12,4 @@
     /// </summary>
     [CascadingParameter]
     public HttpContext? HttpContext { get; set; }
-
-    private ThemeMode InitialMode
-        => HttpContext?.Request.Cookies[ThemeSelectorView.Cookie] == FbThemeBranches.Light
-            ? ThemeMode.Light
-            : ThemeMode.Dark;
 }

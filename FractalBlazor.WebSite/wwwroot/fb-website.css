@@ -1,0 +1,24 @@
+/* Styles of the FractalBlazor web site: theme variables only. */
+
+.fb-site-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--fb-space-s);
+    color: var(--fb-fg-muted);
+    text-decoration: none;
+}
+
+    .fb-site-link:hover {
+        color: var(--fb-fg-highlight);
+    }
+
+.fb-site-code {
+    margin: 0;
+    padding: var(--fb-space-m);
+    border-radius: var(--fb-radius-m);
+    background: var(--fb-bg-accent);
+    color: var(--fb-fg-default);
+    font-family: var(--fb-code-font-family);
+    font-size: 0.85em;
+    overflow-x: auto;
+}

@@ -1,19 +1,13 @@
-using FractalBlazor.Components;
 using FractalBlazor.Components.Components;
-using FractalBlazor.Components.Components.ThemeEditor;
-using FractalBlazor.Components.Forms;
-using FractalBlazor.Demo.States;
+using FractalBlazor.WebSite;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-// Theme registries, and a view registry for every selector (ViewSelector, FbViewSelector…).
-builder.Services.AddFractalBlazor();
-// One application state per circuit: the views only display it and send it actions.
-builder.Services.AddScoped<RootState>();
-builder.Services.AddScoped<ThemeEditorModel>();
+// FractalBlazor and the states of the site: one application state per circuit.
+builder.Services.AddFractalBlazorWebSite();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <!-- The whole web site (documentation, demos, theme editor and their states) as a component
+       library: loaded by the server host and by the WebAssembly host. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FractalBlazor.Components.Common\FractalBlazor.Components.Common.csproj" />
+    <ProjectReference Include="..\FractalBlazor.Components.Forms\FractalBlazor.Components.Forms.csproj" />
+    <ProjectReference Include="..\FractalBlazor.Components.Layout\FractalBlazor.Components.Layout.csproj" />
+  </ItemGroup>
+
+</Project>

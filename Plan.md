@@ -101,6 +101,16 @@ FractalBlazor sert d'abord à écrire des applications d'une seule page. `FbPage
 - [x] **7.4 Vues et coquille de la démo.** Une vue par type du modèle (`[ViewFor<ViewSelector>]`), la coquille rendue dans un `FbPageAnchor` : en-tête en row, corps en row (menu de gauche en stack, contenu en stack défilante), pied de page en row. Les anciennes pages deviennent des vues de modèles de page, la démo n'a plus qu'une route. Le sélecteur de thème du pied de page est un `FbSelect` sur le mode clair ou sombre, et garde le cookie qui évite le flash au chargement.
 - [x] **7.5 Documentation.** README : `FbPageAnchor`, `Scrollable` et le modèle d'application piloté par l'état.
 
+## Phase 8 — Un site, deux hôtes : Server et WebAssembly
+
+Les bibliothèques génériques restent `Layout`, `Forms` et `Common` ; `Benchmarks` les compare aux meilleures bibliothèques. Tout le site (documentation, démos, éditeur de thème, modèles d'état) devient une bibliothèque de composants, `FractalBlazor.WebSite`, chargée par deux hôtes : `FractalBlazor.WebSite.ServerSide` (rendu serveur interactif) et `FractalBlazor.WebSite.ClientSide` (WebAssembly autonome). Le site ne dépend d'aucun hôte : pas de `HttpContext`, pas d'API serveur ; chaque hôte ne fournit que la page HTML et le mode de thème initial.
+
+- [x] **8.1 Bibliothèque FractalBlazor.WebSite.** Bibliothèque Razor (`SupportedPlatform browser`) qui reçoit les états de `FractalBlazor.Demo.States` (supprimé), les vues, l'éditeur de thème, les exemples et `ViewSelector`. Elle expose `AddFractalBlazorWebSite()`, le composant racine `WebSiteApplication` (mode de thème initial en paramètre), le cookie du thème (`ThemeCookie`) et ses ressources `fb-website.css` et `fb-website.js`.
+- [ ] **8.2 FractalBlazor.WebSite.ServerSide.** `FractalBlazor.Components` est renommé. Sa page d'accueil lit le cookie pendant le rendu serveur et rend `WebSiteApplication` en `InteractiveServer`.
+- [ ] **8.3 FractalBlazor.WebSite.ClientSide.** Application WebAssembly autonome qui référence `FractalBlazor.WebSite`. Le mode initial est lu dans le cookie par JS avant le premier rendu, et un script de `index.html` pose le `color-scheme` avant le chargement de Blazor.
+- [ ] **8.4 Registre de vues en WebAssembly.** Le registre ne parcourt que les assemblies qui référencent `FractalBlazor.Components.Common`, celle de `ViewFor` : sous l'interpréteur WebAssembly, parcourir tout le framework retarderait le premier rendu.
+- [ ] **8.5 Documentation et outillage.** README (structure de la solution, lancement des deux hôtes), configurations de lancement, CI.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :

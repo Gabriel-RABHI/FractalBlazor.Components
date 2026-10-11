@@ -1,4 +1,4 @@
-namespace FractalBlazor.Demo.States
+namespace FractalBlazor.WebSite.States
 {
     /// <summary>
     /// The header: the name of the application, the sections of the top menu, and links to

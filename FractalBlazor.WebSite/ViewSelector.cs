@@ -1,4 +1,4 @@
-namespace FractalBlazor.Components;
+namespace FractalBlazor.WebSite;
 
 /// <summary>
 /// The views a state can have in the demo: a read-only one, a compact one, an editable one.

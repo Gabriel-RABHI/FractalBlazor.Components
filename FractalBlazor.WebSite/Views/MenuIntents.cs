@@ -1,8 +1,8 @@
 using FractalBlazor.Components.Forms.Icons;
 using FractalBlazor.Components.Forms.Mapping;
-using FractalBlazor.Demo.States;
+using FractalBlazor.WebSite.States;
 
-namespace FractalBlazor.Components.Components.Views
+namespace FractalBlazor.WebSite.Views
 {
     /// <summary>
     /// How the views present a menu intent: the states only say what an entry is about.

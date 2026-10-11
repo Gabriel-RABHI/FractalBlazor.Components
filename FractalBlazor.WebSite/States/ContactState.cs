@@ -1,6 +1,6 @@
 using FractalBlazor.Components.Common.Contracts;
 
-namespace FractalBlazor.Demo.States
+namespace FractalBlazor.WebSite.States
 {
     /// <summary>
     /// A contact form held entirely by its state. Fields send actions, the state validates
@@ -88,7 +88,7 @@ namespace FractalBlazor.Demo.States
     }
 }
 
-namespace FractalBlazor.Demo.States
+namespace FractalBlazor.WebSite.States
 {
     public enum ContactChannel
     {
