@@ -147,28 +147,33 @@ window.FractalBlazor = window.FractalBlazor || {};
 
     const dropdowns = new Map();
 
+    // The zone is fixed to the window, placed from the rectangle of its anchor: a scrolling
+    // ancestor (overflow: auto) cannot clip it.
     function alignDropdown(containerId, dropdownId) {
         const container = document.getElementById(containerId);
         const dropdown = document.getElementById(dropdownId);
         if (!container || !dropdown) return;
 
-        dropdown.classList.remove('fb-dropdown-open-up');
-        dropdown.classList.add('fb-dropdown-open-down');
-
         const rect = container.getBoundingClientRect();
+        const viewportWidth = document.documentElement.clientWidth;
+        const viewportHeight = document.documentElement.clientHeight;
         const dropdownHeight = dropdown.offsetHeight;
-        const viewportHeight = window.innerHeight;
+        const up = rect.bottom + dropdownHeight > viewportHeight
+            && (rect.top > dropdownHeight || rect.top > viewportHeight - rect.bottom);
 
-        if (rect.bottom + dropdownHeight > viewportHeight
-            && (rect.top > dropdownHeight || rect.top > viewportHeight - rect.bottom)) {
-            dropdown.classList.remove('fb-dropdown-open-down');
-            dropdown.classList.add('fb-dropdown-open-up');
-        }
+        dropdown.classList.add('fb-dropdown-fixed');
+        dropdown.classList.toggle('fb-dropdown-open-up', up);
+        dropdown.classList.toggle('fb-dropdown-open-down', !up);
+        dropdown.style.minWidth = rect.width + 'px';
+        dropdown.style.top = up ? '' : rect.bottom + 'px';
+        dropdown.style.bottom = up ? (viewportHeight - rect.top) + 'px' : '';
+        dropdown.style.left = Math.max(0, Math.min(rect.left, viewportWidth - dropdown.offsetWidth)) + 'px';
     }
 
     /**
      * Opens the dropdown downward, or upward when it does not fit below, and keeps it
-     * aligned while the page scrolls or resizes.
+     * aligned with its anchor while the page or any scrolling area scrolls, or the window
+     * resizes.
      */
     fb.initDropdown = function (containerId, dropdownId) {
         let ticking = false;

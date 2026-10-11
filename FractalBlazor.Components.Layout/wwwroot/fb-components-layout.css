@@ -880,6 +880,11 @@ html {
     box-sizing: border-box;
 }
 
+/* Placed by FractalBlazor.initDropdown from the anchor rectangle, above any scrolling area. */
+.fb-dropdown-content.fb-dropdown-fixed {
+    position: fixed;
+}
+
 .fb-dropdown-open-down {
     top: 100%;
     bottom: auto;
