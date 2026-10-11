@@ -31,7 +31,7 @@ Le raisonnement complet est dans [Conception.md](Conception.md), le modèle de t
 
 | Paquet | Contenu |
 | --- | --- |
-| `FractalBlazor.Components.Layout` | `FbRow`, `FbStack`, items, séparateurs, `FbGridContainer`, `FbGridItem`, `FbDropDown`, `FbShowWhenVisible`, thème Layout autonome |
+| `FractalBlazor.Components.Layout` | `FbPageAnchor`, `FbRow`, `FbStack`, items, séparateurs, `FbGridContainer`, `FbGridItem`, `FbDropDown`, `FbShowWhenVisible`, thème Layout autonome |
 | `FractalBlazor.Components.Forms` | `FbText`, `FbIcon`, `FbButton`, `FbInputText`, `FbInputNumber`, `FbInputDate`, `FbSelect`, `FbCheckbox`, `FbSwitch`, `FbTheme`, `FbVariant`, `FbDynamicView` |
 | `FractalBlazor.Components.Common` | Contrats partagés par les états et les vues : actions, notification, `ViewFor` |
 
@@ -139,6 +139,45 @@ public static IReadOnlyList<object> ContactOptions { get; } =
 ```
 
 La chaîne et les canaux passent par `FbValueView`, la personne par sa propre vue. `ItemSelector` choisit un autre sélecteur, d'une autre énumération si besoin. Le clavier suit le motif ARIA combobox : flèches, Début, Fin, Entrée, Espace, Échap, Tab.
+
+## Application d'une seule page
+
+`FbPageAnchor` est la racine d'une application : il occupe toute la fenêtre, qui ne défile jamais, et dispose ses enfants en colonne. Rows et stacks grandissent par défaut. `NoFlex` garde la hauteur de l'en-tête et du pied de page, et une zone `Scrollable` prend l'espace restant puis défile seule, avec sa barre de défilement.
+
+```razor
+<FbPageAnchor>
+    <FbStack GM PM>
+        <FbRow NoFlex>…en-tête…</FbRow>
+        <FbRow GM JVSt>
+            <FbStack NoFlex Scrollable JVS>…menu…</FbStack>
+            <FbStack Scrollable JVS>…page…</FbStack>
+        </FbRow>
+        <FbRow NoFlex>…pied de page…</FbRow>
+    </FbStack>
+</FbPageAnchor>
+```
+
+Ouverte, la zone d'un `FbDropDown` est fixée à la fenêtre : une zone défilante ne coupe pas la liste d'un Select.
+
+L'application elle-même est un modèle. Dans la démo, `RootState` porte l'en-tête, la navigation et le pied de page. Chaque section du menu du haut porte la sous-liste du menu de gauche, et chaque entrée de ce menu donne le modèle de sa page :
+
+```csharp
+new SectionState(Navigation, MenuItemIntent.Components, section =>
+[
+    new PageLinkState(section, MenuItemIntent.Layout, new LayoutPage()),
+    new PageLinkState(section, MenuItemIntent.Forms, new FormsPage(new ContactState()))
+])
+```
+
+Chaque type d'état déclare sa vue avec `[ViewFor<ViewSelector>]`, et la zone de contenu rend la page ouverte sans la connaître :
+
+```razor
+<FbStack Scrollable GL PX JVS>
+    <FbDynamicView TSelector="ViewSelector" Item="Item.Page" Selector="ViewSelector.Viewer" />
+</FbStack>
+```
+
+Ouvrir une page ne notifie que l'ancienne entrée, la nouvelle et la zone de contenu : le reste de l'application ne se redessine pas. Chaque modèle de page garde son état d'une visite à l'autre.
 
 ## Performances
 
