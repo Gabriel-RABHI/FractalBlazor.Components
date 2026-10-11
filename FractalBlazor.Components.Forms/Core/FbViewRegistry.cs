@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using FractalBlazor.Components.Common.Attributes;
 using FractalBlazor.Components.Forms.Contracts;
+using FractalBlazor.Components.Forms.Mapping;
 using Microsoft.AspNetCore.Components;
 
 namespace FractalBlazor.Components.Forms.Core
@@ -40,7 +41,9 @@ namespace FractalBlazor.Components.Forms.Core
                 if (_registry.TryGetValue((type, selector), out var view))
                     return view;
             }
-            return null;
+
+            // Simple values need no declared view: strings, enumerations, numbers, dates…
+            return FbValueView.Supports(modelType) ? typeof(FbValueView) : null;
         }
 
         private void ScanLoadedAssemblies()

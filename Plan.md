@@ -63,7 +63,7 @@ Chaque changement est vérifié contre ces règles. Une étape qui en viole une 
 - [x] **3.5 `FbButton`.** Fond, frame et rayon de la grammaire Layout, état `Disabled`, `OnClick` et envoi d'une action instance (`Handler` + `Action`).
 - [x] **3.6 `FbCheckbox` et `FbSwitch`.** Champs booléens state-first.
 - [x] **3.7 `FbInputNumber` et `FbInputDate`.** Nombre générique (`INumber<T>`) et date (`DateOnly`) sur les contrôles natifs du navigateur.
-- [x] **3.8 `FbSelect`.** Liste d'options typée sur `<select>` natif.
+- [x] **3.8 `FbSelect`.** Liste d’options typée sur `<select>` natif. Remplacé par la phase 6 : le Select repose désormais sur `FbDropDown` et `FbDynamicView`.
 - [x] **3.9 Démo state-first.** Brancher `FractalBlazor.Demo.States` sur la démo, montrer `FbDynamicView` de bout en bout et une page de formulaires. Ranger les namespaces de `Common` (`FractalBlazor.Components.Common.*`).
 
 ## Phase 4 — Qualité, mesure et publication
@@ -81,6 +81,15 @@ Objectif : régler les couleurs et les valeurs de mélange d'un thème en voyant
 - [x] **5.1 Aperçu d’un thème non enregistré.** `IFbFormThemeRegistry.Resolve(FbThemeSetup, branche)` résout un thème qui hérite d'un thème enregistré, avec les mêmes validations, sans l'enregistrer ni le mettre en cache. `FbTheme` accepte ce thème via un paramètre `Setup`.
 - [x] **5.2 `FbInputColor` et `FbInputRange`.** Champs state-first sur les contrôles natifs `color` et `range`, stylés par les tokens de contrôle.
 - [x] **5.3 Page « Thème ».** En haut, les réglages : branche éditée, mélanges de surface, de frame et de texte, ancres de chaque variante. En dessous, dans un `FbTheme Scoped` qui applique le thème édité : surfaces et frames, textes, variantes, boutons, icônes, carte inversée et un faux formulaire. Un rapport de contraste et le code C# du thème suivent les réglages.
+
+## Phase 6 — Select fondé sur DropDown et FbDynamicView
+
+Un Select permet de choisir un élément dans une liste, mais délègue le rendu de cette liste. Il s'appuie sur `FbDropDown`, une zone ouverte par-dessus la page qui se ferme par un clic en dehors ou au clavier. Chaque élément, et la valeur choisie, sont rendus par `FbDynamicView` : la liste peut être polymorphe et mêler chaînes, énumérations et objets, chacun rendu par sa propre vue. Cette phase remplace le select natif de l'étape 3.8.
+
+- [x] **6.1 FbDynamicView pour les types simples.** Une vue intégrée, `FbValueView`, rend les chaînes, énumérations (avec `[Display(Name)]`), nombres, dates et identifiants. Le registre s'y replie quand aucune vue n'est déclarée pour le type. Le registre de vues est enregistré en générique ouvert par `AddFractalBlazor()`, pour tout sélecteur, et la bibliothèque fournit le sélecteur `FbViewSelector.Item`.
+- [ ] **6.2 FbDropDown au clavier.** `Échap` ferme la zone, et `Block` donne à la zone toute la largeur de son parent.
+- [ ] **6.3 FbSelect sur FbDropDown.** L'ancre affiche la valeur choisie par `FbDynamicView`, la liste rend chaque élément de la même façon, avec le sélecteur `ItemSelector`. Navigation au clavier (flèches, `Début`, `Fin`, `Entrée`, `Espace`, `Échap`), rôles ARIA `combobox` et `listbox`, placeholder.
+- [ ] **6.4 Démo et documentation.** Une liste polymorphe dans la page Formulaires, l'enregistrement par `AddFractalBlazor()` dans la démo, le README à jour.
 
 ## Critères de fin
 
