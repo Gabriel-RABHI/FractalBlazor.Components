@@ -1,0 +1,11 @@
+@attribute [ViewFor<ViewSelector>(typeof(ExternalLinkState), ViewSelector.Viewer)]
+
+<a class="fb-demo-link" href="@Item.Url" target="_blank" rel="noopener noreferrer">
+    <FbIcon Icon="@MenuIntents.Icon(Item.Intent)" />
+    <span>@MenuIntents.Label(Item.Intent)</span>
+</a>
+
+@code {
+    [Parameter]
+    public ExternalLinkState Item { get; set; } = default!;
+}

@@ -1,0 +1,8 @@
+@attribute [ViewFor<ViewSelector>(typeof(MenuSeparatorState), ViewSelector.Viewer)]
+
+<FbStackSeparator WFL />
+
+@code {
+    [Parameter]
+    public MenuSeparatorState Item { get; set; } = default!;
+}

@@ -1,33 +1,9 @@
 @inherits LayoutComponentBase
 
-<FbStack PL GL>
-    <FbRow GL JVC WBA WFL WRL PHL PVM NoFlex>
-        <FbIcon Icon="@FbMaterialIcons.ViewQuilt" L Highlight />
-        <FbText L B>FractalBlazor</FbText>
-        <FbRowSpacer />
-        <NavLink class="fb-demo-nav" href="" Match="NavLinkMatch.All">Layout et theming</NavLink>
-        <NavLink class="fb-demo-nav" href="forms">Formulaires</NavLink>
-        <NavLink class="fb-demo-nav" href="theme">Thème</NavLink>
-        <ThemeToggle @rendermode="InteractiveServer" InitialBranch="@Branch" />
-    </FbRow>
-    @Body
-</FbStack>
+@Body
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
-
-@code {
-    /// <summary>
-    /// Available during the static server render, where the layout runs.
-    /// </summary>
-    [CascadingParameter]
-    public HttpContext? HttpContext { get; set; }
-
-    private string Branch
-        => HttpContext?.Request.Cookies[ThemeToggle.Cookie] == FbThemeBranches.Light
-            ? FbThemeBranches.Light
-            : FbThemeBranches.Dark;
-}

@@ -1,0 +1,15 @@
+@* The menu on the left: a polymorphic list of pages and separators, each rendered by the
+   view of its type. It re-renders when another section opens. *@
+@attribute [ViewFor<ViewSelector>(typeof(SideMenuState), ViewSelector.Viewer)]
+
+<FbStack NoFlex Scrollable GS PS JVS WBA WFL WRL MinWidth="13rem">
+    @foreach (var entry in Item.Entries)
+    {
+        <FbDynamicView @key="entry" TSelector="ViewSelector" Item="entry" Selector="ViewSelector.Viewer" />
+    }
+</FbStack>
+
+@code {
+    [Parameter]
+    public SideMenuState Item { get; set; } = default!;
+}

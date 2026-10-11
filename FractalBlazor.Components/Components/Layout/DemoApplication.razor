@@ -1,0 +1,16 @@
+@* The interactive root of the demo. The whole application is RootState, rendered by the view
+   declared for its type. *@
+@inject RootState Root
+
+<FbDynamicView TSelector="ViewSelector" Item="Root" Selector="ViewSelector.Viewer" />
+
+@code {
+    /// <summary>
+    /// Mode read from the cookie by the server render: the first paint has the right theme.
+    /// </summary>
+    [Parameter]
+    public ThemeMode InitialMode { get; set; }
+
+    protected override void OnInitialized()
+        => Root.Footer.Theme.Handle(new ThemeSelectorState.SetMode(InitialMode));
+}

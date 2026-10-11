@@ -36,13 +36,26 @@ h1:focus {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
-/* Demo navigation: theme variables only. */
-.fb-demo-nav {
+/* Demo links and code samples: theme variables only. */
+.fb-demo-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--fb-space-s);
     color: var(--fb-fg-muted);
     text-decoration: none;
 }
 
-    .fb-demo-nav:hover,
-    .fb-demo-nav.active {
+    .fb-demo-link:hover {
         color: var(--fb-fg-highlight);
     }
+
+.fb-demo-code {
+    margin: 0;
+    padding: var(--fb-space-m);
+    border-radius: var(--fb-radius-m);
+    background: var(--fb-bg-accent);
+    color: var(--fb-fg-default);
+    font-family: var(--fb-code-font-family);
+    font-size: 0.85em;
+    overflow-x: auto;
+}

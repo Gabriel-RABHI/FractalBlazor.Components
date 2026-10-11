@@ -1,0 +1,51 @@
+@attribute [ViewFor<ViewSelector>(typeof(InstallationPage), ViewSelector.Viewer)]
+
+<FbStack GL>
+    <FbText L B>Paquets</FbText>
+    <FbStack GS>
+        <FbText M><b>FractalBlazor.Components.Layout</b> : rows, stacks, grilles, page anchor, dropdown.</FbText>
+        <FbText M><b>FractalBlazor.Components.Forms</b> : textes, icônes, champs, select, thèmes, vues dynamiques.</FbText>
+        <FbText M><b>FractalBlazor.Components.Common</b> : contrats partagés par les états et les vues.</FbText>
+    </FbStack>
+
+    <FbText L B>Program.cs</FbText>
+    <CodeBlock Code="@ProgramCode" />
+
+    <FbText L B>App.razor</FbText>
+    <CodeBlock Code="@AppCode" />
+
+    <FbText L B>Racine de l’application</FbText>
+    <FbText M Muted>
+        FbPageAnchor occupe toute la fenêtre, qui ne défile jamais. Les rows d’en-tête et de pied de
+        page gardent leur hauteur (NoFlex), le corps prend le reste, et la stack Scrollable défile seule.
+    </FbText>
+    <CodeBlock Code="@AnchorCode" />
+</FbStack>
+
+@code {
+    [Parameter]
+    public InstallationPage Item { get; set; } = default!;
+
+    private const string ProgramCode = """
+        builder.Services.AddFractalBlazor();
+        """;
+
+    private const string AppCode = """
+        <link rel="stylesheet" href="@Assets["_content/FractalBlazor.Components.Layout/fb-components-layout.css"]" />
+        <link rel="stylesheet" href="@Assets["_content/FractalBlazor.Components.Forms/fb-components-forms.css"]" />
+        <script src="@Assets["_content/FractalBlazor.Components.Layout/fb-components-layout.js"]"></script>
+        """;
+
+    private const string AnchorCode = """
+        <FbPageAnchor>
+            <FbStack GM PM>
+                <FbRow NoFlex>…en-tête…</FbRow>
+                <FbRow GM JVSt>
+                    <FbStack NoFlex Scrollable JVS>…menu…</FbStack>
+                    <FbStack Scrollable JVS>…page…</FbStack>
+                </FbRow>
+                <FbRow NoFlex>…pied de page…</FbRow>
+            </FbStack>
+        </FbPageAnchor>
+        """;
+}

@@ -1,0 +1,50 @@
+@attribute [ViewFor<ViewSelector>(typeof(LayoutPage), ViewSelector.Viewer)]
+
+<FbStack GL>
+    <FbText L B>Surfaces et frames</FbText>
+    <FbRow GL WFM WSS WRL PL WBA>
+        <FbRow GL WFL PL WBH WRM Hover>
+            <FbText XS T>Home</FbText>
+            <FbText S T>Home</FbText>
+            <FbText M T>Home</FbText>
+            <FbText L T>Home</FbText>
+            <FbText XL T>Home</FbText>
+            <FbText XXL T>Home</FbText>
+        </FbRow>
+        <FbRow GL WFS PM WBS SJVS>
+            <FbText S>Home</FbText>
+            <FbText M>Home</FbText>
+            <FbText L>Home</FbText>
+            <FbText XL>Home with <b>bold</b></FbText>
+        </FbRow>
+        <FbRow GL WFM PM Hover SJVE JVBl>
+            <FbText S B>Home</FbText>
+            <FbText M B>Home</FbText>
+            <FbText L B>Home</FbText>
+            <FbRowItem SJVBl>
+                <FbText XL B>Home</FbText>
+            </FbRowItem>
+        </FbRow>
+    </FbRow>
+
+    <FbText L B>Grille responsive</FbText>
+    <FbGridContainer Columns="4" ColumnsS="6" ColumnsM="8" GM>
+        <FbGridItem ColumnSpan="4" ColumnSpanS="4" ColumnSpanM="4" WBA WFM WRM PM>
+            <FbText S Muted>4 colonnes, puis 4 sur 6, puis 4 sur 8</FbText>
+        </FbGridItem>
+        <FbGridItem ColumnSpan="2" ColumnSpanS="2" ColumnSpanM="2" WBA WFM WRM PM>
+            <FbText M Muted>2 colonnes</FbText>
+        </FbGridItem>
+        <FbGridItem ColumnSpan="2" ColumnSpanS="3" ColumnSpanM="1" WBH WFM WRM PM>
+            <FbText M Muted>Item</FbText>
+        </FbGridItem>
+        <FbGridItem ColumnSpan="2" ColumnSpanS="3" ColumnSpanM="1" WBH WFM WRM PM>
+            <FbText M Muted>Item</FbText>
+        </FbGridItem>
+    </FbGridContainer>
+</FbStack>
+
+@code {
+    [Parameter]
+    public LayoutPage Item { get; set; } = default!;
+}

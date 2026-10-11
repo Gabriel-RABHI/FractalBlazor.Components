@@ -1,0 +1,14 @@
+@* An entry of the menu on the left. It re-renders alone when its selection changes. *@
+@attribute [ViewFor<ViewSelector>(typeof(PageLinkState), ViewSelector.Viewer)]
+
+<FbButton Handler="Item" Action="@Select" Icon="@MenuIntents.Icon(Item.Intent)"
+          WBH="@Item.IsSelected" WBN="@(!Item.IsSelected)" WFN PVS PHM Style="justify-content:flex-start">
+    <FbText S Highlight="@Item.IsSelected" Muted="@(!Item.IsSelected)">@MenuIntents.Label(Item.Intent)</FbText>
+</FbButton>
+
+@code {
+    private static readonly SelectableEntryState.Select Select = new();
+
+    [Parameter]
+    public PageLinkState Item { get; set; } = default!;
+}

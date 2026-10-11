@@ -1,5 +1,6 @@
 using FractalBlazor.Components;
 using FractalBlazor.Components.Components;
+using FractalBlazor.Components.Components.ThemeEditor;
 using FractalBlazor.Components.Forms;
 using FractalBlazor.Demo.States;
 
@@ -12,6 +13,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddFractalBlazor();
 // One application state per circuit: the views only display it and send it actions.
 builder.Services.AddScoped<RootState>();
+builder.Services.AddScoped<ThemeEditorModel>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

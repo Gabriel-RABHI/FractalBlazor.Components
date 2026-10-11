@@ -1,0 +1,67 @@
+@attribute [ViewFor<ViewSelector>(typeof(VariantsPage), ViewSelector.Viewer)]
+
+@using FractalBlazor.Components.Layout.Colors
+
+<FbStack GL>
+    <FbText L B>Couleurs de texte</FbText>
+    <FbRow GL WGM PM>
+        <FbText M Subtle>Subtle</FbText>
+        <FbText M Muted>Muted</FbText>
+        <FbText M>Default</FbText>
+        <FbText M Highlight>Highlight</FbText>
+    </FbRow>
+
+    <FbText L B>Variantes</FbText>
+    <FbRow GL WGM PM MultiLine>
+        @foreach (var variant in FbThemeVariants.Standard)
+        {
+            <FbVariant Variant="@variant">
+                <FbRow GM PM WGM WRM NoFlex>
+                    <FbText S Subtle>@variant</FbText>
+                </FbRow>
+                <FbRow GM PM WGM WRM NoFlex WBS>
+                    <FbText S Muted>Surface</FbText>
+                </FbRow>
+                <FbRow GM PM WGM WRM NoFlex WBA>
+                    <FbText S>Accent</FbText>
+                </FbRow>
+                <FbRow GM PM WGM WRM NoFlex WBH>
+                    <FbText S Highlight>Highlight</FbText>
+                </FbRow>
+            </FbVariant>
+        }
+    </FbRow>
+
+    <FbText L B>Inversion locale et thème local</FbText>
+    <FbRow GL>
+        <FbVariant Invert>
+            <FbStack GS PL WBS WFM WRL>
+                <FbText L B>Variante inversée</FbText>
+                <FbText M Muted>Invert échange les ancres de fond et de premier plan : la carte passe au clair sans nouvelle branche.</FbText>
+                <FbCircularProgress />
+            </FbStack>
+        </FbVariant>
+        <FbTheme Branch="@FbThemeBranches.Light" Scoped>
+            <FbStack GS PL WBS WFM WRL>
+                <FbText L B>Îlot Light</FbText>
+                <FbText M Muted>Un FbTheme Scoped pose la branche Light sur ce seul sous-arbre.</FbText>
+                <FbVariant Variant="@FbThemeVariants.Error">
+                    <FbRow GS PM WBA WFM WRM>
+                        <FbIcon Icon="@FbMaterialIcons.Info" />
+                        <FbText S>Variante Error dans l’îlot</FbText>
+                    </FbRow>
+                </FbVariant>
+            </FbStack>
+        </FbTheme>
+    </FbRow>
+
+    <FbText L B>Palette de base</FbText>
+    <div>
+        @((MarkupString)FbThemeBaseColors.HtmlView)
+    </div>
+</FbStack>
+
+@code {
+    [Parameter]
+    public VariantsPage Item { get; set; } = default!;
+}

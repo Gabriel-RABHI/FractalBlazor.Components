@@ -1,0 +1,59 @@
+@attribute [ViewFor<ViewSelector>(typeof(StateFirstPage), ViewSelector.Viewer)]
+
+<FbStack GL>
+    <FbText M Muted>
+        Cette application est un modèle. RootState porte l’en-tête, la navigation et le pied de page.
+        Chaque section du menu du haut porte la sous-liste du menu de gauche, et chaque entrée de ce
+        menu donne le modèle de sa page.
+    </FbText>
+    <CodeBlock Code="@ModelCode" />
+
+    <FbText L B>Une vue par type</FbText>
+    <FbText M Muted>
+        Chaque type d’état déclare sa vue. Le bouton d’une entrée envoie l’action Select à l’entrée,
+        qui passe par la navigation.
+    </FbText>
+    <CodeBlock Code="@ViewCode" />
+
+    <FbText L B>Un rendu délégué</FbText>
+    <FbText M Muted>
+        La zone de contenu ne connaît pas les pages : elle rend le modèle de la page ouverte avec la
+        vue déclarée pour son type.
+    </FbText>
+    <CodeBlock Code="@ContentCode" />
+
+    <FbText L B>Des notifications ciblées</FbText>
+    <FbText M Muted>
+        Ouvrir une page notifie l’ancienne entrée, la nouvelle et la zone de contenu. L’en-tête, le
+        menu de gauche et le pied de page ne se redessinent pas. Chaque page garde son état : le
+        formulaire de contact conserve sa saisie d’une visite à l’autre.
+    </FbText>
+</FbStack>
+
+@code {
+    [Parameter]
+    public StateFirstPage Item { get; set; } = default!;
+
+    private const string ModelCode = """
+        new SectionState(Navigation, MenuItemIntent.Components, section =>
+        [
+            new PageLinkState(section, MenuItemIntent.Layout, new LayoutPage()),
+            new PageLinkState(section, MenuItemIntent.Forms, new FormsPage(new ContactState()))
+        ])
+        """;
+
+    private const string ViewCode = """
+        @attribute [ViewFor<ViewSelector>(typeof(PageLinkState), ViewSelector.Viewer)]
+
+        <FbButton Handler="Item" Action="@(new SelectableEntryState.Select())"
+                  Icon="@MenuIntents.Icon(Item.Intent)" WBH="@Item.IsSelected">
+            <FbText S>@MenuIntents.Label(Item.Intent)</FbText>
+        </FbButton>
+        """;
+
+    private const string ContentCode = """
+        <FbStack Scrollable GL PX JVS>
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Page" Selector="ViewSelector.Viewer" />
+        </FbStack>
+        """;
+}

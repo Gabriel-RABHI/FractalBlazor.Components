@@ -1,0 +1,19 @@
+@* The application shell. Each area is a state rendered by the view declared for its type:
+   this view only lays them out, in a page anchor that fills the window. *@
+@attribute [ViewFor<ViewSelector>(typeof(RootState), ViewSelector.Viewer)]
+
+<FbPageAnchor>
+    <FbStack GM PM>
+        <FbDynamicView TSelector="ViewSelector" Item="Item.Header" Selector="ViewSelector.Viewer" />
+        <FbRow GM JVSt>
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Navigation.SideMenu" Selector="ViewSelector.Viewer" />
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Navigation.Content" Selector="ViewSelector.Viewer" />
+        </FbRow>
+        <FbDynamicView TSelector="ViewSelector" Item="Item.Footer" Selector="ViewSelector.Viewer" />
+    </FbStack>
+</FbPageAnchor>
+
+@code {
+    [Parameter]
+    public RootState Item { get; set; } = default!;
+}

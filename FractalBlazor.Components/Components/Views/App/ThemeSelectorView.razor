@@ -1,0 +1,27 @@
+@* The page theme and its selector. The FbTheme is the only one of the page: its style block
+   targets :root, so it themes the whole document wherever it sits. The mode is kept in a
+   cookie that the host page reads during the server render, so a reload never flashes. *@
+@attribute [ViewFor<ViewSelector>(typeof(ThemeSelectorState), ViewSelector.Viewer)]
+@inject IJSRuntime JS
+
+<FbTheme Theme="Default" Branch="@Branch" />
+
+<FbRowItem Style="width:10rem">
+    <FbSelect TValue="ThemeMode" TAction="ThemeSelectorState.SetMode" Handler="Item" Value="@Item.Mode"
+              Items="ThemeSelectorState.Modes" ValueChanged="SaveAsync">
+        <StartContent>
+            <FbIcon Icon="@(Item.Mode == ThemeMode.Light ? FbMaterialIcons.LightMode : FbMaterialIcons.DarkMode)" Muted />
+        </StartContent>
+    </FbSelect>
+</FbRowItem>
+
+@code {
+    public const string Cookie = "fb-branch";
+
+    [Parameter]
+    public ThemeSelectorState Item { get; set; } = default!;
+
+    private string Branch => Item.Mode == ThemeMode.Light ? FbThemeBranches.Light : FbThemeBranches.Dark;
+
+    private async Task SaveAsync(ThemeMode mode) => await JS.InvokeVoidAsync("fbDemo.setCookie", Cookie, Branch);
+}

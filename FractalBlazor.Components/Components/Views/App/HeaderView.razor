@@ -1,0 +1,20 @@
+@attribute [ViewFor<ViewSelector>(typeof(HeaderState), ViewSelector.Viewer)]
+
+<FbRow NoFlex MultiLine GM PHL PVS JVC WBA WFL WRL>
+    <FbIcon Icon="@FbMaterialIcons.ViewQuilt" L Highlight />
+    <FbText L B>@Item.Name</FbText>
+    @foreach (var section in Item.Sections)
+    {
+        <FbDynamicView @key="section" TSelector="ViewSelector" Item="section" Selector="ViewSelector.Viewer" />
+    }
+    <FbRowSpacer />
+    @foreach (var link in Item.Links)
+    {
+        <FbDynamicView @key="link" TSelector="ViewSelector" Item="link" Selector="ViewSelector.Viewer" />
+    }
+</FbRow>
+
+@code {
+    [Parameter]
+    public HeaderState Item { get; set; } = default!;
+}

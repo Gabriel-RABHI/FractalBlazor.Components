@@ -1,0 +1,47 @@
+@attribute [ViewFor<ViewSelector>(typeof(IntroductionPage), ViewSelector.Viewer)]
+
+<FbStack GL>
+    <FbText M Muted>
+        FractalBlazor est une bibliothèque de composants Blazor pour écrire des applications d’une
+        seule page. Elle repose sur trois idées.
+    </FbText>
+
+    <FbRow GL JVSt MultiLine>
+        <FbStack GS PL WBA WFL WRL MinWidth="16rem" JVS>
+            <FbIcon Icon="@FbMaterialIcons.AccountTree" L Highlight />
+            <FbText L B>State-first</FbText>
+            <FbText S Muted>
+                L’interface est l’image d’un modèle. Champs et boutons envoient des actions à l’état,
+                l’état notifie, et seules les vues concernées se redessinent.
+            </FbText>
+        </FbStack>
+        <FbStack GS PL WBA WFL WRL MinWidth="16rem" JVS>
+            <FbIcon Icon="@FbMaterialIcons.Bolt" L Highlight />
+            <FbText L B>Composants légers</FbText>
+            <FbText S Muted>
+                Les composants implémentent IComponent directement et mettent leurs styles en cache :
+                mille lignes se rendent plus vite qu’avec ComponentBase.
+            </FbText>
+        </FbStack>
+        <FbStack GS PL WBA WFL WRL MinWidth="16rem" JVS>
+            <FbIcon Icon="@FbMaterialIcons.Palette" L Highlight />
+            <FbText L B>Thème en variables CSS</FbText>
+            <FbText S Muted>
+                Le thème est résolu en C#, puis posé en variables CSS. Chaque couleur mélange deux ancres ;
+                une variante ne fait que rediriger ces ancres.
+            </FbText>
+        </FbStack>
+    </FbRow>
+
+    <FbText L B>Cette démo est une application FractalBlazor</FbText>
+    <FbText M Muted>
+        L’en-tête, les menus, la page ouverte et le pied de page sont des objets d’état. Chacun est
+        rendu par FbDynamicView, avec la vue déclarée pour son type. La page « State-first » détaille
+        ce modèle.
+    </FbText>
+</FbStack>
+
+@code {
+    [Parameter]
+    public IntroductionPage Item { get; set; } = default!;
+}

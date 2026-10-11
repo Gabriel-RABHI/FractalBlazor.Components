@@ -1,15 +1,13 @@
-@page "/theme"
-@rendermode InteractiveServer
+@* The editor model lives in the circuit (a scoped service): the edited values survive navigation. *@
+@attribute [ViewFor<ViewSelector>(typeof(ThemeEditorPage), ViewSelector.Viewer)]
 @inject IFbFormThemeRegistry Registry
+@inject ThemeEditorModel Model
 
 @using FractalBlazor.Components.Components.ThemeEditor
 @using FractalBlazor.Components.Forms.Contracts
 @using FractalBlazor.Components.Forms.Theming.Helpers
 
-<PageTitle>Éditeur de thème</PageTitle>
-
 <FbStack GL>
-    <FbText XL B>Éditeur de thème</FbText>
     <FbText M Muted>
         Les réglages construisent un FbThemeSetup dérivé du thème par défaut. L’aperçu l’applique
         avec un FbTheme Scoped, sans toucher au reste de la page. Changer de branche repart des
@@ -21,19 +19,19 @@
             <FbStack GM PL WBA WFL WRL>
                 <FbText L B>Couleurs</FbText>
                 <FbSelect TValue="string" TAction="FbSetValue<string>" Items="ThemeEditorModel.Branches"
-                          Value="@_model.Branch" ValueChanged="LoadBranch">
+                          Value="@Model.Branch" ValueChanged="LoadBranch">
                     <StartContent><FbRowItem Style="min-width:6.5rem"><FbText S Subtle>Branche</FbText></FbRowItem></StartContent>
                 </FbSelect>
-                <FbSelect TValue="string" TAction="FbSetValue<string>" Items="_model.VariantNames"
-                          @bind-Value="_model.SelectedVariant">
+                <FbSelect TValue="string" TAction="FbSetValue<string>" Items="Model.VariantNames"
+                          @bind-Value="Model.SelectedVariant">
                     <StartContent><FbRowItem Style="min-width:6.5rem"><FbText S Subtle>Variante</FbText></FbRowItem></StartContent>
                 </FbSelect>
-                <ColorField Label="Fond bas" @bind-Value="_model.Selected.BgLow" />
-                <ColorField Label="Fond haut" @bind-Value="_model.Selected.BgHigh" />
-                <ColorField Label="Texte bas" @bind-Value="_model.Selected.FgLow" />
-                <ColorField Label="Texte haut" @bind-Value="_model.Selected.FgHigh" />
+                <ColorField Label="Fond bas" @bind-Value="Model.Selected.BgLow" />
+                <ColorField Label="Fond haut" @bind-Value="Model.Selected.BgHigh" />
+                <ColorField Label="Texte bas" @bind-Value="Model.Selected.FgLow" />
+                <ColorField Label="Texte haut" @bind-Value="Model.Selected.FgHigh" />
                 <FbRow JHE>
-                    <FbButton WBN Icon="@FbMaterialIcons.RestartAlt" OnClick="() => LoadBranch(_model.Branch)">
+                    <FbButton WBN Icon="@FbMaterialIcons.RestartAlt" OnClick="() => LoadBranch(Model.Branch)">
                         <FbText S>Réinitialiser</FbText>
                     </FbButton>
                 </FbRow>
@@ -43,22 +41,22 @@
         <FbGridItem>
             <FbStack GM PL WBA WFL WRL>
                 <FbText L B>Surfaces et frames</FbText>
-                <MixSlider Label="Surface" Max="40" @bind-Value="_model.SurfaceMix" />
-                <MixSlider Label="Accent" Max="40" @bind-Value="_model.AccentOffset" />
-                <MixSlider Label="Highlight" Max="60" @bind-Value="_model.HighlightOffset" />
-                <MixSlider Label="Frame Light" Max="60" @bind-Value="_model.FrameLight" />
-                <MixSlider Label="Frame Medium" Max="60" @bind-Value="_model.FrameMedium" />
-                <MixSlider Label="Frame Strong" Max="60" @bind-Value="_model.FrameStrong" />
+                <MixSlider Label="Surface" Max="40" @bind-Value="Model.SurfaceMix" />
+                <MixSlider Label="Accent" Max="40" @bind-Value="Model.AccentOffset" />
+                <MixSlider Label="Highlight" Max="60" @bind-Value="Model.HighlightOffset" />
+                <MixSlider Label="Frame Light" Max="60" @bind-Value="Model.FrameLight" />
+                <MixSlider Label="Frame Medium" Max="60" @bind-Value="Model.FrameMedium" />
+                <MixSlider Label="Frame Strong" Max="60" @bind-Value="Model.FrameStrong" />
             </FbStack>
         </FbGridItem>
 
         <FbGridItem>
             <FbStack GM PL WBA WFL WRL>
                 <FbText L B>Textes</FbText>
-                <MixSlider Label="Subtle" @bind-Value="_model.TextSubtle" />
-                <MixSlider Label="Muted" @bind-Value="_model.TextMuted" />
-                <MixSlider Label="Default" @bind-Value="_model.TextDefault" />
-                <MixSlider Label="Highlight" @bind-Value="_model.TextHighlight" />
+                <MixSlider Label="Subtle" @bind-Value="Model.TextSubtle" />
+                <MixSlider Label="Muted" @bind-Value="Model.TextMuted" />
+                <MixSlider Label="Default" @bind-Value="Model.TextDefault" />
+                <MixSlider Label="Highlight" @bind-Value="Model.TextHighlight" />
 
                 <FbText L B>Contraste WCAG</FbText>
                 <FbText XS Muted>Plus faible ratio de chaque texte, sur tous les fonds de toutes les variantes.</FbText>
@@ -77,25 +75,25 @@
         </FbGridItem>
     </FbGridContainer>
 
-    <FbTheme Setup="@_model.Setup" Branch="@_model.Branch" Scoped>
+    <FbTheme Setup="@Model.Setup" Branch="@Model.Branch" Scoped>
         <ThemePreview />
     </FbTheme>
 
     <FbStack GS PL WBA WFL WRL>
         <FbText L B>Code du thème</FbText>
         <FbText XS Muted>Seules les valeurs modifiées sont déclarées : le reste est hérité du thème par défaut.</FbText>
-        <pre style="margin:0;overflow:auto"><code>@_model.ToCSharp()</code></pre>
+        <pre style="margin:0;overflow:auto"><code>@Model.ToCSharp()</code></pre>
     </FbStack>
 </FbStack>
 
 @code {
-    private ThemeEditorModel _model = default!;
+    [Parameter]
+    public ThemeEditorPage Item { get; set; } = default!;
+
     private int _contrastVersion = -1;
     private IReadOnlyList<(FbContrastText Text, FbContrastEntry Entry)> _worst = [];
 
-    protected override void OnInitialized() => _model = new ThemeEditorModel(Registry);
-
-    private void LoadBranch(string branch) => _model.Load(branch);
+    private void LoadBranch(string branch) => Model.Load(branch);
 
     /// <summary>
     /// Recomputed only when the edited theme changes.
@@ -104,14 +102,14 @@
     {
         get
         {
-            if (_contrastVersion != _model.Version)
+            if (_contrastVersion != Model.Version)
             {
-                var report = FbThemeContrast.Analyze(Registry.Resolve(_model.Setup, _model.Branch));
+                var report = FbThemeContrast.Analyze(Registry.Resolve(Model.Setup, Model.Branch));
                 _worst = report.Entries
                     .GroupBy(entry => entry.Text)
                     .Select(group => (group.Key, group.MinBy(entry => entry.Ratio)!))
                     .ToList();
-                _contrastVersion = _model.Version;
+                _contrastVersion = Model.Version;
             }
             return _worst;
         }

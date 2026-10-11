@@ -1,0 +1,12 @@
+@attribute [ViewFor<ViewSelector>(typeof(FooterState), ViewSelector.Viewer)]
+
+<FbRow NoFlex MultiLine GM PHL PVS JVC WBA WFL WRL>
+    <FbText S Muted>@Item.Text</FbText>
+    <FbRowSpacer />
+    <FbDynamicView TSelector="ViewSelector" Item="Item.Theme" Selector="ViewSelector.Viewer" />
+</FbRow>
+
+@code {
+    [Parameter]
+    public FooterState Item { get; set; } = default!;
+}
