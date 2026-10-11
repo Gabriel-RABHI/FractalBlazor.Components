@@ -108,8 +108,8 @@ Les bibliothèques génériques restent `Layout`, `Forms` et `Common` ; `Benchma
 - [x] **8.1 Bibliothèque FractalBlazor.WebSite.** Bibliothèque Razor (`SupportedPlatform browser`) qui reçoit les états de `FractalBlazor.Demo.States` (supprimé), les vues, l'éditeur de thème, les exemples et `ViewSelector`. Elle expose `AddFractalBlazorWebSite()`, le composant racine `WebSiteApplication` (mode de thème initial en paramètre), le cookie du thème (`ThemeCookie`) et ses ressources `fb-website.css` et `fb-website.js`.
 - [x] **8.2 FractalBlazor.WebSite.ServerSide.** `FractalBlazor.Components` est renommé. Sa page d'accueil lit le cookie pendant le rendu serveur et rend `WebSiteApplication` en `InteractiveServer`.
 - [x] **8.3 FractalBlazor.WebSite.ClientSide.** Application WebAssembly autonome qui référence `FractalBlazor.WebSite`. Le mode initial est lu dans le cookie par JS avant le premier rendu, et un script de `index.html` pose le `color-scheme` avant le chargement de Blazor.
-- [ ] **8.4 Registre de vues en WebAssembly.** Le registre ne parcourt que les assemblies qui référencent `FractalBlazor.Components.Common`, celle de `ViewFor` : sous l'interpréteur WebAssembly, parcourir tout le framework retarderait le premier rendu.
-- [ ] **8.5 Documentation et outillage.** README (structure de la solution, lancement des deux hôtes), configurations de lancement, CI.
+- [x] **8.4 Registre de vues en WebAssembly.** Mesuré dans l'hôte WebAssembly (Debug) : le premier parcours des assemblies chargées (48) prend environ 34 ms, plus 10 ms pour `FbViewSelector`. Le registre reste tel quel : ne parcourir que les assemblies qui référencent `FractalBlazor.Components.Common` ne ferait gagner que quelques dizaines de millisecondes. Une vue doit vivre dans une assembly déjà chargée quand son modèle est rendu pour la première fois : c'est le cas ici, états et vues partagent `FractalBlazor.WebSite`.
+- [x] **8.5 Documentation et outillage.** README (structure de la solution, lancement des deux hôtes), configurations de lancement, CI.
 
 ## Critères de fin
 

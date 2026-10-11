@@ -35,3 +35,12 @@ jobs:
         with:
           name: packages
           path: artifacts/*.nupkg
+
+      # The WebAssembly site is trimmed when published: a trimming warning fails the build.
+      - name: Publish the WebAssembly site
+        run: dotnet publish FractalBlazor.WebSite.ClientSide/FractalBlazor.WebSite.ClientSide.csproj --configuration Release --no-restore -warnaserror --output website
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: website
+          path: website/wwwroot

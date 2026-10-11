@@ -35,6 +35,20 @@ Le raisonnement complet est dans [Conception.md](Conception.md), le modèle de t
 | `FractalBlazor.Components.Forms` | `FbText`, `FbIcon`, `FbButton`, `FbInputText`, `FbInputNumber`, `FbInputDate`, `FbSelect`, `FbCheckbox`, `FbSwitch`, `FbTheme`, `FbVariant`, `FbDynamicView` |
 | `FractalBlazor.Components.Common` | Contrats partagés par les états et les vues : actions, notification, `ViewFor` |
 
+## Solution
+
+| Projet | Rôle |
+| --- | --- |
+| `FractalBlazor.Components.Layout`, `.Forms`, `.Common` | Les bibliothèques génériques, publiées en paquets. |
+| `FractalBlazor.Components.Benchmarks` | Comparaisons de rendu avec `ComponentBase` et MudBlazor. |
+| `FractalBlazor.Components.Tests` | Tests xUnit et bUnit. |
+| `FractalBlazor.Components.Tools` | Outil qui produit la palette de base à partir d'une image. |
+| `FractalBlazor.WebSite` | Le site : documentation, démos, éditeur de thème et leurs modèles d'état, en bibliothèque de composants. Il ne dépend d'aucun hôte. |
+| `FractalBlazor.WebSite.ServerSide` | Hôte serveur : Blazor interactif côté serveur, avec rendu initial. |
+| `FractalBlazor.WebSite.ClientSide` | Hôte WebAssembly : des fichiers statiques, servis par n'importe quel serveur web. |
+
+Chaque hôte ne fournit que la page HTML et le mode de thème initial, lu dans un cookie avant le premier rendu : par le serveur pendant son rendu, par JS côté WebAssembly. Les deux appellent `AddFractalBlazorWebSite()` et rendent `WebSiteApplication`.
+
 ## Installation
 
 `Program.cs` :
@@ -198,11 +212,19 @@ dotnet build FractalBlazor.Components.slnx
 dotnet test --project FractalBlazor.Components.Tests/FractalBlazor.Components.Tests.csproj
 ```
 
+Le site, rendu côté serveur (`http://localhost:5115`) :
+
 ```bash
-dotnet run --project FractalBlazor.Components/FractalBlazor.Components.csproj --launch-profile http
+dotnet run --project FractalBlazor.WebSite.ServerSide/FractalBlazor.WebSite.ServerSide.csproj --launch-profile http
 ```
 
-La démo (`http://localhost:5115`) montre la mise en page et le thème, un formulaire state-first, un menu piloté par son état et un éditeur de thème : couleurs et mélanges réglés en direct sur un jeu de composants, avec le rapport de contraste et le code C# du thème obtenu. Le plan de finalisation et son avancement sont dans [Plan.md](Plan.md).
+Le même site en WebAssembly (`http://localhost:5125`) :
+
+```bash
+dotnet run --project FractalBlazor.WebSite.ClientSide/FractalBlazor.WebSite.ClientSide.csproj --launch-profile http
+```
+
+Le site est une application d'une seule page pilotée par son modèle : démarrage rapide, principes state-first, mise en page, formulaires, variantes, et un éditeur de thème où couleurs et mélanges se règlent en direct sur un jeu de composants, avec le rapport de contraste et le code C# du thème obtenu. Le plan de finalisation et son avancement sont dans [Plan.md](Plan.md).
 
 ## Licence
 
