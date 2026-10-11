@@ -2,7 +2,7 @@
    view of its type. It re-renders when another section opens. *@
 @attribute [ViewFor<ViewSelector>(typeof(SideMenuState), ViewSelector.Viewer)]
 
-<FbStack NoFlex Scrollable GS PS JVS WBA WFL WRL MinWidth="13rem">
+<FbStack NoFlex Scrollable GS PM JVS WFL MinWidth="13rem">
     @foreach (var entry in Item.Entries)
     {
         <FbDynamicView @key="entry" TSelector="ViewSelector" Item="entry" Selector="ViewSelector.Viewer" />

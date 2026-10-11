@@ -4,7 +4,7 @@
    the height of its content instead of growing with the area. *@
 @attribute [ViewFor<ViewSelector>(typeof(ContentState), ViewSelector.Viewer)]
 
-<FbStack @key="Item.Link" Scrollable GL PX JVS WBS WFL WRL>
+<FbStack @key="Item.Link" Scrollable GL PX JVS WBS WFL>
     @if (Item.Link is { } link)
     {
         <FbText XXL B>@MenuIntents.Label(link.Intent)</FbText>
