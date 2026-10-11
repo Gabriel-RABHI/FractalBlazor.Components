@@ -5,6 +5,7 @@
   <Project Path="FractalBlazor.Components.Layout/FractalBlazor.Components.Layout.csproj" />
   <Project Path="FractalBlazor.Components.Tests/FractalBlazor.Components.Tests.csproj" />
   <Project Path="FractalBlazor.Components.Tools/FractalBlazor.Components.Tools.csproj" Id="df095f25-2c5b-4917-a768-30a4c8e5c10d" />
+  <Project Path="FractalBlazor.WebSite.ClientSide/FractalBlazor.WebSite.ClientSide.csproj" />
   <Project Path="FractalBlazor.WebSite.ServerSide/FractalBlazor.WebSite.ServerSide.csproj" />
   <Project Path="FractalBlazor.WebSite/FractalBlazor.WebSite.csproj" />
 </Solution>

@@ -6,6 +6,12 @@
       "runtimeExecutable": "dotnet",
       "runtimeArgs": ["run", "--project", "FractalBlazor.WebSite.ServerSide/FractalBlazor.WebSite.ServerSide.csproj", "--launch-profile", "http"],
       "port": 5115
+    },
+    {
+      "name": "website-client",
+      "runtimeExecutable": "dotnet",
+      "runtimeArgs": ["run", "--project", "FractalBlazor.WebSite.ClientSide/FractalBlazor.WebSite.ClientSide.csproj", "--launch-profile", "http"],
+      "port": 5125
     }
   ]
 }

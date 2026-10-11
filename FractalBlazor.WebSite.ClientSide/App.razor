@@ -1,0 +1,12 @@
+@* The whole site comes from FractalBlazor.WebSite. Without a server render, the theme mode
+   is read from the cookie through JS, synchronously in WebAssembly, before the first render. *@
+@inject IJSRuntime JS
+
+<WebSiteApplication InitialMode="@_initialMode" />
+
+@code {
+    private ThemeMode _initialMode;
+
+    protected override void OnInitialized()
+        => _initialMode = ThemeCookie.Parse(((IJSInProcessRuntime)JS).Invoke<string?>("fbWebSite.getCookie", ThemeCookie.Name));
+}
