@@ -79,7 +79,7 @@ Chaque changement est vérifié contre ces règles. Une étape qui en viole une 
 Objectif : régler les couleurs et les valeurs de mélange d'un thème en voyant le résultat en direct sur un jeu de composants, puis récupérer le code C# du thème obtenu. L'éditeur passe par le modèle C# (`FbThemeSetup`) et le pipeline normal (`FbTheme`) : aucune variable CSS n'est écrite à la main.
 
 - [x] **5.1 Aperçu d’un thème non enregistré.** `IFbFormThemeRegistry.Resolve(FbThemeSetup, branche)` résout un thème qui hérite d'un thème enregistré, avec les mêmes validations, sans l'enregistrer ni le mettre en cache. `FbTheme` accepte ce thème via un paramètre `Setup`.
-- [ ] **5.2 `FbInputColor` et `FbInputRange`.** Champs state-first sur les contrôles natifs `color` et `range`, stylés par les tokens de contrôle.
+- [x] **5.2 `FbInputColor` et `FbInputRange`.** Champs state-first sur les contrôles natifs `color` et `range`, stylés par les tokens de contrôle.
 - [ ] **5.3 Page « Thème ».** En haut, les réglages : branche éditée, mélanges de surface, de frame et de texte, ancres de chaque variante. En dessous, dans un `FbTheme Scoped` qui applique le thème édité : surfaces et frames, textes, variantes, boutons, icônes, carte inversée et un faux formulaire. Un rapport de contraste et le code C# du thème suivent les réglages.
 
 ## Critères de fin

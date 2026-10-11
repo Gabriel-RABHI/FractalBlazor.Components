@@ -40,6 +40,34 @@
 }
 
 /**********************************************************************************/
+/* COLOR AND RANGE */
+.fb-control-input[type=color] {
+    appearance: none;
+    padding: 0;
+    block-size: 1.5em;
+    cursor: pointer;
+}
+
+.fb-control-input[type=color]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.fb-control-input[type=color]::-webkit-color-swatch {
+    border: 0;
+    border-radius: var(--fb-radius-s);
+}
+
+.fb-control-input[type=color]::-moz-color-swatch {
+    border: 0;
+    border-radius: var(--fb-radius-s);
+}
+
+.fb-control-input[type=range] {
+    accent-color: var(--fb-control-accent);
+    cursor: pointer;
+}
+
+/**********************************************************************************/
 /* SELECT */
 .fb-select {
     cursor: pointer;
