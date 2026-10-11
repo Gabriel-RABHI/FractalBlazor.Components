@@ -47,13 +47,15 @@ namespace FractalBlazor.Components.Layout
         {
             public SurfaceClassKey Surface;
             public FbFrame Separator;
+            public bool Scrollable;
         }
 
         private string RowClasses
-            => ResolveClasses(new RowClassKey { Surface = SurfaceClassKeyValue, Separator = _separator },
+            => ResolveClasses(new RowClassKey { Surface = SurfaceClassKeyValue, Separator = _separator, Scrollable = Scrollable },
                 static component => ((FbRow)component).BuildRowClasses());
 
-        private string BuildRowClasses() => FbClasses.Join("fb-row", BuildSurfaceClasses(), SeparatorClass);
+        private string BuildRowClasses()
+            => FbClasses.Join("fb-row", BuildSurfaceClasses(), SeparatorClass, Scrollable ? "fb-scrollable" : null);
         #endregion
 
         // ************************************************************************************************ //

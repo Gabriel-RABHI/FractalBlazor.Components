@@ -370,7 +370,6 @@ namespace FractalBlazor.Components.Layout.Flex
                             (MinHeightString != "" ? $"min-height: {MinHeightString};" : "") +
                             (MaxHeightString != "" ? $"max-height: {MaxHeightString};" : "") +
                             (ColumnDisplay ? "flex-flow : column;" : "") +
-                            (Scrollable ? "overflow : scroll;" : "") +
                             BuildSurfaceStyle();
         }
         #endregion
@@ -434,7 +433,9 @@ namespace FractalBlazor.Components.Layout.Flex
         public string? WidthSlaveId { get; set; }
 
         /// <summary>
-        /// Scrollable setting
+        /// Scrolls the content when it does not fit (class <c>fb-scrollable</c>). Inside an
+        /// <c>FbPageAnchor</c>, the area takes the space left by its siblings instead of growing
+        /// with its content.
         /// </summary>
         [Parameter]
         public bool Scrollable { get => _state.Scrollable; set => _state.Scrollable = value; }

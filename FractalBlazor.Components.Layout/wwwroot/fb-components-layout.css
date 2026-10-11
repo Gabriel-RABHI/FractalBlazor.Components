@@ -822,6 +822,36 @@ html {
 }
 
 /**********************************************************************************/
+/* PAGE ANCHOR */
+
+/* Root of an application: the window itself, which never scrolls. Children stack in a
+   column, and a growing child (stacks and rows grow by default) takes the whole height. */
+.fb-page-anchor {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+
+/* Scrolls its content instead of growing with it. */
+.fb-scrollable {
+    overflow: auto;
+    min-width: 0;
+    min-height: 0;
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-strong-mix)) transparent;
+}
+
+/* A flex item never shrinks below its content by default. Every box between the anchor and
+   a scrollable area may, so the area takes the space left by its siblings and scrolls
+   instead of pushing the page. Boxes without a scrollable area keep their content size. */
+.fb-page-anchor :has(.fb-scrollable) {
+    min-width: 0;
+    min-height: 0;
+}
+
+/**********************************************************************************/
 /* DROPDOWN */
 .fb-dropdown-container {
     display: inline-block;
