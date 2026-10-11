@@ -1,37 +1,57 @@
-using System.Globalization;
+using System.Collections.Concurrent;
 using FractalBlazor.Components.Common.Contracts;
+using FractalBlazor.Components.Forms.Display;
+using FractalBlazor.Components.Forms.Icons;
+using FractalBlazor.Components.Forms.Mapping;
 using FractalBlazor.Components.Layout;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace FractalBlazor.Components.Forms.Inputs
 {
     /// <summary>
-    /// Typed choice among <see cref="Items"/>, on the native <c>select</c>: keyboard, screen
-    /// readers and mobile pickers work out of the box, in the color scheme of the theme.
-    /// Options carry their index, so any item type works, even without a string form.
+    /// Chooses one element among <see cref="Items"/>, without knowing how elements look: the
+    /// current value and every option are rendered by <see cref="FbDynamicView{TSelector}"/>
+    /// with <see cref="ItemSelector"/>. A list can therefore mix strings, enumerations and
+    /// objects, each displayed by its own view; simple values need no view at all.
     /// </summary>
+    /// <remarks>
+    /// The options open in an <see cref="FbDropDown"/>, closed by a click outside or by
+    /// <c>Escape</c>. From the keyboard, arrows, <c>Home</c> and <c>End</c> move through the
+    /// options, <c>Enter</c> or <c>Space</c> choose, <c>Tab</c> leaves.
+    /// </remarks>
     public class FbSelect<TValue, TAction> : FbInputBase<TValue, TAction>
         where TAction : IStateAction<TValue>
     {
-        private readonly RenderFragment _rowContent;
+        private static readonly ConcurrentDictionary<Type, Type> _viewTypes = new();
+
+        private readonly string _id = "fb-sel-" + Guid.NewGuid().ToString("N");
+        private readonly RenderFragment _anchor;
+        private readonly RenderFragment _zone;
+        private ElementReference _anchorElement;
+        private TValue _shown = default!;
+        private bool _open;
+        private int _active = -1;
 
         public FbSelect()
         {
-            _rowContent = BuildRowContent;
+            _anchor = BuildAnchor;
+            _zone = BuildZone;
         }
 
         [Parameter, EditorRequired]
         public IReadOnlyList<TValue> Items { get; set; } = [];
 
         /// <summary>
-        /// Text of an item. Defaults to <c>ToString()</c>.
+        /// Selector of the views that render the elements. Defaults to
+        /// <see cref="FbViewSelector.Item"/>; any selector enumeration works.
         /// </summary>
         [Parameter]
-        public Func<TValue, string>? ItemText { get; set; }
+        public Enum? ItemSelector { get; set; }
 
         /// <summary>
-        /// Text of an empty first option, shown while the value is not one of the items.
+        /// Text shown while the value is not one of the items.
         /// </summary>
         [Parameter]
         public string? Placeholder { get; set; }
@@ -42,56 +62,223 @@ namespace FractalBlazor.Components.Forms.Inputs
         [Parameter]
         public RenderFragment? EndContent { get; set; }
 
+        private int SelectedIndex => IndexOf(_shown);
+
+        private string OptionId(int index) => $"{_id}-{index}";
+
+        protected override void OnParametersSet() => _shown = Value;
+
         protected override void BuildControl(RenderTreeBuilder builder)
         {
-            builder.OpenComponent<FbRow>(0);
-            builder.AddAttribute(1, nameof(FbRow.WFM), true);
-            builder.AddAttribute(2, nameof(FbRow.GS), true);
-            builder.AddAttribute(3, nameof(FbRow.PVS), true);
-            builder.AddAttribute(4, nameof(FbRow.PHM), true);
-            builder.AddAttribute(5, nameof(FbRow.WBA), true);
-            builder.AddAttribute(6, nameof(FbRow.WRM), true);
-            builder.AddAttribute(7, nameof(FbRow.JVC), true);
-            builder.AddAttribute(8, nameof(FbRow.Classes), $"fb-control fb-field fb-select-field {Classes}".TrimEnd());
-            builder.AddAttribute(9, nameof(FbRow.ChildContent), _rowContent);
+            builder.OpenComponent<FbDropDown>(0);
+            builder.AddAttribute(1, nameof(FbDropDown.IsOpen), _open);
+            builder.AddAttribute(2, nameof(FbDropDown.IsOpenChanged), EventCallback.Factory.Create<bool>(this, SetOpen));
+            builder.AddAttribute(3, nameof(FbDropDown.AutoToggle), !Disabled);
+            builder.AddAttribute(4, nameof(FbDropDown.Block), true);
+            builder.AddAttribute(5, nameof(FbDropDown.Classes), $"fb-control fb-select {Classes}".TrimEnd());
+            builder.AddAttribute(6, nameof(FbDropDown.DropDownClasses), "fb-select-zone");
+            builder.AddAttribute(7, nameof(FbDropDown.ChildContent), _anchor);
+            builder.AddAttribute(8, nameof(FbDropDown.DropDownContent), _zone);
             builder.CloseComponent();
         }
 
-        private void BuildRowContent(RenderTreeBuilder builder)
+        private void BuildAnchor(RenderTreeBuilder builder)
         {
-            var selected = IndexOf(Value);
+            var selected = SelectedIndex;
 
-            builder.AddContent(0, StartContent);
-            builder.OpenElement(1, "select");
-            builder.AddAttribute(2, "class", "fb-control-input fb-select");
-            builder.AddAttribute(3, "disabled", Disabled);
-            builder.AddAttribute(4, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, HandleChangeAsync));
+            builder.OpenElement(0, "div");
+            builder.AddAttribute(1, "class", "fb-select-anchor");
+            builder.AddAttribute(2, "role", "combobox");
+            builder.AddAttribute(3, "tabindex", Disabled ? "-1" : "0");
+            builder.AddAttribute(4, "aria-haspopup", "listbox");
+            builder.AddAttribute(5, "aria-expanded", _open ? "true" : "false");
+            builder.AddAttribute(6, "aria-controls", $"{_id}-list");
+            builder.AddAttribute(7, "aria-activedescendant", _open && _active >= 0 ? OptionId(_active) : null);
+            builder.AddAttribute(8, "aria-disabled", Disabled ? "true" : null);
+            builder.AddAttribute(9, "data-fb-nav-keys", true);
+            builder.AddAttribute(10, "onkeydown", EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDownAsync));
+            builder.AddElementReferenceCapture(11, element => _anchorElement = element);
 
-            if (Placeholder is not null || selected < 0)
+            builder.OpenComponent<FbRow>(12);
+            builder.AddAttribute(13, nameof(FbRow.EOutline), _open);
+            builder.AddAttribute(14, nameof(FbRow.WFS), _open);
+            builder.AddAttribute(15, nameof(FbRow.WFM), !_open);
+            builder.AddAttribute(16, nameof(FbRow.WBA), true);
+            builder.AddAttribute(17, nameof(FbRow.WRM), true);
+            builder.AddAttribute(18, nameof(FbRow.PVS), true);
+            builder.AddAttribute(19, nameof(FbRow.PHM), true);
+            builder.AddAttribute(20, nameof(FbRow.GS), true);
+            builder.AddAttribute(21, nameof(FbRow.JVC), true);
+            builder.AddAttribute(22, nameof(FbRow.Classes), "fb-field");
+            builder.AddAttribute(23, nameof(FbRow.ChildContent), (RenderFragment)(row =>
             {
-                builder.OpenElement(5, "option");
-                builder.AddAttribute(6, "value", "");
-                builder.AddAttribute(7, "selected", selected < 0);
-                builder.AddAttribute(8, "disabled", true);
-                builder.AddContent(9, Placeholder);
-                builder.CloseElement();
-            }
-
-            for (var index = 0; index < Items.Count; index++)
-            {
-                builder.OpenElement(10, "option");
-                builder.SetKey(index);
-                builder.AddAttribute(11, "value", index.ToString(CultureInfo.InvariantCulture));
-                builder.AddAttribute(12, "selected", index == selected);
-                builder.AddContent(13, TextOf(Items[index]));
-                builder.CloseElement();
-            }
+                row.AddContent(0, StartContent);
+                row.OpenElement(1, "div");
+                row.AddAttribute(2, "class", "fb-select-value");
+                if (selected >= 0)
+                {
+                    BuildItem(row, 3, Items[selected]);
+                }
+                else if (Placeholder is not null)
+                {
+                    row.OpenComponent<FbText>(6);
+                    row.AddAttribute(7, nameof(FbText.Value), Placeholder);
+                    row.AddAttribute(8, nameof(FbText.Subtle), true);
+                    row.CloseComponent();
+                }
+                row.CloseElement();
+                row.AddContent(9, EndContent);
+                row.OpenComponent<FbIcon>(10);
+                row.AddAttribute(11, nameof(FbIcon.Icon), FbMaterialIcons.ExpandMore);
+                row.AddAttribute(12, nameof(FbIcon.Muted), true);
+                row.CloseComponent();
+            }));
+            builder.CloseComponent();
 
             builder.CloseElement();
-            builder.AddContent(14, EndContent);
         }
 
-        private string TextOf(TValue item) => ItemText is not null ? ItemText(item) : item?.ToString() ?? string.Empty;
+        private void BuildZone(RenderTreeBuilder builder)
+        {
+            var selected = SelectedIndex;
+
+            builder.OpenComponent<FbStack>(0);
+            builder.AddAttribute(1, nameof(FbStack.WBS), true);
+            builder.AddAttribute(2, nameof(FbStack.WFM), true);
+            builder.AddAttribute(3, nameof(FbStack.WRM), true);
+            builder.AddAttribute(4, nameof(FbStack.PS), true);
+            builder.AddAttribute(5, nameof(FbStack.ChildContent), (RenderFragment)(zone =>
+            {
+                zone.OpenElement(0, "div");
+                zone.AddAttribute(1, "id", $"{_id}-list");
+                zone.AddAttribute(2, "role", "listbox");
+                zone.AddAttribute(3, "class", "fb-select-list");
+
+                for (var index = 0; index < Items.Count; index++)
+                {
+                    var option = index;
+                    zone.OpenElement(4, "div");
+                    zone.SetKey(option);
+                    zone.AddAttribute(5, "id", OptionId(option));
+                    zone.AddAttribute(6, "role", "option");
+                    zone.AddAttribute(7, "aria-selected", option == selected ? "true" : "false");
+                    zone.AddAttribute(8, "class", option == _active ? "fb-select-option fb-select-option-active" : "fb-select-option");
+                    zone.AddAttribute(9, "onclick", EventCallback.Factory.Create(this, () => SelectAsync(option)));
+
+                    zone.OpenComponent<FbRow>(10);
+                    zone.AddAttribute(11, nameof(FbRow.GS), true);
+                    zone.AddAttribute(12, nameof(FbRow.PHM), true);
+                    zone.AddAttribute(13, nameof(FbRow.PVS), true);
+                    zone.AddAttribute(14, nameof(FbRow.JVC), true);
+                    zone.AddAttribute(15, nameof(FbRow.ChildContent), (RenderFragment)(row =>
+                    {
+                        row.OpenElement(0, "div");
+                        row.AddAttribute(1, "class", "fb-select-value");
+                        BuildItem(row, 2, Items[option]);
+                        row.CloseElement();
+                        if (option == selected)
+                        {
+                            row.OpenComponent<FbIcon>(5);
+                            row.AddAttribute(6, nameof(FbIcon.Icon), FbMaterialIcons.Check);
+                            row.AddAttribute(7, nameof(FbIcon.Highlight), true);
+                            row.CloseComponent();
+                        }
+                    }));
+                    zone.CloseComponent();
+
+                    zone.CloseElement();
+                }
+
+                zone.CloseElement();
+            }));
+            builder.CloseComponent();
+        }
+
+        /// <summary>
+        /// Renders one element through the view registered for its run-time type.
+        /// </summary>
+        private void BuildItem(RenderTreeBuilder builder, int sequence, TValue item)
+        {
+            var selector = ItemSelector ?? FbViewSelector.Item;
+            var viewType = _viewTypes.GetOrAdd(selector.GetType(), static type => typeof(FbDynamicView<>).MakeGenericType(type));
+
+            builder.OpenComponent(sequence, viewType);
+            builder.AddAttribute(sequence + 1, "Item", item);
+            builder.AddAttribute(sequence + 2, "Selector", selector);
+            builder.CloseComponent();
+        }
+
+        private void SetOpen(bool open)
+        {
+            _open = open;
+            _active = open ? Math.Max(SelectedIndex, 0) : -1;
+            StateHasChanged();
+        }
+
+        private async Task SelectAsync(int index)
+        {
+            if (Disabled || index < 0 || index >= Items.Count)
+                return;
+
+            _shown = Items[index];
+            _open = false;
+            _active = -1;
+            StateHasChanged();
+
+            await CommitAsync(Items[index]);
+            await FocusAnchorAsync();
+        }
+
+        private Task HandleKeyDownAsync(KeyboardEventArgs args)
+        {
+            if (Disabled || Items.Count == 0)
+                return Task.CompletedTask;
+
+            switch (args.Key)
+            {
+                case "ArrowDown":
+                    Move(_open ? _active + 1 : Math.Max(SelectedIndex, 0));
+                    break;
+                case "ArrowUp":
+                    Move(_open ? _active - 1 : SelectedIndex >= 0 ? SelectedIndex : Items.Count - 1);
+                    break;
+                case "Home" when _open:
+                    Move(0);
+                    break;
+                case "End" when _open:
+                    Move(Items.Count - 1);
+                    break;
+                case "Enter" or " ":
+                    if (_open && _active >= 0)
+                        return SelectAsync(_active);
+                    SetOpen(!_open);
+                    break;
+                case "Tab" when _open:
+                    SetOpen(false);
+                    break;
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private void Move(int index)
+        {
+            _open = true;
+            _active = Math.Clamp(index, 0, Items.Count - 1);
+            StateHasChanged();
+        }
+
+        private async Task FocusAnchorAsync()
+        {
+            try
+            {
+                await _anchorElement.FocusAsync();
+            }
+            catch (Exception exception) when (exception is InvalidOperationException or Microsoft.JSInterop.JSException or Microsoft.JSInterop.JSDisconnectedException)
+            {
+                // The anchor is not rendered interactively (prerender, disconnected circuit).
+            }
+        }
 
         private int IndexOf(TValue value)
         {
@@ -103,10 +290,5 @@ namespace FractalBlazor.Components.Forms.Inputs
             }
             return -1;
         }
-
-        private Task HandleChangeAsync(ChangeEventArgs e)
-            => int.TryParse(e.Value?.ToString(), NumberStyles.None, CultureInfo.InvariantCulture, out var index) && index < Items.Count
-                ? CommitAsync(Items[index])
-                : Task.CompletedTask;
     }
 }

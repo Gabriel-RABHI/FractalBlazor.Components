@@ -133,6 +133,16 @@ window.FractalBlazor = window.FractalBlazor || {};
         over.scrollTarget = over.onMouseMove = over.onScroll = over.onScrollEnd = null;
     };
 
+    //------ Keyboard navigation ------//
+
+    // Elements marked data-fb-nav-keys handle navigation keys in .NET (FbSelect): the
+    // browser must not also scroll the page with them.
+    const navigationKeys = ['ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown', ' '];
+    document.addEventListener('keydown', event => {
+        if (navigationKeys.includes(event.key) && event.target.closest && event.target.closest('[data-fb-nav-keys]'))
+            event.preventDefault();
+    });
+
     //------ Dropdown positioning (FbDropDown) ------//
 
     const dropdowns = new Map();

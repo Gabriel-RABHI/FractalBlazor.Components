@@ -88,7 +88,7 @@ Un Select permet de choisir un élément dans une liste, mais délègue le rendu
 
 - [x] **6.1 FbDynamicView pour les types simples.** Une vue intégrée, `FbValueView`, rend les chaînes, énumérations (avec `[Display(Name)]`), nombres, dates et identifiants. Le registre s'y replie quand aucune vue n'est déclarée pour le type. Le registre de vues est enregistré en générique ouvert par `AddFractalBlazor()`, pour tout sélecteur, et la bibliothèque fournit le sélecteur `FbViewSelector.Item`.
 - [x] **6.2 FbDropDown au clavier.** `Échap` ferme la zone, et `Block` donne à la zone toute la largeur de son parent.
-- [ ] **6.3 FbSelect sur FbDropDown.** L'ancre affiche la valeur choisie par `FbDynamicView`, la liste rend chaque élément de la même façon, avec le sélecteur `ItemSelector`. Navigation au clavier (flèches, `Début`, `Fin`, `Entrée`, `Espace`, `Échap`), rôles ARIA `combobox` et `listbox`, placeholder.
+- [x] **6.3 FbSelect sur FbDropDown.** L'ancre affiche la valeur choisie par `FbDynamicView`, la liste rend chaque élément de la même façon, avec le sélecteur `ItemSelector`. Navigation au clavier (flèches, `Début`, `Fin`, `Entrée`, `Espace`, `Échap`), rôles ARIA `combobox` et `listbox`, placeholder.
 - [ ] **6.4 Démo et documentation.** Une liste polymorphe dans la page Formulaires, l'enregistrement par `AddFractalBlazor()` dans la démo, le README à jour.
 
 ## Critères de fin
