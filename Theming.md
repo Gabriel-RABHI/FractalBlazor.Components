@@ -887,7 +887,7 @@ foreach (var entry in report.Below(4.5))
 
 Le rapport couvre chaque texte (`Subtle`, `Muted`, `Default`, `Highlight`) sur chaque fond (`Surface`, `Accent`, `Highlight`) de chaque variante. `MeetsAA` vaut 4,5:1 (texte courant) et `MeetsAALarge` 3:1 (grand texte, contours de contrôles). Une variante dont une ancre n'est pas au format `#RGB` ou `#RRGGBB` apparaît dans `Skipped`.
 
-Les tests de la solution imposent l'AA à `Default`, `Muted` et `Highlight` pour les deux branches du thème par défaut. `Subtle` est réservé aux textes décoratifs (placeholders, indications désactivées) et n'est pas contraint.
+Les tests de la solution imposent l'AA aux textes `Default`, `Muted` et `Highlight` de la variante `Default`, celle du corps des pages, pour les deux branches du thème par défaut. `Subtle` est réservé aux textes décoratifs (placeholders, indications désactivées) et n'est pas contraint. Les variantes colorées sont un choix de design réglé dans l'éditeur de thème : leur contraste figure dans le rapport, sans être imposé.
 
 ## Adaptation des feuilles CSS
 
