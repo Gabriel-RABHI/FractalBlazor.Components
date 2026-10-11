@@ -1,116 +1,102 @@
-using FractalBlazor.Components.Common.Contracts;
+using System.ComponentModel.DataAnnotations;
 
 namespace FractalBlazor.Demo.States
 {
-
-    public class TopBarState
+    /// <summary>
+    /// The demo application, held entirely by its state. Every element of the screen is a
+    /// state object rendered by the view declared for its type: the header with the sections
+    /// of the top menu, the menu on the left with the pages of the open section, the open
+    /// page, and the footer. One instance per circuit.
+    /// </summary>
+    public sealed class RootState
     {
-        private RootState _parent;
+        public const string RepositoryUrl = "https://github.com/Gabriel-RABHI/FractalBlazor.Components";
 
-        public TopBarState(RootState parent)
-        {
-            _parent = parent;
-        }
-    }
-
-    public class RootState
-    {
-        public TopBarState TopBar { get; }
-
-        // The root menu items
-        public IReadOnlyList<MainMenuItem> MenuItems { get; }
-
-        public ContactState Contact { get; } = new();
+        public const string LinkedInUrl = "https://www.linkedin.com/";
 
         public RootState()
         {
-            TopBar = new TopBarState(this);
-
-            MenuItems = new List<MainMenuItem>
-            {
-                new MenuLinkItemState(null, MenuItemIntent.Introduction),
-                new MainMenuGroupState(null, MenuItemIntent.QuickStart, isOpened: false, group =>
+            Navigation = new NavigationState();
+            Header = new HeaderState(
+                "FractalBlazor",
                 [
-                    new MenuLinkItemState(group, MenuItemIntent.Principles),
-                    new MenuSeparatorItemState(group),
-                    new MenuLinkItemState(group, MenuItemIntent.Forms)
-                ])
-            };
-        }
-    }
+                    new SectionState(Navigation, MenuItemIntent.QuickStart, section =>
+                    [
+                        new PageLinkState(section, MenuItemIntent.Introduction, new IntroductionPage()),
+                        new PageLinkState(section, MenuItemIntent.Installation, new InstallationPage()),
+                        new MenuSeparatorState(),
+                        new PageLinkState(section, MenuItemIntent.StateFirst, new StateFirstPage())
+                    ]),
+                    new SectionState(Navigation, MenuItemIntent.Components, section =>
+                    [
+                        new PageLinkState(section, MenuItemIntent.Layout, new LayoutPage()),
+                        new PageLinkState(section, MenuItemIntent.Forms, new FormsPage(new ContactState()))
+                    ]),
+                    new SectionState(Navigation, MenuItemIntent.Themes, section =>
+                    [
+                        new PageLinkState(section, MenuItemIntent.Variants, new VariantsPage()),
+                        new PageLinkState(section, MenuItemIntent.ThemeEditor, new ThemeEditorPage())
+                    ])
+                ],
+                [
+                    new ExternalLinkState(MenuItemIntent.GitHub, RepositoryUrl),
+                    new ExternalLinkState(MenuItemIntent.LinkedIn, LinkedInUrl)
+                ]);
+            Footer = new FooterState("Composants Blazor state-first", new ThemeSelectorState());
 
-    public enum MenuItemIntent { Introduction, QuickStart, Principles, Forms }
-
-    // 1. The Base Item
-    public abstract class MainMenuItem
-    {
-        public MainMenuGroupState? Parent { get; }
-
-        // Protected constructor so only derived classes can set it
-        protected MainMenuItem(MainMenuGroupState? parent)
-        {
-            Parent = parent;
-        }
-    }
-
-    // 2. An item with an Intent (Links and Groups)
-    public abstract class MenuIntentItem : MainMenuItem
-    {
-        public MenuItemIntent Intent { get; }
-
-        protected MenuIntentItem(MainMenuGroupState? parent, MenuItemIntent intent)
-            : base(parent)
-        {
-            Intent = intent;
-        }
-    }
-
-    // 3. The Leaf Node (Clickable Link)
-    public class MenuLinkItemState : MenuIntentItem
-    {
-        public MenuLinkItemState(MainMenuGroupState? parent, MenuItemIntent intent)
-            : base(parent, intent) { }
-    }
-
-    // 4. The Visual Separator (No intent required)
-    public class MenuSeparatorItemState : MainMenuItem
-    {
-        public MenuSeparatorItemState(MainMenuGroupState? parent)
-            : base(parent) { }
-    }
-
-    // 5. The Group Node
-    public class MainMenuGroupState : MenuIntentItem, INotifyStateChanged
-    {
-        public bool IsOpened { get; private set; }
-
-        public IReadOnlyList<MainMenuItem> Children { get; }
-
-        // The single-line Action
-        public record ToggleGroupAction(bool IsOpened) : IStateAction<bool>;
-
-        // Re-renders the views of this group only
-        public event Action? OnStateChanged;
-
-        /// <param name="children">Builds the children with this group as their parent.</param>
-        public MainMenuGroupState(
-            MainMenuGroupState? parent,
-            MenuItemIntent intent,
-            bool isOpened,
-            Func<MainMenuGroupState, IEnumerable<MainMenuItem>>? children = null)
-            : base(parent, intent)
-        {
-            IsOpened = isOpened;
-            Children = children?.Invoke(this).ToList().AsReadOnly() ?? new List<MainMenuItem>().AsReadOnly();
+            Navigation.Open(Header.Sections[0]);
         }
 
-        public void Handle(ToggleGroupAction action)
-        {
-            if (IsOpened != action.IsOpened)
-            {
-                IsOpened = action.IsOpened;
-                OnStateChanged?.Invoke();
-            }
-        }
+        public HeaderState Header { get; }
+
+        /// <summary>
+        /// The menu on the left and the open page.
+        /// </summary>
+        public NavigationState Navigation { get; }
+
+        public FooterState Footer { get; }
+    }
+
+    /// <summary>
+    /// What a menu entry is about. The views turn it into a label (its <c>Display</c> name)
+    /// and an icon: the state stays free of any presentation.
+    /// </summary>
+    public enum MenuItemIntent
+    {
+        [Display(Name = "Démarrage")]
+        QuickStart,
+
+        [Display(Name = "Introduction")]
+        Introduction,
+
+        [Display(Name = "Installation")]
+        Installation,
+
+        [Display(Name = "State-first")]
+        StateFirst,
+
+        [Display(Name = "Composants")]
+        Components,
+
+        [Display(Name = "Mise en page")]
+        Layout,
+
+        [Display(Name = "Formulaires")]
+        Forms,
+
+        [Display(Name = "Thèmes")]
+        Themes,
+
+        [Display(Name = "Variantes")]
+        Variants,
+
+        [Display(Name = "Éditeur de thème")]
+        ThemeEditor,
+
+        [Display(Name = "GitHub")]
+        GitHub,
+
+        [Display(Name = "LinkedIn")]
+        LinkedIn
     }
 }

@@ -1,6 +1,5 @@
 @page "/forms"
 @rendermode InteractiveServer
-@inject RootState Root
 
 <PageTitle>Formulaires</PageTitle>
 
@@ -11,7 +10,11 @@
         envoie une action à l’état, l’état notifie, et les deux vues se mettent à jour.
     </FbText>
     <FbRow GL JVS MultiLine>
-        <FbDynamicView TSelector="ViewSelector" Item="Root.Contact" Selector="ViewSelector.Editor" />
-        <FbDynamicView TSelector="ViewSelector" Item="Root.Contact" Selector="ViewSelector.Summary" />
+        <FbDynamicView TSelector="ViewSelector" Item="_contact" Selector="ViewSelector.Editor" />
+        <FbDynamicView TSelector="ViewSelector" Item="_contact" Selector="ViewSelector.Summary" />
     </FbRow>
 </FbStack>
+
+@code {
+    private readonly ContactState _contact = new();
+}
