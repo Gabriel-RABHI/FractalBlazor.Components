@@ -31,8 +31,8 @@ namespace FractalBlazor.Components.Forms.Inputs
             WBA = true;
             WFM = true;
             WRM = true;
-            PVS = true;
-            PHM = true;
+            PVM = true;
+            PHL = true;
             Hover = true;
             _button = BuildButton;
             _content = BuildContent;
