@@ -828,6 +828,11 @@ html {
     position: relative;
 }
 
+.fb-dropdown-block {
+    display: block;
+    width: 100%;
+}
+
 .fb-dropdown-overlay {
     position: fixed;
     top: 0;

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FractalBlazor.Components.Layout.Abstracts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 
 namespace FractalBlazor.Components.Layout
@@ -78,6 +79,12 @@ namespace FractalBlazor.Components.Layout
         [Parameter]
         public int ZIndex { get; set; } = 9999;
 
+        /// <summary>
+        /// The anchor and the zone take the full width of the parent instead of their content's.
+        /// </summary>
+        [Parameter]
+        public bool Block { get; set; }
+
         private bool _previousIsOpen;
         private bool _shouldInitDropdown;
         private readonly string _containerId = "fb-ddc-" + Guid.NewGuid().ToString("N");
@@ -131,6 +138,12 @@ namespace FractalBlazor.Components.Layout
             StateHasChanged();
         }
 
+        /// <summary>
+        /// <c>Escape</c>, pressed anywhere inside the dropdown while it is open, closes it.
+        /// </summary>
+        private Task HandleKeyDownAsync(KeyboardEventArgs args)
+            => IsOpen && args.Key == "Escape" ? CloseDropdown() : Task.CompletedTask;
+
         private async Task DestroyDropdownAsync()
         {
             try
@@ -153,8 +166,10 @@ namespace FractalBlazor.Components.Layout
             // Outer container
             builder.OpenElement(0, "div");
             builder.AddAttribute(1, "id", _containerId);
-            builder.AddAttribute(2, "class", $"fb-dropdown-container {Classes}");
+            builder.AddAttribute(2, "class", $"fb-dropdown-container{(Block ? " fb-dropdown-block" : "")} {Classes}".TrimEnd());
             builder.AddAttribute(3, "style", Style);
+            if (IsOpen)
+                builder.AddAttribute(18, "onkeydown", EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDownAsync));
 
             // Anchor wrapper
             builder.OpenElement(4, "div");
