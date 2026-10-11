@@ -1,0 +1,20 @@
+@* One anchor color of a variant, sent while the picker moves. *@
+<FbInputColor TAction="FbSetValue<string>" Value="@Value" ValueChanged="ValueChanged" Immediate>
+    <StartContent>
+        <FbRowItem Style="min-width:6.5rem"><FbText S Subtle>@Label</FbText></FbRowItem>
+    </StartContent>
+    <EndContent>
+        <FbRowItem Style="min-width:4.5rem;justify-content:flex-end"><code>@Value</code></FbRowItem>
+    </EndContent>
+</FbInputColor>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Label { get; set; } = "";
+
+    [Parameter]
+    public string Value { get; set; } = "";
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+}

@@ -79,6 +79,7 @@ builder.Services.AddFractalBlazorTheming(registry =>
 - `<FbVariant Invert>` échange les ancres de fond et de premier plan : une carte claire dans une page sombre.
 - `<FbTheme Branch="Light" Scoped>` pose une autre branche sur un seul sous-arbre.
 - `FbThemeContrast.Analyze(theme)` calcule les couleurs réellement peintes et leur contraste WCAG.
+- `<FbTheme Setup="@monTheme" Scoped>` applique un thème non enregistré, pour un aperçu ou un éditeur.
 
 ## Formulaires state-first
 
@@ -139,7 +140,7 @@ dotnet test --project FractalBlazor.Components.Tests/FractalBlazor.Components.Te
 dotnet run --project FractalBlazor.Components/FractalBlazor.Components.csproj --launch-profile http
 ```
 
-La démo (`http://localhost:5115`) montre la mise en page et le thème, un formulaire state-first et un menu piloté par son état. Le plan de finalisation et son avancement sont dans [Plan.md](Plan.md).
+La démo (`http://localhost:5115`) montre la mise en page et le thème, un formulaire state-first, un menu piloté par son état et un éditeur de thème : couleurs et mélanges réglés en direct sur un jeu de composants, avec le rapport de contraste et le code C# du thème obtenu. Le plan de finalisation et son avancement sont dans [Plan.md](Plan.md).
 
 ## Licence
 
