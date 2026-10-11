@@ -40,9 +40,10 @@ Le raisonnement complet est dans [Conception.md](Conception.md), le modèle de t
 `Program.cs` :
 
 ```csharp
-builder.Services.AddFractalBlazorTheming();
-builder.Services.AddSingleton<IFbViewRegistry<ViewSelector>, FbViewRegistry<ViewSelector>>(); // pour FbDynamicView
+builder.Services.AddFractalBlazor();
 ```
+
+`AddFractalBlazor` enregistre les registres de thèmes et un registre de vues pour chaque énumération de sélecteurs (`ViewSelector`, `FbViewSelector`…), utilisé par `FbDynamicView` et `FbSelect`.
 
 `App.razor` :
 
@@ -60,14 +61,14 @@ builder.Services.AddSingleton<IFbViewRegistry<ViewSelector>, FbViewRegistry<View
 </body>
 ```
 
-Avec Layout seul, `FbLayoutTheme` remplace `FbTheme` et `AddFractalBlazorTheming` enregistre déjà son registre.
+Avec Layout seul, `FbLayoutTheme` remplace `FbTheme` et `AddFractalBlazor` enregistre déjà son registre.
 
 ## Thème
 
 Un thème se déclare une fois en C# : espacements, rayons et typographie, puis des branches (`Dark`, `Light`), puis des variantes (`Default`, `Selected`, `Error`, `Warning`, `Disabled`, `Success`, `Info`). Un thème dérivé ne déclare que ses différences.
 
 ```csharp
-builder.Services.AddFractalBlazorTheming(registry =>
+builder.Services.AddFractalBlazor(registry =>
     registry.Register(new FbThemeSetup("Spacious", registry.Default)
     {
         Spacings = FbThemeLayoutSpacings.Spaced,
@@ -116,6 +117,28 @@ Le binding classique reste possible : `<FbInputText TAction="FbSetValue<string>"
 ```razor
 <FbDynamicView TSelector="ViewSelector" Item="State" Selector="ViewSelector.Editor" />
 ```
+
+Sans vue déclarée, les types simples (`string`, énumérations, nombres, dates, `Guid`) sont rendus par `FbValueView` : le texte formaté dans la culture courante, ou le `[Display(Name = …)]` d'une valeur d'énumération.
+
+## Select
+
+`FbSelect` choisit un élément dans une liste et délègue le rendu : il ouvre un `FbDropDown` (fermé par un clic à l'extérieur ou par Échap) et affiche chaque élément, ainsi que la valeur choisie, avec la vue `FbViewSelector.Item` de son type. La liste peut donc être polymorphe :
+
+```csharp
+public static IReadOnlyList<object> ContactOptions { get; } =
+    ["Pas de préférence", ContactChannel.Email, ContactChannel.Phone, new ContactPerson("Ada Lovelace", "Assistante")];
+```
+
+```razor
+@attribute [ViewFor<FbViewSelector>(typeof(ContactPerson), FbViewSelector.Item)]
+```
+
+```razor
+<FbSelect TValue="object" TAction="ContactState.SetPreferredContact" Handler="State"
+          Value="@State.PreferredContact" Items="ContactState.ContactOptions" />
+```
+
+La chaîne et les canaux passent par `FbValueView`, la personne par sa propre vue. `ItemSelector` choisit un autre sélecteur, d'une autre énumération si besoin. Le clavier suit le motif ARIA combobox : flèches, Début, Fin, Entrée, Espace, Échap, Tab.
 
 ## Performances
 

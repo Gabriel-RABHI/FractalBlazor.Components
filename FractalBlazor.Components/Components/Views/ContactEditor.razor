@@ -24,6 +24,12 @@
         <StartContent><FbText S Subtle>Pays</FbText></StartContent>
     </FbSelect>
 
+    @* Polymorphic list: a string, enumeration values and people, each rendered by its own view. *@
+    <FbSelect TValue="object" TAction="ContactState.SetPreferredContact" Handler="Item" Value="@Item.PreferredContact"
+              Items="ContactState.ContactOptions">
+        <StartContent><FbText S Subtle>Contact</FbText></StartContent>
+    </FbSelect>
+
     <FbCheckbox TAction="ContactState.SetNewsletter" Handler="Item" Value="@Item.Newsletter">
         <FbText S>Recevoir la newsletter</FbText>
     </FbCheckbox>

@@ -1,0 +1,15 @@
+@* A person in a list: FbSelect asks for the Item view of each element. Strings and channels
+   need no view of their own, the built-in FbValueView renders them. *@
+@using FractalBlazor.Components.Forms.Mapping
+@attribute [ViewFor<FbViewSelector>(typeof(ContactPerson), FbViewSelector.Item)]
+
+<FbRow GS JHS JVC>
+    <FbIcon Icon="@FbMaterialIcons.Person" Muted />
+    <FbText>@Item.Name</FbText>
+    <FbText S Subtle>@Item.Role</FbText>
+</FbRow>
+
+@code {
+    [Parameter]
+    public ContactPerson Item { get; set; } = default!;
+}

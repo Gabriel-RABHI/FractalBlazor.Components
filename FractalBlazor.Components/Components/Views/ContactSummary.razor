@@ -19,6 +19,11 @@
         <FbText S>@(Item.Country ?? "—")</FbText>
     </FbRow>
     <FbRow GS JHS>
+        <FbText S Subtle>Contact</FbText>
+        @* Same views as the select list: the summary does not know the type of the value either. *@
+        <FbDynamicView TSelector="FbViewSelector" Item="Item.PreferredContact" Selector="FbViewSelector.Item" />
+    </FbRow>
+    <FbRow GS JHS>
         <FbText S Subtle>Options</FbText>
         <FbText S>@(Item.Newsletter ? "newsletter" : "")@(Item.Newsletter && Item.Premium ? ", " : "")@(Item.Premium ? "premium" : "")</FbText>
     </FbRow>
