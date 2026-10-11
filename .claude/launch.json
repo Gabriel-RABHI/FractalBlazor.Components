@@ -2,9 +2,9 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "demo",
+      "name": "website-server",
       "runtimeExecutable": "dotnet",
-      "runtimeArgs": ["run", "--project", "FractalBlazor.Components/FractalBlazor.Components.csproj", "--launch-profile", "http"],
+      "runtimeArgs": ["run", "--project", "FractalBlazor.WebSite.ServerSide/FractalBlazor.WebSite.ServerSide.csproj", "--launch-profile", "http"],
       "port": 5115
     }
   ]

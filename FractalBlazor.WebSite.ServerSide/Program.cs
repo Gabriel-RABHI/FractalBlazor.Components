@@ -1,4 +1,4 @@
-using FractalBlazor.Components.Components;
+using FractalBlazor.WebSite.ServerSide.Components;
 using FractalBlazor.WebSite;
 
 var builder = WebApplication.CreateBuilder(args);
