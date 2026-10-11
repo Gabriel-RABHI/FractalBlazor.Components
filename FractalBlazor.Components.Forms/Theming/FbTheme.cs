@@ -1,6 +1,7 @@
 using FractalBlazor.Components.Forms.Contracts;
 using FractalBlazor.Components.Forms.Theming.Constants;
 using FractalBlazor.Components.Forms.Theming.Helpers;
+using FractalBlazor.Components.Forms.Theming.Model;
 using FractalBlazor.Components.Forms.Theming.Registry;
 using FractalBlazor.Components.Forms.Theming.Solver;
 using FractalBlazor.Components.Layout.Abstracts;
@@ -21,6 +22,13 @@ public sealed class FbTheme : FbComponentBase
     [Parameter]
     public string Branch { get; set; } = FbThemeBranches.Dark;
 
+    /// <summary>
+    /// A theme that is not registered, applied instead of <see cref="Theme"/>: the preview of a
+    /// theme editor, for instance. It must inherit from a registered theme.
+    /// </summary>
+    [Parameter]
+    public FbThemeSetup? Setup { get; set; }
+
     [Parameter]
     public string Selector { get; set; } = ":root";
 
@@ -38,10 +46,31 @@ public sealed class FbTheme : FbComponentBase
     private FbResolvedTheme? _resolved;
     private FbThemeContext? _context;
     private string _variables = "";
+    private FbThemeSetup? _resolvedSetup;
+    private string? _resolvedSetupBranch;
+
+    /// <summary>
+    /// Registered themes are resolved once by the registry. An unregistered <see cref="Setup"/>
+    /// is resolved again only when another instance or another branch is given.
+    /// </summary>
+    private FbResolvedTheme ResolveTheme()
+    {
+        if (Setup is null)
+            return Registry.Resolve(Theme, Branch);
+
+        if (_resolved is null || !ReferenceEquals(Setup, _resolvedSetup) || Branch != _resolvedSetupBranch)
+        {
+            _resolvedSetup = Setup;
+            _resolvedSetupBranch = Branch;
+            return Registry.Resolve(Setup, Branch);
+        }
+
+        return _resolved;
+    }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        var resolved = Registry.Resolve(Theme, Branch);
+        var resolved = ResolveTheme();
         if (!ReferenceEquals(resolved, _resolved))
         {
             _resolved = resolved;

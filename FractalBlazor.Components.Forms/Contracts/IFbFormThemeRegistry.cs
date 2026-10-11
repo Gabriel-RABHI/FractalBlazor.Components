@@ -12,4 +12,11 @@ public interface IFbFormThemeRegistry
     bool TryGet(string name, out FbThemeSetup theme);
 
     FbResolvedTheme Resolve(string theme, string branch);
+
+    /// <summary>
+    /// Resolves a theme that is not registered, for previews and theme editors. The theme must
+    /// inherit from a registered theme; it is validated like a registration but neither stored
+    /// nor cached.
+    /// </summary>
+    FbResolvedTheme Resolve(FbThemeSetup theme, string branch);
 }

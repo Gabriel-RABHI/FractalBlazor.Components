@@ -80,6 +80,26 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
         }
     }
 
+    public FbResolvedTheme Resolve(FbThemeSetup theme, string branch)
+    {
+        ArgumentNullException.ThrowIfNull(theme);
+        ArgumentException.ThrowIfNullOrWhiteSpace(branch);
+
+        lock (_sync)
+        {
+            ValidateDefinition(theme);
+
+            if (theme.Parent is null ||
+                !_themes.TryGetValue(theme.Parent.Name, out var registeredParent) ||
+                !ReferenceEquals(theme.Parent, registeredParent))
+            {
+                throw new InvalidOperationException($"Theme '{theme.Name}' must inherit from a registered theme.");
+            }
+
+            return ResolveCore(theme, branch.Trim());
+        }
+    }
+
     private void CacheTheme(FbThemeSetup theme)
     {
         foreach (var branch in GetBranchNames(theme))

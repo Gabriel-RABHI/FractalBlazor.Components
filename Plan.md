@@ -74,6 +74,14 @@ Chaque changement est vérifié contre ces règles. Une étape qui en viole une 
 - [x] **4.4 Mesure.** Ajouter un projet BenchmarkDotNet qui compare le rendu de N `FbRow` à un équivalent fondé sur `ComponentBase` et à MudBlazor, et noter les résultats. La première mesure montrait FractalBlazor plus lent que `ComponentBase` : les chaînes `class` sont désormais mises en cache comme les styles.
 - [x] **4.5 Publication.** README complet, README de Grid corrigé, licence renseignée, métadonnées NuGet (`Directory.Build.props`, version 0.1.0-preview, documentation XML), workflow CI (build sans avertissement, tests, paquets).
 
+## Phase 5 — Éditeur de thème
+
+Objectif : régler les couleurs et les valeurs de mélange d'un thème en voyant le résultat en direct sur un jeu de composants, puis récupérer le code C# du thème obtenu. L'éditeur passe par le modèle C# (`FbThemeSetup`) et le pipeline normal (`FbTheme`) : aucune variable CSS n'est écrite à la main.
+
+- [x] **5.1 Aperçu d’un thème non enregistré.** `IFbFormThemeRegistry.Resolve(FbThemeSetup, branche)` résout un thème qui hérite d'un thème enregistré, avec les mêmes validations, sans l'enregistrer ni le mettre en cache. `FbTheme` accepte ce thème via un paramètre `Setup`.
+- [ ] **5.2 `FbInputColor` et `FbInputRange`.** Champs state-first sur les contrôles natifs `color` et `range`, stylés par les tokens de contrôle.
+- [ ] **5.3 Page « Thème ».** En haut, les réglages : branche éditée, mélanges de surface, de frame et de texte, ancres de chaque variante. En dessous, dans un `FbTheme Scoped` qui applique le thème édité : surfaces et frames, textes, variantes, boutons, icônes, carte inversée et un faux formulaire. Un rapport de contraste et le code C# du thème suivent les réglages.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :
