@@ -1,10 +1,16 @@
-@* One anchor color of a variant, sent while the picker moves. *@
+@* One anchor color of a variant, sent while the picker moves. The color can be copied, then
+   pasted into any other anchor; copying also puts it in the system clipboard. *@
+@inject IJSRuntime JS
+
 <FbInputColor TAction="FbSetValue<string>" Value="@Value" ValueChanged="ValueChanged" Immediate>
     <StartContent>
         <FbRowItem Style="min-width:6.5rem"><FbText S Subtle>@Label</FbText></FbRowItem>
     </StartContent>
     <EndContent>
         <FbRowItem Style="min-width:4.5rem;justify-content:flex-end"><code>@Value</code></FbRowItem>
+        <FbButton WBN WFN PVS PHS Title="Copier la couleur" Icon="@FbMaterialIcons.ContentCopy" OnClick="CopyAsync" />
+        <FbButton WBN WFN PVS PHS Title="@(Clipboard is null ? "Aucune couleur copiée" : $"Coller {Clipboard}")"
+                  Icon="@FbMaterialIcons.ContentPaste" Disabled="@(Clipboard is null || Clipboard == Value)" OnClick="PasteAsync" />
     </EndContent>
 </FbInputColor>
 
@@ -17,4 +23,28 @@
 
     [Parameter]
     public EventCallback<string> ValueChanged { get; set; }
+
+    /// <summary>
+    /// The color copied last, shared by every color field of the editor.
+    /// </summary>
+    [Parameter]
+    public string? Clipboard { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> ClipboardChanged { get; set; }
+
+    private async Task CopyAsync()
+    {
+        await ClipboardChanged.InvokeAsync(Value);
+        try
+        {
+            await JS.InvokeVoidAsync("fbWebSite.copyText", Value);
+        }
+        catch (JSException)
+        {
+            // The system clipboard is optional: the editor keeps its own copy.
+        }
+    }
+
+    private Task PasteAsync() => Clipboard is null ? Task.CompletedTask : ValueChanged.InvokeAsync(Clipboard);
 }

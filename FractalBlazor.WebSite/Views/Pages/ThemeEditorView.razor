@@ -1,4 +1,5 @@
-@* The editor model lives in the circuit (a scoped service): the edited values survive navigation. *@
+@* The editor model lives in the circuit (a scoped service): the edited values, and the open
+   tabs, survive navigation. *@
 @attribute [ViewFor<ViewSelector>(typeof(ThemeEditorPage), ViewSelector.Viewer)]
 @inject IFbFormThemeRegistry Registry
 @inject ThemeEditorModel Model
@@ -10,91 +11,155 @@
 <FbStack GL>
     <FbText M Muted>
         Les réglages construisent un FbThemeSetup dérivé du thème par défaut. L’aperçu l’applique
-        avec un FbTheme Scoped, sans toucher au reste de la page. Changer de branche repart des
-        valeurs de cette branche ; les espacements et les rayons, communs à tout le thème, sont
-        conservés.
+        avec un FbTheme Scoped, sans toucher au reste de la page. Les espacements, les rayons et la
+        typographie appartiennent au thème ; les couleurs et les mélanges, à la branche éditée.
     </FbText>
 
-    <FbGridContainer Columns="1" ColumnsM="2" ColumnsXL="3" GL JVS>
-        <FbGridItem>
-            <FbStack GM PL WBA WFL WRL>
-                <FbText L B>Couleurs</FbText>
-                <FbSelect TValue="string" TAction="FbSetValue<string>" Items="ThemeEditorModel.Branches"
-                          Value="@Model.Branch" ValueChanged="LoadBranch">
-                    <StartContent><FbRowItem Style="min-width:6.5rem"><FbText S Subtle>Branche</FbText></FbRowItem></StartContent>
-                </FbSelect>
-                <FbSelect TValue="string" TAction="FbSetValue<string>" Items="Model.VariantNames"
-                          @bind-Value="Model.SelectedVariant">
-                    <StartContent><FbRowItem Style="min-width:6.5rem"><FbText S Subtle>Variante</FbText></FbRowItem></StartContent>
-                </FbSelect>
-                <ColorField Label="Fond bas" @bind-Value="Model.Selected.BgLow" />
-                <ColorField Label="Fond haut" @bind-Value="Model.Selected.BgHigh" />
-                <ColorField Label="Texte bas" @bind-Value="Model.Selected.FgLow" />
-                <ColorField Label="Texte haut" @bind-Value="Model.Selected.FgHigh" />
-                <FbRow JHE>
-                    <FbButton WBN Icon="@FbMaterialIcons.RestartAlt" OnClick="() => LoadBranch(Model.Branch)">
-                        <FbText S>Réinitialiser</FbText>
-                    </FbButton>
-                </FbRow>
-            </FbStack>
-        </FbGridItem>
+    <FbTabs TAction="FbSetValue<int>" @bind-Value="Model.EditTab" Items="EditTabs" />
 
-        <FbGridItem>
-            <FbStack GM PL WBA WFL WRL>
-                <FbText L B>Surfaces et frames</FbText>
-                <MixSlider Label="Surface" Max="40" @bind-Value="Model.SurfaceMix" />
-                <MixSlider Label="Accent" Max="40" @bind-Value="Model.AccentOffset" />
-                <MixSlider Label="Highlight" Max="60" @bind-Value="Model.HighlightOffset" />
-                <MixSlider Label="Frame Light" Max="60" @bind-Value="Model.FrameLight" />
-                <MixSlider Label="Frame Medium" Max="60" @bind-Value="Model.FrameMedium" />
-                <MixSlider Label="Frame Strong" Max="60" @bind-Value="Model.FrameStrong" />
-            </FbStack>
-        </FbGridItem>
+    @switch (Model.EditTab)
+    {
+        case 0:
+            <FbGridContainer Columns="1" ColumnsM="2" GL JVS>
+                <FbGridItem>
+                    <FbStack GM PL WBA WFL WRL>
+                        <FbText L B>Espacements</FbText>
+                        <ValueSlider Label="S" Unit="rem" Max="4" Step="0.0625" @bind-Value="Model.SpaceS" />
+                        <ValueSlider Label="M" Unit="rem" Max="4" Step="0.0625" @bind-Value="Model.SpaceM" />
+                        <ValueSlider Label="L" Unit="rem" Max="4" Step="0.0625" @bind-Value="Model.SpaceL" />
+                        <ValueSlider Label="X" Unit="rem" Max="4" Step="0.0625" @bind-Value="Model.SpaceX" />
+                    </FbStack>
+                </FbGridItem>
+                <FbGridItem>
+                    <FbStack GM PL WBA WFL WRL>
+                        <FbText L B>Rayons</FbText>
+                        <ValueSlider Label="S" Unit="rem" Max="2" Step="0.0625" @bind-Value="Model.RadiusS" />
+                        <ValueSlider Label="M" Unit="rem" Max="2" Step="0.0625" @bind-Value="Model.RadiusM" />
+                        <ValueSlider Label="L" Unit="rem" Max="2" Step="0.0625" @bind-Value="Model.RadiusL" />
+                        <ValueSlider Label="X" Unit="rem" Max="2" Step="0.0625" @bind-Value="Model.RadiusX" />
+                    </FbStack>
+                </FbGridItem>
+            </FbGridContainer>
+            <FbRow JHE>
+                <FbButton WBN Icon="@FbMaterialIcons.RestartAlt" OnClick="Model.ResetShape"><FbText S>Réinitialiser les espacements et les rayons</FbText></FbButton>
+            </FbRow>
+            break;
 
-        <FbGridItem>
-            <FbStack GM PL WBA WFL WRL>
-                <FbText L B>Textes</FbText>
-                <MixSlider Label="Subtle" @bind-Value="Model.TextSubtle" />
-                <MixSlider Label="Muted" @bind-Value="Model.TextMuted" />
-                <MixSlider Label="Default" @bind-Value="Model.TextDefault" />
-                <MixSlider Label="Highlight" @bind-Value="Model.TextHighlight" />
+        case 1:
+            <FbGridContainer Columns="1" ColumnsM="2" ColumnsXL="3" GL JVS>
+                <FbGridItem>
+                    <FbStack GM PL WBA WFL WRL>
+                        <FbText L B>Polices et tailles</FbText>
+                        <FbInputText TAction="FbSetValue<string>" Value="@Model.TextFontFamily" ValueChanged="@(value => Model.TextFontFamily = value)">
+                            <StartContent><FbRowItem Style="min-width:6.5rem"><FbText S Subtle>Texte</FbText></FbRowItem></StartContent>
+                        </FbInputText>
+                        <FbInputText TAction="FbSetValue<string>" Value="@Model.CodeFontFamily" ValueChanged="@(value => Model.CodeFontFamily = value)">
+                            <StartContent><FbRowItem Style="min-width:6.5rem"><FbText S Subtle>Code</FbText></FbRowItem></StartContent>
+                        </FbInputText>
+                        <ValueSlider Label="Taille de base" Unit="px" Min="10" Max="24" Step="0.5" @bind-Value="Model.FontSize" />
+                        <ValueSlider Label="Interligne" Unit="" Min="1" Max="2" Step="0.05" @bind-Value="Model.LineHeight" />
+                    </FbStack>
+                </FbGridItem>
+                <FbGridItem>
+                    <FbStack GM PL WBA WFL WRL>
+                        <FbText L B>Échelle</FbText>
+                        <ValueSlider Label="XS" Unit="" Min="0.5" Max="3" Step="0.05" @bind-Value="Model.CoefXS" />
+                        <ValueSlider Label="S" Unit="" Min="0.5" Max="3" Step="0.05" @bind-Value="Model.CoefS" />
+                        <ValueSlider Label="M" Unit="" Min="0.5" Max="3" Step="0.05" @bind-Value="Model.CoefM" />
+                        <ValueSlider Label="L" Unit="" Min="0.5" Max="3" Step="0.05" @bind-Value="Model.CoefL" />
+                        <ValueSlider Label="XL" Unit="" Min="0.5" Max="3" Step="0.05" @bind-Value="Model.CoefXL" />
+                        <ValueSlider Label="XXL" Unit="" Min="0.5" Max="3" Step="0.05" @bind-Value="Model.CoefXXL" />
+                    </FbStack>
+                </FbGridItem>
+                <FbGridItem>
+                    <FbStack GM PL WBA WFL WRL>
+                        <FbText L B>Graisses</FbText>
+                        <ValueSlider Label="Fine" Unit="" Min="100" Max="900" Step="100" @bind-Value="Model.WeightThin" />
+                        <ValueSlider Label="Normale" Unit="" Min="100" Max="900" Step="100" @bind-Value="Model.WeightDefault" />
+                        <ValueSlider Label="Grasse" Unit="" Min="100" Max="900" Step="100" @bind-Value="Model.WeightBold" />
+                        <ValueSlider Label="Très grasse" Unit="" Min="100" Max="900" Step="100" @bind-Value="Model.WeightExtraBold" />
+                    </FbStack>
+                </FbGridItem>
+            </FbGridContainer>
+            <FbRow JHE>
+                <FbButton WBN Icon="@FbMaterialIcons.RestartAlt" OnClick="Model.ResetTypography"><FbText S>Réinitialiser la typographie</FbText></FbButton>
+            </FbRow>
+            break;
 
-                <FbText L B>Contraste WCAG</FbText>
-                <FbText XS Muted>Plus faible ratio de chaque texte, sur tous les fonds de toutes les variantes.</FbText>
-                @foreach (var (text, entry) in WorstContrasts)
-                {
-                    <FbVariant Variant="@(entry.MeetsAA ? FbThemeVariants.Success : entry.MeetsAALarge ? FbThemeVariants.Warning : FbThemeVariants.Error)">
-                        <FbRow GS PS PHM WBA WRM>
-                            <FbText S B>@text</FbText>
-                            <FbText S>@entry.Ratio.ToString("0.0"):1</FbText>
-                            <FbRowSpacer />
-                            <FbText XS Muted>@entry.Variant sur @entry.Background</FbText>
-                        </FbRow>
-                    </FbVariant>
-                }
-            </FbStack>
-        </FbGridItem>
+        default:
+            <FbGridContainer Columns="1" ColumnsM="2" ColumnsXL="3" GL JVS>
+                <FbGridItem>
+                    <FbStack GM PL WBA WFL WRL>
+                        <FbText L B>Couleurs</FbText>
+                        <FbSelect TValue="string" TAction="FbSetValue<string>" Items="ThemeEditorModel.Branches"
+                                  Value="@Model.Branch" ValueChanged="LoadBranch">
+                            <StartContent><FbRowItem Style="min-width:6.5rem"><FbText S Subtle>Branche</FbText></FbRowItem></StartContent>
+                        </FbSelect>
+                        <FbSelect TValue="string" TAction="FbSetValue<string>" Items="Model.VariantNames"
+                                  @bind-Value="Model.SelectedVariant">
+                            <StartContent><FbRowItem Style="min-width:6.5rem"><FbText S Subtle>Variante</FbText></FbRowItem></StartContent>
+                        </FbSelect>
+                        <ColorField Label="Fond bas" @bind-Value="Model.Selected.BgLow" @bind-Clipboard="Model.CopiedColor" />
+                        <ColorField Label="Fond haut" @bind-Value="Model.Selected.BgHigh" @bind-Clipboard="Model.CopiedColor" />
+                        <ColorField Label="Texte bas" @bind-Value="Model.Selected.FgLow" @bind-Clipboard="Model.CopiedColor" />
+                        <ColorField Label="Texte haut" @bind-Value="Model.Selected.FgHigh" @bind-Clipboard="Model.CopiedColor" />
+                        <FbSwitch TAction="FbSetValue<bool>" @bind-Value="Model.Selected.HasFrameColors">
+                            <FbText S>Couleurs de filet propres</FbText>
+                        </FbSwitch>
+                        @if (Model.Selected.HasFrameColors)
+                        {
+                            <ColorField Label="Filet bas" @bind-Value="Model.Selected.FrameLow" @bind-Clipboard="Model.CopiedColor" />
+                            <ColorField Label="Filet haut" @bind-Value="Model.Selected.FrameHigh" @bind-Clipboard="Model.CopiedColor" />
+                        }
+                        else
+                        {
+                            <FbText XS Muted>Les filets vont du fond courant vers l’ancre haute des fonds.</FbText>
+                        }
+                    </FbStack>
+                </FbGridItem>
 
-        <FbGridItem>
-            <FbStack GM PL WBA WFL WRL>
-                <FbText L B>Espacements et rayons</FbText>
-                <FbText XS Muted>Valeurs du thème, communes à ses deux branches.</FbText>
-                <LengthSlider Label="Espacement S" Max="4" @bind-Value="Model.SpaceS" />
-                <LengthSlider Label="Espacement M" Max="4" @bind-Value="Model.SpaceM" />
-                <LengthSlider Label="Espacement L" Max="4" @bind-Value="Model.SpaceL" />
-                <LengthSlider Label="Espacement X" Max="4" @bind-Value="Model.SpaceX" />
-                <LengthSlider Label="Rayon S" @bind-Value="Model.RadiusS" />
-                <LengthSlider Label="Rayon M" @bind-Value="Model.RadiusM" />
-                <LengthSlider Label="Rayon L" @bind-Value="Model.RadiusL" />
-                <LengthSlider Label="Rayon X" @bind-Value="Model.RadiusX" />
-                <FbRow JHE>
-                    <FbButton WBN Icon="@FbMaterialIcons.RestartAlt" OnClick="Model.ResetShape">
-                        <FbText S>Réinitialiser</FbText>
-                    </FbButton>
-                </FbRow>
-            </FbStack>
-        </FbGridItem>
-    </FbGridContainer>
+                <FbGridItem>
+                    <FbStack GM PL WBA WFL WRL>
+                        <FbText L B>Surfaces et filets</FbText>
+                        <ValueSlider Label="Surface" Max="50" @bind-Value="Model.SurfaceMix" />
+                        <ValueSlider Label="Accent" Max="50" @bind-Value="Model.AccentOffset" />
+                        <ValueSlider Label="Highlight" Max="100" @bind-Value="Model.HighlightOffset" />
+                        <ValueSlider Label="Survol" Max="30" @bind-Value="Model.HoverOffset" />
+                        <ValueSlider Label="Frame Light" Max="100" @bind-Value="Model.FrameLight" />
+                        <ValueSlider Label="Frame Medium" Max="100" @bind-Value="Model.FrameMedium" />
+                        <ValueSlider Label="Frame Strong" Max="100" @bind-Value="Model.FrameStrong" />
+                    </FbStack>
+                </FbGridItem>
+
+                <FbGridItem>
+                    <FbStack GM PL WBA WFL WRL>
+                        <FbText L B>Textes</FbText>
+                        <ValueSlider Label="Subtle" @bind-Value="Model.TextSubtle" />
+                        <ValueSlider Label="Muted" @bind-Value="Model.TextMuted" />
+                        <ValueSlider Label="Default" @bind-Value="Model.TextDefault" />
+                        <ValueSlider Label="Highlight" @bind-Value="Model.TextHighlight" />
+
+                        <FbText L B>Contraste WCAG</FbText>
+                        <FbText XS Muted>Plus faible ratio de chaque texte, sur tous les fonds de toutes les variantes.</FbText>
+                        @foreach (var (text, entry) in WorstContrasts)
+                        {
+                            <FbVariant Variant="@(entry.MeetsAA ? FbThemeVariants.Success : entry.MeetsAALarge ? FbThemeVariants.Warning : FbThemeVariants.Error)">
+                                <FbRow GS PS PHM WBA WRM>
+                                    <FbText S B>@text</FbText>
+                                    <FbText S>@entry.Ratio.ToString("0.0"):1</FbText>
+                                    <FbRowSpacer />
+                                    <FbText XS Muted>@entry.Variant sur @entry.Background</FbText>
+                                </FbRow>
+                            </FbVariant>
+                        }
+                    </FbStack>
+                </FbGridItem>
+            </FbGridContainer>
+            <FbRow JHE>
+                <FbButton WBN Icon="@FbMaterialIcons.RestartAlt" OnClick="() => LoadBranch(Model.Branch)"><FbText S>Réinitialiser la branche @Model.Branch</FbText></FbButton>
+            </FbRow>
+            break;
+    }
 
     <FbTheme Setup="@Model.Setup" Branch="@Model.Branch" Scoped>
         <ThemePreview />
@@ -108,6 +173,8 @@
 </FbStack>
 
 @code {
+    private static readonly IReadOnlyList<object> EditTabs = ["Espacements et rayons", "Typographie", "Branches et mélanges"];
+
     [Parameter]
     public ThemeEditorPage Item { get; set; } = default!;
 

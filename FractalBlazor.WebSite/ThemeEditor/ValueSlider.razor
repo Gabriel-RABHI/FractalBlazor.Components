@@ -1,0 +1,39 @@
+@* One numeric value of the theme (a mix, a length, a coefficient, a weight), sent while the
+   thumb moves and shown with its unit. *@
+@using System.Globalization
+
+<FbInputRange TValue="double" TAction="FbSetValue<double>" Value="Value" ValueChanged="ValueChanged"
+              Min="Min" Max="Max" Step="Step" Immediate>
+    <StartContent>
+        <FbRowItem Style="min-width:6.5rem"><FbText S Subtle>@Label</FbText></FbRowItem>
+    </StartContent>
+    <EndContent>
+        <FbRowItem Style="min-width:4.5rem;justify-content:flex-end"><FbText S>@(Value.ToString("0.####", CultureInfo.InvariantCulture) + Unit)</FbText></FbRowItem>
+    </EndContent>
+</FbInputRange>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Label { get; set; } = "";
+
+    [Parameter]
+    public double Value { get; set; }
+
+    [Parameter]
+    public EventCallback<double> ValueChanged { get; set; }
+
+    [Parameter]
+    public double Min { get; set; }
+
+    [Parameter]
+    public double Max { get; set; } = 100;
+
+    [Parameter]
+    public double Step { get; set; } = 0.5;
+
+    /// <summary>
+    /// Shown after the value: <c>%</c>, <c>rem</c>, <c>px</c>, or nothing.
+    /// </summary>
+    [Parameter]
+    public string Unit { get; set; } = "%";
+}
