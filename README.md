@@ -41,13 +41,17 @@ Le raisonnement complet est dans [Conception.md](Conception.md), le modèle de t
 | --- | --- |
 | `FractalBlazor.Components.Layout`, `.Forms`, `.Common` | Les bibliothèques génériques, publiées en paquets. |
 | `FractalBlazor.Components.Benchmarks` | Comparaisons de rendu avec `ComponentBase` et MudBlazor. |
-| `FractalBlazor.Components.Tests` | Tests xUnit et bUnit. |
+| `FractalBlazor.Components.Tests` | Tests xUnit et bUnit des bibliothèques. |
 | `FractalBlazor.Components.Tools` | Outil qui produit la palette de base à partir d'une image. |
-| `FractalBlazor.WebSite` | Le site : documentation, démos, éditeur de thème et leurs modèles d'état, en bibliothèque de composants. Il ne dépend d'aucun hôte. |
+| `FractalBlazor.WebSite.StateModel` | Le modèle d'état du site : en-tête, navigation, pages, formulaire de contact, sélecteur de thème. Des classes simples, qui ne référencent que `FractalBlazor.Components.Common`. |
+| `FractalBlazor.WebSite.StateModel.Tests` | Tests xUnit du modèle, pilotés sans interface. |
+| `FractalBlazor.WebSite` | Le site : vues, documentation, démos et éditeur de thème, en bibliothèque de composants. Il référence le modèle et ne dépend d'aucun hôte. |
 | `FractalBlazor.WebSite.ServerSide` | Hôte serveur : Blazor interactif côté serveur, avec rendu initial. |
 | `FractalBlazor.WebSite.ClientSide` | Hôte WebAssembly : des fichiers statiques, servis par n'importe quel serveur web. |
 
-Chaque hôte ne fournit que la page HTML et le mode de thème initial, lu dans un cookie avant le premier rendu : par le serveur pendant son rendu, par JS côté WebAssembly. Les deux appellent `AddFractalBlazorWebSite()` et rendent `WebSiteApplication`.
+Quand le modèle a besoin d'un service qui vit dans une assembly qui le référence, il déclare une interface ; cette assembly l'implémente et l'injecte. Ainsi `ThemeSelectorState` enregistre le mode choisi par `IThemeModeStore`, que `FractalBlazor.WebSite` implémente avec un cookie et enregistre dans `AddFractalBlazorWebSite()`.
+
+Chaque hôte ne fournit que la page HTML et le mode de thème initial, relu dans ce cookie avant le premier rendu : par le serveur pendant son rendu, par JS côté WebAssembly. Les deux appellent `AddFractalBlazorWebSite()` et rendent `WebSiteApplication`.
 
 ## Installation
 
@@ -210,6 +214,10 @@ dotnet build FractalBlazor.Components.slnx
 
 ```bash
 dotnet test --project FractalBlazor.Components.Tests/FractalBlazor.Components.Tests.csproj
+```
+
+```bash
+dotnet test --project FractalBlazor.WebSite.StateModel.Tests/FractalBlazor.WebSite.StateModel.Tests.csproj
 ```
 
 Le site, rendu côté serveur (`http://localhost:5115`) :

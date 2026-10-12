@@ -118,7 +118,7 @@ Les états du site quittent `FractalBlazor.WebSite` pour `FractalBlazor.WebSite.
 - [x] **9.1 Projet FractalBlazor.WebSite.StateModel.** Bibliothèque de classes qui reçoit le contenu de `States` sous l'espace de noms `FractalBlazor.WebSite.StateModel`. `FractalBlazor.WebSite` la référence.
 - [x] **9.2 Projet FractalBlazor.WebSite.StateModel.Tests.** Projet xUnit qui reçoit les tests de navigation, jusqu'ici dans `FractalBlazor.Components.Tests` ; ce dernier ne teste plus que les bibliothèques. La CI exécute les deux projets.
 - [x] **9.3 Services du modèle.** Enregistrer le mode de thème choisi est l'affaire de l'état, pas de la vue. `ThemeSelectorState` reçoit un `IThemeModeStore` déclaré dans le modèle ; `FractalBlazor.WebSite` l'implémente avec le cookie (JS) et l'enregistre dans `AddFractalBlazorWebSite()`. `SetMode` enregistre le choix, `Restore` applique le mode relu par l'hôte sans le réécrire. La vue n'envoie plus que l'action.
-- [ ] **9.4 Documentation.** README : les projets du site et la règle des services du modèle.
+- [x] **9.4 Documentation.** README : les projets du site et la règle des services du modèle.
 
 ## Critères de fin
 
