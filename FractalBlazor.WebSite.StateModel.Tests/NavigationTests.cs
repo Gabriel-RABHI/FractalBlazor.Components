@@ -1,10 +1,9 @@
 using FractalBlazor.Components.Common.Contracts;
-using FractalBlazor.WebSite.StateModel;
 
-namespace FractalBlazor.Components.Tests.Demo;
+namespace FractalBlazor.WebSite.StateModel.Tests;
 
 /// <summary>
-/// The demo application is a model: these tests drive it without any interface.
+/// The web site is a model: these tests drive it without any interface.
 /// </summary>
 public sealed class NavigationTests
 {

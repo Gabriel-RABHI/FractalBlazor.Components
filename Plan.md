@@ -116,7 +116,7 @@ Les bibliothèques génériques restent `Layout`, `Forms` et `Common` ; `Benchma
 Les états du site quittent `FractalBlazor.WebSite` pour `FractalBlazor.WebSite.StateModel`, qui ne référence que `FractalBlazor.Components.Common` : aucun composant, aucune API d'hôte. Quand le modèle a besoin d'un service qui vit dans une assembly qui le référence, il déclare une interface ; `FractalBlazor.WebSite` l'implémente et l'injecte. Les vues restent dans `FractalBlazor.WebSite`, chargée avant le premier rendu d'un état : le registre de vues les trouve toujours.
 
 - [x] **9.1 Projet FractalBlazor.WebSite.StateModel.** Bibliothèque de classes qui reçoit le contenu de `States` sous l'espace de noms `FractalBlazor.WebSite.StateModel`. `FractalBlazor.WebSite` la référence.
-- [ ] **9.2 Projet FractalBlazor.WebSite.StateModel.Tests.** Projet xUnit qui reçoit les tests de navigation, jusqu'ici dans `FractalBlazor.Components.Tests` ; ce dernier ne teste plus que les bibliothèques. La CI exécute les deux projets.
+- [x] **9.2 Projet FractalBlazor.WebSite.StateModel.Tests.** Projet xUnit qui reçoit les tests de navigation, jusqu'ici dans `FractalBlazor.Components.Tests` ; ce dernier ne teste plus que les bibliothèques. La CI exécute les deux projets.
 - [ ] **9.3 Services du modèle.** Enregistrer le mode de thème choisi est l'affaire de l'état, pas de la vue. `ThemeSelectorState` reçoit un `IThemeModeStore` déclaré dans le modèle ; `FractalBlazor.WebSite` l'implémente avec le cookie (JS) et l'enregistre dans `AddFractalBlazorWebSite()`. `SetMode` enregistre le choix, `Restore` applique le mode relu par l'hôte sans le réécrire. La vue n'envoie plus que l'action.
 - [ ] **9.4 Documentation.** README : les projets du site et la règle des services du modèle.
 

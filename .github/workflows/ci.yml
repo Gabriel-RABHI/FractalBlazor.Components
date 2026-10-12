@@ -22,8 +22,11 @@ jobs:
       - name: Build
         run: dotnet build FractalBlazor.Components.slnx --configuration Release --no-restore -warnaserror
 
-      - name: Test
+      - name: Test the libraries
         run: dotnet test --project FractalBlazor.Components.Tests/FractalBlazor.Components.Tests.csproj --configuration Release --no-build
+
+      - name: Test the site state model
+        run: dotnet test --project FractalBlazor.WebSite.StateModel.Tests/FractalBlazor.WebSite.StateModel.Tests.csproj --configuration Release --no-build
 
       - name: Pack
         run: |
