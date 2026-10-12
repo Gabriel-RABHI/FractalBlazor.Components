@@ -1,0 +1,24 @@
+@* One length of the theme, in rem by steps of one pixel, sent while the thumb moves. *@
+<FbInputRange TValue="double" TAction="FbSetValue<double>" Value="Value" ValueChanged="ValueChanged"
+              Min="0" Max="Max" Step="0.0625" Immediate>
+    <StartContent>
+        <FbRowItem Style="min-width:6.5rem"><FbText S Subtle>@Label</FbText></FbRowItem>
+    </StartContent>
+    <EndContent>
+        <FbRowItem Style="min-width:4.5rem;justify-content:flex-end"><FbText S>@ThemeEditorModel.CssRem(Value)</FbText></FbRowItem>
+    </EndContent>
+</FbInputRange>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Label { get; set; } = "";
+
+    [Parameter]
+    public double Value { get; set; }
+
+    [Parameter]
+    public EventCallback<double> ValueChanged { get; set; }
+
+    [Parameter]
+    public double Max { get; set; } = 2;
+}

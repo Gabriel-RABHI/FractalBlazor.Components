@@ -11,7 +11,8 @@
     <FbText M Muted>
         Les réglages construisent un FbThemeSetup dérivé du thème par défaut. L’aperçu l’applique
         avec un FbTheme Scoped, sans toucher au reste de la page. Changer de branche repart des
-        valeurs de cette branche.
+        valeurs de cette branche ; les espacements et les rayons, communs à tout le thème, sont
+        conservés.
     </FbText>
 
     <FbGridContainer Columns="1" ColumnsM="2" ColumnsXL="3" GL JVS>
@@ -71,6 +72,26 @@
                         </FbRow>
                     </FbVariant>
                 }
+            </FbStack>
+        </FbGridItem>
+
+        <FbGridItem>
+            <FbStack GM PL WBA WFL WRL>
+                <FbText L B>Espacements et rayons</FbText>
+                <FbText XS Muted>Valeurs du thème, communes à ses deux branches.</FbText>
+                <LengthSlider Label="Espacement S" Max="4" @bind-Value="Model.SpaceS" />
+                <LengthSlider Label="Espacement M" Max="4" @bind-Value="Model.SpaceM" />
+                <LengthSlider Label="Espacement L" Max="4" @bind-Value="Model.SpaceL" />
+                <LengthSlider Label="Espacement X" Max="4" @bind-Value="Model.SpaceX" />
+                <LengthSlider Label="Rayon S" @bind-Value="Model.RadiusS" />
+                <LengthSlider Label="Rayon M" @bind-Value="Model.RadiusM" />
+                <LengthSlider Label="Rayon L" @bind-Value="Model.RadiusL" />
+                <LengthSlider Label="Rayon X" @bind-Value="Model.RadiusX" />
+                <FbRow JHE>
+                    <FbButton WBN Icon="@FbMaterialIcons.RestartAlt" OnClick="Model.ResetShape">
+                        <FbText S>Réinitialiser</FbText>
+                    </FbButton>
+                </FbRow>
             </FbStack>
         </FbGridItem>
     </FbGridContainer>

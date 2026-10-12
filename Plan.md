@@ -120,6 +120,13 @@ Les états du site quittent `FractalBlazor.WebSite` pour `FractalBlazor.WebSite.
 - [x] **9.3 Services du modèle.** Enregistrer le mode de thème choisi est l'affaire de l'état, pas de la vue. `ThemeSelectorState` reçoit un `IThemeModeStore` déclaré dans le modèle ; `FractalBlazor.WebSite` l'implémente avec le cookie (JS) et l'enregistre dans `AddFractalBlazorWebSite()`. `SetMode` enregistre le choix, `Restore` applique le mode relu par l'hôte sans le réécrire. La vue n'envoie plus que l'action.
 - [x] **9.4 Documentation.** README : les projets du site et la règle des services du modèle.
 
+## Phase 10 — Espacements et rayons dans l'éditeur de thème
+
+Les espacements (`Spacings`) et les rayons, ou courbures (`Corners`), sont des valeurs du thème communes à toutes ses branches. L'éditeur ne réglait que des valeurs de branche ; il règle désormais aussi celles-ci.
+
+- [x] **10.1 Éditeur de thème.** Une carte « Espacements et rayons » règle les quatre espacements et les quatre rayons S, M, L, X, en rem, comme le thème par défaut. Ces valeurs appartiennent au thème, pas à la branche : changer de branche les conserve, et la carte a son propre bouton de réinitialisation. L'aperçu montre les quatre rayons et les quatre espacements, et le code C# déclare `Spacings` et `Corners` au niveau du thème quand ils diffèrent du thème par défaut.
+- [ ] **10.2 Documentation.** README : ce que règle l'éditeur.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :
