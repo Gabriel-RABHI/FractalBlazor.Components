@@ -10,9 +10,54 @@
         <FbDynamicView TSelector="ViewSelector" Item="Item.Contact" Selector="ViewSelector.Editor" />
         <FbDynamicView TSelector="ViewSelector" Item="Item.Contact" Selector="ViewSelector.Summary" />
     </FbRow>
+
+    <FbText L B>Cases à cocher</FbText>
+    <FbText M Muted>
+        La case est dessinée avec le thème, à côté d’un contenu quelconque. Mirror la place à droite,
+        Circle l’arrondit, Top, Center et Bottom l’alignent sur un contenu plus haut qu’elle.
+    </FbText>
+    <FbGridContainer Columns="1" ColumnsM="2" GL JVS>
+        <FbGridItem>
+            <FbStack GM>
+                <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_checks[0]">
+                    <FbStack PM WFL WRM><FbText S>Par défaut : case à gauche, centrée</FbText></FbStack>
+                </FbCheckbox>
+                <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_checks[1]" Mirror>
+                    <FbStack PM WFL WRM><FbText S>Mirror : case à droite</FbText></FbStack>
+                </FbCheckbox>
+                <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_checks[2]" Circle>
+                    <FbStack PM WFL WRM><FbText S>Circle : case ronde</FbText></FbStack>
+                </FbCheckbox>
+                <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_checks[3]" Circle Top>
+                    <FbStack PM WFL WRM MinHeight="5rem" JVC><FbText S>Top : alignée en haut du contenu</FbText></FbStack>
+                </FbCheckbox>
+            </FbStack>
+        </FbGridItem>
+        <FbGridItem>
+            <FbStack GM>
+                <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_checks[4]" Circle Center>
+                    <FbStack PM WFL WRM MinHeight="5rem" JVC><FbText S>Center : centrée sur le contenu</FbText></FbStack>
+                </FbCheckbox>
+                <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_checks[5]" Circle Bottom>
+                    <FbStack PM WFL WRM MinHeight="5rem" JVC><FbText S>Bottom : alignée en bas du contenu</FbText></FbStack>
+                </FbCheckbox>
+                <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_checks[6]" Mirror Top>
+                    <FbStack GS>
+                        <FbText S B>Conditions d’utilisation</FbText>
+                        <FbText S Muted>
+                            Le contenu peut être n’importe quel balisage : un titre, un paragraphe,
+                            une carte… La case suit son alignement.
+                        </FbText>
+                    </FbStack>
+                </FbCheckbox>
+            </FbStack>
+        </FbGridItem>
+    </FbGridContainer>
 </FbStack>
 
 @code {
     [Parameter]
     public FormsPage Item { get; set; } = default!;
+
+    private readonly bool[] _checks = [true, false, true, false, true, false, false];
 }

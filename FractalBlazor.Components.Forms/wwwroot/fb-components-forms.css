@@ -203,13 +203,96 @@
     user-select: none;
 }
 
-.fb-checkbox {
-    width: 1.1em;
-    height: 1.1em;
+/* Checkbox: the native input is hidden but stays focusable and announced; the box is
+   drawn with the theme next to its content, which takes the remaining width. Checked,
+   it takes the Highlight text color, made to stand out on every background, and the mark
+   takes the current background. */
+.fb-check {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--fb-space-m);
+    cursor: pointer;
+    user-select: none;
+}
+
+.fb-check-top {
+    align-items: flex-start;
+}
+
+.fb-check-bottom {
+    align-items: flex-end;
+}
+
+.fb-check-mirror {
+    flex-direction: row-reverse;
+}
+
+.fb-check-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
     margin: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.fb-check-box {
     flex: none;
-    accent-color: var(--fb-control-accent);
-    cursor: inherit;
+    display: inline-grid;
+    place-items: center;
+    box-sizing: border-box;
+    width: 1.25em;
+    height: 1.25em;
+    border: 1px solid color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-strong-mix));
+    border-radius: var(--fb-radius-s);
+    color: var(--fb-current-bg);
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.fb-check-circle .fb-check-box {
+    border-radius: 50%;
+}
+
+.fb-check-mark {
+    width: 0.9em;
+    height: 0.9em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.15s ease-in-out, transform 0.15s ease-in-out;
+}
+
+.fb-check:hover .fb-check-box {
+    border-color: var(--fb-fg-muted);
+}
+
+.fb-check-input:checked + .fb-check-box {
+    background: var(--fb-fg-highlight);
+    border-color: var(--fb-fg-highlight);
+}
+
+.fb-check-input:checked + .fb-check-box .fb-check-mark {
+    opacity: 1;
+    transform: none;
+}
+
+.fb-check-input:focus-visible + .fb-check-box {
+    outline: 2px solid var(--fb-fg-highlight);
+    outline-offset: 2px;
+}
+
+.fb-check-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.fb-check:has(:disabled) {
+    cursor: not-allowed;
 }
 
 .fb-switch {
@@ -246,7 +329,6 @@
     background: var(--fb-control-accent-fg);
 }
 
-.fb-checkbox:focus-visible,
 .fb-switch:focus-visible {
     outline: 2px solid var(--fb-control-accent);
     outline-offset: 2px;

@@ -43,17 +43,8 @@ namespace FractalBlazor.Components.Forms.Inputs
             builder.CloseElement();
         }
 
-        private Task HandleChangeAsync(ChangeEventArgs e)
+        protected Task HandleChangeAsync(ChangeEventArgs e)
             => CommitAsync(e.Value is bool value ? value : bool.TryParse(e.Value?.ToString(), out var parsed) && parsed);
-    }
-
-    /// <summary>
-    /// Checkbox colored by the theme through <c>accent-color</c>.
-    /// </summary>
-    public class FbCheckbox<TAction> : FbToggleBase<TAction>
-        where TAction : IStateAction<bool>
-    {
-        protected override string InputClass => "fb-checkbox";
     }
 
     /// <summary>

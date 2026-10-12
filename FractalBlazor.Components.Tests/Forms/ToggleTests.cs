@@ -33,9 +33,69 @@ public sealed class ToggleTests : BunitContext
     {
         var cut = Render<FbCheckbox<SubscribeAction>>(p => p.Add(x => x.Value, true).AddChildContent("Newsletter"));
 
-        var label = cut.Find("label.fb-toggle");
+        var label = cut.Find("label.fb-check");
         Assert.Equal("Newsletter", label.TextContent);
-        Assert.True(label.QuerySelector("input.fb-checkbox")!.HasAttribute("checked"));
+        Assert.True(label.QuerySelector("input.fb-check-input")!.HasAttribute("checked"));
+        Assert.Equal("Newsletter", label.QuerySelector(".fb-check-content")!.TextContent);
+    }
+
+    [Fact]
+    public void Checkbox_draws_its_box_before_the_content_and_centers_it()
+    {
+        var cut = Render<FbCheckbox<SubscribeAction>>(p => p.AddChildContent("Newsletter"));
+
+        var label = cut.Find("label");
+        Assert.Equal(["input", "span", "span"], label.Children.Select(child => child.LocalName));
+        Assert.Contains("fb-check-box", label.Children[1].ClassList);
+        Assert.Equal("true", label.Children[1].GetAttribute("aria-hidden"));
+        Assert.Contains("fb-check-center", label.ClassList);
+        Assert.DoesNotContain("fb-check-mirror", label.ClassList);
+        Assert.DoesNotContain("fb-check-circle", label.ClassList);
+    }
+
+    [Fact]
+    public void Checkbox_options_set_their_classes()
+    {
+        var cut = Render<FbCheckbox<SubscribeAction>>(p => p.Add(x => x.Mirror, true).Add(x => x.Circle, true).Add(x => x.Bottom, true));
+
+        var label = cut.Find("label");
+        Assert.Contains("fb-check-mirror", label.ClassList);
+        Assert.Contains("fb-check-circle", label.ClassList);
+        Assert.Contains("fb-check-bottom", label.ClassList);
+        Assert.DoesNotContain("fb-check-center", label.ClassList);
+    }
+
+    [Fact]
+    public void Checkbox_alignment_can_be_computed()
+    {
+        var cut = Render<FbCheckbox<SubscribeAction>>(p => p.Add(x => x.Align, FbCheckboxAlign.Top));
+
+        Assert.Contains("fb-check-top", cut.Find("label").ClassList);
+    }
+
+    [Fact]
+    public void Checkbox_options_follow_the_parameters()
+    {
+        var cut = Render<FbCheckbox<SubscribeAction>>(p => p.Add(x => x.Mirror, true).Add(x => x.Top, true));
+
+        cut.Render(p => p.Add(x => x.Circle, true));
+
+        var label = cut.Find("label");
+        Assert.DoesNotContain("fb-check-mirror", label.ClassList);
+        Assert.Contains("fb-check-center", label.ClassList);
+        Assert.Contains("fb-check-circle", label.ClassList);
+    }
+
+    [Fact]
+    public void Disabled_checkbox_sends_nothing()
+    {
+        var state = new NewsletterState();
+        var cut = Render<FbCheckbox<SubscribeAction>>(p => p.Add(x => x.Handler, state).Add(x => x.Disabled, true));
+
+        cut.Find("input").Change(true);
+
+        Assert.False(state.Subscribed);
+        Assert.True(cut.Find("input").HasAttribute("disabled"));
     }
 
     [Fact]

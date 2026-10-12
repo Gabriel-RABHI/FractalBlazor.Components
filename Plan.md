@@ -141,6 +141,10 @@ Les espacements (`Spacings`) et les rayons, ou courbures (`Corners`), sont des v
 - [x] **12.1 Une valeur par branche.** Changer de branche ne recharge plus les valeurs par défaut : chaque branche garde ses mélanges et ses ancres, et l'aperçu comme le code C# déclarent toutes les branches modifiées.
 - [x] **12.2 Enregistrement automatique.** L'état de l'éditeur (valeurs du thème, de chaque branche, branche, variante et onglet ouverts) est enregistré dans le navigateur à chaque modification, et restauré à l'ouverture de l'éditeur, sur les deux hôtes. Un rechargement, une coupure du circuit ou un redémarrage ne perdent plus rien. « Repartir du thème par défaut » efface la session, après confirmation.
 
+## Phase 13 — Case à cocher dessinée par le thème
+
+- [x] **13.1 FbCheckbox personnalisé.** La case native, cachée mais focalisable et annoncée, porte l'état ; une case carrée (ou ronde, `Circle`) est dessinée avec le thème à côté d'un contenu quelconque, qui prend la largeur restante. `Mirror` la place à droite ; `Top`, `Center` (par défaut) et `Bottom` l'alignent sur un contenu plus haut, `Align` en donne la valeur calculée. Cochée, elle prend la couleur de texte Highlight, faite pour ressortir sur tous les fonds. Démonstration dans la page Formulaires.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :
