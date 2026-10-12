@@ -1,4 +1,4 @@
-namespace FractalBlazor.WebSite.States
+namespace FractalBlazor.WebSite.StateModel
 {
     // The models of the pages, one type per page: the content area renders each with the
     // view declared for its type. A documentation page needs no data, its type is enough.

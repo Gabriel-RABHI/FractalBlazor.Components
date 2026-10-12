@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace FractalBlazor.WebSite.States
+namespace FractalBlazor.WebSite.StateModel
 {
     /// <summary>
     /// The demo application, held entirely by its state. Every element of the screen is a

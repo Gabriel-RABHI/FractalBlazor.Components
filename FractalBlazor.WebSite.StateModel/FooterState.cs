@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using FractalBlazor.Components.Common.Contracts;
 
-namespace FractalBlazor.WebSite.States
+namespace FractalBlazor.WebSite.StateModel
 {
     /// <summary>
     /// The footer: a line of text and the theme selector.

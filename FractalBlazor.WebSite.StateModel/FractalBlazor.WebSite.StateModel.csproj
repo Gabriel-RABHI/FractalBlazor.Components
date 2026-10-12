@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The states of the web site: plain classes, free of components and of any host API.
+       A service that lives in an assembly referencing this one is declared here as an
+       interface, and implemented and injected by that assembly. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FractalBlazor.Components.Common\FractalBlazor.Components.Common.csproj" />
+  </ItemGroup>
+
+</Project>

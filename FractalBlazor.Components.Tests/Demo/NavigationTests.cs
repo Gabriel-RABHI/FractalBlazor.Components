@@ -1,5 +1,5 @@
 using FractalBlazor.Components.Common.Contracts;
-using FractalBlazor.WebSite.States;
+using FractalBlazor.WebSite.StateModel;
 
 namespace FractalBlazor.Components.Tests.Demo;
 

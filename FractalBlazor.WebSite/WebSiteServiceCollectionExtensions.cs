@@ -1,5 +1,5 @@
 using FractalBlazor.Components.Forms;
-using FractalBlazor.WebSite.States;
+using FractalBlazor.WebSite.StateModel;
 using FractalBlazor.WebSite.ThemeEditor;
 using Microsoft.Extensions.DependencyInjection;
 

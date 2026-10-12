@@ -21,6 +21,7 @@
     <ProjectReference Include="..\FractalBlazor.Components.Common\FractalBlazor.Components.Common.csproj" />
     <ProjectReference Include="..\FractalBlazor.Components.Forms\FractalBlazor.Components.Forms.csproj" />
     <ProjectReference Include="..\FractalBlazor.Components.Layout\FractalBlazor.Components.Layout.csproj" />
+    <ProjectReference Include="..\FractalBlazor.WebSite.StateModel\FractalBlazor.WebSite.StateModel.csproj" />
   </ItemGroup>
 
 </Project>

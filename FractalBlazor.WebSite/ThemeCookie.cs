@@ -1,5 +1,5 @@
 using FractalBlazor.Components.Forms.Theming.Constants;
-using FractalBlazor.WebSite.States;
+using FractalBlazor.WebSite.StateModel;
 
 namespace FractalBlazor.WebSite;
 

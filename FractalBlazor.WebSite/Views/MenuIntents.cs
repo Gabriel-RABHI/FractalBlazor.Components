@@ -1,6 +1,6 @@
 using FractalBlazor.Components.Forms.Icons;
 using FractalBlazor.Components.Forms.Mapping;
-using FractalBlazor.WebSite.States;
+using FractalBlazor.WebSite.StateModel;
 
 namespace FractalBlazor.WebSite.Views
 {
