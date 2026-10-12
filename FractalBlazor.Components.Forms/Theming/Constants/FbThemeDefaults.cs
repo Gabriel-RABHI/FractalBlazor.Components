@@ -47,7 +47,7 @@ public static class FbThemeDefaults
             TextVariantMix = new FbThemeFormTextVariantMix
             {
                 DefaultHighMix = "75%",
-                SubtleHighMix = "12%",
+                SubtleHighMix = "20%",
                 MutedHighMix = "35%",
                 HighlightHighMix = "100%"
             },
@@ -60,7 +60,7 @@ public static class FbThemeDefaults
             SurfaceMix = CreateSurfaceMix(),
             Variants =
             [
-                Variant(FbThemeVariants.Default, "#15151e", "#1f2023", "#303240", "#f0f3f4", "#1b1b27", "#686d97"),
+                Variant(FbThemeVariants.Default, "#15151e", "#292a2e", "#303240", "#f0f3f4", "#1b1b27", "#686d97"),
                 Variant(FbThemeVariants.Selected, "#0d0c1d", "#163cfe", "#2448ff", "#e5f2ff", "#141051", "#395afe"),
                 Variant(FbThemeVariants.Error, "#270707", "#fb0404", "#a02222", "#febebe", "#330a0a", "#fb0404"),
                 Variant(FbThemeVariants.Warning, "#1d1002", "#ff8800", "#ff7300", "#d2b5a3", "#2b1803", "#ff8800"),
@@ -77,8 +77,8 @@ public static class FbThemeDefaults
             TextVariantMix = new FbThemeFormTextVariantMix
             {
                 DefaultHighMix = "75%",
-                SubtleHighMix = "25%",
-                MutedHighMix = "45%",
+                SubtleHighMix = "30%",
+                MutedHighMix = "50%",
                 HighlightHighMix = "100%"
             },
             BordersMix = new FbThemeLayoutBordersMix
@@ -90,7 +90,7 @@ public static class FbThemeDefaults
             SurfaceMix = CreateSurfaceMix(),
             Variants =
             [
-                Variant(FbThemeVariants.Default, "#f2f2f2", "#acafcd", "#deedf2", "#1d1d2f", "#e3e3e3", "#484a61"),
+                Variant(FbThemeVariants.Default, "#ffffff", "#e2e3e9", "#deedf2", "#1d1d2f", "#e3e3e3", "#484a61"),
                 Variant(FbThemeVariants.Selected, "#e5f2ff", "#526eff", "#9ecfff", "#0a1b43", "#e5f2ff", "#002aff"),
                 Variant(FbThemeVariants.Error, "#fde7e7", "#fb0404", "#fde7f0", "#480505", "#fde7e7", "#fb0404"),
                 Variant(FbThemeVariants.Warning, "#fff4e5", "#ffa200", "#fff9e5", "#331600", "#fee5c3", "#d18400"),

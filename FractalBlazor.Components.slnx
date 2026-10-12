@@ -1,13 +1,17 @@
 <Solution>
-  <Project Path="FractalBlazor.Components.Benchmarks/FractalBlazor.Components.Benchmarks.csproj" />
-  <Project Path="FractalBlazor.Components.Common/FractalBlazor.Components.Common.csproj" Id="45542248-574f-48cf-8c6f-3dde5ae4cf8b" />
-  <Project Path="FractalBlazor.Components.Forms/FractalBlazor.Components.Forms.csproj" />
-  <Project Path="FractalBlazor.Components.Layout/FractalBlazor.Components.Layout.csproj" />
-  <Project Path="FractalBlazor.Components.Tests/FractalBlazor.Components.Tests.csproj" />
-  <Project Path="FractalBlazor.Components.Tools/FractalBlazor.Components.Tools.csproj" Id="df095f25-2c5b-4917-a768-30a4c8e5c10d" />
-  <Project Path="FractalBlazor.WebSite.ClientSide/FractalBlazor.WebSite.ClientSide.csproj" />
-  <Project Path="FractalBlazor.WebSite.ServerSide/FractalBlazor.WebSite.ServerSide.csproj" />
-  <Project Path="FractalBlazor.WebSite.StateModel.Tests/FractalBlazor.WebSite.StateModel.Tests.csproj" />
-  <Project Path="FractalBlazor.WebSite.StateModel/FractalBlazor.WebSite.StateModel.csproj" />
-  <Project Path="FractalBlazor.WebSite/FractalBlazor.WebSite.csproj" />
+  <Folder Name="/Components/">
+    <Project Path="FractalBlazor.Components.Benchmarks/FractalBlazor.Components.Benchmarks.csproj" />
+    <Project Path="FractalBlazor.Components.Common/FractalBlazor.Components.Common.csproj" Id="45542248-574f-48cf-8c6f-3dde5ae4cf8b" />
+    <Project Path="FractalBlazor.Components.Forms/FractalBlazor.Components.Forms.csproj" />
+    <Project Path="FractalBlazor.Components.Layout/FractalBlazor.Components.Layout.csproj" />
+    <Project Path="FractalBlazor.Components.Tests/FractalBlazor.Components.Tests.csproj" />
+    <Project Path="FractalBlazor.Components.Tools/FractalBlazor.Components.Tools.csproj" Id="df095f25-2c5b-4917-a768-30a4c8e5c10d" />
+  </Folder>
+  <Folder Name="/WebSite/">
+    <Project Path="FractalBlazor.WebSite.ClientSide/FractalBlazor.WebSite.ClientSide.csproj" />
+    <Project Path="FractalBlazor.WebSite.ServerSide/FractalBlazor.WebSite.ServerSide.csproj" />
+    <Project Path="FractalBlazor.WebSite.StateModel.Tests/FractalBlazor.WebSite.StateModel.Tests.csproj" />
+    <Project Path="FractalBlazor.WebSite.StateModel/FractalBlazor.WebSite.StateModel.csproj" />
+    <Project Path="FractalBlazor.WebSite/FractalBlazor.WebSite.csproj" />
+  </Folder>
 </Solution>
