@@ -12,5 +12,5 @@
     public ThemeMode InitialMode { get; set; }
 
     protected override void OnInitialized()
-        => Root.Footer.Theme.Handle(new ThemeSelectorState.SetMode(InitialMode));
+        => Root.Footer.Theme.Handle(new ThemeSelectorState.Restore(InitialMode));
 }

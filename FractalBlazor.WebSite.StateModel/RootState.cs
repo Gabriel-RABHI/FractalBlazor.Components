@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations;
 namespace FractalBlazor.WebSite.StateModel
 {
     /// <summary>
-    /// The demo application, held entirely by its state. Every element of the screen is a
+    /// The web site, held entirely by its state. Every element of the screen is a
     /// state object rendered by the view declared for its type: the header with the sections
     /// of the top menu, the menu on the left with the pages of the open section, the open
-    /// page, and the footer. One instance per circuit.
+    /// page, and the footer. One instance per circuit on the server, per page in WebAssembly.
     /// </summary>
     public sealed class RootState
     {
@@ -14,7 +14,8 @@ namespace FractalBlazor.WebSite.StateModel
 
         public const string LinkedInUrl = "https://www.linkedin.com/";
 
-        public RootState()
+        /// <param name="themeModeStore">Keeps the theme mode chosen in the footer.</param>
+        public RootState(IThemeModeStore themeModeStore)
         {
             Navigation = new NavigationState();
             Header = new HeaderState(
@@ -42,7 +43,7 @@ namespace FractalBlazor.WebSite.StateModel
                     new ExternalLinkState(MenuItemIntent.GitHub, RepositoryUrl),
                     new ExternalLinkState(MenuItemIntent.LinkedIn, LinkedInUrl)
                 ]);
-            Footer = new FooterState("Composants Blazor state-first", new ThemeSelectorState());
+            Footer = new FooterState("Composants Blazor state-first", new ThemeSelectorState(themeModeStore));
 
             Navigation.Open(Header.Sections[0]);
         }

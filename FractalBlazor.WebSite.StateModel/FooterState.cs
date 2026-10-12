@@ -33,7 +33,22 @@ namespace FractalBlazor.WebSite.StateModel
     /// </summary>
     public sealed class ThemeSelectorState : ObservableState
     {
+        private readonly IThemeModeStore _store;
+
+        /// <summary>
+        /// The mode chosen by the user: applied and saved.
+        /// </summary>
         public sealed record SetMode(ThemeMode Value) : IStateAction<ThemeMode>;
+
+        /// <summary>
+        /// The mode read back by the host before the first render: applied, not saved again.
+        /// </summary>
+        public sealed record Restore(ThemeMode Value) : IStateAction<ThemeMode>;
+
+        public ThemeSelectorState(IThemeModeStore store)
+        {
+            _store = store;
+        }
 
         public static IReadOnlyList<ThemeMode> Modes { get; } = [ThemeMode.Dark, ThemeMode.Light];
 
@@ -41,11 +56,20 @@ namespace FractalBlazor.WebSite.StateModel
 
         public void Handle(SetMode action)
         {
-            if (Mode == action.Value)
-                return;
+            if (Apply(action.Value))
+                _store.Save(action.Value);
+        }
 
-            Mode = action.Value;
+        public void Handle(Restore action) => Apply(action.Value);
+
+        private bool Apply(ThemeMode mode)
+        {
+            if (Mode == mode)
+                return false;
+
+            Mode = mode;
             NotifyStateChanged();
+            return true;
         }
     }
 }

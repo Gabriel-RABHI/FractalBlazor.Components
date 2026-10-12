@@ -7,7 +7,7 @@ namespace FractalBlazor.WebSite.StateModel.Tests;
 /// </summary>
 public sealed class NavigationTests
 {
-    private readonly RootState _root = new();
+    private readonly RootState _root = new(new RecordingThemeModeStore());
 
     private SectionState Section(MenuItemIntent intent) => _root.Header.Sections.Single(s => s.Intent == intent);
 
@@ -110,18 +110,5 @@ public sealed class NavigationTests
         forms.Handle(new SelectableEntryState.Select());
 
         Assert.Equal("Ada", ((FormsPage)_root.Navigation.Content.Page!).Contact.Name);
-    }
-
-    [Fact]
-    public void Theme_selector_notifies_when_the_mode_changes()
-    {
-        var theme = _root.Footer.Theme;
-        var notifications = CountNotifications(theme);
-
-        theme.Handle(new ThemeSelectorState.SetMode(ThemeMode.Light));
-        theme.Handle(new ThemeSelectorState.SetMode(ThemeMode.Light));
-
-        Assert.Equal(ThemeMode.Light, theme.Mode);
-        Assert.Equal(1, notifications());
     }
 }
