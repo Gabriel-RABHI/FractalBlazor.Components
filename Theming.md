@@ -145,9 +145,9 @@ Un thème Forms possède trois couches strictes.
 | --- | --- | --- |
 | Main | `Spacings`, `Corners`, `Typography` | Commun à toutes les branches et variantes du thème |
 | Branch | `MasterTint`, `TextVariantMix`, `BordersMix`, `SurfaceMix` | Propre à une branche Dark/Light |
-| Variant | `LayoutColors`, `FormColors` | Propre à un état visuel local |
+| Variant | `LayoutColors`, `FormColors`, `FrameColors` | Propre à un état visuel local |
 
-La couche Main ne contient pas les couleurs. Une branche choisit la teinte maître d’échantillonnage ainsi que les mélanges de texte, de surface et de frame adaptés à son contraste. Chaque variante fournit ensuite uniquement les ancres de fond et de premier plan.
+La couche Main ne contient pas les couleurs. Une branche choisit la teinte maître d’échantillonnage ainsi que les mélanges de texte, de surface et de frame adaptés à son contraste. Chaque variante fournit ensuite les ancres de fond et de premier plan, et peut fournir celles de ses filets.
 
 Cette séparation permet à `Error` d'avoir des couleurs différentes en `Dark` et en `Light`, tout en partageant les mêmes espacements, rayons et règles typographiques.
 
@@ -199,6 +199,7 @@ public sealed class FbThemeColorVariant
     // Variant
     public FbThemeLayoutColors? LayoutColors { get; init; }
     public FbThemeFormColors? FormColors { get; init; }
+    public FbThemeFormColors? FrameColors { get; init; }
 }
 ```
 
@@ -589,7 +590,19 @@ Les formules existantes en `oklab` restent statiques et relatives aux variables 
 
 Ces formules doivent être déclarées à la fois sur `:root` et sur `.fb-theme-scope`. Un scope de variante redéfinit les variables actives sur son propre élément ; les variables calculées doivent donc être redéclarées sur ce même élément pour être réévaluées à partir de ces nouvelles valeurs, et non simplement héritées du parent.
 
-Les couleurs de frame restent calculées à partir de `--fb-current-bg`, de `--fb-bg-high-anchor` et du mix temporaire Light/Medium/Strong. Les tailles viennent des variables actives `--fb-frame-*-size`.
+Les couleurs de frame vont de l’ncre basse des filets vers leur ancre haute, au mix temporaire Light/Medium/Strong :
+
+```css
+--fb-frame-border-color: color-mix(
+    in oklab,
+    var(--fb-frame-low-anchor, var(--fb-current-bg)),
+    var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-light-mix)
+);
+```
+
+Une variante sans `FrameColors` n’écrit pas ses ancres de filet : la redirection pointe alors vers une variable indéfinie, l’ncre active reste vide et le repli CSS reprend le fond courant et l’ncre haute des fonds. Un thème sans couleurs de filet rend donc les filets comme avant ; l’Ne des deux ancres peut être déclarée seule. Frames, séparateurs, contours, piste des interrupteurs, anneau de progression et barres de défilement partagent ce calcul.
+
+Le survol ajoute `--fb-hover-mix-offset` aux mixes de fond, de frame et de texte. Sa valeur vient de la branche (`SurfaceMix.HoverOffset`, écrit dans `--fb-bg-hover-offset`, 4 % par défaut) ; l’ppui d’N bouton en ajoute le double, et le paramètre `HoverMixOffset` la remplace sur un composant.
 
 Cette indirection garantit quatre propriétés :
 
@@ -667,14 +680,15 @@ ActiveReference("Error", "bg-low-anchor");
 // --fb-bg-low-anchor:var(--fb-error-bg-low-anchor);
 ```
 
-Les tokens Variant sont centralisés dans `FbThemeCssNames.VariantReferences`, partagé par le générateur du thème, `FbVariant` et `FbLayoutVariant`. Ils forment deux paires d'ancres : `bg` (`FbThemeLayoutColors`) et `fg` (`FbThemeFormColors`). Les mélanges de surface et de frame restent au niveau de la branche.
+Les tokens Variant sont centralisés dans `FbThemeCssNames.VariantReferences`, partagé par le générateur du thème, `FbVariant` et `FbLayoutVariant`. Ils forment trois paires d'ancres : `bg` (`FbThemeLayoutColors`), `fg` (`FbThemeFormColors`) et `frame` (`FrameColors`, facultatives). Les mélanges de surface et de frame restent au niveau de la branche.
 
 ```text
 bg-low-anchor   bg-high-anchor    // Layout et Forms
 fg-low-anchor   fg-high-anchor    // Forms uniquement
+frame-low-anchor frame-high-anchor // si la variante les déclare
 ```
 
-Une variante peut être inversée (`Invert`) : les ancres de fond pointent vers les ancres de premier plan de la variante, et l'inverse. L'ancre absolue du premier plan devient celle du fond, ce qui transforme une variante sombre en variante claire, comme le prévoit `Conception.md`. L'inversion reste une redirection, sans aucune valeur calculée en C#.
+Une variante peut être inversée (`Invert`) : les ancres de fond pointent vers les ancres de premier plan de la variante, et l'inverse. L'ancre absolue du premier plan devient celle du fond, ce qui transforme une variante sombre en variante claire, comme le prévoit `Conception.md`. Les ancres de filet sont échangées entre elles. L'inversion reste une redirection, sans aucune valeur calculée en C#.
 
 Les chaînes de redirection sont construites une fois par combinaison (variante, inversion) puis mises en cache, dans une limite de 256 entrées.
 

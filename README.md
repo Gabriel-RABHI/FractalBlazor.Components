@@ -32,7 +32,7 @@ Le raisonnement complet est dans [Conception.md](Conception.md), le modèle de t
 | Paquet | Contenu |
 | --- | --- |
 | `FractalBlazor.Components.Layout` | `FbPageAnchor`, `FbRow`, `FbStack`, items, séparateurs, `FbGridContainer`, `FbGridItem`, `FbDropDown`, `FbShowWhenVisible`, thème Layout autonome |
-| `FractalBlazor.Components.Forms` | `FbText`, `FbIcon`, `FbButton`, `FbInputText`, `FbInputNumber`, `FbInputDate`, `FbSelect`, `FbCheckbox`, `FbSwitch`, `FbTheme`, `FbVariant`, `FbDynamicView` |
+| `FractalBlazor.Components.Forms` | `FbText`, `FbIcon`, `FbButton`, `FbInputText`, `FbInputNumber`, `FbInputDate`, `FbSelect`, `FbTabs`, `FbCheckbox`, `FbSwitch`, `FbTheme`, `FbVariant`, `FbDynamicView` |
 | `FractalBlazor.Components.Common` | Contrats partagés par les états et les vues : actions, notification, `ViewFor` |
 
 ## Solution
@@ -158,6 +158,21 @@ public static IReadOnlyList<object> ContactOptions { get; } =
 
 La chaîne et les canaux passent par `FbValueView`, la personne par sa propre vue. `ItemSelector` choisit un autre sélecteur, d'une autre énumération si besoin. Le clavier suit le motif ARIA combobox : flèches, Début, Fin, Entrée, Espace, Échap, Tab.
 
+## Onglets
+
+`FbTabs` ne fait que sélectionner un index : l'affichage du contenu de l'onglet choisi revient à la page. Comme les champs, il envoie son action à l'état (`TAction`, `Handler`) ou se lie avec `@bind-Value`, et ses libellés sont rendus par `FbDynamicView`.
+
+```razor
+<FbTabs TAction="FbSetValue<int>" @bind-Value="tab" Items="@(["Compte", "Mot de passe", "Réglages"])" />
+
+@switch (tab)
+{
+    case 0: <AccountView /> break;
+    case 1: <PasswordView /> break;
+    default: <SettingsView /> break;
+}
+```
+
 ## Application d'une seule page
 
 `FbPageAnchor` est la racine d'une application : il occupe toute la fenêtre, qui ne défile jamais, et dispose ses enfants en colonne. Rows et stacks grandissent par défaut. `NoFlex` garde la hauteur de l'en-tête et du pied de page, et une zone `Scrollable` prend l'espace restant puis défile seule, avec sa barre de défilement.
@@ -232,7 +247,7 @@ Le même site en WebAssembly (`http://localhost:5125`) :
 dotnet run --project FractalBlazor.WebSite.ClientSide/FractalBlazor.WebSite.ClientSide.csproj --launch-profile http
 ```
 
-Le site est une application d'une seule page pilotée par son modèle : démarrage rapide, principes state-first, mise en page, formulaires, variantes, et un éditeur de thème où couleurs, mélanges, espacements et rayons se règlent en direct sur un jeu de composants, avec le rapport de contraste et le code C# du thème obtenu. Le plan de finalisation et son avancement sont dans [Plan.md](Plan.md).
+Le site est une application d'une seule page pilotée par son modèle : démarrage rapide, principes state-first, mise en page, formulaires, variantes, et un éditeur de thème où couleurs, filets, mélanges, survol, espacements, rayons et typographie se règlent en direct sur un jeu de composants, avec le rapport de contraste et le code C# du thème obtenu. Le plan de finalisation et son avancement sont dans [Plan.md](Plan.md).
 
 ## Licence
 

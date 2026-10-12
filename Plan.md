@@ -134,7 +134,7 @@ Les espacements (`Spacings`) et les rayons, ou courbures (`Corners`), sont des v
 - [x] **11.3 FbTabs.** Un sélecteur d'index en onglets, state-first comme les champs (`TAction`, `Handler`, `ValueChanged`) : il ne gère pas l'affichage de la page. Les libellés sont rendus par `FbDynamicView`. Rôles ARIA `tablist` et `tab`, flèches, `Début` et `Fin`.
 - [x] **11.4 Éditeur en onglets.** Trois onglets d'édition : « Espacements et rayons », « Typographie » (toutes les valeurs typographiques du thème) et « Branches et mélanges » (couleurs des variantes, y compris les ancres de filet, mélanges de surface, de filet, de survol et de texte, contraste). Les couleurs se copient et se collent d'une ancre à l'autre.
 - [x] **11.5 Aperçu en onglets.** « Surfaces et frames » : Surface, Accent, Highlight et Survol en colonnes, frames Light, Medium et Strong en lignes. « Textes » : de Subtle à Highlight en colonnes, de XS à XL en lignes. « Variantes » : la même grille pour chaque variante, avec un sélecteur de force du texte. « Boutons » : chaque variante sur chaque fond, avec des sélecteurs de frame et de texte. « Formulaire » : le faux formulaire, avec un sélecteur de variante.
-- [ ] **11.6 Documentation.** Theming.md : ancres de filet et décalage de survol ; README : `FbTabs`.
+- [x] **11.6 Documentation.** Theming.md : ancres de filet et décalage de survol ; README : `FbTabs`.
 
 ## Critères de fin
 
