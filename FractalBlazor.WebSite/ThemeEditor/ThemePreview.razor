@@ -1,140 +1,35 @@
-@* Components drawn with the edited theme. The fake form keeps its own values: typing in it
-   re-renders this component only, never the editor or the theme. *@
+@* Components drawn with the edited theme, in tabs. The open tab and the options of each tab
+   live in the editor model, so they survive a change of tab and navigation. *@
+@inject ThemeEditorModel Model
 
 <FbStack GL PL WBS WFM WRL>
     <FbText XL B>Aperçu</FbText>
+    <FbTabs TAction="FbSetValue<int>" @bind-Value="Model.PreviewTab" Items="Tabs" />
 
-    <FbText L B>Surfaces et frames</FbText>
-    <FbRow GM MultiLine JVSt>
-        <FbStack GS PM WBS WFL WRM><FbText S Muted>Surface</FbText><FbText S>Frame Light</FbText></FbStack>
-        <FbStack GS PM WBA WFM WRM><FbText S Muted>Accent</FbText><FbText S>Frame Medium</FbText></FbStack>
-        <FbStack GS PM WBH WFS WRM><FbText S Muted>Highlight</FbText><FbText S>Frame Strong</FbText></FbStack>
-        <FbStack GS PM WBA WFM WRM Hover><FbText S Muted>Survol</FbText><FbText S>Passer la souris</FbText></FbStack>
-    </FbRow>
-
-    <FbText L B>Rayons</FbText>
-    <FbRow GM MultiLine JHS>
-        <FbStack GS PM WBA WFM WRS NoFlex MinWidth="7rem"><FbText S Muted>Rayon</FbText><FbText S>S</FbText></FbStack>
-        <FbStack GS PM WBA WFM WRM NoFlex MinWidth="7rem"><FbText S Muted>Rayon</FbText><FbText S>M</FbText></FbStack>
-        <FbStack GS PM WBA WFM WRL NoFlex MinWidth="7rem"><FbText S Muted>Rayon</FbText><FbText S>L</FbText></FbStack>
-        <FbStack GS PM WBA WFM WRX NoFlex MinWidth="7rem"><FbText S Muted>Rayon</FbText><FbText S>X</FbText></FbStack>
-    </FbRow>
-
-    @* Each row takes the gap and the padding of its size. *@
-    <FbText L B>Espacements</FbText>
-    <FbStack GS>
-        <FbRow GS PS WBA WFL WRM JHS JVC><FbText S Muted>S</FbText>@Swatches</FbRow>
-        <FbRow GM PM WBA WFL WRM JHS JVC><FbText S Muted>M</FbText>@Swatches</FbRow>
-        <FbRow GL PL WBA WFL WRM JHS JVC><FbText S Muted>L</FbText>@Swatches</FbRow>
-        <FbRow GX PX WBA WFL WRM JHS JVC><FbText S Muted>X</FbText>@Swatches</FbRow>
-    </FbStack>
-
-    <FbText L B>Textes</FbText>
-    <FbRow GL WBA WGL WRM PM MultiLine>
-        <FbText M Subtle>Subtle</FbText>
-        <FbText M Muted>Muted</FbText>
-        <FbText M>Default</FbText>
-        <FbText M Highlight>Highlight</FbText>
-        <FbText XL B>Titre XL</FbText>
-        <FbText XS>Note XS</FbText>
-    </FbRow>
-
-    <FbText L B>Variantes</FbText>
-    <FbRow GS MultiLine>
-        @foreach (var variant in FbThemeVariants.Standard)
-        {
-            <FbVariant Variant="@variant">
-                <FbRow GS PS PHM WBA WFM WRM NoFlex>
-                    <FbIcon Icon="@FbMaterialIcons.Info" S />
-                    <FbText S>@variant</FbText>
-                </FbRow>
-            </FbVariant>
-        }
-    </FbRow>
-
-    <FbText L B>Boutons et icônes</FbText>
-    <FbRow GS MultiLine JHS>
-        <FbButton Icon="@FbMaterialIcons.Edit"><FbText S>Modifier</FbText></FbButton>
-        <FbButton Variant="@FbThemeVariants.Selected" Icon="@FbMaterialIcons.Save"><FbText S>Enregistrer</FbText></FbButton>
-        <FbButton Variant="@FbThemeVariants.Success" Icon="@FbMaterialIcons.CheckCircle"><FbText S>Valider</FbText></FbButton>
-        <FbButton Variant="@FbThemeVariants.Error" Icon="@FbMaterialIcons.Delete"><FbText S>Supprimer</FbText></FbButton>
-        <FbButton WBN Icon="@FbMaterialIcons.Refresh"><FbText S>Discret</FbText></FbButton>
-        <FbButton Disabled><FbText S>Désactivé</FbText></FbButton>
-        <FbButton Title="Rechercher" Icon="@FbMaterialIcons.Search" PHS />
-        <FbCircularProgress />
-    </FbRow>
-
-    <FbText L B>Faux formulaire</FbText>
-    <FbRow GL JVS MultiLine>
-        <FbStack GM PL WBA WFL WRL MinWidth="18rem">
-            <FbInputText TAction="FbSetValue<string>" @bind-Value="_name" Immediate Placeholder="Nom complet"
-                         Variant="@(_name.Length is > 0 and < 2 ? FbThemeVariants.Error : null)">
-                <StartContent><FbIcon Icon="@FbMaterialIcons.Person" Subtle /></StartContent>
-            </FbInputText>
-            <FbInputText TAction="FbSetValue<string>" @bind-Value="_email" Placeholder="adresse@exemple.fr">
-                <StartContent><FbText S Subtle>Courriel</FbText></StartContent>
-            </FbInputText>
-            <FbRow GM>
-                <FbInputNumber TValue="int" TAction="FbSetValue<int>" @bind-Value="_seats" Min="1" Max="50">
-                    <StartContent><FbText S Subtle>Places</FbText></StartContent>
-                </FbInputNumber>
-                <FbInputDate TAction="FbSetValue<DateOnly?>" @bind-Value="_start">
-                    <StartContent><FbText S Subtle>Début</FbText></StartContent>
-                </FbInputDate>
-            </FbRow>
-            <FbSelect TValue="string" TAction="FbSetValue<string>" @bind-Value="_plan" Items="Plans">
-                <StartContent><FbText S Subtle>Formule</FbText></StartContent>
-            </FbSelect>
-            <FbInputRange TValue="int" TAction="FbSetValue<int>" @bind-Value="_budget" Min="0" Max="1000" Step="50" Immediate>
-                <StartContent><FbText S Subtle>Budget</FbText></StartContent>
-                <EndContent><FbText S>@_budget €</FbText></EndContent>
-            </FbInputRange>
-            <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_terms"><FbText S>J’accepte les conditions</FbText></FbCheckbox>
-            <FbSwitch TAction="FbSetValue<bool>" @bind-Value="_notifications"><FbText S>Notifications</FbText></FbSwitch>
-            <FbRow GS JHE>
-                <FbButton WBN><FbText S>Annuler</FbText></FbButton>
-                <FbButton Variant="@FbThemeVariants.Selected" Disabled="@(!_terms)"><FbText S>Envoyer</FbText></FbButton>
-            </FbRow>
-        </FbStack>
-
-        <FbStack GS PL WBH WFL WRL MinWidth="14rem">
-            <FbText M B>Récapitulatif</FbText>
-            <FbRow GS JHS><FbText S Subtle>Nom</FbText><FbText S Highlight>@(_name.Length == 0 ? "—" : _name)</FbText></FbRow>
-            <FbRow GS JHS><FbText S Subtle>Courriel</FbText><FbText S>@(_email.Length == 0 ? "—" : _email)</FbText></FbRow>
-            <FbRow GS JHS><FbText S Subtle>Places</FbText><FbText S>@_seats</FbText></FbRow>
-            <FbRow GS JHS><FbText S Subtle>Formule</FbText><FbText S>@_plan</FbText></FbRow>
-            <FbRow GS JHS><FbText S Subtle>Budget</FbText><FbText S>@_budget €</FbText></FbRow>
-            <FbVariant Variant="@(_terms ? FbThemeVariants.Success : FbThemeVariants.Warning)">
-                <FbRow GS PS WBA WRM>
-                    <FbIcon Icon="@(_terms ? FbMaterialIcons.CheckCircle : FbMaterialIcons.Info)" />
-                    <FbText S>@(_terms ? "Prêt à envoyer" : "Conditions à accepter")</FbText>
-                </FbRow>
-            </FbVariant>
-            <FbVariant Invert>
-                <FbStack GS PM WBS WRM>
-                    <FbText S B>Carte inversée</FbText>
-                    <FbText XS Muted>Mêmes ancres, fond et texte échangés.</FbText>
-                </FbStack>
-            </FbVariant>
-        </FbStack>
-    </FbRow>
+    @switch (Model.PreviewTab)
+    {
+        case 0:
+            <SurfaceGrid />
+            break;
+        case 1:
+            <PreviewTexts />
+            break;
+        case 2:
+            <PreviewVariants />
+            break;
+        case 3:
+            <PreviewButtons />
+            break;
+        case 4:
+            <PreviewForm />
+            break;
+        default:
+            <PreviewShape />
+            break;
+    }
 </FbStack>
 
 @code {
-    private static readonly IReadOnlyList<string> Plans = ["Découverte", "Équipe", "Entreprise"];
-
-    private static readonly RenderFragment Swatches = @<text>
-        <FbRowItem WBH WFM WRS Style="width:1.5rem;height:1.5rem" />
-        <FbRowItem WBH WFM WRS Style="width:1.5rem;height:1.5rem" />
-        <FbRowItem WBH WFM WRS Style="width:1.5rem;height:1.5rem" />
-    </text>;
-
-    private string _name = "";
-    private string _email = "";
-    private int _seats = 3;
-    private DateOnly? _start;
-    private string _plan = "Équipe";
-    private int _budget = 300;
-    private bool _terms;
-    private bool _notifications = true;
+    private static readonly IReadOnlyList<object> Tabs =
+        ["Surfaces et frames", "Textes", "Variantes", "Boutons", "Formulaire", "Espacements et rayons"];
 }

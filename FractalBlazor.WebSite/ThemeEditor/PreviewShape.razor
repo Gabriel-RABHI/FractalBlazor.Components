@@ -1,0 +1,28 @@
+@* The four corner radii, and one row per spacing: each row takes the gap and the padding of
+   its size. *@
+
+<FbStack GL>
+    <FbText M B>Rayons</FbText>
+    <FbRow GM MultiLine JHS>
+        <FbStack GS PM WBA WFM WRS NoFlex MinWidth="7rem"><FbText S Muted>Rayon</FbText><FbText S>S</FbText></FbStack>
+        <FbStack GS PM WBA WFM WRM NoFlex MinWidth="7rem"><FbText S Muted>Rayon</FbText><FbText S>M</FbText></FbStack>
+        <FbStack GS PM WBA WFM WRL NoFlex MinWidth="7rem"><FbText S Muted>Rayon</FbText><FbText S>L</FbText></FbStack>
+        <FbStack GS PM WBA WFM WRX NoFlex MinWidth="7rem"><FbText S Muted>Rayon</FbText><FbText S>X</FbText></FbStack>
+    </FbRow>
+
+    <FbText M B>Espacements</FbText>
+    <FbStack GS>
+        <FbRow GS PS WBA WFL WRM JHS JVC><FbText S Muted>S</FbText>@Swatches</FbRow>
+        <FbRow GM PM WBA WFL WRM JHS JVC><FbText S Muted>M</FbText>@Swatches</FbRow>
+        <FbRow GL PL WBA WFL WRM JHS JVC><FbText S Muted>L</FbText>@Swatches</FbRow>
+        <FbRow GX PX WBA WFL WRM JHS JVC><FbText S Muted>X</FbText>@Swatches</FbRow>
+    </FbStack>
+</FbStack>
+
+@code {
+    private static readonly RenderFragment Swatches = @<text>
+        <FbRowItem WBH WFM WRS Style="width:1.5rem;height:1.5rem" />
+        <FbRowItem WBH WFM WRS Style="width:1.5rem;height:1.5rem" />
+        <FbRowItem WBH WFM WRS Style="width:1.5rem;height:1.5rem" />
+    </text>;
+}

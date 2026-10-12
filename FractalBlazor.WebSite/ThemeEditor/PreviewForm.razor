@@ -1,0 +1,82 @@
+@* The fake form, in the variant chosen above it. It keeps its own values: typing in it
+   re-renders this component only, never the editor or the theme. *@
+@inject ThemeEditorModel Model
+
+<FbStack GL>
+    <FbRowItem Style="width:18rem">
+        <FbSelect TValue="string" TAction="FbSetValue<string>" Items="FbThemeVariants.Standard" @bind-Value="Model.FormVariant">
+            <StartContent><FbText S Subtle>Variante</FbText></StartContent>
+        </FbSelect>
+    </FbRowItem>
+
+    <FbVariant Variant="@Model.FormVariant">
+        <FbRow GL JVS MultiLine>
+            <FbStack GM PL WBA WFL WRL MinWidth="18rem">
+                <FbInputText TAction="FbSetValue<string>" @bind-Value="_name" Immediate Placeholder="Nom complet"
+                             Variant="@(_name.Length is > 0 and < 2 ? FbThemeVariants.Error : null)">
+                    <StartContent><FbIcon Icon="@FbMaterialIcons.Person" Subtle /></StartContent>
+                </FbInputText>
+                <FbInputText TAction="FbSetValue<string>" @bind-Value="_email" Placeholder="adresse@exemple.fr">
+                    <StartContent><FbText S Subtle>Courriel</FbText></StartContent>
+                </FbInputText>
+                <FbRow GM>
+                    <FbInputNumber TValue="int" TAction="FbSetValue<int>" @bind-Value="_seats" Min="1" Max="50">
+                        <StartContent><FbText S Subtle>Places</FbText></StartContent>
+                    </FbInputNumber>
+                    <FbInputDate TAction="FbSetValue<DateOnly?>" @bind-Value="_start">
+                        <StartContent><FbText S Subtle>Début</FbText></StartContent>
+                    </FbInputDate>
+                </FbRow>
+                <FbSelect TValue="string" TAction="FbSetValue<string>" @bind-Value="_plan" Items="Plans">
+                    <StartContent><FbText S Subtle>Formule</FbText></StartContent>
+                </FbSelect>
+                <FbInputRange TValue="int" TAction="FbSetValue<int>" @bind-Value="_budget" Min="0" Max="1000" Step="50" Immediate>
+                    <StartContent><FbText S Subtle>Budget</FbText></StartContent>
+                    <EndContent><FbText S>@_budget €</FbText></EndContent>
+                </FbInputRange>
+                <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_terms"><FbText S>J’accepte les conditions</FbText></FbCheckbox>
+                <FbSwitch TAction="FbSetValue<bool>" @bind-Value="_notifications"><FbText S>Notifications</FbText></FbSwitch>
+                <FbRow GS JHE>
+                    <FbButton WBN><FbText S>Annuler</FbText></FbButton>
+                    <FbTheme Branch="Dark" Scoped>
+                        <FbButton Variant="@FbThemeVariants.Selected" Disabled="@(!_terms)"><FbText S>Envoyer</FbText></FbButton>
+                    </FbTheme>
+                </FbRow>
+            </FbStack>
+
+            <FbStack GS PL WBH WFL WRL MinWidth="14rem">
+                <FbText M B>Récapitulatif</FbText>
+                <FbRow GS JHS><FbText S Subtle>Nom</FbText><FbText S Highlight>@(_name.Length == 0 ? "—" : _name)</FbText></FbRow>
+                <FbRow GS JHS><FbText S Subtle>Courriel</FbText><FbText S>@(_email.Length == 0 ? "—" : _email)</FbText></FbRow>
+                <FbRow GS JHS><FbText S Subtle>Places</FbText><FbText S>@_seats</FbText></FbRow>
+                <FbRow GS JHS><FbText S Subtle>Formule</FbText><FbText S>@_plan</FbText></FbRow>
+                <FbRow GS JHS><FbText S Subtle>Budget</FbText><FbText S>@_budget €</FbText></FbRow>
+                <FbVariant Variant="@(_terms ? FbThemeVariants.Success : FbThemeVariants.Warning)">
+                    <FbRow GS PS WBA WRM>
+                        <FbIcon Icon="@(_terms ? FbMaterialIcons.CheckCircle : FbMaterialIcons.Info)" />
+                        <FbText S>@(_terms ? "Prêt à envoyer" : "Conditions à accepter")</FbText>
+                    </FbRow>
+                </FbVariant>
+                <FbVariant Invert>
+                    <FbStack GS PM WBS WRM>
+                        <FbText S B>Carte inversée</FbText>
+                        <FbText XS Muted>Mêmes ancres, fond et texte échangés.</FbText>
+                    </FbStack>
+                </FbVariant>
+            </FbStack>
+        </FbRow>
+    </FbVariant>
+</FbStack>
+
+@code {
+    private static readonly IReadOnlyList<string> Plans = ["Découverte", "Équipe", "Entreprise"];
+
+    private string _name = "";
+    private string _email = "";
+    private int _seats = 3;
+    private DateOnly? _start;
+    private string _plan = "Équipe";
+    private int _budget = 300;
+    private bool _terms;
+    private bool _notifications = true;
+}

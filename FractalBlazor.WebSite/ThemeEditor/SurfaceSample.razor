@@ -1,0 +1,23 @@
+@* One surface of the preview: a background, a frame and a text strength. *@
+
+<FbStack GS PM WRM JVC
+         WBS="@(Background is PreviewBackground.Surface or PreviewBackground.Hover)"
+         WBA="@(Background == PreviewBackground.Accent)"
+         WBH="@(Background == PreviewBackground.Highlight)"
+         Hover="@(Background == PreviewBackground.Hover)"
+         WFL="@(Frame == PreviewFrame.Light)"
+         WFM="@(Frame == PreviewFrame.Medium)"
+         WFS="@(Frame == PreviewFrame.Strong)">
+    <PreviewLabel Text="@Text" S>@Text</PreviewLabel>
+</FbStack>
+
+@code {
+    [Parameter]
+    public PreviewBackground Background { get; set; }
+
+    [Parameter]
+    public PreviewFrame Frame { get; set; }
+
+    [Parameter]
+    public PreviewText Text { get; set; } = PreviewText.Default;
+}

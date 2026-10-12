@@ -1,0 +1,28 @@
+@* A text of the preview, at a given strength and size. *@
+
+<FbText Subtle="@(Text == PreviewText.Subtle)" Muted="@(Text == PreviewText.Muted)" Highlight="@(Text == PreviewText.Highlight)"
+        XS="@(Size == PreviewSize.XS || XS)" S="@(Size == PreviewSize.S || S)" M="@(Size == PreviewSize.M)"
+        L="@(Size == PreviewSize.L)" XL="@(Size == PreviewSize.XL)" B="B">@ChildContent</FbText>
+
+@code {
+    [Parameter]
+    public PreviewText Text { get; set; } = PreviewText.Default;
+
+    /// <summary>
+    /// Size of the text; <c>null</c> keeps the base size, unless <see cref="XS"/> or <see cref="S"/> is set.
+    /// </summary>
+    [Parameter]
+    public PreviewSize? Size { get; set; }
+
+    [Parameter]
+    public bool XS { get; set; }
+
+    [Parameter]
+    public bool S { get; set; }
+
+    [Parameter]
+    public bool B { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

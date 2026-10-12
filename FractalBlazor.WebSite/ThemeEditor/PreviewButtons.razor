@@ -1,0 +1,53 @@
+@* Every variant on every background, with the chosen frame and text strength. *@
+@inject ThemeEditorModel Model
+
+<FbStack GL>
+    <FbRow GM JHS MultiLine>
+        <FbRowItem Style="width:16rem">
+            <FbSelect TValue="PreviewFrame" TAction="FbSetValue<PreviewFrame>" Items="PreviewOptions.AllFrames" @bind-Value="Model.ButtonFrame">
+                <StartContent><FbText S Subtle>Frame</FbText></StartContent>
+            </FbSelect>
+        </FbRowItem>
+        <FbRowItem Style="width:16rem">
+            <FbSelect TValue="PreviewText" TAction="FbSetValue<PreviewText>" Items="PreviewOptions.Texts" @bind-Value="Model.ButtonText">
+                <StartContent><FbText S Subtle>Texte</FbText></StartContent>
+            </FbSelect>
+        </FbRowItem>
+    </FbRow>
+
+    <FbStack GS>
+        <FbRow GS JVC>
+            <FbRowItem Style="width:7rem;flex:none" />
+            @foreach (var background in PreviewOptions.ButtonBackgrounds)
+            {
+                <FbRowItem Style="flex:1"><FbText XS Subtle>@FbValueView.TextOf(background)</FbText></FbRowItem>
+            }
+        </FbRow>
+        @foreach (var variant in FbThemeVariants.Standard)
+        {
+            <FbRow GS JVC>
+                <FbRowItem Style="width:7rem;flex:none"><FbText XS Subtle>@variant</FbText></FbRowItem>
+                @foreach (var background in PreviewOptions.ButtonBackgrounds)
+                {
+                    <FbRowItem Style="flex:1">
+                        <FbButton Variant="@variant" Icon="@FbMaterialIcons.Bolt"
+                                  WBS="@(background == PreviewBackground.Surface)" WBA="@(background == PreviewBackground.Accent)"
+                                  WBH="@(background == PreviewBackground.Highlight)" WBN="@(background == PreviewBackground.None)"
+                                  WFN="@(Model.ButtonFrame == PreviewFrame.None)" WFL="@(Model.ButtonFrame == PreviewFrame.Light)"
+                                  WFM="@(Model.ButtonFrame == PreviewFrame.Medium)" WFS="@(Model.ButtonFrame == PreviewFrame.Strong)">
+                            <PreviewLabel Text="Model.ButtonText" S>@variant</PreviewLabel>
+                        </FbButton>
+                    </FbRowItem>
+                }
+            </FbRow>
+        }
+    </FbStack>
+
+    <FbText M B>Autres boutons</FbText>
+    <FbRow GS MultiLine JHS JVC>
+        <FbButton WBN Icon="@FbMaterialIcons.Refresh"><FbText S>Discret</FbText></FbButton>
+        <FbButton Disabled><FbText S>Désactivé</FbText></FbButton>
+        <FbButton Title="Rechercher" Icon="@FbMaterialIcons.Search" PHS />
+        <FbCircularProgress />
+    </FbRow>
+</FbStack>

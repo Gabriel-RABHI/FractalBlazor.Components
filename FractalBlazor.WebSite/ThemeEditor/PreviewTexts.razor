@@ -1,0 +1,21 @@
+@* Every text strength in columns, every size in rows. *@
+
+<FbStack GS PM WBA WFL WRM>
+    <FbRow GS JVC>
+        <FbRowItem Style="width:4rem;flex:none" />
+        @foreach (var text in PreviewOptions.Texts)
+        {
+            <FbRowItem Style="flex:1"><FbText XS Subtle>@text</FbText></FbRowItem>
+        }
+    </FbRow>
+    @foreach (var size in PreviewOptions.Sizes)
+    {
+        <FbRow GS JVC>
+            <FbRowItem Style="width:4rem;flex:none"><FbText XS Subtle>@size</FbText></FbRowItem>
+            @foreach (var text in PreviewOptions.Texts)
+            {
+                <FbRowItem Style="flex:1"><PreviewLabel Text="text" Size="size">Texte @text</PreviewLabel></FbRowItem>
+            }
+        </FbRow>
+    }
+</FbStack>

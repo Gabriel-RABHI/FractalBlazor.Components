@@ -50,6 +50,15 @@ namespace FractalBlazor.WebSite.ThemeEditor
         /// </summary>
         public string? CopiedColor { get; set; }
 
+        // -------- Options of the preview tabs
+        public PreviewText VariantsText { get; set; } = PreviewText.Default;
+
+        public PreviewFrame ButtonFrame { get; set; } = PreviewFrame.Medium;
+
+        public PreviewText ButtonText { get; set; } = PreviewText.Default;
+
+        public string FormVariant { get; set; } = FbThemeVariants.Default;
+
         // -------- Mixes of the branch, in percent
         public double SurfaceMix { get => _surfaceMix; set => Set(ref _surfaceMix, value); }
         public double AccentOffset { get => _accentOffset; set => Set(ref _accentOffset, value); }

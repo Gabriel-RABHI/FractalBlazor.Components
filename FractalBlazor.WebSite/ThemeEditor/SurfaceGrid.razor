@@ -1,0 +1,27 @@
+@* Surface, Accent, Highlight and Survol in columns, Frame Light, Medium and Strong in rows,
+   all written at one text strength. It takes the variant of its parent. *@
+
+<FbStack GS>
+    <FbRow GS JVC>
+        <FbRowItem Style="width:7rem;flex:none" />
+        @foreach (var background in PreviewOptions.SurfaceBackgrounds)
+        {
+            <FbRowItem Style="flex:1"><FbText XS Subtle>@FbValueView.TextOf(background)</FbText></FbRowItem>
+        }
+    </FbRow>
+    @foreach (var frame in PreviewOptions.Frames)
+    {
+        <FbRow GS JVSt>
+            <FbRowItem Style="width:7rem;flex:none" SJVC><FbText XS Subtle>@FbValueView.TextOf(frame)</FbText></FbRowItem>
+            @foreach (var background in PreviewOptions.SurfaceBackgrounds)
+            {
+                <SurfaceSample Background="background" Frame="frame" Text="Text" />
+            }
+        </FbRow>
+    }
+</FbStack>
+
+@code {
+    [Parameter]
+    public PreviewText Text { get; set; } = PreviewText.Default;
+}

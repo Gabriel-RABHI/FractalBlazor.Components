@@ -1,0 +1,20 @@
+@* The surface grid of every variant, written at the chosen text strength. *@
+@inject ThemeEditorModel Model
+
+<FbStack GL>
+    <FbRowItem Style="width:18rem">
+        <FbSelect TValue="PreviewText" TAction="FbSetValue<PreviewText>" Items="PreviewOptions.Texts" @bind-Value="Model.VariantsText">
+            <StartContent><FbText S Subtle>Texte</FbText></StartContent>
+        </FbSelect>
+    </FbRowItem>
+
+    @foreach (var variant in FbThemeVariants.Standard)
+    {
+        <FbStack GS>
+            <FbText M B>@variant</FbText>
+            <FbVariant Variant="@variant">
+                <SurfaceGrid Text="Model.VariantsText" />
+            </FbVariant>
+        </FbStack>
+    }
+</FbStack>
