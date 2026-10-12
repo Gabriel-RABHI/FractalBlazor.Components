@@ -12,7 +12,8 @@
     <FbText M Muted>
         Les réglages construisent un FbThemeSetup dérivé du thème par défaut. L’aperçu l’applique
         avec un FbTheme Scoped, sans toucher au reste de la page. Les espacements, les rayons et la
-        typographie appartiennent au thème ; les couleurs et les mélanges, à la branche éditée.
+        typographie appartiennent au thème ; les couleurs et les mélanges, à chaque branche, qui garde
+        ses réglages quand on passe de l’une à l’autre. Le code du thème déclare les deux.
     </FbText>
 
     <FbTabs TAction="FbSetValue<int>" @bind-Value="Model.EditTab" Items="EditTabs" />
@@ -92,7 +93,7 @@
                     <FbStack GM PL WBA WFL WRL>
                         <FbText L B>Couleurs</FbText>
                         <FbSelect TValue="string" TAction="FbSetValue<string>" Items="ThemeEditorModel.Branches"
-                                  Value="@Model.Branch" ValueChanged="LoadBranch">
+                                  Value="@Model.Branch" ValueChanged="Model.SelectBranch">
                             <StartContent><FbRowItem Style="min-width:6.5rem"><FbText S Subtle>Branche</FbText></FbRowItem></StartContent>
                         </FbSelect>
                         <FbSelect TValue="string" TAction="FbSetValue<string>" Items="Model.VariantNames"
@@ -156,7 +157,7 @@
                 </FbGridItem>
             </FbGridContainer>
             <FbRow JHE>
-                <FbButton WBN Icon="@FbMaterialIcons.RestartAlt" OnClick="() => LoadBranch(Model.Branch)"><FbText S>Réinitialiser la branche @Model.Branch</FbText></FbButton>
+                <FbButton WBN Icon="@FbMaterialIcons.RestartAlt" OnClick="Model.ResetBranch"><FbText S>Réinitialiser la branche @Model.Branch</FbText></FbButton>
             </FbRow>
             break;
     }
@@ -180,8 +181,6 @@
 
     private int _contrastVersion = -1;
     private IReadOnlyList<(FbContrastText Text, FbContrastEntry Entry)> _worst = [];
-
-    private void LoadBranch(string branch) => Model.Load(branch);
 
     /// <summary>
     /// Recomputed only when the edited theme changes.

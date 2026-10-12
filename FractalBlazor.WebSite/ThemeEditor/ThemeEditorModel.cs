@@ -11,21 +11,25 @@ namespace FractalBlazor.WebSite.ThemeEditor
 {
     /// <summary>
     /// Values edited from the default theme: the spacings, corners and typography of the
-    /// theme, and the mixes and anchors of one branch. Every change bumps
-    /// <see cref="Version"/>; <see cref="Setup"/> is rebuilt only then, so the preview theme is
-    /// resolved again only when something was really edited.
+    /// theme, and the mixes and anchors of each branch. Every branch keeps its own values:
+    /// switching from Dark to Light and back loses nothing, and <see cref="Setup"/> declares
+    /// every branch that was opened. Every change bumps <see cref="Version"/>;
+    /// <see cref="Setup"/> is rebuilt only then, so the preview theme is resolved again only
+    /// when something was really edited.
     /// </summary>
     public sealed class ThemeEditorModel
     {
         private readonly IFbFormThemeRegistry _registry;
-        private FbResolvedTheme _original = default!;
+        private readonly FbResolvedTheme _theme;
+        private readonly Dictionary<string, BranchValues> _branches = new(StringComparer.OrdinalIgnoreCase);
         private FbThemeSetup? _setup;
         private int _setupVersion = -1;
 
         public ThemeEditorModel(IFbFormThemeRegistry registry)
         {
             _registry = registry;
-            Load(FbThemeBranches.Dark);
+            _theme = Resolve(FbThemeBranches.Dark);
+            SelectBranch(FbThemeBranches.Dark);
             ResetShape();
             ResetTypography();
         }
@@ -34,11 +38,16 @@ namespace FractalBlazor.WebSite.ThemeEditor
 
         public int Version { get; private set; }
 
+        /// <summary>
+        /// The branch being edited and previewed.
+        /// </summary>
         public string Branch { get; private set; } = FbThemeBranches.Dark;
 
         public string SelectedVariant { get; set; } = FbThemeVariants.Default;
 
-        public IReadOnlyList<string> VariantNames => _original.VariantOrder;
+        public IReadOnlyList<string> VariantNames => Current.Original.VariantOrder;
+
+        private BranchValues Current => _branches[Branch];
 
         // -------- State of the editor itself, kept across navigation
         public int EditTab { get; set; }
@@ -59,21 +68,18 @@ namespace FractalBlazor.WebSite.ThemeEditor
 
         public string FormVariant { get; set; } = FbThemeVariants.Default;
 
-        // -------- Mixes of the branch, in percent
-        public double SurfaceMix { get => _surfaceMix; set => Set(ref _surfaceMix, value); }
-        public double AccentOffset { get => _accentOffset; set => Set(ref _accentOffset, value); }
-        public double HighlightOffset { get => _highlightOffset; set => Set(ref _highlightOffset, value); }
-        public double HoverOffset { get => _hoverOffset; set => Set(ref _hoverOffset, value); }
-        public double FrameLight { get => _frameLight; set => Set(ref _frameLight, value); }
-        public double FrameMedium { get => _frameMedium; set => Set(ref _frameMedium, value); }
-        public double FrameStrong { get => _frameStrong; set => Set(ref _frameStrong, value); }
-        public double TextSubtle { get => _textSubtle; set => Set(ref _textSubtle, value); }
-        public double TextMuted { get => _textMuted; set => Set(ref _textMuted, value); }
-        public double TextDefault { get => _textDefault; set => Set(ref _textDefault, value); }
-        public double TextHighlight { get => _textHighlight; set => Set(ref _textHighlight, value); }
-
-        private double _surfaceMix, _accentOffset, _highlightOffset, _hoverOffset, _frameLight, _frameMedium, _frameStrong,
-            _textSubtle, _textMuted, _textDefault, _textHighlight;
+        // -------- Mixes of the edited branch, in percent
+        public double SurfaceMix { get => Current.SurfaceMix; set => Set(ref Current.SurfaceMix, value); }
+        public double AccentOffset { get => Current.AccentOffset; set => Set(ref Current.AccentOffset, value); }
+        public double HighlightOffset { get => Current.HighlightOffset; set => Set(ref Current.HighlightOffset, value); }
+        public double HoverOffset { get => Current.HoverOffset; set => Set(ref Current.HoverOffset, value); }
+        public double FrameLight { get => Current.FrameLight; set => Set(ref Current.FrameLight, value); }
+        public double FrameMedium { get => Current.FrameMedium; set => Set(ref Current.FrameMedium, value); }
+        public double FrameStrong { get => Current.FrameStrong; set => Set(ref Current.FrameStrong, value); }
+        public double TextSubtle { get => Current.TextSubtle; set => Set(ref Current.TextSubtle, value); }
+        public double TextMuted { get => Current.TextMuted; set => Set(ref Current.TextMuted, value); }
+        public double TextDefault { get => Current.TextDefault; set => Set(ref Current.TextDefault, value); }
+        public double TextHighlight { get => Current.TextHighlight; set => Set(ref Current.TextHighlight, value); }
 
         // -------- Spacings and corners, in rem: values of the theme, shared by its branches
         public double SpaceS { get => _spaceS; set => Set(ref _spaceS, value); }
@@ -110,9 +116,12 @@ namespace FractalBlazor.WebSite.ThemeEditor
         private double _fontSize, _lineHeight, _coefXS, _coefS, _coefM, _coefL, _coefXL, _coefXXL,
             _weightThin, _weightDefault, _weightBold, _weightExtraBold;
 
-        private readonly Dictionary<string, Anchors> _anchors = new(StringComparer.OrdinalIgnoreCase);
+        public Anchors Selected => Current.Anchors[SelectedVariant];
 
-        public Anchors Selected => _anchors[SelectedVariant];
+        /// <summary>
+        /// Whether <paramref name="branch"/> differs from the default theme.
+        /// </summary>
+        public bool IsChanged(string branch) => _branches.TryGetValue(branch, out var values) && BranchCode(values).Length > 0;
 
         /// <summary>
         /// Theme built from the edited values, inheriting from the registered default theme.
@@ -131,28 +140,50 @@ namespace FractalBlazor.WebSite.ThemeEditor
         }
 
         /// <summary>
-        /// Starts again from the spacings and corners of the default theme. They belong to the
-        /// theme, so <see cref="Load"/> keeps them.
+        /// Edits <paramref name="branch"/>. A branch opened for the first time starts from the
+        /// default theme; one already edited comes back with its values.
         /// </summary>
-        public void ResetShape()
+        public void SelectBranch(string branch)
         {
-            _spaceS = Rem(_original.Spacings.S);
-            _spaceM = Rem(_original.Spacings.M);
-            _spaceL = Rem(_original.Spacings.L);
-            _spaceX = Rem(_original.Spacings.X);
-            _radiusS = Rem(_original.Corners.S);
-            _radiusM = Rem(_original.Corners.M);
-            _radiusL = Rem(_original.Corners.L);
-            _radiusX = Rem(_original.Corners.X);
+            if (!_branches.ContainsKey(branch))
+                _branches[branch] = new BranchValues(this, Resolve(branch));
+
+            Branch = branch;
             Version++;
         }
 
         /// <summary>
-        /// Starts again from the typography of the default theme, kept by <see cref="Load"/>.
+        /// Starts the edited branch again from the default theme. The other branch and the
+        /// values of the theme are kept.
+        /// </summary>
+        public void ResetBranch()
+        {
+            _branches[Branch] = new BranchValues(this, Resolve(Branch));
+            Version++;
+        }
+
+        /// <summary>
+        /// Starts again from the spacings and corners of the default theme.
+        /// </summary>
+        public void ResetShape()
+        {
+            _spaceS = Rem(_theme.Spacings.S);
+            _spaceM = Rem(_theme.Spacings.M);
+            _spaceL = Rem(_theme.Spacings.L);
+            _spaceX = Rem(_theme.Spacings.X);
+            _radiusS = Rem(_theme.Corners.S);
+            _radiusM = Rem(_theme.Corners.M);
+            _radiusL = Rem(_theme.Corners.L);
+            _radiusX = Rem(_theme.Corners.X);
+            Version++;
+        }
+
+        /// <summary>
+        /// Starts again from the typography of the default theme.
         /// </summary>
         public void ResetTypography()
         {
-            var typography = _original.Typography;
+            var typography = _theme.Typography;
             _textFont = typography.TextFontFamily!;
             _codeFont = typography.CodeFontFamily!;
             _fontSize = Px(typography.FontSizeBase);
@@ -170,59 +201,28 @@ namespace FractalBlazor.WebSite.ThemeEditor
             Version++;
         }
 
-        /// <summary>
-        /// Starts again from the resolved values of <paramref name="branch"/>: its mixes and
-        /// anchors. The spacings, corners and typography of the theme are kept.
-        /// </summary>
-        public void Load(string branch)
-        {
-            Branch = branch;
-            _original = _registry.Resolve(_registry.Default.Name, branch);
-
-            _surfaceMix = Percent(_original.SurfaceMix.SurfaceMix);
-            _accentOffset = Percent(_original.SurfaceMix.AccentOffset);
-            _highlightOffset = Percent(_original.SurfaceMix.HighlightOffset);
-            _hoverOffset = Percent(_original.SurfaceMix.HoverOffset);
-            _frameLight = Percent(_original.BordersMix.LightMix);
-            _frameMedium = Percent(_original.BordersMix.MediumMix);
-            _frameStrong = Percent(_original.BordersMix.StrongMix);
-            _textSubtle = Percent(_original.TextVariant.SubtleHighMix);
-            _textMuted = Percent(_original.TextVariant.MutedHighMix);
-            _textDefault = Percent(_original.TextVariant.DefaultHighMix);
-            _textHighlight = Percent(_original.TextVariant.HighlightHighMix);
-
-            _anchors.Clear();
-            foreach (var name in _original.VariantOrder)
-            {
-                var variant = _original.GetVariant(name);
-                _anchors[name] = new Anchors(this,
-                    variant.LayoutColors.LowAnchor!, variant.LayoutColors.HighAnchor!,
-                    variant.FormColors.LowAnchor!, variant.FormColors.HighAnchor!,
-                    variant.FrameColors.LowAnchor, variant.FrameColors.HighAnchor);
-            }
-
-            Version++;
-        }
+        private FbResolvedTheme Resolve(string branch) => _registry.Resolve(_registry.Default.Name, branch);
 
         /// <summary>
-        /// C# of a theme that declares only what differs from the default theme.
+        /// C# of a theme that declares only what differs from the default theme, for the theme
+        /// and for every edited branch.
         /// </summary>
         public string ToCSharp()
         {
-            const string ThemeIndent = "    ", BranchIndent = "            ";
-            var typography = _original.Typography;
+            const string ThemeIndent = "    ";
+            var typography = _theme.Typography;
 
             var theme = new StringBuilder();
             AppendGroup(theme, ThemeIndent, "Spacings", "FbThemeLayoutSpacings",
-                Value("S", CssRem(_spaceS), CssRem(Rem(_original.Spacings.S))),
-                Value("M", CssRem(_spaceM), CssRem(Rem(_original.Spacings.M))),
-                Value("L", CssRem(_spaceL), CssRem(Rem(_original.Spacings.L))),
-                Value("X", CssRem(_spaceX), CssRem(Rem(_original.Spacings.X))));
+                Value("S", CssRem(_spaceS), CssRem(Rem(_theme.Spacings.S))),
+                Value("M", CssRem(_spaceM), CssRem(Rem(_theme.Spacings.M))),
+                Value("L", CssRem(_spaceL), CssRem(Rem(_theme.Spacings.L))),
+                Value("X", CssRem(_spaceX), CssRem(Rem(_theme.Spacings.X))));
             AppendGroup(theme, ThemeIndent, "Corners", "FbThemeLayoutCorners",
-                Value("S", CssRem(_radiusS), CssRem(Rem(_original.Corners.S))),
-                Value("M", CssRem(_radiusM), CssRem(Rem(_original.Corners.M))),
-                Value("L", CssRem(_radiusL), CssRem(Rem(_original.Corners.L))),
-                Value("X", CssRem(_radiusX), CssRem(Rem(_original.Corners.X))));
+                Value("S", CssRem(_radiusS), CssRem(Rem(_theme.Corners.S))),
+                Value("M", CssRem(_radiusM), CssRem(Rem(_theme.Corners.M))),
+                Value("L", CssRem(_radiusL), CssRem(Rem(_theme.Corners.L))),
+                Value("X", CssRem(_radiusX), CssRem(Rem(_theme.Corners.X))));
             AppendGroup(theme, ThemeIndent, "Typography", "FbThemeFormTypography",
                 Value("TextFontFamily", _textFont, typography.TextFontFamily),
                 Value("CodeFontFamily", _codeFont, typography.CodeFontFamily),
@@ -239,30 +239,70 @@ namespace FractalBlazor.WebSite.ThemeEditor
                 Value("BoldWeight", CssNumber(_weightBold), CssNumber(Number(typography.BoldWeight))),
                 Value("ExtraBoldWeight", CssNumber(_weightExtraBold), CssNumber(Number(typography.ExtraBoldWeight))));
 
+            var branches = Branches
+                .Where(_branches.ContainsKey)
+                .Select(name => (Name: name, Code: BranchCode(_branches[name])))
+                .Where(branch => branch.Code.Length > 0)
+                .ToList();
+
+            if (theme.Length == 0 && branches.Count == 0)
+                return "// Aucune valeur modifiée : le thème par défaut s'applique tel quel.";
+
+            var body = new StringBuilder(theme.ToString());
+            if (branches.Count > 0)
+            {
+                body.AppendLine("    Branches =");
+                body.AppendLine("    [");
+                for (var i = 0; i < branches.Count; i++)
+                {
+                    body.AppendLine($"        new FbThemeBranch(FbThemeBranches.{branches[i].Name})");
+                    body.AppendLine("        {");
+                    body.Append(branches[i].Code.TrimEnd().TrimEnd(',')).AppendLine();
+                    body.AppendLine(i < branches.Count - 1 ? "        }," : "        }");
+                }
+                body.AppendLine("    ]");
+            }
+
+            var code = new StringBuilder();
+            code.AppendLine("var myTheme = new FbThemeSetup(\"MyTheme\", registry.Default)");
+            code.AppendLine("{");
+            code.Append(body.ToString().TrimEnd().TrimEnd(',')).AppendLine();
+            code.Append("};");
+            return code.ToString();
+        }
+
+        /// <summary>
+        /// The assignments of one branch that differ from the default theme, or nothing.
+        /// </summary>
+        private static string BranchCode(BranchValues values)
+        {
+            const string BranchIndent = "            ";
+            var original = values.Original;
+
             var branch = new StringBuilder();
             AppendGroup(branch, BranchIndent, "SurfaceMix", "FbThemeLayoutSurfaceMix",
-                MixValue("SurfaceMix", _surfaceMix, _original.SurfaceMix.SurfaceMix),
-                MixValue("AccentOffset", _accentOffset, _original.SurfaceMix.AccentOffset),
-                MixValue("HighlightOffset", _highlightOffset, _original.SurfaceMix.HighlightOffset),
-                MixValue("HoverOffset", _hoverOffset, _original.SurfaceMix.HoverOffset));
+                MixValue("SurfaceMix", values.SurfaceMix, original.SurfaceMix.SurfaceMix),
+                MixValue("AccentOffset", values.AccentOffset, original.SurfaceMix.AccentOffset),
+                MixValue("HighlightOffset", values.HighlightOffset, original.SurfaceMix.HighlightOffset),
+                MixValue("HoverOffset", values.HoverOffset, original.SurfaceMix.HoverOffset));
             AppendGroup(branch, BranchIndent, "BordersMix", "FbThemeLayoutBordersMix",
-                MixValue("LightMix", _frameLight, _original.BordersMix.LightMix),
-                MixValue("MediumMix", _frameMedium, _original.BordersMix.MediumMix),
-                MixValue("StrongMix", _frameStrong, _original.BordersMix.StrongMix));
+                MixValue("LightMix", values.FrameLight, original.BordersMix.LightMix),
+                MixValue("MediumMix", values.FrameMedium, original.BordersMix.MediumMix),
+                MixValue("StrongMix", values.FrameStrong, original.BordersMix.StrongMix));
             AppendGroup(branch, BranchIndent, "TextVariantMix", "FbThemeFormTextVariantMix",
-                MixValue("SubtleHighMix", _textSubtle, _original.TextVariant.SubtleHighMix),
-                MixValue("MutedHighMix", _textMuted, _original.TextVariant.MutedHighMix),
-                MixValue("DefaultHighMix", _textDefault, _original.TextVariant.DefaultHighMix),
-                MixValue("HighlightHighMix", _textHighlight, _original.TextVariant.HighlightHighMix));
+                MixValue("SubtleHighMix", values.TextSubtle, original.TextVariant.SubtleHighMix),
+                MixValue("MutedHighMix", values.TextMuted, original.TextVariant.MutedHighMix),
+                MixValue("DefaultHighMix", values.TextDefault, original.TextVariant.DefaultHighMix),
+                MixValue("HighlightHighMix", values.TextHighlight, original.TextVariant.HighlightHighMix));
 
-            var variants = _original.VariantOrder.Where(name => _anchors[name].Changed).ToList();
+            var variants = original.VariantOrder.Where(name => values.Anchors[name].Changed).ToList();
             if (variants.Count > 0)
             {
                 branch.AppendLine($"{BranchIndent}Variants =");
                 branch.AppendLine($"{BranchIndent}[");
                 for (var i = 0; i < variants.Count; i++)
                 {
-                    var a = _anchors[variants[i]];
+                    var a = values.Anchors[variants[i]];
                     var colors = new List<string>
                     {
                         $"LayoutColors = new FbThemeLayoutColors {{ LowAnchor = \"{a.BgLow}\", HighAnchor = \"{a.BgHigh}\" }}",
@@ -273,33 +313,13 @@ namespace FractalBlazor.WebSite.ThemeEditor
 
                     branch.AppendLine($"{BranchIndent}    new FbThemeColorVariant(\"{variants[i]}\")");
                     branch.AppendLine($"{BranchIndent}    {{");
-                    branch.AppendLine(string.Join(",\n", colors.Select(line => $"{BranchIndent}        {line}")));
+                    branch.AppendLine(string.Join("," + Environment.NewLine, colors.Select(line => $"{BranchIndent}        {line}")));
                     branch.AppendLine(i < variants.Count - 1 ? $"{BranchIndent}    }}," : $"{BranchIndent}    }}");
                 }
                 branch.AppendLine($"{BranchIndent}]");
             }
 
-            if (theme.Length == 0 && branch.Length == 0)
-                return "// Aucune valeur modifiée : le thème par défaut s'applique tel quel.";
-
-            var body = new StringBuilder(theme.ToString());
-            if (branch.Length > 0)
-            {
-                body.AppendLine("    Branches =");
-                body.AppendLine("    [");
-                body.AppendLine($"        new FbThemeBranch(FbThemeBranches.{Branch})");
-                body.AppendLine("        {");
-                body.Append(branch.ToString().TrimEnd().TrimEnd(',')).AppendLine();
-                body.AppendLine("        }");
-                body.AppendLine("    ]");
-            }
-
-            var code = new StringBuilder();
-            code.AppendLine("var myTheme = new FbThemeSetup(\"MyTheme\", registry.Default)");
-            code.AppendLine("{");
-            code.Append(body.ToString().TrimEnd().TrimEnd(',')).AppendLine();
-            code.Append("};");
-            return code.ToString();
+            return branch.ToString();
         }
 
         private FbThemeSetup BuildSetup() => new("Edited", _registry.Default)
@@ -335,43 +355,79 @@ namespace FractalBlazor.WebSite.ThemeEditor
                 BoldWeight = CssNumber(_weightBold),
                 ExtraBoldWeight = CssNumber(_weightExtraBold)
             },
-            Branches =
-            [
-                new FbThemeBranch(Branch)
-                {
-                    SurfaceMix = new FbThemeLayoutSurfaceMix
-                    {
-                        SurfaceMix = Css(_surfaceMix),
-                        AccentOffset = Css(_accentOffset),
-                        HighlightOffset = Css(_highlightOffset),
-                        HoverOffset = Css(_hoverOffset)
-                    },
-                    BordersMix = new FbThemeLayoutBordersMix
-                    {
-                        LightMix = Css(_frameLight),
-                        MediumMix = Css(_frameMedium),
-                        StrongMix = Css(_frameStrong)
-                    },
-                    TextVariantMix = new FbThemeFormTextVariantMix
-                    {
-                        SubtleHighMix = Css(_textSubtle),
-                        MutedHighMix = Css(_textMuted),
-                        DefaultHighMix = Css(_textDefault),
-                        HighlightHighMix = Css(_textHighlight)
-                    },
-                    Variants = _original.VariantOrder.Select(name =>
-                    {
-                        var a = _anchors[name];
-                        return new FbThemeColorVariant(name)
-                        {
-                            LayoutColors = new FbThemeLayoutColors { LowAnchor = a.BgLow, HighAnchor = a.BgHigh },
-                            FormColors = new FbThemeFormColors { LowAnchor = a.FgLow, HighAnchor = a.FgHigh },
-                            FrameColors = a.HasFrameColors ? new FbThemeFormColors { LowAnchor = a.FrameLow, HighAnchor = a.FrameHigh } : null
-                        };
-                    }).ToList()
-                }
-            ]
+            Branches = _branches.Select(pair => BuildBranch(pair.Key, pair.Value)).ToList()
         };
+
+        private static FbThemeBranch BuildBranch(string name, BranchValues values) => new(name)
+        {
+            SurfaceMix = new FbThemeLayoutSurfaceMix
+            {
+                SurfaceMix = Css(values.SurfaceMix),
+                AccentOffset = Css(values.AccentOffset),
+                HighlightOffset = Css(values.HighlightOffset),
+                HoverOffset = Css(values.HoverOffset)
+            },
+            BordersMix = new FbThemeLayoutBordersMix
+            {
+                LightMix = Css(values.FrameLight),
+                MediumMix = Css(values.FrameMedium),
+                StrongMix = Css(values.FrameStrong)
+            },
+            TextVariantMix = new FbThemeFormTextVariantMix
+            {
+                SubtleHighMix = Css(values.TextSubtle),
+                MutedHighMix = Css(values.TextMuted),
+                DefaultHighMix = Css(values.TextDefault),
+                HighlightHighMix = Css(values.TextHighlight)
+            },
+            Variants = values.Original.VariantOrder.Select(variant =>
+            {
+                var a = values.Anchors[variant];
+                return new FbThemeColorVariant(variant)
+                {
+                    LayoutColors = new FbThemeLayoutColors { LowAnchor = a.BgLow, HighAnchor = a.BgHigh },
+                    FormColors = new FbThemeFormColors { LowAnchor = a.FgLow, HighAnchor = a.FgHigh },
+                    FrameColors = a.HasFrameColors ? new FbThemeFormColors { LowAnchor = a.FrameLow, HighAnchor = a.FrameHigh } : null
+                };
+            }).ToList()
+        };
+
+        /// <summary>
+        /// The values of one branch: its mixes, in percent, and the anchors of its variants,
+        /// starting from the default theme.
+        /// </summary>
+        private sealed class BranchValues
+        {
+            public readonly FbResolvedTheme Original;
+            public readonly Dictionary<string, Anchors> Anchors = new(StringComparer.OrdinalIgnoreCase);
+            public double SurfaceMix, AccentOffset, HighlightOffset, HoverOffset, FrameLight, FrameMedium, FrameStrong,
+                TextSubtle, TextMuted, TextDefault, TextHighlight;
+
+            public BranchValues(ThemeEditorModel model, FbResolvedTheme original)
+            {
+                Original = original;
+                SurfaceMix = Percent(original.SurfaceMix.SurfaceMix);
+                AccentOffset = Percent(original.SurfaceMix.AccentOffset);
+                HighlightOffset = Percent(original.SurfaceMix.HighlightOffset);
+                HoverOffset = Percent(original.SurfaceMix.HoverOffset);
+                FrameLight = Percent(original.BordersMix.LightMix);
+                FrameMedium = Percent(original.BordersMix.MediumMix);
+                FrameStrong = Percent(original.BordersMix.StrongMix);
+                TextSubtle = Percent(original.TextVariant.SubtleHighMix);
+                TextMuted = Percent(original.TextVariant.MutedHighMix);
+                TextDefault = Percent(original.TextVariant.DefaultHighMix);
+                TextHighlight = Percent(original.TextVariant.HighlightHighMix);
+
+                foreach (var name in original.VariantOrder)
+                {
+                    var variant = original.GetVariant(name);
+                    Anchors[name] = new Anchors(model,
+                        variant.LayoutColors.LowAnchor!, variant.LayoutColors.HighAnchor!,
+                        variant.FormColors.LowAnchor!, variant.FormColors.HighAnchor!,
+                        variant.FrameColors.LowAnchor, variant.FrameColors.HighAnchor);
+                }
+            }
+        }
 
         private static (string Name, string Value, string? Original) MixValue(string name, double value, string? original)
             => (name, Css(value), Css(Percent(original)));
