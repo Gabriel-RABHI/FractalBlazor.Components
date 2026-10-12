@@ -25,6 +25,7 @@ public static class FbLayoutThemeCssWriter
         Append(builder, "--fb-bg-surface-mix", theme.SurfaceMix.SurfaceMix);
         Append(builder, "--fb-bg-accent-offset", theme.SurfaceMix.AccentOffset);
         Append(builder, "--fb-bg-highlight-offset", theme.SurfaceMix.HighlightOffset);
+        Append(builder, "--fb-bg-hover-offset", theme.SurfaceMix.HoverOffset);
 
         Append(builder, "--fb-frame-light-mix", theme.BordersMix.LightMix);
         Append(builder, "--fb-frame-medium-mix", theme.BordersMix.MediumMix);

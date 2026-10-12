@@ -31,7 +31,8 @@ public static class FbThemeDefaults
         {
             SurfaceMix = "8%",
             AccentOffset = "10%",
-            HighlightOffset = "18%"
+            HighlightOffset = "18%",
+            HoverOffset = "4%"
         };
 
     /// <summary>

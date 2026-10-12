@@ -112,7 +112,8 @@ public sealed class FbLayoutThemeRegistry : IFbLayoutThemeRegistry
         {
             SurfaceMix = Required(FindThemeValue(theme, value => value.SurfaceMix?.SurfaceMix), "SurfaceMix.SurfaceMix"),
             AccentOffset = Required(FindThemeValue(theme, value => value.SurfaceMix?.AccentOffset), "SurfaceMix.AccentOffset"),
-            HighlightOffset = Required(FindThemeValue(theme, value => value.SurfaceMix?.HighlightOffset), "SurfaceMix.HighlightOffset")
+            HighlightOffset = Required(FindThemeValue(theme, value => value.SurfaceMix?.HighlightOffset), "SurfaceMix.HighlightOffset"),
+            HoverOffset = Required(FindThemeValue(theme, value => value.SurfaceMix?.HoverOffset), "SurfaceMix.HoverOffset")
         };
 
         var variantNames = GetVariantNames(theme);
@@ -298,7 +299,7 @@ public sealed class FbLayoutThemeRegistry : IFbLayoutThemeRegistry
 
     private static void ValidateValues(FbThemeLayoutSurfaceMix? values)
         => ValidateValues(values is null ? [] :
-            [values.SurfaceMix, values.AccentOffset, values.HighlightOffset]);
+            [values.SurfaceMix, values.AccentOffset, values.HighlightOffset, values.HoverOffset]);
 
     private static void ValidateValues(IEnumerable<string?> values)
     {

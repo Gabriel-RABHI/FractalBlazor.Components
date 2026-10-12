@@ -182,7 +182,8 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
         {
             SurfaceMix = Required(FindBranchValue(theme, branchName, value => value.SurfaceMix?.SurfaceMix), $"{branchName}.SurfaceMix.SurfaceMix"),
             AccentOffset = Required(FindBranchValue(theme, branchName, value => value.SurfaceMix?.AccentOffset), $"{branchName}.SurfaceMix.AccentOffset"),
-            HighlightOffset = Required(FindBranchValue(theme, branchName, value => value.SurfaceMix?.HighlightOffset), $"{branchName}.SurfaceMix.HighlightOffset")
+            HighlightOffset = Required(FindBranchValue(theme, branchName, value => value.SurfaceMix?.HighlightOffset), $"{branchName}.SurfaceMix.HighlightOffset"),
+            HoverOffset = Required(FindBranchValue(theme, branchName, value => value.SurfaceMix?.HoverOffset), $"{branchName}.SurfaceMix.HoverOffset")
         };
 
         var variantNames = GetVariantNames(theme, branchName);
@@ -447,7 +448,7 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
         => Validate(value is null ? [] : [value.LightMix, value.MediumMix, value.StrongMix]);
 
     private static void ValidateValues(FbThemeLayoutSurfaceMix? value)
-        => Validate(value is null ? [] : [value.SurfaceMix, value.AccentOffset, value.HighlightOffset]);
+        => Validate(value is null ? [] : [value.SurfaceMix, value.AccentOffset, value.HighlightOffset, value.HoverOffset]);
     
     private static void ValidateValues(FbThemeFormColors? value)
         => Validate(value is null ? [] : [value.LowAnchor, value.HighAnchor]);

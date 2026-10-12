@@ -19,7 +19,7 @@
 }
 
 .fb-hover {
-    --fb-hover-mix-offset: 4%;
+    --fb-hover-mix-offset: var(--fb-bg-hover-offset);
 }
 
 .fb-hover:hover {

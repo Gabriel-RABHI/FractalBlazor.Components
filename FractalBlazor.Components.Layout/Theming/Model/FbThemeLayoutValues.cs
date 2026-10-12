@@ -45,6 +45,11 @@ public sealed class FbThemeLayoutSurfaceMix
     public string? AccentOffset { get; init; }
 
     public string? HighlightOffset { get; init; }
+
+    /// <summary>
+    /// Added to the background, frame and text mixes while a hoverable surface is hovered.
+    /// </summary>
+    public string? HoverOffset { get; init; }
 }
 
 public sealed class FbThemeLayoutColors

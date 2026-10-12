@@ -133,7 +133,7 @@
 }
 
 .fb-button:active {
-    --fb-hover-mix-offset: 8%;
+    --fb-hover-mix-offset: calc(var(--fb-bg-hover-offset) * 2);
 }
 
 .fb-button:focus-visible {

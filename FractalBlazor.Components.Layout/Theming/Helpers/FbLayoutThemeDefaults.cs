@@ -29,7 +29,8 @@ public static class FbLayoutThemeDefaults
             {
                 SurfaceMix = "8%",
                 AccentOffset = "10%",
-                HighlightOffset = "18%"
+                HighlightOffset = "18%",
+                HoverOffset = "4%"
             },
             Variants =
             [
