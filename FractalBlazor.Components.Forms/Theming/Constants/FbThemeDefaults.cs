@@ -4,6 +4,11 @@ using FractalBlazor.Components.Layout.Theming.Model;
 
 namespace FractalBlazor.Components.Forms.Theming.Constants;
 
+/// <summary>
+/// The default theme, tuned in the theme editor: low surfaces with strong accent and
+/// highlight offsets, a marked hover, and hand-picked background, text and frame anchors for
+/// every variant of both branches.
+/// </summary>
 public static class FbThemeDefaults
 {
     public static FbThemeSetup Create()
@@ -29,130 +34,84 @@ public static class FbThemeDefaults
     private static FbThemeLayoutSurfaceMix CreateSurfaceMix()
         => new()
         {
-            SurfaceMix = "8%",
-            AccentOffset = "10%",
-            HighlightOffset = "18%",
-            HoverOffset = "4%"
+            SurfaceMix = "3%",
+            AccentOffset = "30%",
+            HighlightOffset = "85%",
+            HoverOffset = "15%"
         };
 
-    /// <summary>
-    /// Tuned in the theme editor: stronger frames, a wider gap between text levels, and
-    /// hand-picked anchors for every variant except Default, which stays on the palette.
-    /// </summary>
     private static FbThemeBranch CreateDarkBranch()
-    {
-        var masterTint = CreateMasterTint();
-
-        return new FbThemeBranch(FbThemeBranches.Dark)
+        => new(FbThemeBranches.Dark)
         {
-            MasterTint = masterTint,
+            MasterTint = CreateMasterTint(),
             TextVariantMix = new FbThemeFormTextVariantMix
             {
                 DefaultHighMix = "75%",
                 SubtleHighMix = "12%",
-                MutedHighMix = "30%",
-                HighlightHighMix = "100%"
-            },
-            BordersMix = new FbThemeLayoutBordersMix
-            {
-                LightMix = "15%",
-                MediumMix = "24%",
-                StrongMix = "50%"
-            },
-            SurfaceMix = CreateSurfaceMix(),
-            Variants =
-            [
-                Variant(FbThemeVariants.Default, FbThemeBaseColorsIndex.Zinc, light: false, masterTint),
-                Variant(FbThemeVariants.Selected, "#1d1683", "#0070ff", "#0070ff", "#e5f2ff"),
-                Variant(FbThemeVariants.Error, "#5e1313", "#fb0404", "#a02222", "#febebe"),
-                Variant(FbThemeVariants.Warning, "#4d4a00", "#ff8800", "#ff7300", "#d2b5a3"),
-                Variant(FbThemeVariants.Disabled, "#030916", "#44536a", "#21334f", "#7a8590"),
-                Variant(FbThemeVariants.Success, "#0b603f", "#00ff7b", "#00ff55", "#c2ffe8"),
-                Variant(FbThemeVariants.Info, "#044d71", "#009dff", "#00adff", "#95a6fe")
-            ]
-        };
-    }
-
-    private static FbThemeBranch CreateLightBranch()
-    {
-        var masterTint = CreateMasterTint();
-
-        return new FbThemeBranch(FbThemeBranches.Light)
-        {
-            MasterTint = masterTint,
-            TextVariantMix = new FbThemeFormTextVariantMix
-            {
-                DefaultHighMix = "82%",
-                SubtleHighMix = "46%",
-                MutedHighMix = "64%",
+                MutedHighMix = "35%",
                 HighlightHighMix = "100%"
             },
             BordersMix = new FbThemeLayoutBordersMix
             {
                 LightMix = "8%",
-                MediumMix = "14%",
-                StrongMix = "28%"
+                MediumMix = "20%",
+                StrongMix = "45%"
             },
             SurfaceMix = CreateSurfaceMix(),
             Variants =
             [
-                Variant(FbThemeVariants.Default, FbThemeBaseColorsIndex.Zinc, light: true, masterTint),
-                Variant(FbThemeVariants.Selected, FbThemeBaseColorsIndex.Blue, light: true, masterTint),
-                Variant(FbThemeVariants.Error, FbThemeBaseColorsIndex.Red, light: true, masterTint),
-                Variant(FbThemeVariants.Warning, FbThemeBaseColorsIndex.Amber, light: true, masterTint),
-                Variant(FbThemeVariants.Disabled, FbThemeBaseColorsIndex.Gray, light: true, masterTint),
-                Variant(FbThemeVariants.Success, FbThemeBaseColorsIndex.Emerald, light: true, masterTint),
-                Variant(FbThemeVariants.Info, FbThemeBaseColorsIndex.Sky, light: true, masterTint)
+                Variant(FbThemeVariants.Default, "#15151e", "#1f2023", "#303240", "#f0f3f4", "#1b1b27", "#686d97"),
+                Variant(FbThemeVariants.Selected, "#0d0c1d", "#163cfe", "#2448ff", "#e5f2ff", "#141051", "#395afe"),
+                Variant(FbThemeVariants.Error, "#270707", "#fb0404", "#a02222", "#febebe", "#330a0a", "#fb0404"),
+                Variant(FbThemeVariants.Warning, "#1d1002", "#ff8800", "#ff7300", "#d2b5a3", "#2b1803", "#ff8800"),
+                Variant(FbThemeVariants.Disabled, "#191e29", "#242a33", "#2d394e", "#4f5963", "#191e29", "#3d4552"),
+                Variant(FbThemeVariants.Success, "#062d1e", "#03c700", "#66ff00", "#c2ffe8", "#084f34", "#03c700"),
+                Variant(FbThemeVariants.Info, "#02122c", "#009dff", "#00adff", "#90ddfe", "#092b62", "#009dff")
             ]
         };
-    }
+
+    private static FbThemeBranch CreateLightBranch()
+        => new(FbThemeBranches.Light)
+        {
+            MasterTint = CreateMasterTint(),
+            TextVariantMix = new FbThemeFormTextVariantMix
+            {
+                DefaultHighMix = "75%",
+                SubtleHighMix = "25%",
+                MutedHighMix = "45%",
+                HighlightHighMix = "100%"
+            },
+            BordersMix = new FbThemeLayoutBordersMix
+            {
+                LightMix = "8%",
+                MediumMix = "20%",
+                StrongMix = "45%"
+            },
+            SurfaceMix = CreateSurfaceMix(),
+            Variants =
+            [
+                Variant(FbThemeVariants.Default, "#f2f2f2", "#acafcd", "#deedf2", "#1d1d2f", "#e3e3e3", "#484a61"),
+                Variant(FbThemeVariants.Selected, "#e5f2ff", "#526eff", "#9ecfff", "#0a1b43", "#e5f2ff", "#002aff"),
+                Variant(FbThemeVariants.Error, "#fde7e7", "#fb0404", "#fde7f0", "#480505", "#fde7e7", "#fb0404"),
+                Variant(FbThemeVariants.Warning, "#fff4e5", "#ffa200", "#fff9e5", "#331600", "#fee5c3", "#d18400"),
+                Variant(FbThemeVariants.Disabled, "#eef2f6", "#b5bbc4", "#eef2f6", "#848994", "#ebebeb", "#6a717c"),
+                Variant(FbThemeVariants.Success, "#e8fdec", "#00ff4c", "#e8fdeb", "#001916", "#e8fdec", "#00992e"),
+                Variant(FbThemeVariants.Info, "#e5f5ff", "#00adff", "#e5f5ff", "#010f18", "#e5f5ff", "#00adff")
+            ]
+        };
 
     private static FbThemeColorVariant Variant(
         string name,
         string layoutLow,
         string layoutHigh,
         string formLow,
-        string formHigh)
+        string formHigh,
+        string frameLow,
+        string frameHigh)
         => new(name)
         {
             LayoutColors = new FbThemeLayoutColors { LowAnchor = layoutLow, HighAnchor = layoutHigh },
-            FormColors = new FbThemeFormColors { LowAnchor = formLow, HighAnchor = formHigh }
+            FormColors = new FbThemeFormColors { LowAnchor = formLow, HighAnchor = formHigh },
+            FrameColors = new FbThemeFormColors { LowAnchor = frameLow, HighAnchor = frameHigh }
         };
-
-    private static FbThemeColorVariant Variant(
-        string name,
-        FbThemeBaseColorsIndex color,
-        bool light,
-        FbThemeMasterTint masterTint)
-    {
-        var lighter = FbThemeBaseShadesIndex._50;
-        var medium = FbThemeBaseShadesIndex._500;
-        var darker = FbThemeBaseShadesIndex._950;
-        // ------------------------ LIGHT ----- DARK -------------------------- //
-        // BACKGROUND
-        var lowShadeBg =    light ? lighter :   darker;
-        var highShadeBg =   light ? medium :    medium;
-        // FOREGROUD
-        var lowShadeFg =    light ? lighter :    medium;
-        var highShadeFg =   light ? darker :    lighter;
-
-        var lowBg = FbThemeBaseColors.GetColor(color, lowShadeBg, masterTint);
-        var highBg = FbThemeBaseColors.GetColor(color, highShadeBg, masterTint);
-        var lowFg = FbThemeBaseColors.GetColor(color, lowShadeFg, masterTint);
-        var highFg = FbThemeBaseColors.GetColor(color, highShadeFg, masterTint);
-
-        return new FbThemeColorVariant(name)
-        {
-            LayoutColors = new FbThemeLayoutColors
-            {
-                LowAnchor = lowBg,
-                HighAnchor = highBg
-            },
-            FormColors = new FbThemeFormColors
-            {
-                LowAnchor = lowFg,
-                HighAnchor = highFg
-            }
-        };
-    }
 }

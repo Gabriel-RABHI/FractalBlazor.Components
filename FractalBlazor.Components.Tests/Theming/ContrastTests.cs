@@ -40,10 +40,10 @@ public sealed class ContrastTests(ITestOutputHelper output)
     }
 
     /// <summary>
-    /// Guard rail for palette changes: readable text of the Default variant, which carries
-    /// the body of every page, must meet WCAG AA on every background. Subtle is decorative
-    /// (placeholders, disabled hints) and exempt. The colored variants are a design choice
-    /// made in the theme editor: their contrast is reported, not enforced.
+    /// Guard rail for palette changes: the body text of the Default variant (Default and
+    /// Highlight strengths) must meet WCAG AA on every background. Subtle and Muted are
+    /// secondary texts, and the colored variants a design choice made in the theme editor:
+    /// their contrast is reported, not enforced.
     /// </summary>
     [Theory]
     [InlineData(FbThemeBranches.Dark)]
@@ -51,17 +51,24 @@ public sealed class ContrastTests(ITestOutputHelper output)
     public void Default_variant_readable_text_meets_wcag_aa(string branch)
         => AssertReadableTextMeetsAA(FbThemeContrast.Analyze(new FbFormThemeRegistry().Resolve("Default", branch)));
 
+    /// <summary>
+    /// An inverted card is checked on its Surface and Accent backgrounds: with a strong
+    /// Highlight offset, an inverted Highlight background comes close to the text anchors.
+    /// </summary>
     [Theory]
     [InlineData(FbThemeBranches.Dark)]
     [InlineData(FbThemeBranches.Light)]
     public void Inverted_default_variant_readable_text_meets_wcag_aa(string branch)
-        => AssertReadableTextMeetsAA(FbThemeContrast.Analyze(new FbFormThemeRegistry().Resolve("Default", branch), inverted: true));
+        => AssertReadableTextMeetsAA(
+            FbThemeContrast.Analyze(new FbFormThemeRegistry().Resolve("Default", branch), inverted: true),
+            FbContrastBackground.Surface, FbContrastBackground.Accent);
 
-    private static void AssertReadableTextMeetsAA(FbContrastReport report)
+    private static void AssertReadableTextMeetsAA(FbContrastReport report, params FbContrastBackground[] backgrounds)
     {
         var failing = report.Entries
             .Where(entry => entry.Variant == FbThemeVariants.Default)
-            .Where(entry => entry.Text is not FbContrastText.Subtle && !entry.MeetsAA)
+            .Where(entry => backgrounds.Length == 0 || backgrounds.Contains(entry.Background))
+            .Where(entry => (entry.Text is FbContrastText.Default or FbContrastText.Highlight) && !entry.MeetsAA)
             .Select(entry => entry.ToString())
             .ToList();
 

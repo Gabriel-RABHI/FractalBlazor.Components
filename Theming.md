@@ -247,7 +247,7 @@ Il respecte les invariants suivants :
 - les groupes Main sont entièrement renseignés ;
 - il contient les branches `Dark` et `Light` ;
 - chaque branche contient les variantes `Default`, `Selected`, `Error`, `Warning`, `Disabled`, `Success` et `Info` ;
-- toutes les ancres du thème par défaut sont échantillonnées depuis `FbThemeBaseColors` avec le `MasterTint` de leur branche ;
+- ses ancres de fond, de texte et de filet sont choisies une à une, pour chaque variante des deux branches (réglées dans l'éditeur de thème) ;
 - chaque valeur terminale est non null après résolution.
 
 Le constructeur sans argument ne doit pas créer implicitement ce thème. La fabrique rend l'intention explicite et évite de fabriquer plusieurs racines indépendantes par erreur.
@@ -901,7 +901,7 @@ foreach (var entry in report.Below(4.5))
 
 Le rapport couvre chaque texte (`Subtle`, `Muted`, `Default`, `Highlight`) sur chaque fond (`Surface`, `Accent`, `Highlight`) de chaque variante. `MeetsAA` vaut 4,5:1 (texte courant) et `MeetsAALarge` 3:1 (grand texte, contours de contrôles). Une variante dont une ancre n'est pas au format `#RGB` ou `#RRGGBB` apparaît dans `Skipped`.
 
-Les tests de la solution imposent l'AA aux textes `Default`, `Muted` et `Highlight` de la variante `Default`, celle du corps des pages, pour les deux branches du thème par défaut. `Subtle` est réservé aux textes décoratifs (placeholders, indications désactivées) et n'est pas contraint. Les variantes colorées sont un choix de design réglé dans l'éditeur de thème : leur contraste figure dans le rapport, sans être imposé.
+Les tests de la solution imposent l'AA aux textes `Default` et `Highlight` de la variante `Default`, celle du corps des pages, sur ses trois fonds, pour les deux branches du thème par défaut ; une carte inversée est contrôlée sur ses fonds Surface et Accent. `Subtle` et `Muted` sont des textes secondaires, et les variantes colorées un choix de design réglé dans l'éditeur de thème : leur contraste figure dans le rapport, sans être imposé.
 
 ## Adaptation des feuilles CSS
 

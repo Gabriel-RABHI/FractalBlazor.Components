@@ -15,12 +15,12 @@ public sealed class HoverOffsetTests
     [Theory]
     [InlineData(FbThemeBranches.Dark)]
     [InlineData(FbThemeBranches.Light)]
-    public void Default_theme_offsets_hovered_surfaces_by_four_percent(string branch)
+    public void Default_theme_writes_the_hover_offset_of_each_branch(string branch)
     {
         var theme = _registry.Resolve(_registry.Default.Name, branch);
 
-        Assert.Equal("4%", theme.SurfaceMix.HoverOffset);
-        Assert.Contains("--fb-bg-hover-offset:4%;", FbThemeCssWriter.ToCssVariables(theme));
+        Assert.False(string.IsNullOrWhiteSpace(theme.SurfaceMix.HoverOffset));
+        Assert.Contains($"--fb-bg-hover-offset:{theme.SurfaceMix.HoverOffset};", FbThemeCssWriter.ToCssVariables(theme));
     }
 
     [Fact]
@@ -32,17 +32,19 @@ public sealed class HoverOffsetTests
             [
                 new FbThemeBranch(FbThemeBranches.Dark)
                 {
-                    SurfaceMix = new FbThemeLayoutSurfaceMix { HoverOffset = "10%" }
+                    SurfaceMix = new FbThemeLayoutSurfaceMix { HoverOffset = "27%" }
                 }
             ]
         };
+        var defaultDark = _registry.Resolve(_registry.Default.Name, FbThemeBranches.Dark);
+        var defaultLight = _registry.Resolve(_registry.Default.Name, FbThemeBranches.Light);
 
         var dark = _registry.Resolve(edited, FbThemeBranches.Dark);
         var light = _registry.Resolve(edited, FbThemeBranches.Light);
 
-        Assert.Equal("10%", dark.SurfaceMix.HoverOffset);
-        Assert.Equal("8%", dark.SurfaceMix.SurfaceMix);
-        Assert.Equal("4%", light.SurfaceMix.HoverOffset);
+        Assert.Equal("27%", dark.SurfaceMix.HoverOffset);
+        Assert.Equal(defaultDark.SurfaceMix.SurfaceMix, dark.SurfaceMix.SurfaceMix);
+        Assert.Equal(defaultLight.SurfaceMix.HoverOffset, light.SurfaceMix.HoverOffset);
     }
 
     [Fact]

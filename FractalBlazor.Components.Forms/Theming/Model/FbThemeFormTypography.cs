@@ -56,7 +56,7 @@ public sealed class FbThemeFormTypography
         TextFontFamily = "'text-font',system-ui,-apple-system,sans-serif",
         CodeFontFamily = "'code-font',monospace",
         FontSizeBase = "14px",
-        LineHeight = "1.4",
+        LineHeight = "1.5",
         ExtraSmallCoef = "0.7",
         SmallCoef = "0.85",
         MediumCoef = "1",
