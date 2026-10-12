@@ -227,7 +227,17 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
             HighAnchor = Pick(value => value.FormColors?.HighAnchor, value => value.FormColors.HighAnchor, $"{branchName}.{variantName}.FormColors.HighAnchor")
         };
 
-        return new FbResolvedThemeVariant(variantName, layoutColors, formColors);
+        // Optional: without frame anchors, the CSS falls back to the background ones.
+        string? Optional(Func<FbThemeColorVariant, string?> selector, Func<FbResolvedThemeVariant, string?> fallback)
+            => FindVariantValue(theme, branchName, variantName, selector) ?? (defaultVariant is null ? null : fallback(defaultVariant));
+
+        var frameColors = new FbThemeFormColors
+        {
+            LowAnchor = Optional(value => value.FrameColors?.LowAnchor, value => value.FrameColors.LowAnchor),
+            HighAnchor = Optional(value => value.FrameColors?.HighAnchor, value => value.FrameColors.HighAnchor)
+        };
+
+        return new FbResolvedThemeVariant(variantName, layoutColors, formColors, frameColors);
     }
 
     private static List<string> GetBranchNames(FbThemeSetup theme)
@@ -400,6 +410,7 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
 
                 ValidateValues(variant.LayoutColors);
                 ValidateValues(variant.FormColors);
+                ValidateValues(variant.FrameColors);
             }
 
             ValidateValues(branch.MasterTint);

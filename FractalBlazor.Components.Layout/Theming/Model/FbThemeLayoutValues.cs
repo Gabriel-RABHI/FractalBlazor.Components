@@ -137,7 +137,8 @@ public static class FbThemeCssNames
         if (_references.TryGetValue(key, out var cached))
             return cached;
 
-        const string bgLow = "bg-low-anchor", bgHigh = "bg-high-anchor", fgLow = "fg-low-anchor", fgHigh = "fg-high-anchor";
+        const string bgLow = "bg-low-anchor", bgHigh = "bg-high-anchor", fgLow = "fg-low-anchor", fgHigh = "fg-high-anchor",
+            frameLow = "frame-low-anchor", frameHigh = "frame-high-anchor";
         var builder = new StringBuilder();
         if (!invert)
         {
@@ -161,6 +162,11 @@ public static class FbThemeCssNames
             builder.Append(ActiveReference(normalizedVariant, bgLow, bgHigh));
             builder.Append(ActiveReference(normalizedVariant, bgHigh, bgLow));
         }
+
+        // Frame anchors, when the variant declares them. A reference to an undefined anchor
+        // leaves the active one unset, and the frames fall back to the background anchors.
+        builder.Append(ActiveReference(normalizedVariant, frameLow, invert ? frameHigh : frameLow));
+        builder.Append(ActiveReference(normalizedVariant, frameHigh, invert ? frameLow : frameHigh));
         var references = builder.ToString();
 
         if (_references.Count < ReferenceCacheCapacity)

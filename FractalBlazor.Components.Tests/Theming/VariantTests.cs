@@ -9,7 +9,7 @@ public sealed class VariantTests : BunitContext
         => Render<FbVariant>(parameters).Find("div.fb-theme-scope").GetAttribute("style")!;
 
     [Fact]
-    public void A_variant_only_redirects_the_four_anchors()
+    public void A_variant_only_redirects_its_anchors()
     {
         var style = StyleOf(p => p.Add(x => x.Variant, FbThemeVariants.Error));
 
@@ -17,7 +17,9 @@ public sealed class VariantTests : BunitContext
             "--fb-bg-low-anchor:var(--fb-error-bg-low-anchor);" +
             "--fb-bg-high-anchor:var(--fb-error-bg-high-anchor);" +
             "--fb-fg-low-anchor:var(--fb-error-fg-low-anchor);" +
-            "--fb-fg-high-anchor:var(--fb-error-fg-high-anchor);",
+            "--fb-fg-high-anchor:var(--fb-error-fg-high-anchor);" +
+            "--fb-frame-low-anchor:var(--fb-error-frame-low-anchor);" +
+            "--fb-frame-high-anchor:var(--fb-error-frame-high-anchor);",
             style);
     }
 
@@ -30,7 +32,9 @@ public sealed class VariantTests : BunitContext
             "--fb-bg-low-anchor:var(--fb-error-fg-high-anchor);" +
             "--fb-bg-high-anchor:var(--fb-error-fg-low-anchor);" +
             "--fb-fg-low-anchor:var(--fb-error-bg-high-anchor);" +
-            "--fb-fg-high-anchor:var(--fb-error-bg-low-anchor);",
+            "--fb-fg-high-anchor:var(--fb-error-bg-low-anchor);" +
+            "--fb-frame-low-anchor:var(--fb-error-frame-high-anchor);" +
+            "--fb-frame-high-anchor:var(--fb-error-frame-low-anchor);",
             style);
     }
 
@@ -42,7 +46,9 @@ public sealed class VariantTests : BunitContext
 
         Assert.Equal(
             "--fb-bg-low-anchor:var(--fb-default-bg-high-anchor);" +
-            "--fb-bg-high-anchor:var(--fb-default-bg-low-anchor);",
+            "--fb-bg-high-anchor:var(--fb-default-bg-low-anchor);" +
+            "--fb-frame-low-anchor:var(--fb-default-frame-high-anchor);" +
+            "--fb-frame-high-anchor:var(--fb-default-frame-low-anchor);",
             style);
     }
 

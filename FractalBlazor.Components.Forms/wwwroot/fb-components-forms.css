@@ -172,7 +172,7 @@
     margin: 0;
     flex: none;
     border-radius: 1em;
-    background: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-strong-mix));
+    background: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-strong-mix));
     cursor: inherit;
     transition: background-color 0.15s ease-in-out;
 }

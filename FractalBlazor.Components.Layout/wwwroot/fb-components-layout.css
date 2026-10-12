@@ -75,19 +75,19 @@ html {
 .fb-framed-light,
 .fb-separated-row-light,
 .fb-separated-stack-light {
-    --fb-frame-border-color: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-light-mix));
+    --fb-frame-border-color: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-light-mix));
 }
 
 .fb-framed-medium,
 .fb-separated-row-medium,
 .fb-separated-stack-medium {
-    --fb-frame-border-color: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-medium-mix));
+    --fb-frame-border-color: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-medium-mix));
 }
 
 .fb-framed-strong,
 .fb-separated-row-strong,
 .fb-separated-stack-strong {
-    --fb-frame-border-color: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-strong-mix));
+    --fb-frame-border-color: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-strong-mix));
 }
 
 .fb-outline {
@@ -100,17 +100,17 @@ html {
 
 .fb-separator-light-frame {
     flex-basis: 1px;
-    background: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-light-mix));
+    background: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-light-mix));
 }
 
 .fb-separator-medium-frame {
     flex-basis: 1px;
-    background: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-medium-mix));
+    background: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-medium-mix));
 }
 
 .fb-separator-strong-frame {
     flex-basis: 1px;
-    background: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-strong-mix));
+    background: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-strong-mix));
 }
 
 /**********************************************************************************/
@@ -786,7 +786,7 @@ html {
 
 .fb-prog-path-back {
     /* Track: the medium frame color of the current background. */
-    stroke: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-medium-mix));
+    stroke: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-medium-mix));
 }
 
 .fb-prog-path {
@@ -840,7 +840,7 @@ html {
     min-width: 0;
     min-height: 0;
     scrollbar-width: thin;
-    scrollbar-color: color-mix(in oklab, var(--fb-current-bg), var(--fb-bg-high-anchor) var(--fb-current-frame-strong-mix)) transparent;
+    scrollbar-color: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-strong-mix)) transparent;
 }
 
 /* A flex item never shrinks below its content by default. Every box between the anchor and

@@ -87,6 +87,13 @@ public static class FbThemeCssWriter
         AppendVariant(builder, name, "bg-high-anchor", variant.LayoutColors.HighAnchor);
         AppendVariant(builder, name, "fg-low-anchor", variant.FormColors.LowAnchor);
         AppendVariant(builder, name, "fg-high-anchor", variant.FormColors.HighAnchor);
+
+        // Written only when declared: an undefined frame anchor lets the CSS fall back to the
+        // background anchors.
+        if (variant.FrameColors.LowAnchor is not null)
+            AppendVariant(builder, name, "frame-low-anchor", variant.FrameColors.LowAnchor);
+        if (variant.FrameColors.HighAnchor is not null)
+            AppendVariant(builder, name, "frame-high-anchor", variant.FrameColors.HighAnchor);
     }
 
     private static void AppendVariant(StringBuilder builder, string variant, string token, string? value)
