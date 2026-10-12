@@ -125,7 +125,7 @@ Les états du site quittent `FractalBlazor.WebSite` pour `FractalBlazor.WebSite.
 Les espacements (`Spacings`) et les rayons, ou courbures (`Corners`), sont des valeurs du thème communes à toutes ses branches. L'éditeur ne réglait que des valeurs de branche ; il règle désormais aussi celles-ci.
 
 - [x] **10.1 Éditeur de thème.** Une carte « Espacements et rayons » règle les quatre espacements et les quatre rayons S, M, L, X, en rem, comme le thème par défaut. Ces valeurs appartiennent au thème, pas à la branche : changer de branche les conserve, et la carte a son propre bouton de réinitialisation. L'aperçu montre les quatre rayons et les quatre espacements, et le code C# déclare `Spacings` et `Corners` au niveau du thème quand ils diffèrent du thème par défaut.
-- [ ] **10.2 Documentation.** README : ce que règle l'éditeur.
+- [x] **10.2 Documentation.** README : ce que règle l'éditeur.
 
 ## Critères de fin
 

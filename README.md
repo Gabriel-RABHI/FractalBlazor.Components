@@ -232,7 +232,7 @@ Le même site en WebAssembly (`http://localhost:5125`) :
 dotnet run --project FractalBlazor.WebSite.ClientSide/FractalBlazor.WebSite.ClientSide.csproj --launch-profile http
 ```
 
-Le site est une application d'une seule page pilotée par son modèle : démarrage rapide, principes state-first, mise en page, formulaires, variantes, et un éditeur de thème où couleurs et mélanges se règlent en direct sur un jeu de composants, avec le rapport de contraste et le code C# du thème obtenu. Le plan de finalisation et son avancement sont dans [Plan.md](Plan.md).
+Le site est une application d'une seule page pilotée par son modèle : démarrage rapide, principes state-first, mise en page, formulaires, variantes, et un éditeur de thème où couleurs, mélanges, espacements et rayons se règlent en direct sur un jeu de composants, avec le rapport de contraste et le code C# du thème obtenu. Le plan de finalisation et son avancement sont dans [Plan.md](Plan.md).
 
 ## Licence
 
