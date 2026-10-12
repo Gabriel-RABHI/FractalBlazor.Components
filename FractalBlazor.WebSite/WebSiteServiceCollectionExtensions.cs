@@ -18,6 +18,7 @@ public static class WebSiteServiceCollectionExtensions
         services.AddScoped<IThemeModeStore, CookieThemeModeStore>();
         services.AddScoped<RootState>();
         services.AddScoped<ThemeEditorModel>();
+        services.AddScoped<ThemeEditorAutoSave>();
         return services;
     }
 }

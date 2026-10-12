@@ -136,6 +136,11 @@ Les espacements (`Spacings`) et les rayons, ou courbures (`Corners`), sont des v
 - [x] **11.5 Aperçu en onglets.** « Surfaces et frames » : Surface, Accent, Highlight et Survol en colonnes, frames Light, Medium et Strong en lignes. « Textes » : de Subtle à Highlight en colonnes, de XS à XL en lignes. « Variantes » : la même grille pour chaque variante, avec un sélecteur de force du texte. « Boutons » : chaque variante sur chaque fond, avec des sélecteurs de frame et de texte. « Formulaire » : le faux formulaire, avec un sélecteur de variante.
 - [x] **11.6 Documentation.** Theming.md : ancres de filet et décalage de survol ; README : `FbTabs`.
 
+## Phase 12 — Ne jamais perdre un réglage de l'éditeur
+
+- [x] **12.1 Une valeur par branche.** Changer de branche ne recharge plus les valeurs par défaut : chaque branche garde ses mélanges et ses ancres, et l'aperçu comme le code C# déclarent toutes les branches modifiées.
+- [x] **12.2 Enregistrement automatique.** L'état de l'éditeur (valeurs du thème, de chaque branche, branche, variante et onglet ouverts) est enregistré dans le navigateur à chaque modification, et restauré à l'ouverture de l'éditeur, sur les deux hôtes. Un rechargement, une coupure du circuit ou un redémarrage ne perdent plus rien. « Repartir du thème par défaut » efface la session, après confirmation.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :

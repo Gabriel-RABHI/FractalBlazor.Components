@@ -9,6 +9,15 @@ window.fbWebSite = {
         return entry ? decodeURIComponent(entry.substring(name.length + 1)) : null;
     },
 
+    // Keeps a text in this browser; a browser that refuses storage is ignored.
+    saveText: (key, text) => {
+        try { localStorage.setItem(key, text); } catch { }
+    },
+
+    loadText: key => {
+        try { return localStorage.getItem(key); } catch { return null; }
+    },
+
     // Puts a text in the system clipboard; a browser that refuses it is ignored.
     copyText: text => navigator.clipboard ? navigator.clipboard.writeText(text).catch(() => { }) : undefined
 };

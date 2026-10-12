@@ -201,6 +201,63 @@ namespace FractalBlazor.WebSite.ThemeEditor
             Version++;
         }
 
+        /// <summary>
+        /// Starts everything again from the default theme: the values of the theme and every branch.
+        /// </summary>
+        public void ResetAll()
+        {
+            _branches.Clear();
+            SelectBranch(Branch);
+            ResetShape();
+            ResetTypography();
+        }
+
+        /// <summary>
+        /// The whole state of the editor, to save it.
+        /// </summary>
+        internal ThemeEditorSnapshot Capture() => new(
+            ThemeEditorSnapshot.CurrentFormat,
+            Branch, SelectedVariant, EditTab,
+            _spaceS, _spaceM, _spaceL, _spaceX,
+            _radiusS, _radiusM, _radiusL, _radiusX,
+            _textFont, _codeFont, _fontSize, _lineHeight,
+            _coefXS, _coefS, _coefM, _coefL, _coefXL, _coefXXL,
+            _weightThin, _weightDefault, _weightBold, _weightExtraBold,
+            _branches.ToDictionary(pair => pair.Key, pair => pair.Value.Capture()));
+
+        /// <summary>
+        /// Comes back to a saved state. Unknown branches and variants are skipped, and invalid
+        /// values keep the default ones: an old or damaged save never breaks the editor.
+        /// </summary>
+        internal void Restore(ThemeEditorSnapshot saved)
+        {
+            _spaceS = saved.SpaceS; _spaceM = saved.SpaceM; _spaceL = saved.SpaceL; _spaceX = saved.SpaceX;
+            _radiusS = saved.RadiusS; _radiusM = saved.RadiusM; _radiusL = saved.RadiusL; _radiusX = saved.RadiusX;
+            SetCss(ref _textFont, saved.TextFontFamily ?? "");
+            SetCss(ref _codeFont, saved.CodeFontFamily ?? "");
+            _fontSize = saved.FontSize; _lineHeight = saved.LineHeight;
+            _coefXS = saved.CoefXS; _coefS = saved.CoefS; _coefM = saved.CoefM;
+            _coefL = saved.CoefL; _coefXL = saved.CoefXL; _coefXXL = saved.CoefXXL;
+            _weightThin = saved.WeightThin; _weightDefault = saved.WeightDefault;
+            _weightBold = saved.WeightBold; _weightExtraBold = saved.WeightExtraBold;
+
+            foreach (var (name, branch) in saved.Branches ?? [])
+            {
+                var known = Branches.FirstOrDefault(value => value.Equals(name, StringComparison.OrdinalIgnoreCase));
+                if (known is null)
+                    continue;
+
+                var values = new BranchValues(this, Resolve(known));
+                values.Restore(branch);
+                _branches[known] = values;
+            }
+
+            EditTab = saved.EditTab;
+            SelectBranch(Branches.FirstOrDefault(value => value.Equals(saved.Branch, StringComparison.OrdinalIgnoreCase)) ?? Branch);
+            if (Current.Anchors.ContainsKey(saved.SelectedVariant ?? ""))
+                SelectedVariant = saved.SelectedVariant!;
+        }
+
         private FbResolvedTheme Resolve(string branch) => _registry.Resolve(_registry.Default.Name, branch);
 
         /// <summary>
@@ -427,6 +484,27 @@ namespace FractalBlazor.WebSite.ThemeEditor
                         variant.FrameColors.LowAnchor, variant.FrameColors.HighAnchor);
                 }
             }
+
+            public BranchSnapshot Capture() => new(
+                SurfaceMix, AccentOffset, HighlightOffset, HoverOffset,
+                FrameLight, FrameMedium, FrameStrong,
+                TextSubtle, TextMuted, TextDefault, TextHighlight,
+                Anchors.ToDictionary(pair => pair.Key, pair => pair.Value.Capture()));
+
+            public void Restore(BranchSnapshot saved)
+            {
+                SurfaceMix = saved.SurfaceMix; AccentOffset = saved.AccentOffset;
+                HighlightOffset = saved.HighlightOffset; HoverOffset = saved.HoverOffset;
+                FrameLight = saved.FrameLight; FrameMedium = saved.FrameMedium; FrameStrong = saved.FrameStrong;
+                TextSubtle = saved.TextSubtle; TextMuted = saved.TextMuted;
+                TextDefault = saved.TextDefault; TextHighlight = saved.TextHighlight;
+
+                foreach (var (name, anchors) in saved.Anchors ?? [])
+                {
+                    if (Anchors.TryGetValue(name, out var current))
+                        current.Restore(anchors);
+                }
+            }
         }
 
         private static (string Name, string Value, string? Original) MixValue(string name, double value, string? original)
@@ -531,6 +609,25 @@ namespace FractalBlazor.WebSite.ThemeEditor
             public string FgHigh { get => _currentFgHigh; set => Set(ref _currentFgHigh, value); }
             public string FrameLow { get => _currentFrameLow ?? _currentBgLow; set => SetFrame(ref _currentFrameLow, value); }
             public string FrameHigh { get => _currentFrameHigh ?? _currentBgHigh; set => SetFrame(ref _currentFrameHigh, value); }
+
+            internal AnchorSnapshot Capture()
+                => new(_currentBgLow, _currentBgHigh, _currentFgLow, _currentFgHigh, _currentFrameLow, _currentFrameHigh);
+
+            /// <summary>
+            /// Takes back saved colors; a value that is not a color is left as it is.
+            /// </summary>
+            internal void Restore(AnchorSnapshot saved)
+            {
+                _currentBgLow = Color(saved.BgLow) ?? _currentBgLow;
+                _currentBgHigh = Color(saved.BgHigh) ?? _currentBgHigh;
+                _currentFgLow = Color(saved.FgLow) ?? _currentFgLow;
+                _currentFgHigh = Color(saved.FgHigh) ?? _currentFgHigh;
+                _currentFrameLow = Color(saved.FrameLow);
+                _currentFrameHigh = Color(saved.FrameHigh);
+            }
+
+            private static string? Color(string? value)
+                => value is { Length: 4 or 7 } && value[0] == '#' && value.Skip(1).All(char.IsAsciiHexDigit) ? value.ToLowerInvariant() : null;
 
             /// <summary>
             /// Whether the frame lines have their own anchors. Turned on, they start from the

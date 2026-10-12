@@ -1,8 +1,10 @@
 @* The editor model lives in the circuit (a scoped service): the edited values, and the open
-   tabs, survive navigation. *@
+   tabs, survive navigation. It is also saved in the browser after every change and restored
+   when the editor opens, so a reload, a lost circuit or a restart lose nothing. *@
 @attribute [ViewFor<ViewSelector>(typeof(ThemeEditorPage), ViewSelector.Viewer)]
 @inject IFbFormThemeRegistry Registry
 @inject ThemeEditorModel Model
+@inject ThemeEditorAutoSave AutoSave
 
 @using FractalBlazor.WebSite.ThemeEditor
 @using FractalBlazor.Components.Forms.Contracts
@@ -15,6 +17,22 @@
         typographie appartiennent au thème ; les couleurs et les mélanges, à chaque branche, qui garde
         ses réglages quand on passe de l’une à l’autre. Le code du thème déclare les deux.
     </FbText>
+
+    <FbRow GS JVC MultiLine>
+        <FbIcon Icon="@FbMaterialIcons.CloudDone" S Subtle />
+        <FbText XS Muted>Tout est enregistré automatiquement dans ce navigateur.</FbText>
+        <FbRowSpacer />
+        @if (_confirmReset)
+        {
+            <FbText S>Effacer tous les réglages et repartir du thème par défaut ?</FbText>
+            <FbButton Variant="@FbThemeVariants.Error" Icon="@FbMaterialIcons.DeleteForever" OnClick="ResetAll"><FbText S>Effacer</FbText></FbButton>
+            <FbButton WBN OnClick="() => _confirmReset = false"><FbText S>Annuler</FbText></FbButton>
+        }
+        else
+        {
+            <FbButton WBN Icon="@FbMaterialIcons.RestartAlt" OnClick="() => _confirmReset = true"><FbText S>Repartir du thème par défaut</FbText></FbButton>
+        }
+    </FbRow>
 
     <FbTabs TAction="FbSetValue<int>" @bind-Value="Model.EditTab" Items="EditTabs" />
 
@@ -181,6 +199,27 @@
 
     private int _contrastVersion = -1;
     private IReadOnlyList<(FbContrastText Text, FbContrastEntry Entry)> _worst = [];
+    private bool _confirmReset;
+
+    protected override Task OnInitializedAsync() => AutoSave.RestoreAsync();
+
+    /// <summary>
+    /// Every edit re-renders this view: saving after the render keeps the browser up to date.
+    /// When the restore could not run before (no interactive JS yet), it runs here.
+    /// </summary>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (await AutoSave.RestoreAsync())
+            StateHasChanged();
+        else
+            await AutoSave.SaveAsync();
+    }
+
+    private void ResetAll()
+    {
+        Model.ResetAll();
+        _confirmReset = false;
+    }
 
     /// <summary>
     /// Recomputed only when the edited theme changes.
