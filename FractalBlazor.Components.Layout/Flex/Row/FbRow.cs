@@ -36,9 +36,9 @@ namespace FractalBlazor.Components.Layout
 
         private string SeparatorClass => _separator switch
         {
-            FbFrame.Light => "fb-separated-row fb-separated-row-light",
-            FbFrame.Medium => "fb-separated-row fb-separated-row-medium",
-            FbFrame.Strong => "fb-separated-row fb-separated-row-strong",
+            FbFrame.Light => "fb-wsl",
+            FbFrame.Medium => "fb-wsm",
+            FbFrame.Strong => "fb-wss",
             _ => ""
         };
 

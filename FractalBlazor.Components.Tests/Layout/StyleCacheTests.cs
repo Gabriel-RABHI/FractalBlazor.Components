@@ -19,7 +19,7 @@ public sealed class StyleCacheTests
         var second = new ProbeRow { WBA = true, WFM = true, Hover = true, PL = true };
 
         Assert.Same(first.RowClasses, second.RowClasses);
-        Assert.Equal($"fb-row fb-bg-accent fb-framed fb-framed-medium fb-hover {Atom("padding:var(--fb-space-l)")}", first.RowClasses);
+        Assert.Equal($"fb-row fb-wba fb-wfm fb-hover {Atom("padding:var(--fb-space-l)")}", first.RowClasses);
     }
 
     [Fact]
@@ -28,7 +28,7 @@ public sealed class StyleCacheTests
         var first = new ProbeRow { WBA = true, Classes = "custom" };
         var second = new ProbeRow { WBA = true, Classes = "custom" };
 
-        Assert.Equal("fb-row fb-bg-accent custom", first.RowClasses);
+        Assert.Equal("fb-row fb-wba custom", first.RowClasses);
         Assert.NotSame(first.RowClasses, second.RowClasses);
     }
 

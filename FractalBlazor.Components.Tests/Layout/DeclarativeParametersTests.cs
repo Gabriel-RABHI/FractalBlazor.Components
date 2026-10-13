@@ -13,22 +13,22 @@ public sealed class DeclarativeParametersTests : BunitContext
     public void Background_flag_turned_off_removes_the_background_class()
     {
         var cut = Render<FbRow>(p => p.Add(x => x.WBA, true));
-        Assert.Contains("fb-bg-accent", cut.Find("div").ClassList);
+        Assert.Contains("fb-wba", cut.Find("div").ClassList);
 
         cut.Render(p => p.Add(x => x.WBA, false));
 
-        Assert.DoesNotContain("fb-bg-accent", cut.Find("div").ClassList);
+        Assert.DoesNotContain("fb-wba", cut.Find("div").ClassList);
     }
 
     [Fact]
     public void Frame_flag_turned_off_removes_the_frame_class()
     {
         var cut = Render<FbStack>(p => p.Add(x => x.WFS, true));
-        Assert.Contains("fb-framed-strong", cut.Find("div").ClassList);
+        Assert.Contains("fb-wfs", cut.Find("div").ClassList);
 
         cut.Render(p => p.Add(x => x.WFS, false));
 
-        Assert.DoesNotContain("fb-framed", cut.Find("div").ClassList);
+        Assert.DoesNotContain("fb-wfs", cut.Find("div").ClassList);
     }
 
     [Fact]
@@ -57,11 +57,11 @@ public sealed class DeclarativeParametersTests : BunitContext
     public void Outline_follows_the_flag()
     {
         var cut = Render<FbRow>(p => p.Add(x => x.EOutline, true));
-        Assert.Contains("fb-outline", cut.Find("div").ClassList);
+        Assert.Contains("fb-eoutline", cut.Find("div").ClassList);
 
         cut.Render(p => p.Add(x => x.EOutline, false));
 
-        Assert.DoesNotContain("fb-outline", cut.Find("div").ClassList);
+        Assert.DoesNotContain("fb-eoutline", cut.Find("div").ClassList);
     }
 
     [Fact]

@@ -84,7 +84,7 @@ namespace FractalBlazor.Components.Forms.Components.Display
 
         private static readonly string[] SizeClasses = { "", " fb-t-xs", " fb-t-s", " fb-t-m", " fb-t-l", " fb-t-xl", " fb-t-xxl" };
         private static readonly string[] WeightClasses = { "", " fb-t-t", " fb-t-b", " fb-t-xb" };
-        private static readonly string[] ColorClasses = { "", " fb-fg-subtle", " fb-fg-muted", " fb-fg-highlight" };
+        private static readonly string[] ColorClasses = { "", " fb-subtle", " fb-muted", " fb-highlight" };
         private static readonly string[] ModifierClasses = { "", " fb-t-nw", " fb-t-tr", " fb-t-nw fb-t-tr" };
 
         // Every combination is built once and shared by all instances.

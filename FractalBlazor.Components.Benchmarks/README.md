@@ -39,21 +39,23 @@ Rendu de 1 000 éditeurs empilés, un par candidat. Le DTO `ApplicantDto` porte 
 
 | Bibliothèque | FirstRender | Mémoire | Rerender | Mémoire |
 | --- | ---: | ---: | ---: | ---: |
-| FractalBlazor | 141 ms | 50,3 Mo | 29,1 ms | 3,2 Mo |
-| Radzen | 233 ms | 69,3 Mo | 90,4 ms | 12,3 Mo |
-| Fluent UI | 318 ms | 96,0 Mo | 122,9 ms | 20,7 Mo |
-| MudBlazor | 1 151 ms | 404,9 Mo | 125,1 ms | 16,9 Mo |
+| FractalBlazor | 140 ms | 48,2 Mo | 28,0 ms | 3,2 Mo |
+| Radzen | 210 ms | 69,3 Mo | 82,2 ms | 12,3 Mo |
+| Fluent UI | 282 ms | 96,0 Mo | 120,1 ms | 20,8 Mo |
+| MudBlazor | 1 108 ms | 404,9 Mo | 119,2 ms | 16,9 Mo |
 
-Au premier rendu, FractalBlazor est 1,6 fois plus rapide que Radzen, 2,2 fois plus que Fluent UI et 8 fois plus que MudBlazor ; au re-rendu, de 3 à 4,3 fois plus rapide, avec 4 à 6 fois moins de mémoire.
+Au premier rendu, FractalBlazor est 1,5 fois plus rapide que Radzen, 2 fois plus que Fluent UI et 8 fois plus que MudBlazor ; au re-rendu, de 2,9 à 4,3 fois plus rapide, avec 4 à 6 fois moins de mémoire.
 
 | HTML de la page | Brut | gzip | Brotli | Éléments |
 | --- | ---: | ---: | ---: | ---: |
-| FractalBlazor | 2 170 Ko | 63 Ko | 48 Ko | 32 001 |
+| FractalBlazor | 1 685 Ko | 57 Ko | 47 Ko | 28 001 |
 | Radzen | 3 885 Ko | 184 Ko | 131 Ko | 40 001 |
 | Fluent UI | 1 849 Ko | 131 Ko | 81 Ko | 23 001 |
 | MudBlazor | 5 954 Ko | 173 Ko | 99 Ko | 49 002 |
 
-Fluent UI produit le HTML brut le plus court, mais ses web components (`<fluent-text-input>`, `<fluent-checkbox>`) construisent ensuite leur propre DOM dans le navigateur, ce que cette mesure côté serveur ne voit pas ; ses identifiants aléatoires se compressent aussi mal. Compressé, le HTML de FractalBlazor est le plus léger, de 1,7 à 2,9 fois.
+Le HTML de FractalBlazor est le plus léger, brut comme compressé (de 2,3 à 3,2 fois en gzip). Celui de Fluent UI est court, mais ses web components (`<fluent-text-input>`, `<fluent-checkbox>`) construisent ensuite leur propre DOM dans le navigateur, ce que cette mesure côté serveur ne voit pas, et ses identifiants aléatoires se compressent mal. Les classes de FractalBlazor portent le nom de leurs drapeaux (`fb-wba`, `fb-wfm`), et ses icônes internes (coche, chevron) sont dessinées par la feuille de style : avant cela, la page pesait 2 170 Ko et 32 001 éléments.
+
+Quelle taille compte dépend du mode de rendu. En Interactive Server, les échanges SignalR sont compressés par défaut depuis .NET 8 (`permessage-deflate`, désactivable par `DisableWebSocketCompression`), avec une politique `frame-ancestors` qui interdit l'intégration dans une `iframe` d'une autre origine, contre les attaques de type CRIME et BREACH. Le HTML du rendu statique ou du prérendu, lui, n'est compressé que par un middleware ajouté explicitement (`EnableForHttps` vaut `false` par défaut, pour la même raison) ou par un proxy : sans eux, c'est la taille brute qui part sur le réseau.
 
 Ce que chaque bibliothèque rend pèse sur les écarts :
 

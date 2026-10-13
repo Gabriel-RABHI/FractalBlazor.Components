@@ -20,7 +20,7 @@ Composants Blazor ultra-légers pour la mise en page et les formulaires, avec un
 
 - **Composants ultra-légers.** Ils implémentent `IComponent` directement, sans `ComponentBase`. La mise en page s'écrit en classes techniques très courtes (`fb-a`, `fb-ab`…), une déclaration chacune, générées depuis une table C# ; une rangée ou une pile n'ajoute que celles qui diffèrent de sa règle de base. La chaîne `class` vient d'un cache partagé, indexé par la valeur complète des paramètres. Seules les valeurs libres (`Style`, `MinWidth`, `FlexBasis`…) restent en style inline.
 - **Les composants ne lisent pas le thème.** Ils posent des classes ; le thème est résolu en C#, sérialisé en variables CSS, et la cascade fait le reste.
-- **Une grammaire courte.** Des drapeaux booléens préfixés : `WB*` fond, `WF*` frame, `WR*` rayon, `P*` padding, `M*` marge, `G*` gutter, `J*` alignement. Une API enum les complète pour les valeurs calculées.
+- **Une grammaire courte.** Des drapeaux booléens préfixés : `WB*` fond, `WF*` frame, `WR*` rayon, `P*` padding, `M*` marge, `G*` gutter, `J*` alignement. Une API enum les complète pour les valeurs calculées. Le DOM parle la même langue : un drapeau donne une classe de son nom (`WBA` → `fb-wba`, `WFM` → `fb-wfm`, `Muted` → `fb-muted`).
 - **Rendu ≠ fonctionnel.** `Muted` est un rendu ; `Error`, `Selected`, `Disabled` sont des variantes posées par `FbVariant`.
 - **Layout autonome.** `FractalBlazor.Components.Layout` ne dépend pas de Forms et préfixe tout son CSS par `fb-` : il cohabite avec MudBlazor ou Radzen.
 - **State-first.** Les champs envoient des actions à un objet d'état ; la vue est choisie d'après le type de l'état.
@@ -220,9 +220,9 @@ Rendu côté serveur de 1 000 lignes encadrées, puis de 1 000 éditeurs à cinq
 | --- | ---: | ---: | ---: | ---: |
 | Lignes, premier rendu | 4,21 ms | 8,99 ms | 8,51 ms | 16,23 ms |
 | Lignes, re-rendu | 1,23 ms | 3,17 ms | 3,64 ms | 4,79 ms |
-| Éditeurs, premier rendu | 141 ms | 1 151 ms | 233 ms | 318 ms |
-| Éditeurs, re-rendu | 29 ms | 125 ms | 90 ms | 123 ms |
-| Éditeurs, HTML compressé (gzip) | 63 Ko | 173 Ko | 184 Ko | 131 Ko |
+| Éditeurs, premier rendu | 140 ms | 1 108 ms | 210 ms | 282 ms |
+| Éditeurs, re-rendu | 28 ms | 119 ms | 82 ms | 120 ms |
+| Éditeurs, HTML compressé (gzip) | 57 Ko | 173 Ko | 184 Ko | 131 Ko |
 
 ## Développement
 

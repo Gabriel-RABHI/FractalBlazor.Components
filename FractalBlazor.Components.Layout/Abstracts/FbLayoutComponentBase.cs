@@ -114,39 +114,34 @@ namespace FractalBlazor.Components.Layout.Abstracts
 
         private FbSpacing MarginRight { get => _state.MarginRight; set => _state.MarginRight = value; }
 
-        private string WrapClassString {
-            get {
-                if (_state._noWrap)
-                    return "fb-text-no-wrap";
-                return "";
-            }
-        }
+        /// <summary>
+        /// Class of <see cref="WNTW"/>, named after the flag.
+        /// </summary>
+        private string WrapClassString => _state._noWrap ? "fb-wntw" : "";
 
+        /// <summary>
+        /// Class of the <c>VO_*</c> and <c>VU_*</c> flags, named after the flag:
+        /// <c>fb-vo-xl</c>, <c>fb-vu-xl</c>…
+        /// </summary>
         private string ResponsiveClassString {
             get {
                 if (ResponsiveContainer)
                     return "fb-container-init";
 
-                if (ResponsiveBreakpoint is not FbBreaks.None)
+                var breakpoint = ResponsiveBreakpoint switch
                 {
-                    var responsiveResultClasse = "fb-container";
-                    switch (ResponsiveBreakpoint)
-                    {
-                        case FbBreaks.XXL: responsiveResultClasse = $"{responsiveResultClasse}-xxl"; break;
-                        case FbBreaks.XL: responsiveResultClasse = $"{responsiveResultClasse}-xl"; break;
-                        case FbBreaks.L: responsiveResultClasse = $"{responsiveResultClasse}-l"; break;
-                        case FbBreaks.M: responsiveResultClasse = $"{responsiveResultClasse}-m"; break;
-                        case FbBreaks.S: responsiveResultClasse = $"{responsiveResultClasse}-s"; break;
-                        case FbBreaks.XS: responsiveResultClasse = $"{responsiveResultClasse}-xs"; break;
-                    }
+                    FbBreaks.XXL => "xxl",
+                    FbBreaks.XL => "xl",
+                    FbBreaks.L => "l",
+                    FbBreaks.M => "m",
+                    FbBreaks.S => "s",
+                    FbBreaks.XS => "xs",
+                    _ => null
+                };
+                if (breakpoint is null)
+                    return "";
 
-                    if (_state._responsiveUnder)
-                        return $"{responsiveResultClasse}-none";
-                    else
-                        return $"{responsiveResultClasse}-flex";
-                }
-
-                return "";
+                return _state._responsiveUnder ? $"fb-vu-{breakpoint}" : $"fb-vo-{breakpoint}";
             }
         }
 

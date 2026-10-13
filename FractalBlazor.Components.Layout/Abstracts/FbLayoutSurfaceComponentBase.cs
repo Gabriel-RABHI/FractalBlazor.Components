@@ -31,15 +31,15 @@ namespace FractalBlazor.Components.Layout.Abstracts
             }
         }
 
-        private string OutlineClassString => EOutline ? "fb-outline" : "";
+        private string OutlineClassString => EOutline ? "fb-eoutline" : "";
 
         private FbSpacing Radius { get => _radius; set => _radius = value; }
 
         private string FrameClass => _frame switch
         {
-            FbFrame.Light => "fb-framed fb-framed-light",
-            FbFrame.Medium => "fb-framed fb-framed-medium",
-            FbFrame.Strong => "fb-framed fb-framed-strong",
+            FbFrame.Light => "fb-wfl",
+            FbFrame.Medium => "fb-wfm",
+            FbFrame.Strong => "fb-wfs",
             _ => ""
         };
 
@@ -48,11 +48,11 @@ namespace FractalBlazor.Components.Layout.Abstracts
                 switch (_background)
                 {
                     case FbBackground.Surface:
-                        return "fb-bg-surface";
+                        return "fb-wbs";
                     case FbBackground.Accent:
-                        return "fb-bg-accent";
+                        return "fb-wba";
                     case FbBackground.Highlight:
-                        return "fb-bg-highlight";
+                        return "fb-wbh";
                 }
                 return "";
             }

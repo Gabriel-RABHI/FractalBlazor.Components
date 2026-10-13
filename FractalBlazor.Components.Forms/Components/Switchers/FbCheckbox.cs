@@ -30,9 +30,6 @@ namespace FractalBlazor.Components.Forms.Components.Switchers
         // Classes of every combination of alignment, mirror and circle, built once.
         private static readonly string[] CombinedClasses = BuildClasses();
 
-        // Check mark of the box, in a 24×24 view box.
-        private const string Mark = "<path d=\"M5 12.5l4.5 4.5L19 7.5\"/>";
-
         private FbCheckboxAlign _align;
 
         /// <summary>
@@ -94,14 +91,10 @@ namespace FractalBlazor.Components.Forms.Components.Switchers
             builder.AddAttribute(7, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, HandleChangeAsync));
             builder.CloseElement();
 
+            // The box and its mark are drawn by the stylesheet.
             builder.OpenElement(8, "span");
             builder.AddAttribute(9, "class", "fb-check-box");
             builder.AddAttribute(10, "aria-hidden", "true");
-            builder.OpenElement(11, "svg");
-            builder.AddAttribute(12, "class", "fb-check-mark");
-            builder.AddAttribute(13, "viewBox", "0 0 24 24");
-            builder.AddMarkupContent(14, Mark);
-            builder.CloseElement();
             builder.CloseElement();
 
             builder.OpenElement(15, "span");

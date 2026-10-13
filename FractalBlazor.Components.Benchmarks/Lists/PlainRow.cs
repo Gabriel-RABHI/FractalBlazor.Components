@@ -25,7 +25,7 @@ namespace FractalBlazor.Components.Benchmarks.Lists
         {
             builder.OpenElement(0, "div");
             builder.AddAttribute(1, "class",
-                "fb-row" + (WBA ? " fb-bg-accent" : "") + (WFM ? " fb-framed fb-framed-medium" : "") +
+                "fb-row" + (WBA ? " fb-wba" : "") + (WFM ? " fb-wfm" : "") +
                 (PL ? PaddingL : "") + (WRM ? RadiusM : "") + (GM ? GapM : ""));
             builder.AddContent(2, ChildContent);
             builder.CloseElement();
@@ -41,7 +41,7 @@ namespace FractalBlazor.Components.Benchmarks.Lists
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "span");
-            builder.AddAttribute(1, "class", "fb-txt" + (S ? " fb-t-s" : "") + (Muted ? " fb-fg-muted" : ""));
+            builder.AddAttribute(1, "class", "fb-txt" + (S ? " fb-t-s" : "") + (Muted ? " fb-muted" : ""));
             builder.AddContent(2, ChildContent);
             builder.CloseElement();
         }

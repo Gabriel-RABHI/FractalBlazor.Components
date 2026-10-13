@@ -16,7 +16,7 @@ namespace FractalBlazor.Components.Forms.Components.Icons
         private const int SizeCount = 5, ColorCount = 4;
 
         private static readonly string[] SizeClasses = { "", " fb-icon-s", " fb-icon-m", " fb-icon-l", " fb-icon-x" };
-        private static readonly string[] ColorClasses = { "", " fb-fg-subtle", " fb-fg-muted", " fb-fg-highlight" };
+        private static readonly string[] ColorClasses = { "", " fb-subtle", " fb-muted", " fb-highlight" };
         private static readonly string?[] _classes = new string?[SizeCount * ColorCount];
 
         private FbSpacing _size;

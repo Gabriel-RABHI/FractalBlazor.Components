@@ -154,6 +154,12 @@ Le HTML de 1 000 éditeurs pesait 3,9 Mo, dont 52 % de styles inline : 7 001 att
 - [x] **14.3 Cache.** La clé de chaque niveau réunit désormais tout l'état (style et classes) ; la chaîne `class` est mise en cache comme l'était le style, et les `Classes` libres s'ajoutent à la fin, composant par composant, sans priver le reste du cache. Le style inline ne porte plus que les valeurs libres, et n'est pas rendu quand il est vide. Le HTML de 1 000 éditeurs passe de 3 926 à 2 080 Ko, et l'allocation du premier rendu de 57,5 à 55,3 Mo. `FrozenDictionary` avec un verrou actif a été mesuré contre `ConcurrentDictionary` : 4 à 17 % plus lent en lecture, la clé étant hachée de la même façon ; le cache reste un `ConcurrentDictionary`.
 - [x] **14.4 Vérification.** Les styles calculés de chaque élément du site (35 propriétés, dimensions comprises) sont identiques avant et après, page par page.
 
+## Phase 15 — Classes nommées comme les drapeaux, icônes en CSS
+
+- [x] **15.1 Une classe par drapeau, du nom du drapeau.** `WBS`, `WBA`, `WBH` donnent `fb-wbs`, `fb-wba`, `fb-wbh` ; `WFL`, `WFM`, `WFS` donnent `fb-wfl`, `fb-wfm`, `fb-wfs` (au lieu de `fb-framed fb-framed-light`…) ; `WSL`, `WSM`, `WSS` donnent `fb-wsl`… sur les rangées, les piles et les grilles ; `EOutline` donne `fb-eoutline`, `WNTW` `fb-wntw`, `VO_XL` et `VU_XL` `fb-vo-xl` et `fb-vu-xl` ; `Subtle`, `Muted` et `Highlight` donnent `fb-subtle`, `fb-muted` et `fb-highlight` sur `FbText` et `FbIcon`. Les variables CSS gardent leur nom. La classe morte `fb-fg-default` est supprimée.
+- [x] **15.2 Icônes des composants en CSS.** La coche de `FbCheckbox`, le chevron de `FbSelect` et la coche de l'option choisie sont dessinés par la feuille de style (`mask` et `currentColor`) sur un élément vide, au lieu d'un SVG inline à chaque instance. `FbIcon` garde le SVG inline pour les icônes de l'utilisateur.
+- [x] **15.3 Vérification.** Styles calculés identiques sur onze écrans du site, liste ouverte comprise ; même boîte, même couleur et même opacité pour chaque icône. Le HTML de 1 000 éditeurs passe de 2 170 à 1 685 Ko et de 32 001 à 28 001 éléments.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :

@@ -10,7 +10,7 @@ public sealed class TextTests : BunitContext
     [Fact]
     public void Flags_produce_their_classes()
     {
-        Assert.Equal("fb-txt fb-t-s fb-t-b fb-fg-muted", ClassOf(p => p.Add(x => x.S, true).Add(x => x.B, true).Add(x => x.Muted, true)));
+        Assert.Equal("fb-txt fb-t-s fb-t-b fb-muted", ClassOf(p => p.Add(x => x.S, true).Add(x => x.B, true).Add(x => x.Muted, true)));
     }
 
     [Fact]

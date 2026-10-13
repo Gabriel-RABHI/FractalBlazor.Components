@@ -143,6 +143,36 @@
     white-space: nowrap;
 }
 
+/* Icons of the select, drawn in the current color through their shape: the chevron of the
+   anchor (Muted) and the mark of the selected option (Highlight). Same box as an FbIcon. */
+.fb-select-chevron,
+.fb-select-check {
+    display: inline-block;
+    flex: none;
+    width: 1.25em;
+    height: 1.25em;
+    vertical-align: -0.25em;
+    background-color: currentColor;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+}
+
+.fb-select-chevron {
+    color: var(--fb-fg-muted);
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.88 9.29L12 13.17 8.12 9.29c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.39-.39.39-1.02 0-1.41-.39-.38-1.03-.39-1.42 0z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.88 9.29L12 13.17 8.12 9.29c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.39-.39.39-1.02 0-1.41-.39-.38-1.03-.39-1.42 0z'/%3E%3C/svg%3E");
+}
+
+.fb-select-check {
+    color: var(--fb-fg-highlight);
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.17L5.53 12.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l4.18 4.18c.39.39 1.02.39 1.41 0L20.29 7.71c.39-.39.39-1.02 0-1.41-.39-.39-1.02-.39-1.41 0L9 16.17z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.17L5.53 12.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l4.18 4.18c.39.39 1.02.39 1.41 0L20.29 7.71c.39-.39.39-1.02 0-1.41-.39-.39-1.02-.39-1.41 0L9 16.17z'/%3E%3C/svg%3E");
+}
+
 .fb-select-zone {
     margin-block: var(--fb-space-s);
 }
@@ -257,14 +287,14 @@
     border-radius: 50%;
 }
 
-.fb-check-mark {
+/* The check mark: the color of the box, through the shape of the mark. */
+.fb-check-box::after {
+    content: "";
     width: 0.9em;
     height: 0.9em;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 3;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+    background-color: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / contain no-repeat;
     opacity: 0;
     transform: scale(0.5);
     transition: opacity 0.15s ease-in-out, transform 0.15s ease-in-out;
@@ -279,7 +309,7 @@
     border-color: var(--fb-fg-highlight);
 }
 
-.fb-check-input:checked + .fb-check-box .fb-check-mark {
+.fb-check-input:checked + .fb-check-box::after {
     opacity: 1;
     transform: none;
 }
@@ -481,21 +511,17 @@ pre, code {
 }
 /* or 700 depending on font */
 
-/* 3. Intent */
-.fb-fg-subtle {
+/* 3. Intent, named after the flags Subtle, Muted and Highlight */
+.fb-subtle {
     color: var(--fb-fg-subtle);
 }
 
-.fb-fg-muted {
+.fb-muted {
     color: var(--fb-fg-muted);
 }
 
-.fb-fg-highlight {
+.fb-highlight {
     color: var(--fb-fg-highlight);
-}
-
-.fb-fg-default {
-    color: var(--fb-fg-default);
 }
 
 /* 4. Modifiers */

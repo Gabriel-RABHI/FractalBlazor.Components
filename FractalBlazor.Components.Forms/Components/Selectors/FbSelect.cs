@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
 using FractalBlazor.Components.Common.Contracts;
 using FractalBlazor.Components.Forms.Components.Display;
-using FractalBlazor.Components.Forms.Components.Icons;
 using FractalBlazor.Components.Forms.Components.Inputs;
 using FractalBlazor.Components.Forms.Mapping;
 using FractalBlazor.Components.Layout;
@@ -129,10 +128,11 @@ namespace FractalBlazor.Components.Forms.Components.Selectors
                 }
                 row.CloseElement();
                 row.AddContent(9, EndContent);
-                row.OpenComponent<FbIcon>(10);
-                row.AddAttribute(11, nameof(FbIcon.Icon), FbMaterialIcons.ExpandMore);
-                row.AddAttribute(12, nameof(FbIcon.Muted), true);
-                row.CloseComponent();
+                // The chevron is drawn by the stylesheet.
+                row.OpenElement(10, "span");
+                row.AddAttribute(11, "class", "fb-select-chevron");
+                row.AddAttribute(12, "aria-hidden", "true");
+                row.CloseElement();
             }));
             builder.CloseComponent();
 
@@ -179,10 +179,11 @@ namespace FractalBlazor.Components.Forms.Components.Selectors
                         row.CloseElement();
                         if (option == selected)
                         {
-                            row.OpenComponent<FbIcon>(5);
-                            row.AddAttribute(6, nameof(FbIcon.Icon), FbMaterialIcons.Check);
-                            row.AddAttribute(7, nameof(FbIcon.Highlight), true);
-                            row.CloseComponent();
+                            // The check mark is drawn by the stylesheet.
+                            row.OpenElement(5, "span");
+                            row.AddAttribute(6, "class", "fb-select-check");
+                            row.AddAttribute(7, "aria-hidden", "true");
+                            row.CloseElement();
                         }
                     }));
                     zone.CloseComponent();

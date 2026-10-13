@@ -34,7 +34,7 @@ public sealed class IconTests : BunitContext
         var enums = Render<FbIcon>(p => p.Add(x => x.Icon, FbMaterialIcons.Check).Add(x => x.Size, FbSpacing.L)
             .Add(x => x.Color, FbTextColor.Muted));
 
-        Assert.Equal("fb-icon fb-icon-l fb-fg-muted", flags.Find("svg").GetAttribute("class"));
+        Assert.Equal("fb-icon fb-icon-l fb-muted", flags.Find("svg").GetAttribute("class"));
         Assert.Equal(flags.Find("svg").GetAttribute("class"), enums.Find("svg").GetAttribute("class"));
     }
 }

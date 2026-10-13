@@ -38,17 +38,18 @@ html {
     background-color: var(--fb-bg-surface);
 }
 
-.fb-bg-surface {
+/* Fills, named after their flags: WBS, WBA, WBH */
+.fb-wbs {
     --fb-current-bg: var(--fb-bg-surface);
     background-color: var(--fb-current-bg);
 }
 
-.fb-bg-accent {
+.fb-wba {
     --fb-current-bg: var(--fb-bg-accent);
     background-color: var(--fb-current-bg);
 }
 
-.fb-bg-highlight {
+.fb-wbh {
     --fb-current-bg: var(--fb-bg-highlight);
     background-color: var(--fb-current-bg);
 }
@@ -56,41 +57,41 @@ html {
 /**********************************************************************************/
 /* FRAMES */
 
+/* Classes named after their flags: WFL, WFM, WFS for frames, WSL, WSM, WSS for separators. */
+
 /* Border of a surface (Row, Stack, items, Grid) */
-.fb-framed {
+:is(.fb-wfl, .fb-wfm, .fb-wfs) {
     border: 1px solid var(--fb-frame-border-color);
 }
 
-/* Separators between the children of a Row */
-.fb-separated-row > div:nth-last-child(n+2) {
+/* Separators between the children of a Row (and of a Grid container) */
+:is(.fb-row, .fb-grid-container):is(.fb-wsl, .fb-wsm, .fb-wss) > div:nth-last-child(n+2) {
     border-right: 1px solid var(--fb-frame-border-color);
 }
 
 /* Separators between the children of a Stack */
-.fb-separated-stack > div:nth-last-child(n+2) {
+.fb-stack:is(.fb-wsl, .fb-wsm, .fb-wss) > div:nth-last-child(n+2) {
     border-bottom: 1px solid var(--fb-frame-border-color);
 }
 
 /* Frame strength: a mix between the current background and the high anchor */
-.fb-framed-light,
-.fb-separated-row-light,
-.fb-separated-stack-light {
+.fb-wfl,
+.fb-wsl {
     --fb-frame-border-color: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-light-mix));
 }
 
-.fb-framed-medium,
-.fb-separated-row-medium,
-.fb-separated-stack-medium {
+.fb-wfm,
+.fb-wsm {
     --fb-frame-border-color: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-medium-mix));
 }
 
-.fb-framed-strong,
-.fb-separated-row-strong,
-.fb-separated-stack-strong {
+.fb-wfs,
+.fb-wss {
     --fb-frame-border-color: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-strong-mix));
 }
 
-.fb-outline {
+/* EOutline */
+.fb-eoutline {
     outline: var(--fb-outline-size) solid var(--fb-frame-border-color);
     outline-offset: 0;
 }
@@ -123,7 +124,8 @@ html {
     width: 100%;
 }
 
-.fb-text-no-wrap {
+/* WNTW */
+.fb-wntw {
     text-wrap-mode:nowrap;
 }
 
@@ -457,6 +459,7 @@ html {
 
 /*********************************************************************************/
 /* RESPONSIVE CONTAINER */
+/* VO_* shows an element over a container width, VU_* under it: fb-vo-xl, fb-vu-xl… */
 
 /* RESPONSIVE CONTAINER INITIALIZER */
 .fb-container-init {
@@ -465,108 +468,108 @@ html {
 
 /* RESPONSIVE CONTAINER-XXL */
 
-.fb-container-xxl-flex {
+.fb-vo-xxl {
     display: none !important;
 }
 
 @container (min-width: 1536px) {
-    .fb-container-xxl-flex {
+    .fb-vo-xxl {
         display: flex !important;
     }
 }
 
 @container (min-width: 1536px) {
-    .fb-container-xxl-none {
+    .fb-vu-xxl {
         display: none !important;
     }
 }
 
 /* RESPONSIVE CONTAINER-XL */
 
-.fb-container-xl-flex {
+.fb-vo-xl {
     display: none !important;
 }
 
 @container (min-width: 1280px) {
-    .fb-container-xl-flex {
+    .fb-vo-xl {
         display: flex !important;
     }
 }
 
 @container (min-width: 1280px) {
-    .fb-container-xl-none {
+    .fb-vu-xl {
         display: none !important;
     }
 }
 
 /* RESPONSIVE CONTAINER-L */
 
-.fb-container-l-flex {
+.fb-vo-l {
     display: none !important;
 }
 
 @container (min-width: 1024px) {
-    .fb-container-l-flex {
+    .fb-vo-l {
         display: flex !important;
     }
 }
 
 @container (min-width: 1024px) {
-    .fb-container-l-none {
+    .fb-vu-l {
         display: none !important;
     }
 }
 
 /* RESPONSIVE CONTAINER-M */
 
-.fb-container-m-flex {
+.fb-vo-m {
     display: none !important;
 }
 
 @container (min-width: 768px) {
-    .fb-container-m-flex {
+    .fb-vo-m {
         display: flex !important;
     }
 }
 
 @container (min-width: 768px) {
-    .fb-container-m-none {
+    .fb-vu-m {
         display: none !important;
     }
 }
 
 /* RESPONSIVE CONTAINER-S */
 
-.fb-container-s-flex {
+.fb-vo-s {
     display: none !important;
 }
 
 @container (min-width: 640px) {
-    .fb-container-s-flex {
+    .fb-vo-s {
         display: flex !important;
     }
 }
 
 @container (min-width: 640px) {
-    .fb-container-s-none {
+    .fb-vu-s {
         display: none !important;
     }
 }
 
 /* REPONSIVE CONTAINER-XS */
 
-.fb-container-xs-flex {
+.fb-vo-xs {
     display: none !important;
 }
 
 @container (min-width: 512px) {
-    .fb-container-xs-flex {
+    .fb-vo-xs {
         display: flex !important;
     }
 }
 
 @container (min-width: 512px) {
-    .fb-container-xs-none {
+    .fb-vu-xs {
         display: none !important;
     }
 }

@@ -21,7 +21,7 @@ public sealed class PageAnchorTests : BunitContext
 
         var anchor = cut.Find("div");
         Assert.Contains("fb-page-anchor", anchor.ClassList);
-        Assert.Contains("fb-bg-surface", anchor.ClassList);
+        Assert.Contains("fb-wbs", anchor.ClassList);
         Assert.Contains(FbAtoms.NameOf("padding:var(--fb-space-m)"), anchor.ClassList);
     }
 

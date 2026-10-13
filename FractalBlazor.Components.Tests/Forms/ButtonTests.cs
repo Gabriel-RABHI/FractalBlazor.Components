@@ -14,8 +14,8 @@ public sealed class ButtonTests : BunitContext
 
         var button = cut.Find("button");
         Assert.Equal("button", button.GetAttribute("type"));
-        Assert.Contains("fb-bg-accent", button.ClassList);
-        Assert.Contains("fb-framed-medium", button.ClassList);
+        Assert.Contains("fb-wba", button.ClassList);
+        Assert.Contains("fb-wfm", button.ClassList);
         Assert.Contains("fb-hover", button.ClassList);
         Assert.Contains(FbAtoms.NameOf("border-radius:var(--fb-radius-m)"), button.ClassList);
         Assert.False(button.HasAttribute("style"));
@@ -28,9 +28,9 @@ public sealed class ButtonTests : BunitContext
         var cut = Render<FbButton>(p => p.Add(x => x.WBH, true).Add(x => x.WFN, true));
 
         var button = cut.Find("button");
-        Assert.Contains("fb-bg-highlight", button.ClassList);
-        Assert.DoesNotContain("fb-bg-accent", button.ClassList);
-        Assert.DoesNotContain("fb-framed", button.ClassList);
+        Assert.Contains("fb-wbh", button.ClassList);
+        Assert.DoesNotContain("fb-wba", button.ClassList);
+        Assert.DoesNotContain("fb-wfm", button.ClassList);
     }
 
     [Fact]

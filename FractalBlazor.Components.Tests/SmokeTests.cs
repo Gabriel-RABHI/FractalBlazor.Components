@@ -13,7 +13,7 @@ public sealed class SmokeTests : BunitContext
 
         var row = cut.Find("div");
         Assert.Contains("fb-row", row.ClassList);
-        Assert.Contains("fb-bg-accent", row.ClassList);
+        Assert.Contains("fb-wba", row.ClassList);
     }
 
     [Fact]
