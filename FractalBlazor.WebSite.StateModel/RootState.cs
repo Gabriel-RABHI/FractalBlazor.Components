@@ -31,7 +31,7 @@ namespace FractalBlazor.WebSite.StateModel
                     ]),
                     new SectionState(Navigation, MenuItemIntent.Components, section =>
                     [
-                        new PageLinkState(section, MenuItemIntent.Layout, new LayoutPage()),
+                        new PageLinkState(section, MenuItemIntent.Layout, new LayoutPage(new DrawerDemoState())),
                         new PageLinkState(section, MenuItemIntent.Forms, new FormsPage(new ContactState()))
                     ]),
                     new SectionState(Navigation, MenuItemIntent.Themes, section =>

@@ -9,7 +9,10 @@ namespace FractalBlazor.WebSite.StateModel
 
     public sealed record StateFirstPage;
 
-    public sealed record LayoutPage;
+    /// <summary>
+    /// The layout page, with the drawer it demonstrates.
+    /// </summary>
+    public sealed record LayoutPage(DrawerDemoState Drawer);
 
     /// <summary>
     /// The contact form. The page owns its state, which survives navigation.

@@ -1,0 +1,96 @@
+@* The drawer of the layout page, in a zone of its own. The selects and the buttons only send
+   actions: the drawer opens, closes and changes mode or side because the state does. It
+   re-renders alone. *@
+@attribute [ViewFor<ViewSelector>(typeof(DrawerDemoState), ViewSelector.Viewer)]
+
+<FbStack NoFlex GM>
+    <FbRow NoFlex MultiLine GM JVC>
+        <FbRowItem Style="width:16rem">
+            <FbSelect TValue="DrawerMode" TAction="DrawerDemoState.SetMode" Handler="Item" Value="@Item.Mode"
+                      Items="DrawerDemoState.Modes">
+                <StartContent><FbText S Subtle>Mode</FbText></StartContent>
+            </FbSelect>
+        </FbRowItem>
+        <FbRowItem Style="width:11rem">
+            <FbSelect TValue="DrawerSide" TAction="DrawerDemoState.SetSide" Handler="Item" Value="@Item.Side"
+                      Items="DrawerDemoState.Sides">
+                <StartContent><FbText S Subtle>Côté</FbText></StartContent>
+            </FbSelect>
+        </FbRowItem>
+        <FbButton Handler="Item" Action="@Toggle" Icon="@(Item.IsOpen ? FbMaterialIcons.MenuOpen : FbMaterialIcons.Menu)" PVS PHM>
+            <FbText S>@(Item.IsOpen ? "Fermer" : "Ouvrir")</FbText>
+        </FbButton>
+    </FbRow>
+
+    @if (Item.IsHorizontal)
+    {
+        <FbRow NoFlex JVSt WFM WRM Style="height:16rem;overflow:hidden">
+            @if (Item.Side == DrawerSide.Left)
+            {
+                @Drawer
+            }
+            @Zone
+            @if (Item.Side == DrawerSide.Right)
+            {
+                @Drawer
+            }
+        </FbRow>
+    }
+    else
+    {
+        <FbStack NoFlex WFM WRM Style="height:16rem;overflow:hidden">
+            @if (Item.Side == DrawerSide.Top)
+            {
+                @Drawer
+            }
+            @Zone
+            @if (Item.Side == DrawerSide.Bottom)
+            {
+                @Drawer
+            }
+        </FbStack>
+    }
+</FbStack>
+
+@code {
+    private static readonly PopupState.Toggle Toggle = new();
+
+    [Parameter]
+    public DrawerDemoState Item { get; set; } = default!;
+
+    private void SetOpen(bool open) => Item.Handle(new PopupState.SetOpen(open));
+
+    private RenderFragment Drawer => @<FbDrawer Modal="@(Item.Mode == DrawerMode.Modal)"
+                                                Inline="@(Item.Mode == DrawerMode.Inline)"
+                                                InlineModal="@(Item.Mode == DrawerMode.InlineModal)"
+                                                Left="@(Item.Side == DrawerSide.Left)"
+                                                Right="@(Item.Side == DrawerSide.Right)"
+                                                Top="@(Item.Side == DrawerSide.Top)"
+                                                Bottom="@(Item.Side == DrawerSide.Bottom)"
+                                                IsOpen="@Item.IsOpen" IsOpenChanged="@SetOpen"
+                                                Size="@(Item.IsHorizontal ? "13rem" : "7rem")" Title="Tiroir" WFL>
+        <FbStack GS PM JVS>
+            <FbRow NoFlex GS JVC>
+                <FbText M B>Tiroir</FbText>
+                <FbRowSpacer />
+                <FbButton Handler="Item" Action="@Toggle" Icon="@FbMaterialIcons.Close" Title="Fermer" WBN WFN PVS PHS />
+            </FbRow>
+            <FbText S Muted>@ModeText</FbText>
+        </FbStack>
+    </FbDrawer>;
+
+    private RenderFragment Zone => @<FbStack GS PM JVS>
+        <FbText M B>Zone de la page</FbText>
+        <FbText S Muted>
+            Le tiroir vit dans cette zone. En place, il la pousse ; par-dessus, il la couvre avec un
+            voile ; modal, il couvre tout l’écran.
+        </FbText>
+    </FbStack>;
+
+    private string ModeText => Item.Mode switch
+    {
+        DrawerMode.Modal => "Dialogue natif : la page devient inerte et le focus reste ici. Échap ou un clic sur le voile demandent la fermeture.",
+        DrawerMode.Inline => "À sa place dans la mise en page : en s’ouvrant, il pousse la zone voisine.",
+        _ => "À sa place, mais par-dessus sa zone. Échap ou un clic sur le voile demandent la fermeture."
+    };
+}

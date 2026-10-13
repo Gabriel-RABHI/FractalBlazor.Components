@@ -31,9 +31,9 @@ Le raisonnement complet est dans [Conception.md](Conception.md), le modèle de t
 
 | Paquet | Contenu |
 | --- | --- |
-| `FractalBlazor.Components.Layout` | `FbPageAnchor`, `FbRow`, `FbStack`, items, séparateurs, `FbGridContainer`, `FbGridItem`, `FbDropDown`, `FbShowWhenVisible`, thème Layout autonome |
-| `FractalBlazor.Components.Forms` | `FbText`, `FbIcon`, `FbButton`, `FbInputText`, `FbInputNumber`, `FbInputDate`, `FbSelect`, `FbTabs`, `FbCheckbox`, `FbSwitch`, `FbTheme`, `FbVariant`, `FbDynamicView` |
-| `FractalBlazor.Components.Common` | Contrats partagés par les états et les vues : actions, notification, `ViewFor` |
+| `FractalBlazor.Components.Layout` | `FbPageAnchor`, `FbRow`, `FbStack`, items, séparateurs, `FbGridContainer`, `FbGridItem`, `FbDropDown`, `FbDrawer`, `FbShowWhenVisible`, thème Layout autonome |
+| `FractalBlazor.Components.Forms` | `FbText`, `FbIcon`, `FbButton`, `FbInputText`, `FbInputNumber`, `FbInputDate`, `FbSelect`, `FbTabs`, `FbCheckbox`, `FbSwitch`, `FbWidthSensor`, `FbTheme`, `FbVariant`, `FbDynamicView` |
+| `FractalBlazor.Components.Common` | Contrats partagés par les états et les vues : actions, notification, `ViewFor`, catégories de largeur (`FbWidthClass`) |
 
 ## Solution
 
@@ -197,7 +197,7 @@ L'application elle-même est un modèle. Dans la démo, `RootState` porte l'en-t
 ```csharp
 new SectionState(Navigation, MenuItemIntent.Components, section =>
 [
-    new PageLinkState(section, MenuItemIntent.Layout, new LayoutPage()),
+    new PageLinkState(section, MenuItemIntent.Layout, new LayoutPage(new DrawerDemoState())),
     new PageLinkState(section, MenuItemIntent.Forms, new FormsPage(new ContactState()))
 ])
 ```
@@ -211,6 +211,56 @@ Chaque type d'état déclare sa vue avec `[ViewFor<ViewSelector>]`, et la zone d
 ```
 
 Ouvrir une page ne notifie que l'ancienne entrée, la nouvelle et la zone de contenu : le reste de l'application ne se redessine pas. Chaque modèle de page garde son état d'une visite à l'autre.
+
+## Écran piloté par l'état
+
+La mise en page ne dépend d'aucune media query : c'est l'état qui la décide. `FbWidthSensor` mesure la largeur de son parent et envoie sa catégorie à l'état, comme un champ envoie sa valeur, et seulement quand elle change. Les catégories `FbWidthClass` suivent les seuils des drapeaux `VO_*`/`VU_*` et de la grille : `Base`, puis `XS` dès 512 px, `S` dès 640, `M` dès 768, `L` dès 1024, `XL` dès 1280 et `XXL` dès 1536. L'énumération est ordonnée, l'état compare donc directement :
+
+```csharp
+public sealed class ScreenState : ObservableState
+{
+    public sealed record SetWidth(FbWidthClass Value) : IStateAction<FbWidthClass>;
+
+    // Le premier rendu précède toute mesure : celui d'un bureau.
+    public FbWidthClass Width { get; private set; } = FbWidthClass.XL;
+
+    public bool MenuInDrawer => Width < FbWidthClass.M;
+
+    public bool CompactHeader => Width < FbWidthClass.S;
+}
+```
+
+Les vues suivent l'état avec `if`. Dans la démo, sous 768 px, le menu de gauche passe dans un tiroir ouvert par un bouton de l'en-tête ; sous 640 px, l'en-tête prend sa vue compacte (`Summary`), où sections et liens passent dans un menu :
+
+```razor
+<FbPageAnchor>
+    <FbWidthSensor TAction="ScreenState.SetWidth" Handler="Item.Screen" Value="Item.Screen.Width" />
+    <FbStack>
+        <FbRow NoFlex>
+            @if (Item.Screen.MenuInDrawer)
+            {
+                <FbDynamicView TSelector="ViewSelector" Item="Item.Navigation.Drawer" Selector="ViewSelector.Viewer" />
+            }
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Header" Selector="@HeaderView" />
+        </FbRow>
+        …
+```
+
+Le tiroir et le menu de l'en-tête sont des états à part : les ouvrir ne redessine que leur vue. La navigation les referme quand une page ou une section s'ouvre, et l'écran quand il s'élargit au-delà de leur seuil.
+
+`FbDrawer` glisse depuis un bord (`Left`, `Right`, `Top`, `Bottom`) et porte les drapeaux de surface. `Size` donne sa largeur, ou sa hauteur en haut et en bas. Trois modes :
+
+- `Modal` : par-dessus tout l'écran, dans un `<dialog>` natif. La page devient inerte, le focus reste dans le tiroir, puis revient où il était.
+- `Inline` : à sa place dans la mise en page, qu'il pousse en s'ouvrant.
+- `InlineModal` : à sa place, mais par-dessus sa zone (la row ou la stack qui le contient), avec un voile limité à celle-ci.
+
+Il est contrôlé par `IsOpen` : Échap, un clic sur le voile ou une demande du navigateur n'appellent que `IsOpenChanged(false)`, et l'état décide. Fermé, un tiroir en place garde son contenu, rendu inerte ; un tiroir modal ne rend le sien que lorsqu'il est ouvert. Le voile vient de la variable `--fb-drawer-scrim`.
+
+```razor
+<FbDrawer Modal Left IsOpen="@Item.IsOpen" IsOpenChanged="@SetOpen" Title="Menu" Size="16rem" WFL>
+    <FbDynamicView TSelector="ViewSelector" Item="Item.Menu" Selector="ViewSelector.Summary" />
+</FbDrawer>
+```
 
 ## Performances
 
