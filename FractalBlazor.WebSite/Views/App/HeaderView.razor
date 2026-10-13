@@ -1,18 +1,18 @@
+@* The header, inside the bar of the application view: the name, the sections of the top
+   menu and the links. *@
 @attribute [ViewFor<ViewSelector>(typeof(HeaderState), ViewSelector.Viewer)]
 
-<FbRow NoFlex MultiLine GM PL JVC WFL>
-    <FbIcon Icon="@FbMaterialIcons.ViewQuilt" L Highlight />
-    <FbText L B>@Item.Name</FbText>
-    @foreach (var section in Item.Sections)
-    {
-        <FbDynamicView @key="section" TSelector="ViewSelector" Item="section" Selector="ViewSelector.Viewer" />
-    }
-    <FbRowSpacer />
-    @foreach (var link in Item.Links)
-    {
-        <FbDynamicView @key="link" TSelector="ViewSelector" Item="link" Selector="ViewSelector.Viewer" />
-    }
-</FbRow>
+<FbIcon Icon="@FbMaterialIcons.ViewQuilt" L Highlight />
+<FbText L B>@Item.Name</FbText>
+@foreach (var section in Item.Sections)
+{
+    <FbDynamicView @key="section" TSelector="ViewSelector" Item="section" Selector="ViewSelector.Viewer" />
+}
+<FbRowSpacer />
+@foreach (var link in Item.Links)
+{
+    <FbDynamicView @key="link" TSelector="ViewSelector" Item="link" Selector="ViewSelector.Viewer" />
+}
 
 @code {
     [Parameter]

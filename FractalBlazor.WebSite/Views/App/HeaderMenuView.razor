@@ -1,0 +1,34 @@
+@* The menu of the compact header. Its button and the dropdown only send actions: the state
+   opens it, and closes it once the chosen section is open. It re-renders alone. *@
+@attribute [ViewFor<ViewSelector>(typeof(HeaderMenuState), ViewSelector.Viewer)]
+
+<FbDropDown IsOpen="@Item.IsOpen" IsOpenChanged="@SetOpen" AutoToggle="false">
+    <ChildContent>
+        <FbButton Handler="Item" Action="@Toggle" Icon="@FbMaterialIcons.MoreVert" Title="Sections"
+                  WBH="@Item.IsOpen" WBN="@(!Item.IsOpen)" WFN PVS PHS />
+    </ChildContent>
+    <DropDownContent>
+        <FbStack NoFlex GS PS JVS WBS WFL WRM>
+            @foreach (var section in Item.Header.Sections)
+            {
+                <FbDynamicView @key="section" TSelector="ViewSelector" Item="section" Selector="ViewSelector.Viewer" />
+            }
+            <FbStackSeparator />
+            @foreach (var link in Item.Header.Links)
+            {
+                <FbStackItem @key="link" PHM PVS>
+                    <FbDynamicView TSelector="ViewSelector" Item="link" Selector="ViewSelector.Viewer" />
+                </FbStackItem>
+            }
+        </FbStack>
+    </DropDownContent>
+</FbDropDown>
+
+@code {
+    private static readonly PopupState.Toggle Toggle = new();
+
+    [Parameter]
+    public HeaderMenuState Item { get; set; } = default!;
+
+    private void SetOpen(bool open) => Item.Handle(new PopupState.SetOpen(open));
+}

@@ -1,0 +1,15 @@
+@* The menu on the left inside its drawer, on a narrow screen: the same entries, without the
+   frame and the width the drawer already gives. *@
+@attribute [ViewFor<ViewSelector>(typeof(SideMenuState), ViewSelector.Summary)]
+
+<FbStack NoFlex GS PM JVS>
+    @foreach (var entry in Item.Entries)
+    {
+        <FbDynamicView @key="entry" TSelector="ViewSelector" Item="entry" Selector="ViewSelector.Viewer" />
+    }
+</FbStack>
+
+@code {
+    [Parameter]
+    public SideMenuState Item { get; set; } = default!;
+}

@@ -1,0 +1,13 @@
+@* The compact header, on a narrow screen: the name, then a menu that holds the sections
+   and the links. *@
+@attribute [ViewFor<ViewSelector>(typeof(HeaderState), ViewSelector.Summary)]
+
+<FbIcon Icon="@FbMaterialIcons.ViewQuilt" L Highlight />
+<FbText L B>@Item.Name</FbText>
+<FbRowSpacer />
+<FbDynamicView TSelector="ViewSelector" Item="Item.Menu" Selector="ViewSelector.Viewer" />
+
+@code {
+    [Parameter]
+    public HeaderState Item { get; set; } = default!;
+}

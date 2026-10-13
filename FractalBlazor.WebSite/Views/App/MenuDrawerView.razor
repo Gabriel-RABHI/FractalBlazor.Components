@@ -1,0 +1,19 @@
+@* The menu on the left on a narrow screen: a button in the header and the drawer it opens,
+   on top of the whole page. Escape or a click outside only send the closing to the state;
+   the navigation closes the drawer once the chosen page is open. It re-renders alone. *@
+@attribute [ViewFor<ViewSelector>(typeof(MenuDrawerState), ViewSelector.Viewer)]
+
+<FbButton Handler="Item" Action="@Toggle" Icon="@FbMaterialIcons.Menu" Title="Menu"
+          WBH="@Item.IsOpen" WBN="@(!Item.IsOpen)" WFN PVS PHS />
+<FbDrawer Modal Left IsOpen="@Item.IsOpen" IsOpenChanged="@SetOpen" Title="Menu" Size="16rem" WFL>
+    <FbDynamicView TSelector="ViewSelector" Item="Item.Menu" Selector="ViewSelector.Summary" />
+</FbDrawer>
+
+@code {
+    private static readonly PopupState.Toggle Toggle = new();
+
+    [Parameter]
+    public MenuDrawerState Item { get; set; } = default!;
+
+    private void SetOpen(bool open) => Item.Handle(new PopupState.SetOpen(open));
+}
