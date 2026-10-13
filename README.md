@@ -192,14 +192,19 @@ La chaîne et les canaux passent par `FbValueView`, la personne par sa propre vu
 
 Ouverte, la zone d'un `FbDropDown` est fixée à la fenêtre : une zone défilante ne coupe pas la liste d'un Select.
 
-L'application elle-même est un modèle. Dans la démo, `RootState` porte l'en-tête, la navigation et le pied de page. Chaque section du menu du haut porte la sous-liste du menu de gauche, et chaque entrée de ce menu donne le modèle de sa page :
+L'application elle-même est un modèle. Dans la démo, `RootState` porte l'en-tête, la navigation et le pied de page. Chaque section du menu du haut porte les entrées du menu de gauche : des pages, et des groupes qui titrent des pages. Chaque page donne son modèle. Une section sans entrées est elle-même une page :
 
 ```csharp
 new SectionState(Navigation, MenuItemIntent.Components, section =>
 [
-    new PageLinkState(section, MenuItemIntent.Layout, new LayoutPage(new DrawerDemoState())),
-    new PageLinkState(section, MenuItemIntent.Forms, new FormsPage(new ContactState()))
-])
+    new MenuGroupState(section, MenuItemIntent.Layout, group =>
+    [
+        new PageLinkState(group, MenuItemIntent.RowStack, new RowStackPage()),
+        new PageLinkState(group, MenuItemIntent.Drawer, new DrawerPage(new DrawerDemoState()))
+    ]),
+    new MenuGroupState(section, MenuItemIntent.Inputs)
+]),
+new SectionState(Navigation, MenuItemIntent.Compositions, new FormsPage(new ContactState()))
 ```
 
 Chaque type d'état déclare sa vue avec `[ViewFor<ViewSelector>]`, et la zone de contenu rend la page ouverte sans la connaître :
@@ -224,29 +229,32 @@ public sealed class ScreenState : ObservableState
     // Le premier rendu précède toute mesure : celui d'un bureau.
     public FbWidthClass Width { get; private set; } = FbWidthClass.XL;
 
-    public bool MenuInDrawer => Width < FbWidthClass.M;
-
-    public bool CompactHeader => Width < FbWidthClass.S;
+    public bool Compact => Width < FbWidthClass.L;
 }
 ```
 
-Les vues suivent l'état avec `if`. Dans la démo, sous 768 px, le menu de gauche passe dans un tiroir ouvert par un bouton de l'en-tête ; sous 640 px, l'en-tête prend sa vue compacte (`Summary`), où sections et liens passent dans un menu :
+Les vues suivent l'état avec `if`. Dans la démo, sous 1024 px, les deux menus se replient. L'en-tête prend sa vue compacte (`Summary`), où sections et liens passent dans un menu, et gagne une seconde ligne : le bouton du tiroir qui porte désormais le menu de gauche, puis le fil d'Ariane de la page ouverte (Section ▶ Groupe ▶ Page) :
 
 ```razor
 <FbPageAnchor>
     <FbWidthSensor TAction="ScreenState.SetWidth" Handler="Item.Screen" Value="Item.Screen.Width" />
     <FbStack>
-        <FbRow NoFlex>
-            @if (Item.Screen.MenuInDrawer)
+        <FbStack NoFlex WFL WSL>
+            <FbRow NoFlex GM PHL PVM JVC>
+                <FbDynamicView TSelector="ViewSelector" Item="Item.Header" Selector="@HeaderView" />
+            </FbRow>
+            @if (Item.Screen.Compact)
             {
-                <FbDynamicView TSelector="ViewSelector" Item="Item.Navigation.Drawer" Selector="ViewSelector.Viewer" />
+                <FbRow NoFlex GS PHL PVS JVC>
+                    <FbDynamicView TSelector="ViewSelector" Item="Item.Navigation.Drawer" Selector="ViewSelector.Viewer" />
+                    <FbDynamicView TSelector="ViewSelector" Item="Item.Navigation.Content" Selector="ViewSelector.Summary" />
+                </FbRow>
             }
-            <FbDynamicView TSelector="ViewSelector" Item="Item.Header" Selector="@HeaderView" />
-        </FbRow>
+        </FbStack>
         …
 ```
 
-Le tiroir et le menu de l'en-tête sont des états à part : les ouvrir ne redessine que leur vue. La navigation les referme quand une page ou une section s'ouvre, et l'écran quand il s'élargit au-delà de leur seuil.
+Le tiroir et le menu de l'en-tête sont des états à part : les ouvrir ne redessine que leur vue. La navigation les referme quand une page ou une section s'ouvre, et l'écran quand il repasse au-dessus de 1024 px.
 
 `FbDrawer` glisse depuis un bord (`Left`, `Right`, `Top`, `Bottom`) et porte les drapeaux de surface. `Size` donne sa largeur, ou sa hauteur en haut et en bas. Trois modes :
 
