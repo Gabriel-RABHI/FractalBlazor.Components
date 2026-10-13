@@ -87,6 +87,10 @@ namespace FractalBlazor.Components.Layout
 
         private bool _previousIsOpen;
         private bool _shouldInitDropdown;
+
+        // True once the script has set up the open dropdown: only then is there something to
+        // destroy. A dropdown never opened, or prerendered, never calls the script.
+        private bool _initialized;
         private readonly string _containerId = "fb-ddc-" + Guid.NewGuid().ToString("N");
         private readonly string _dropdownId = "fb-ddd-" + Guid.NewGuid().ToString("N");
 
@@ -111,6 +115,7 @@ namespace FractalBlazor.Components.Layout
                 try
                 {
                     await JS.InvokeVoidAsync("FractalBlazor.initDropdown", _containerId, _dropdownId);
+                    _initialized = true;
                 }
                 catch (Exception)
                 {
@@ -146,6 +151,9 @@ namespace FractalBlazor.Components.Layout
 
         private async Task DestroyDropdownAsync()
         {
+            if (!_initialized)
+                return;
+            _initialized = false;
             try
             {
                 await JS.InvokeVoidAsync("FractalBlazor.destroyDropdown", _dropdownId);

@@ -52,6 +52,28 @@ public sealed class DropDownTests : BunitContext
     }
 
     [Fact]
+    public async Task A_dropdown_never_opened_never_calls_the_script()
+    {
+        Render<FbDropDown>(p => p.Add(x => x.ChildContent, "<span class=\"anchor\">Open</span>"));
+
+        await DisposeComponentsAsync();
+
+        Assert.DoesNotContain(JSInterop.Invocations, invocation => invocation.Identifier.StartsWith("FractalBlazor.", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task An_opened_dropdown_is_destroyed_once()
+    {
+        var cut = RenderOpen(_ => { });
+
+        cut.Render(p => p.Add(x => x.IsOpen, false));
+        await DisposeComponentsAsync();
+
+        Assert.Single(JSInterop.Invocations, invocation => invocation.Identifier == "FractalBlazor.initDropdown");
+        Assert.Single(JSInterop.Invocations, invocation => invocation.Identifier == "FractalBlazor.destroyDropdown");
+    }
+
+    [Fact]
     public void Block_takes_the_full_width()
     {
         var cut = Render<FbDropDown>(p => p.Add(x => x.Block, true));
