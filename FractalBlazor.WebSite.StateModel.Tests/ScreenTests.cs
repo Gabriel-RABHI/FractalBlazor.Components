@@ -33,26 +33,24 @@ public sealed class ScreenTests
     [Fact]
     public void Before_any_measure_the_screen_is_laid_out_for_a_desktop()
     {
-        Assert.False(Screen.MenuInDrawer);
-        Assert.False(Screen.CompactHeader);
+        Assert.False(Screen.Compact);
         Assert.False(Drawer.IsOpen);
         Assert.False(HeaderMenu.IsOpen);
     }
 
     [Theory]
-    [InlineData(FbWidthClass.XXL, false, false)]
-    [InlineData(FbWidthClass.L, false, false)]
-    [InlineData(FbWidthClass.M, false, false)]
-    [InlineData(FbWidthClass.S, true, false)]
-    [InlineData(FbWidthClass.XS, true, true)]
-    [InlineData(FbWidthClass.Base, true, true)]
-    public void The_menu_moves_into_a_drawer_under_M_and_the_header_shrinks_under_S(FbWidthClass width, bool menuInDrawer, bool compactHeader)
+    [InlineData(FbWidthClass.XXL, false)]
+    [InlineData(FbWidthClass.XL, false)]
+    [InlineData(FbWidthClass.L, false)]
+    [InlineData(FbWidthClass.M, true)]
+    [InlineData(FbWidthClass.S, true)]
+    [InlineData(FbWidthClass.Base, true)]
+    public void Both_menus_fold_under_1024_px(FbWidthClass width, bool compact)
     {
         Resize(width);
 
         Assert.Equal(width, Screen.Width);
-        Assert.Equal(menuInDrawer, Screen.MenuInDrawer);
-        Assert.Equal(compactHeader, Screen.CompactHeader);
+        Assert.Equal(compact, Screen.Compact);
     }
 
     [Fact]
@@ -136,15 +134,16 @@ public sealed class ScreenTests
     [Fact]
     public void Widening_the_screen_closes_the_menus_it_no_longer_shows()
     {
-        Resize(FbWidthClass.XS);
+        Resize(FbWidthClass.S);
         Drawer.Handle(new PopupState.Toggle());
         HeaderMenu.Handle(new PopupState.Toggle());
 
-        Resize(FbWidthClass.S);
+        Resize(FbWidthClass.M);
         Assert.True(Drawer.IsOpen);
-        Assert.False(HeaderMenu.IsOpen);
+        Assert.True(HeaderMenu.IsOpen);
 
         Resize(FbWidthClass.L);
         Assert.False(Drawer.IsOpen);
+        Assert.False(HeaderMenu.IsOpen);
     }
 }

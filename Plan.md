@@ -187,7 +187,7 @@ La structure de l'écran ne dépend plus de media queries : un capteur envoie à
 Le menu suit l'arbre donné : `Quick Start` (Introduction, Installation, Basics, Principles, Themes), `Components` (le groupe Layout : Row / Stack, Grid, Show When Over, Show When Visible, Drawer, Drop Down, Updatable ; les groupes Panels, View, Inputs, Selectors), `Compositions`, `Advanced`, `Building Blocks` (Templates), `Pricing`. Les libellés sont ceux de l'arbre ; les marqueurs [pro] et les pastilles de l'en-tête attendent.
 
 - [x] **19.1 Un menu à trois niveaux.** Section, groupe, page. Un groupe (`MenuGroupState`) titre ses pages dans le menu de gauche ; une section sans pages est elle-même une page. Les pages existantes sont rangées : State-first sous Principles ; Variantes puis l'éditeur sous Themes ; le formulaire de contact sous Compositions ; l'ancienne page « Mise en page » se répartit entre Row / Stack, Grid et Drawer. Les autres feuilles affichent « Contenu à venir ».
-- [ ] **19.2 Un seul seuil.** Sous 1024 px (`L`), l'écran est compact : le menu du haut passe dans un sous-menu, celui de gauche dans un tiroir.
+- [x] **19.2 Un seul seuil.** Sous 1024 px (`L`), l'écran est compact : le menu du haut passe dans un sous-menu, celui de gauche dans un tiroir.
 - [ ] **19.3 L'en-tête.** Large : le logo et le nom à gauche ; à droite, les sections en texte, puis LinkedIn et GitHub en icônes. Compact, sur deux lignes : le logo, le nom et le sous-menu (⋮) ; puis le bouton du tiroir (☰) et le fil d'Ariane de la page ouverte (Section ▶ Groupe ▶ Page).
 - [ ] **19.4 Documentation.** Textes du site et README à jour.
 

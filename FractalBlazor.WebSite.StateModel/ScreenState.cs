@@ -13,7 +13,7 @@ namespace FractalBlazor.WebSite.StateModel
 
         public sealed record SetWidth(FbWidthClass Value) : IStateAction<FbWidthClass>;
 
-        /// <param name="drawer">Closed when the menu leaves it.</param>
+        /// <param name="drawer">Closed when the menu on the left leaves it.</param>
         /// <param name="headerMenu">Closed when the header shows its sections again.</param>
         public ScreenState(PopupState drawer, PopupState headerMenu)
         {
@@ -28,14 +28,10 @@ namespace FractalBlazor.WebSite.StateModel
         public FbWidthClass Width { get; private set; } = FbWidthClass.XL;
 
         /// <summary>
-        /// Under 768 px, the menu on the left moves into a drawer, opened from the header.
+        /// Under 1024 px, both menus fold: the sections and the links of the header move into
+        /// a menu, and the menu on the left into a drawer.
         /// </summary>
-        public bool MenuInDrawer => Width < FbWidthClass.M;
-
-        /// <summary>
-        /// Under 640 px, the sections and the links of the header move into a menu.
-        /// </summary>
-        public bool CompactHeader => Width < FbWidthClass.S;
+        public bool Compact => Width < FbWidthClass.L;
 
         public void Handle(SetWidth action)
         {
@@ -43,10 +39,11 @@ namespace FractalBlazor.WebSite.StateModel
                 return;
 
             Width = action.Value;
-            if (!MenuInDrawer)
+            if (!Compact)
+            {
                 _drawer.Close();
-            if (!CompactHeader)
                 _headerMenu.Close();
+            }
             NotifyStateChanged();
         }
     }
