@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using FractalBlazor.Components.Common.Contracts;
 
 namespace FractalBlazor.WebSite.StateModel
 {
@@ -8,7 +9,7 @@ namespace FractalBlazor.WebSite.StateModel
     /// of the top menu, the menu on the left with the pages of the open section, the open
     /// page, and the footer. One instance per circuit on the server, per page in WebAssembly.
     /// </summary>
-    public sealed class RootState
+    public sealed class RootState : ObservableState
     {
         public const string RepositoryUrl = "https://github.com/Gabriel-RABHI/FractalBlazor.Components";
 
@@ -44,9 +45,20 @@ namespace FractalBlazor.WebSite.StateModel
                     new ExternalLinkState(MenuItemIntent.LinkedIn, LinkedInUrl)
                 ]);
             Footer = new FooterState("Composants Blazor state-first", new ThemeSelectorState(themeModeStore));
+            Screen = new ScreenState(Navigation.Drawer, Header.Menu);
+
+            // The menu of the header closes once the section chosen in it is open. The
+            // application view lays the areas out from the screen: it follows its changes.
+            Navigation.Opened += Header.Menu.Close;
+            Screen.OnStateChanged += NotifyStateChanged;
 
             Navigation.Open(Header.Sections[0]);
         }
+
+        /// <summary>
+        /// The width of the window and the layout it implies.
+        /// </summary>
+        public ScreenState Screen { get; }
 
         public HeaderState Header { get; }
 

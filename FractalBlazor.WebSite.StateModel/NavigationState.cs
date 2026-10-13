@@ -9,9 +9,25 @@ namespace FractalBlazor.WebSite.StateModel
     /// </summary>
     public sealed class NavigationState
     {
+        public NavigationState()
+        {
+            Drawer = new MenuDrawerState(SideMenu);
+        }
+
         public SideMenuState SideMenu { get; } = new();
 
+        /// <summary>
+        /// The drawer that carries <see cref="SideMenu"/> on a narrow screen.
+        /// </summary>
+        public MenuDrawerState Drawer { get; }
+
         public ContentState Content { get; } = new();
+
+        /// <summary>
+        /// Raised once a section or a page is open, even the one already open: the menus
+        /// that led there close.
+        /// </summary>
+        public event Action? Opened;
 
         /// <summary>
         /// Shows the entries of <paramref name="section"/> and opens the page it showed last.
@@ -27,18 +43,26 @@ namespace FractalBlazor.WebSite.StateModel
             ShowSection(section);
             Content.Link?.SetSelected(false);
             Content.Show(null);
+            CloseMenus();
         }
 
         public void Open(PageLinkState link)
         {
             ShowSection(link.Section);
-            if (ReferenceEquals(Content.Link, link))
-                return;
+            if (!ReferenceEquals(Content.Link, link))
+            {
+                Content.Link?.SetSelected(false);
+                link.SetSelected(true);
+                link.Section.LastPage = link;
+                Content.Show(link);
+            }
+            CloseMenus();
+        }
 
-            Content.Link?.SetSelected(false);
-            link.SetSelected(true);
-            link.Section.LastPage = link;
-            Content.Show(link);
+        private void CloseMenus()
+        {
+            Drawer.Close();
+            Opened?.Invoke();
         }
 
         private void ShowSection(SectionState section)

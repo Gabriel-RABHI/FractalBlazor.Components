@@ -2,7 +2,8 @@ namespace FractalBlazor.WebSite.StateModel
 {
     /// <summary>
     /// The header: the name of the application, the sections of the top menu, and links to
-    /// other sites.
+    /// other sites. On a narrow screen, the sections and the links move into
+    /// <see cref="Menu"/>.
     /// </summary>
     public sealed class HeaderState
     {
@@ -11,6 +12,7 @@ namespace FractalBlazor.WebSite.StateModel
             Name = name;
             Sections = sections;
             Links = links;
+            Menu = new HeaderMenuState(this);
         }
 
         public string Name { get; }
@@ -18,6 +20,11 @@ namespace FractalBlazor.WebSite.StateModel
         public IReadOnlyList<SectionState> Sections { get; }
 
         public IReadOnlyList<ExternalLinkState> Links { get; }
+
+        /// <summary>
+        /// The menu of the compact header.
+        /// </summary>
+        public HeaderMenuState Menu { get; }
     }
 
     /// <summary>
