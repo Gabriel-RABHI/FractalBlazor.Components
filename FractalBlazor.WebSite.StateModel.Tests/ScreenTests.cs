@@ -19,7 +19,7 @@ public sealed class ScreenTests
     private void Resize(FbWidthClass width) => Screen.Handle(new ScreenState.SetWidth(width));
 
     private PageLinkState Link(MenuItemIntent intent)
-        => _root.Header.Sections.SelectMany(s => s.Entries).OfType<PageLinkState>().Single(l => l.Intent == intent);
+        => _root.Header.Sections.SelectMany(s => s.Pages).Single(l => l.Intent == intent);
 
     private SectionState Section(MenuItemIntent intent) => _root.Header.Sections.Single(s => s.Intent == intent);
 
@@ -104,7 +104,7 @@ public sealed class ScreenTests
         Resize(FbWidthClass.S);
         Drawer.Handle(new PopupState.Toggle());
 
-        Link(MenuItemIntent.StateFirst).Handle(new SelectableEntryState.Select());
+        Link(MenuItemIntent.Principles).Handle(new SelectableEntryState.Select());
 
         Assert.False(Drawer.IsOpen);
         Assert.IsType<StateFirstPage>(_root.Navigation.Content.Page);
@@ -127,10 +127,10 @@ public sealed class ScreenTests
         Resize(FbWidthClass.XS);
         HeaderMenu.Handle(new PopupState.Toggle());
 
-        Section(MenuItemIntent.Themes).Handle(new SelectableEntryState.Select());
+        Section(MenuItemIntent.Components).Handle(new SelectableEntryState.Select());
 
         Assert.False(HeaderMenu.IsOpen);
-        Assert.IsType<VariantsPage>(_root.Navigation.Content.Page);
+        Assert.IsType<RowStackPage>(_root.Navigation.Content.Page);
     }
 
     [Fact]

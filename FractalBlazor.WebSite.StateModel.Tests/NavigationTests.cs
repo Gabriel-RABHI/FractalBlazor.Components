@@ -12,13 +12,26 @@ public sealed class NavigationTests
     private SectionState Section(MenuItemIntent intent) => _root.Header.Sections.Single(s => s.Intent == intent);
 
     private PageLinkState Link(MenuItemIntent intent)
-        => _root.Header.Sections.SelectMany(s => s.Entries).OfType<PageLinkState>().Single(l => l.Intent == intent);
+        => _root.Header.Sections.SelectMany(s => s.Pages).Single(l => l.Intent == intent);
 
     private static Func<int> CountNotifications(INotifyStateChanged state)
     {
         var count = 0;
         state.OnStateChanged += () => count++;
         return () => count;
+    }
+
+    [Fact]
+    public void The_top_menu_follows_the_tree()
+    {
+        Assert.Equal(
+            [MenuItemIntent.QuickStart, MenuItemIntent.Components, MenuItemIntent.Compositions,
+             MenuItemIntent.Advanced, MenuItemIntent.BuildingBlocks, MenuItemIntent.Pricing],
+            _root.Header.Sections.Select(s => s.Intent));
+        Assert.Equal(
+            [MenuItemIntent.Introduction, MenuItemIntent.Installation, MenuItemIntent.Basics,
+             MenuItemIntent.Principles, MenuItemIntent.Themes],
+            Section(MenuItemIntent.QuickStart).Pages.Select(p => p.Intent));
     }
 
     [Fact]
@@ -36,10 +49,10 @@ public sealed class NavigationTests
     [Fact]
     public void Each_menu_entry_gives_the_model_of_its_page()
     {
-        Link(MenuItemIntent.Forms).Handle(new SelectableEntryState.Select());
+        Link(MenuItemIntent.Drawer).Handle(new SelectableEntryState.Select());
 
-        var page = Assert.IsType<FormsPage>(_root.Navigation.Content.Page);
-        Assert.NotNull(page.Contact);
+        var page = Assert.IsType<DrawerPage>(_root.Navigation.Content.Page);
+        Assert.NotNull(page.Drawer);
     }
 
     [Fact]
@@ -52,15 +65,45 @@ public sealed class NavigationTests
         Assert.True(components.IsSelected);
         Assert.False(Section(MenuItemIntent.QuickStart).IsSelected);
         Assert.Same(components.Entries, _root.Navigation.SideMenu.Entries);
-        Assert.IsType<LayoutPage>(_root.Navigation.Content.Page);
+        Assert.IsType<RowStackPage>(_root.Navigation.Content.Page);
         Assert.False(Link(MenuItemIntent.Introduction).IsSelected);
+    }
+
+    [Fact]
+    public void A_group_titles_pages_of_its_section_and_may_still_be_empty()
+    {
+        var components = Section(MenuItemIntent.Components);
+        var groups = components.Entries.Cast<MenuGroupState>().ToList();
+
+        Assert.Equal(
+            [MenuItemIntent.Layout, MenuItemIntent.Panels, MenuItemIntent.View, MenuItemIntent.Inputs, MenuItemIntent.Selectors],
+            groups.Select(g => g.Intent));
+        Assert.Equal(7, groups[0].Pages.Count);
+        Assert.All(groups.Skip(1), group => Assert.Empty(group.Pages));
+
+        var drawer = Link(MenuItemIntent.Drawer);
+        Assert.Same(groups[0], drawer.Group);
+        Assert.Same(components, drawer.Section);
+    }
+
+    [Fact]
+    public void A_section_without_entries_is_a_page_itself()
+    {
+        var compositions = Section(MenuItemIntent.Compositions);
+
+        compositions.Handle(new SelectableEntryState.Select());
+
+        Assert.True(compositions.IsSelected);
+        Assert.Empty(_root.Navigation.SideMenu.Entries);
+        Assert.Same(compositions.Home, _root.Navigation.Content.Link);
+        Assert.IsType<FormsPage>(_root.Navigation.Content.Page);
     }
 
     [Fact]
     public void A_section_reopens_the_page_it_showed_last()
     {
-        Link(MenuItemIntent.StateFirst).Handle(new SelectableEntryState.Select());
-        Section(MenuItemIntent.Themes).Handle(new SelectableEntryState.Select());
+        Link(MenuItemIntent.Principles).Handle(new SelectableEntryState.Select());
+        Section(MenuItemIntent.Components).Handle(new SelectableEntryState.Select());
 
         Section(MenuItemIntent.QuickStart).Handle(new SelectableEntryState.Select());
 
@@ -72,7 +115,7 @@ public sealed class NavigationTests
     {
         var introduction = CountNotifications(Link(MenuItemIntent.Introduction));
         var installation = CountNotifications(Link(MenuItemIntent.Installation));
-        var stateFirst = CountNotifications(Link(MenuItemIntent.StateFirst));
+        var principles = CountNotifications(Link(MenuItemIntent.Principles));
         var section = CountNotifications(Section(MenuItemIntent.QuickStart));
         var sideMenu = CountNotifications(_root.Navigation.SideMenu);
         var content = CountNotifications(_root.Navigation.Content);
@@ -81,7 +124,7 @@ public sealed class NavigationTests
 
         Assert.Equal(1, introduction());
         Assert.Equal(1, installation());
-        Assert.Equal(0, stateFirst());
+        Assert.Equal(0, principles());
         Assert.Equal(0, section());
         Assert.Equal(0, sideMenu());
         Assert.Equal(1, content());
@@ -102,12 +145,11 @@ public sealed class NavigationTests
     [Fact]
     public void A_page_keeps_its_state_across_navigation()
     {
-        var forms = Link(MenuItemIntent.Forms);
-        var contact = ((FormsPage)forms.Page).Contact;
-        contact.Handle(new ContactState.SetName("Ada"));
+        var compositions = Section(MenuItemIntent.Compositions);
+        ((FormsPage)compositions.Home!.Page).Contact.Handle(new ContactState.SetName("Ada"));
 
-        Section(MenuItemIntent.Themes).Handle(new SelectableEntryState.Select());
-        forms.Handle(new SelectableEntryState.Select());
+        Section(MenuItemIntent.Components).Handle(new SelectableEntryState.Select());
+        compositions.Handle(new SelectableEntryState.Select());
 
         Assert.Equal("Ada", ((FormsPage)_root.Navigation.Content.Page!).Contact.Name);
     }

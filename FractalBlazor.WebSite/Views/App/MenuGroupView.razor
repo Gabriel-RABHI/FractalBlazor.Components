@@ -1,0 +1,18 @@
+@* A group of the menu on the left: its title, then its pages. A group still empty shows
+   its title alone. *@
+@attribute [ViewFor<ViewSelector>(typeof(MenuGroupState), ViewSelector.Viewer)]
+
+<FbStack NoFlex GS JVS>
+    <FbStackItem PHM MTS>
+        <FbText XS B Subtle>@MenuIntents.Label(Item.Intent)</FbText>
+    </FbStackItem>
+    @foreach (var page in Item.Pages)
+    {
+        <FbDynamicView @key="page" TSelector="ViewSelector" Item="page" Selector="ViewSelector.Viewer" />
+    }
+</FbStack>
+
+@code {
+    [Parameter]
+    public MenuGroupState Item { get; set; } = default!;
+}

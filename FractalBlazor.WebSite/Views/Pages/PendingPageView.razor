@@ -1,0 +1,12 @@
+@* A page of the menu whose content is still to come. *@
+@attribute [ViewFor<ViewSelector>(typeof(PendingPage), ViewSelector.Viewer)]
+
+<FbRow GS JVC>
+    <FbIcon Icon="@FbMaterialIcons.Construction" M Subtle />
+    <FbText M Muted>Contenu à venir.</FbText>
+</FbRow>
+
+@code {
+    [Parameter]
+    public PendingPage Item { get; set; } = default!;
+}

@@ -13,16 +13,19 @@ namespace FractalBlazor.WebSite.Views
 
         public static string Icon(MenuItemIntent intent) => intent switch
         {
-            MenuItemIntent.QuickStart => FbMaterialIcons.RocketLaunch,
             MenuItemIntent.Introduction => FbMaterialIcons.AutoStories,
             MenuItemIntent.Installation => FbMaterialIcons.InstallDesktop,
-            MenuItemIntent.StateFirst => FbMaterialIcons.AccountTree,
-            MenuItemIntent.Components => FbMaterialIcons.Widgets,
-            MenuItemIntent.Layout => FbMaterialIcons.ViewQuilt,
-            MenuItemIntent.Forms => FbMaterialIcons.DynamicForm,
+            MenuItemIntent.Basics => FbMaterialIcons.School,
+            MenuItemIntent.Principles => FbMaterialIcons.AccountTree,
             MenuItemIntent.Themes => FbMaterialIcons.Palette,
-            MenuItemIntent.Variants => FbMaterialIcons.Contrast,
-            MenuItemIntent.ThemeEditor => FbMaterialIcons.Tune,
+            MenuItemIntent.RowStack => FbMaterialIcons.ViewColumn,
+            MenuItemIntent.Grid => FbMaterialIcons.GridView,
+            MenuItemIntent.ShowWhenOver => FbMaterialIcons.Mouse,
+            MenuItemIntent.ShowWhenVisible => FbMaterialIcons.Visibility,
+            MenuItemIntent.Drawer => FbMaterialIcons.MenuOpen,
+            MenuItemIntent.DropDown => FbMaterialIcons.ArrowDropDownCircle,
+            MenuItemIntent.Updatable => FbMaterialIcons.Sync,
+            MenuItemIntent.Templates => FbMaterialIcons.Dashboard,
             MenuItemIntent.GitHub => FbMaterialIcons.Code,
             MenuItemIntent.LinkedIn => FbMaterialIcons.Work,
             _ => FbMaterialIcons.Circle

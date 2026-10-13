@@ -3,8 +3,9 @@
 <FbStack GL>
     <FbText M Muted>
         Cette application est un modèle. RootState porte l’en-tête, la navigation et le pied de page.
-        Chaque section du menu du haut porte la sous-liste du menu de gauche, et chaque entrée de ce
-        menu donne le modèle de sa page.
+        Chaque section du menu du haut porte les entrées du menu de gauche : des pages, et des
+        groupes qui titrent des pages. Chaque page donne son modèle. Une section sans entrées est
+        elle-même une page.
     </FbText>
     <CodeBlock Code="@ModelCode" />
 
@@ -37,9 +38,14 @@
     private const string ModelCode = """
         new SectionState(Navigation, MenuItemIntent.Components, section =>
         [
-            new PageLinkState(section, MenuItemIntent.Layout, new LayoutPage(new DrawerDemoState())),
-            new PageLinkState(section, MenuItemIntent.Forms, new FormsPage(new ContactState()))
-        ])
+            new MenuGroupState(section, MenuItemIntent.Layout, group =>
+            [
+                new PageLinkState(group, MenuItemIntent.RowStack, new RowStackPage()),
+                new PageLinkState(group, MenuItemIntent.Drawer, new DrawerPage(new DrawerDemoState()))
+            ]),
+            new MenuGroupState(section, MenuItemIntent.Inputs)
+        ]),
+        new SectionState(Navigation, MenuItemIntent.Compositions, new FormsPage(new ContactState()))
         """;
 
     private const string ViewCode = """

@@ -1,0 +1,13 @@
+@* Themes: the variants, then the theme editor, each rendered by the view of its model. *@
+@attribute [ViewFor<ViewSelector>(typeof(ThemesPage), ViewSelector.Viewer)]
+
+<FbStack GL>
+    <FbDynamicView TSelector="ViewSelector" Item="Item.Variants" Selector="ViewSelector.Viewer" />
+    <FbText XL B>Éditeur de thème</FbText>
+    <FbDynamicView TSelector="ViewSelector" Item="Item.Editor" Selector="ViewSelector.Viewer" />
+</FbStack>
+
+@code {
+    [Parameter]
+    public ThemesPage Item { get; set; } = default!;
+}

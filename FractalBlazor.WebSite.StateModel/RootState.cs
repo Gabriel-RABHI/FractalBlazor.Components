@@ -20,29 +20,44 @@ namespace FractalBlazor.WebSite.StateModel
         {
             Navigation = new NavigationState();
             Header = new HeaderState(
-                "FractalBlazor",
+                "Fractal Blazor",
                 [
                     new SectionState(Navigation, MenuItemIntent.QuickStart, section =>
                     [
                         new PageLinkState(section, MenuItemIntent.Introduction, new IntroductionPage()),
                         new PageLinkState(section, MenuItemIntent.Installation, new InstallationPage()),
-                        new MenuSeparatorState(),
-                        new PageLinkState(section, MenuItemIntent.StateFirst, new StateFirstPage())
+                        new PageLinkState(section, MenuItemIntent.Basics, new PendingPage()),
+                        new PageLinkState(section, MenuItemIntent.Principles, new StateFirstPage()),
+                        new PageLinkState(section, MenuItemIntent.Themes, new ThemesPage(new VariantsPage(), new ThemeEditorPage()))
                     ]),
                     new SectionState(Navigation, MenuItemIntent.Components, section =>
                     [
-                        new PageLinkState(section, MenuItemIntent.Layout, new LayoutPage(new DrawerDemoState())),
-                        new PageLinkState(section, MenuItemIntent.Forms, new FormsPage(new ContactState()))
+                        new MenuGroupState(section, MenuItemIntent.Layout, group =>
+                        [
+                            new PageLinkState(group, MenuItemIntent.RowStack, new RowStackPage()),
+                            new PageLinkState(group, MenuItemIntent.Grid, new GridPage()),
+                            new PageLinkState(group, MenuItemIntent.ShowWhenOver, new PendingPage()),
+                            new PageLinkState(group, MenuItemIntent.ShowWhenVisible, new PendingPage()),
+                            new PageLinkState(group, MenuItemIntent.Drawer, new DrawerPage(new DrawerDemoState())),
+                            new PageLinkState(group, MenuItemIntent.DropDown, new PendingPage()),
+                            new PageLinkState(group, MenuItemIntent.Updatable, new PendingPage())
+                        ]),
+                        new MenuGroupState(section, MenuItemIntent.Panels),
+                        new MenuGroupState(section, MenuItemIntent.View),
+                        new MenuGroupState(section, MenuItemIntent.Inputs),
+                        new MenuGroupState(section, MenuItemIntent.Selectors)
                     ]),
-                    new SectionState(Navigation, MenuItemIntent.Themes, section =>
+                    new SectionState(Navigation, MenuItemIntent.Compositions, new FormsPage(new ContactState())),
+                    new SectionState(Navigation, MenuItemIntent.Advanced, new PendingPage()),
+                    new SectionState(Navigation, MenuItemIntent.BuildingBlocks, section =>
                     [
-                        new PageLinkState(section, MenuItemIntent.Variants, new VariantsPage()),
-                        new PageLinkState(section, MenuItemIntent.ThemeEditor, new ThemeEditorPage())
-                    ])
+                        new PageLinkState(section, MenuItemIntent.Templates, new PendingPage())
+                    ]),
+                    new SectionState(Navigation, MenuItemIntent.Pricing, new PendingPage())
                 ],
                 [
-                    new ExternalLinkState(MenuItemIntent.GitHub, RepositoryUrl),
-                    new ExternalLinkState(MenuItemIntent.LinkedIn, LinkedInUrl)
+                    new ExternalLinkState(MenuItemIntent.LinkedIn, LinkedInUrl),
+                    new ExternalLinkState(MenuItemIntent.GitHub, RepositoryUrl)
                 ]);
             Footer = new FooterState("Composants Blazor state-first", new ThemeSelectorState(themeModeStore));
             Screen = new ScreenState(Navigation.Drawer, Header.Menu);
@@ -76,7 +91,7 @@ namespace FractalBlazor.WebSite.StateModel
     /// </summary>
     public enum MenuItemIntent
     {
-        [Display(Name = "Démarrage")]
+        [Display(Name = "Quick Start")]
         QuickStart,
 
         [Display(Name = "Introduction")]
@@ -85,26 +100,68 @@ namespace FractalBlazor.WebSite.StateModel
         [Display(Name = "Installation")]
         Installation,
 
-        [Display(Name = "State-first")]
-        StateFirst,
+        [Display(Name = "Basics")]
+        Basics,
 
-        [Display(Name = "Composants")]
-        Components,
+        [Display(Name = "Principles")]
+        Principles,
 
-        [Display(Name = "Mise en page")]
-        Layout,
-
-        [Display(Name = "Formulaires")]
-        Forms,
-
-        [Display(Name = "Thèmes")]
+        [Display(Name = "Themes")]
         Themes,
 
-        [Display(Name = "Variantes")]
-        Variants,
+        [Display(Name = "Components")]
+        Components,
 
-        [Display(Name = "Éditeur de thème")]
-        ThemeEditor,
+        [Display(Name = "Layout")]
+        Layout,
+
+        [Display(Name = "Row / Stack")]
+        RowStack,
+
+        [Display(Name = "Grid")]
+        Grid,
+
+        [Display(Name = "Show When Over")]
+        ShowWhenOver,
+
+        [Display(Name = "Show When Visible")]
+        ShowWhenVisible,
+
+        [Display(Name = "Drawer")]
+        Drawer,
+
+        [Display(Name = "Drop Down")]
+        DropDown,
+
+        [Display(Name = "Updatable")]
+        Updatable,
+
+        [Display(Name = "Panels")]
+        Panels,
+
+        [Display(Name = "View")]
+        View,
+
+        [Display(Name = "Inputs")]
+        Inputs,
+
+        [Display(Name = "Selectors")]
+        Selectors,
+
+        [Display(Name = "Compositions")]
+        Compositions,
+
+        [Display(Name = "Advanced")]
+        Advanced,
+
+        [Display(Name = "Building Blocks")]
+        BuildingBlocks,
+
+        [Display(Name = "Templates")]
+        Templates,
+
+        [Display(Name = "Pricing")]
+        Pricing,
 
         [Display(Name = "GitHub")]
         GitHub,

@@ -1,13 +1,17 @@
-@* The menu on the left: a polymorphic list of pages and separators, each rendered by the
-   view of its type. It re-renders when another section opens. *@
+@* The menu on the left: a polymorphic list of pages and groups of pages, each rendered by
+   the view of its type. It re-renders when another section opens, and disappears for a
+   section that is a page itself. *@
 @attribute [ViewFor<ViewSelector>(typeof(SideMenuState), ViewSelector.Viewer)]
 
-<FbStack NoFlex Scrollable GS PM JVS WFL MinWidth="13rem">
-    @foreach (var entry in Item.Entries)
-    {
-        <FbDynamicView @key="entry" TSelector="ViewSelector" Item="entry" Selector="ViewSelector.Viewer" />
-    }
-</FbStack>
+@if (Item.Entries.Count > 0)
+{
+    <FbStack NoFlex Scrollable GS PM JVS WFL MinWidth="13rem">
+        @foreach (var entry in Item.Entries)
+        {
+            <FbDynamicView @key="entry" TSelector="ViewSelector" Item="entry" Selector="ViewSelector.Viewer" />
+        }
+    </FbStack>
+}
 
 @code {
     [Parameter]

@@ -1,0 +1,34 @@
+@attribute [ViewFor<ViewSelector>(typeof(RowStackPage), ViewSelector.Viewer)]
+
+<FbStack GL>
+    <FbText L B>Surfaces et frames</FbText>
+    <FbRow GL WFM WSS WRL PL WBA>
+        <FbRow GL WFL PL WBH WRM Hover>
+            <FbText XS T>Home</FbText>
+            <FbText S T>Home</FbText>
+            <FbText M T>Home</FbText>
+            <FbText L T>Home</FbText>
+            <FbText XL T>Home</FbText>
+            <FbText XXL T>Home</FbText>
+        </FbRow>
+        <FbRow GL WFS PM WBS SJVS>
+            <FbText S>Home</FbText>
+            <FbText M>Home</FbText>
+            <FbText L>Home</FbText>
+            <FbText XL>Home with <b>bold</b></FbText>
+        </FbRow>
+        <FbRow GL WFM PM Hover SJVE JVBl>
+            <FbText S B>Home</FbText>
+            <FbText M B>Home</FbText>
+            <FbText L B>Home</FbText>
+            <FbRowItem SJVBl>
+                <FbText XL B>Home</FbText>
+            </FbRowItem>
+        </FbRow>
+    </FbRow>
+</FbStack>
+
+@code {
+    [Parameter]
+    public RowStackPage Item { get; set; } = default!;
+}
