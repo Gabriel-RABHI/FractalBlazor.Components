@@ -40,7 +40,7 @@ Le raisonnement complet est dans [Conception.md](Conception.md), le modèle de t
 | Projet | Rôle |
 | --- | --- |
 | `FractalBlazor.Components.Layout`, `.Forms`, `.Common` | Les bibliothèques génériques, publiées en paquets. |
-| `FractalBlazor.Components.Benchmarks` | Comparaisons de rendu avec `ComponentBase` et MudBlazor. |
+| `FractalBlazor.Components.Benchmarks` | Comparaisons de rendu avec `ComponentBase`, MudBlazor, Radzen et Fluent UI. |
 | `FractalBlazor.Components.Tests` | Tests xUnit et bUnit des bibliothèques. |
 | `FractalBlazor.Components.Tools` | Outil qui produit la palette de base à partir d'une image. |
 | `FractalBlazor.WebSite.StateModel` | Le modèle d'état du site : en-tête, navigation, pages, formulaire de contact, sélecteur de thème. Des classes simples, qui ne référencent que `FractalBlazor.Components.Common`. |
@@ -214,12 +214,15 @@ Ouvrir une page ne notifie que l'ancienne entrée, la nouvelle et la zone de con
 
 ## Performances
 
-Rendu de 1 000 lignes encadrées contenant un texte (détails dans [FractalBlazor.Components.Benchmarks](FractalBlazor.Components.Benchmarks/README.md)) :
+Rendu côté serveur de 1 000 lignes encadrées, puis de 1 000 éditeurs à cinq champs (texte, date, liste), face à MudBlazor, Radzen et Fluent UI. Détails, méthode et limites dans [FractalBlazor.Components.Benchmarks](FractalBlazor.Components.Benchmarks/README.md).
 
-| Scénario | ComponentBase équivalent | FractalBlazor | MudBlazor |
-| --- | ---: | ---: | ---: |
-| Premier rendu | 4,28 ms · 4 123 Ko | 4,19 ms · 3 991 Ko | 8,64 ms · 7 350 Ko |
-| Re-rendu | 1,46 ms · 758 Ko | 1,26 ms · 352 Ko | 3,53 ms · 1 016 Ko |
+| Scénario | FractalBlazor | MudBlazor | Radzen | Fluent UI |
+| --- | ---: | ---: | ---: | ---: |
+| Lignes, premier rendu | 4,21 ms | 8,99 ms | 8,51 ms | 16,23 ms |
+| Lignes, re-rendu | 1,23 ms | 3,17 ms | 3,64 ms | 4,79 ms |
+| Éditeurs, premier rendu | 173 ms | 1 779 ms | 458 ms | 511 ms |
+| Éditeurs, re-rendu | 34 ms | 104 ms | 292 ms | 301 ms |
+| Éditeurs, HTML produit | 2 080 Ko | 7 326 Ko | 14 071 Ko | 8 424 Ko |
 
 ## Développement
 

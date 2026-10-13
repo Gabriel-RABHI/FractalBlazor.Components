@@ -1,0 +1,11 @@
+@inherits ListBase
+@using Radzen.Blazor
+
+@for (var i = 0; i < Rows; i++)
+{
+    <RadzenCard Variant="Radzen.Variant.Outlined" class="rz-p-4">
+        <RadzenStack Orientation="Radzen.Orientation.Horizontal" Gap="0.5rem">
+            <RadzenText TextStyle="TextStyle.Body2">Row @i, generation @Generation</RadzenText>
+        </RadzenStack>
+    </RadzenCard>
+}

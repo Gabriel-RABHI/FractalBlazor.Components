@@ -1,0 +1,24 @@
+@using Radzen.Blazor
+@* Each field binds a property of the applicant, inside an outlined form field with its label. *@
+<RadzenStack Orientation="Radzen.Orientation.Horizontal" Gap="0.5rem">
+    <RadzenFormField Text="First Name" Variant="Radzen.Variant.Outlined">
+        <RadzenTextBox @bind-Value="Applicant.FirstName" />
+    </RadzenFormField>
+    <RadzenFormField Text="Last Name" Variant="Radzen.Variant.Outlined">
+        <RadzenTextBox @bind-Value="Applicant.LastName" />
+    </RadzenFormField>
+    <RadzenFormField Text="City" Variant="Radzen.Variant.Outlined">
+        <RadzenTextBox @bind-Value="Applicant.City" />
+    </RadzenFormField>
+    <RadzenFormField Text="Birth Date" Variant="Radzen.Variant.Outlined">
+        <RadzenDatePicker TValue="DateTime" @bind-Value="Applicant.BirthDate" DateFormat="d" />
+    </RadzenFormField>
+    <RadzenFormField Text="Status" Variant="Radzen.Variant.Outlined">
+        <RadzenDropDown TValue="ApplicantStatus" Data="ApplicantDto.Statuses" @bind-Value="Applicant.Status" />
+    </RadzenFormField>
+</RadzenStack>
+
+@code {
+    [Parameter]
+    public ApplicantDto Applicant { get; set; } = default!;
+}

@@ -1,0 +1,15 @@
+@using Microsoft.FluentUI.AspNetCore.Components
+@* Each field binds a property of the applicant, with its label. *@
+<FluentStack Orientation="Microsoft.FluentUI.AspNetCore.Components.Orientation.Horizontal" HorizontalGap="8px">
+    <FluentTextInput Label="First Name" @bind-Value="Applicant.FirstName" />
+    <FluentTextInput Label="Last Name" @bind-Value="Applicant.LastName" />
+    <FluentTextInput Label="City" @bind-Value="Applicant.City" />
+    <FluentDatePicker TValue="DateTime" Label="Birth Date" @bind-Value="Applicant.BirthDate" />
+    <FluentSelect TOption="ApplicantStatus" TValue="ApplicantStatus" Label="Status" Items="ApplicantDto.Statuses"
+                  @bind-Value="Applicant.Status" />
+</FluentStack>
+
+@code {
+    [Parameter]
+    public ApplicantDto Applicant { get; set; } = default!;
+}

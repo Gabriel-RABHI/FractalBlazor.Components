@@ -1,0 +1,9 @@
+@inherits EditorListBase
+@using Microsoft.FluentUI.AspNetCore.Components
+
+<FluentStack Orientation="Microsoft.FluentUI.AspNetCore.Components.Orientation.Vertical" VerticalGap="8px">
+    @foreach (var applicant in Applicants)
+    {
+        <FluentApplicantEditor Applicant="applicant" />
+    }
+</FluentStack>

@@ -1,0 +1,9 @@
+@inherits EditorListBase
+@using Radzen.Blazor
+
+<RadzenStack Gap="0.5rem">
+    @foreach (var applicant in Applicants)
+    {
+        <RadzenApplicantEditor Applicant="applicant" />
+    }
+</RadzenStack>

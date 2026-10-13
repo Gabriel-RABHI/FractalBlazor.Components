@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.FluentUI.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor.Services;
+using Radzen;
 
 namespace FractalBlazor.Components.Benchmarks
 {
@@ -17,14 +19,14 @@ namespace FractalBlazor.Components.Benchmarks
     /// status of every applicant of an already rendered stack.
     /// </summary>
     [MemoryDiagnoser]
-    [ShortRunJob]
+    [MediumRunJob]
     public class EditorBenchmarks
     {
         private ServiceProvider _services = default!;
         private HtmlRenderer _renderer = default!;
         private IReadOnlyList<ApplicantDto> _applicants = [];
 
-        [Params(Library.FractalBlazor, Library.MudBlazor)]
+        [Params(Library.FractalBlazor, Library.MudBlazor, Library.Radzen, Library.FluentUI)]
         public Library Library { get; set; }
 
         [Params(1000)]
@@ -38,6 +40,8 @@ namespace FractalBlazor.Components.Benchmarks
             services.AddSingleton<IJSRuntime, NoJSRuntime>();
             services.AddFractalBlazor();
             services.AddMudServices();
+            services.AddRadzenComponents();
+            services.AddFluentUIComponents();
             _services = services.BuildServiceProvider();
             _applicants = ApplicantDto.Generate(Rows);
         }
@@ -76,9 +80,13 @@ namespace FractalBlazor.Components.Benchmarks
         private Task RenderListAsync() => _renderer.Dispatcher.InvokeAsync(() =>
         {
             var parameters = ParameterView.FromDictionary(new Dictionary<string, object?> { [nameof(EditorListBase.Applicants)] = _applicants });
-            return Library == Library.MudBlazor
-                ? _renderer.RenderComponentAsync<MudEditorList>(parameters)
-                : _renderer.RenderComponentAsync<FractalEditorList>(parameters);
+            return Library switch
+            {
+                Library.MudBlazor => _renderer.RenderComponentAsync<MudEditorList>(parameters),
+                Library.Radzen => _renderer.RenderComponentAsync<RadzenEditorList>(parameters),
+                Library.FluentUI => _renderer.RenderComponentAsync<FluentEditorList>(parameters),
+                _ => _renderer.RenderComponentAsync<FractalEditorList>(parameters)
+            };
         });
     }
 }

@@ -1,10 +1,14 @@
 using BenchmarkDotNet.Attributes;
+using FractalBlazor.Components.Benchmarks.Editors;
 using FractalBlazor.Components.Benchmarks.Lists;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.FluentUI.AspNetCore.Components;
+using Microsoft.JSInterop;
 using MudBlazor.Services;
+using Radzen;
 
 namespace FractalBlazor.Components.Benchmarks
 {
@@ -12,7 +16,9 @@ namespace FractalBlazor.Components.Benchmarks
     {
         ComponentBase,
         FractalBlazor,
-        MudBlazor
+        MudBlazor,
+        Radzen,
+        FluentUI
     }
 
     /// <summary>
@@ -21,13 +27,13 @@ namespace FractalBlazor.Components.Benchmarks
     /// <c>Rerender</c> changes the text of every row of an already rendered list.
     /// </summary>
     [MemoryDiagnoser]
-    [ShortRunJob]
+    [MediumRunJob]
     public class RenderBenchmarks
     {
         private ServiceProvider _services = default!;
         private HtmlRenderer _renderer = default!;
 
-        [Params(Library.ComponentBase, Library.FractalBlazor, Library.MudBlazor)]
+        [Params(Library.ComponentBase, Library.FractalBlazor, Library.MudBlazor, Library.Radzen, Library.FluentUI)]
         public Library Library { get; set; }
 
         [Params(1000)]
@@ -38,7 +44,10 @@ namespace FractalBlazor.Components.Benchmarks
         {
             var services = new ServiceCollection();
             services.AddLogging();
+            services.AddSingleton<IJSRuntime, NoJSRuntime>();
             services.AddMudServices();
+            services.AddRadzenComponents();
+            services.AddFluentUIComponents();
             _services = services.BuildServiceProvider();
         }
 
@@ -80,6 +89,8 @@ namespace FractalBlazor.Components.Benchmarks
             {
                 Library.FractalBlazor => _renderer.RenderComponentAsync<FractalList>(parameters),
                 Library.MudBlazor => _renderer.RenderComponentAsync<MudList>(parameters),
+                Library.Radzen => _renderer.RenderComponentAsync<RadzenList>(parameters),
+                Library.FluentUI => _renderer.RenderComponentAsync<FluentList>(parameters),
                 _ => _renderer.RenderComponentAsync<PlainList>(parameters)
             };
         });
