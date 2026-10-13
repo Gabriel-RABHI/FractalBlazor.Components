@@ -21,6 +21,8 @@
   <ItemGroup>
     <ProjectReference Include="..\FractalBlazor.Components.Layout\FractalBlazor.Components.Layout.csproj" />
     <ProjectReference Include="..\FractalBlazor.Components.Forms\FractalBlazor.Components.Forms.csproj" />
+    <!-- The site reads the flags of the libraries: a test keeps its catalog complete. -->
+    <ProjectReference Include="..\FractalBlazor.WebSite\FractalBlazor.WebSite.csproj" />
   </ItemGroup>
 
   <ItemGroup>
