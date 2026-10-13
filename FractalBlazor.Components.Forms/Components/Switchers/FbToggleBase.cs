@@ -1,8 +1,9 @@
 using FractalBlazor.Components.Common.Contracts;
+using FractalBlazor.Components.Forms.Components.Inputs;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace FractalBlazor.Components.Forms.Inputs
+namespace FractalBlazor.Components.Forms.Components.Switchers
 {
     /// <summary>
     /// Boolean field on a native checkbox wrapped in its label, so a click on the text

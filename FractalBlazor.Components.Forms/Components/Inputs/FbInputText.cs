@@ -1,6 +1,6 @@
 using FractalBlazor.Components.Common.Contracts;
 
-namespace FractalBlazor.Components.Forms.Inputs
+namespace FractalBlazor.Components.Forms.Components.Inputs
 {
     /// <summary>
     /// Single-line text field.

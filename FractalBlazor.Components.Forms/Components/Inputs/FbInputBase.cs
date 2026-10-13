@@ -7,7 +7,7 @@ using FractalBlazor.Components.Layout.Abstracts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace FractalBlazor.Components.Forms.Inputs
+namespace FractalBlazor.Components.Forms.Components.Inputs
 {
     /// <summary>
     /// Base of every field. A new value is first sent as a <typeparamref name="TAction"/> to

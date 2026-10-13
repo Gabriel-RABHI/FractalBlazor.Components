@@ -1,10 +1,10 @@
-using FractalBlazor.Components.Forms.Display;
+using FractalBlazor.Components.Forms.Components.Display;
 using FractalBlazor.Components.Layout;
 using FractalBlazor.Components.Layout.Abstracts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace FractalBlazor.Components.Forms.Icons
+namespace FractalBlazor.Components.Forms.Components.Icons
 {
     /// <summary>
     /// Renders an icon from <see cref="FbMaterialIcons"/> as an inline SVG painted with the

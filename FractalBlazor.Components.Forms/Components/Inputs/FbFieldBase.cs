@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace FractalBlazor.Components.Forms.Inputs
+namespace FractalBlazor.Components.Forms.Components.Inputs
 {
     /// <summary>
     /// Framed single-line field on a native <c>input</c>. While it has the focus, it keeps

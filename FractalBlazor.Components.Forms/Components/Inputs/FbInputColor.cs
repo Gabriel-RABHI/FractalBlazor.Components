@@ -1,6 +1,6 @@
 using FractalBlazor.Components.Common.Contracts;
 
-namespace FractalBlazor.Components.Forms.Inputs
+namespace FractalBlazor.Components.Forms.Components.Inputs
 {
     /// <summary>
     /// Color field on the native color picker. Values are <c>#RRGGBB</c> strings; the field

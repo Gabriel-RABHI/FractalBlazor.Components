@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FractalBlazor.Components.Forms.Display
+namespace FractalBlazor.Components.Forms.Components.Display
 {
     public enum FbTextSize : byte
     {

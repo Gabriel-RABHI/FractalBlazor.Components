@@ -1,5 +1,5 @@
 using FractalBlazor.Components.Common.Contracts;
-using FractalBlazor.Components.Forms.Inputs;
+using FractalBlazor.Components.Forms.Components.Inputs;
 
 namespace FractalBlazor.Components.Tests.Forms;
 

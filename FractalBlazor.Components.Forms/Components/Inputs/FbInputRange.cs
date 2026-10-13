@@ -1,6 +1,6 @@
 using FractalBlazor.Components.Common.Contracts;
 
-namespace FractalBlazor.Components.Forms.Inputs
+namespace FractalBlazor.Components.Forms.Components.Inputs
 {
     /// <summary>
     /// Numeric field on the native slider. <c>Min</c>, <c>Max</c> and <c>Step</c> set its

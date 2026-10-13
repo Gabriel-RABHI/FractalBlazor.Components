@@ -1,6 +1,6 @@
 using FractalBlazor.Components.Common.Contracts;
+using FractalBlazor.Components.Forms.Components.Icons;
 using FractalBlazor.Components.Forms.Core;
-using FractalBlazor.Components.Forms.Icons;
 using FractalBlazor.Components.Forms.Theming.Helpers;
 using FractalBlazor.Components.Forms.Theming.Registry;
 using FractalBlazor.Components.Layout.Abstracts;
@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace FractalBlazor.Components.Forms.Inputs
+namespace FractalBlazor.Components.Forms.Components.Actions
 {
     /// <summary>
     /// A native <c>button</c> that speaks the Layout grammar: fill, frame, radius, padding and

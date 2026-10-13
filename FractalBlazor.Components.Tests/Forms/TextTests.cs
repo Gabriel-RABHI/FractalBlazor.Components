@@ -1,4 +1,4 @@
-using FractalBlazor.Components.Forms.Display;
+using FractalBlazor.Components.Forms.Components.Display;
 
 namespace FractalBlazor.Components.Tests.Forms;
 

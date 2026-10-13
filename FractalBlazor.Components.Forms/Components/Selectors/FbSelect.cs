@@ -1,14 +1,15 @@
 using System.Collections.Concurrent;
 using FractalBlazor.Components.Common.Contracts;
-using FractalBlazor.Components.Forms.Display;
-using FractalBlazor.Components.Forms.Icons;
+using FractalBlazor.Components.Forms.Components.Display;
+using FractalBlazor.Components.Forms.Components.Icons;
+using FractalBlazor.Components.Forms.Components.Inputs;
 using FractalBlazor.Components.Forms.Mapping;
 using FractalBlazor.Components.Layout;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace FractalBlazor.Components.Forms.Inputs
+namespace FractalBlazor.Components.Forms.Components.Selectors
 {
     /// <summary>
     /// Chooses one element among <see cref="Items"/>, without knowing how elements look: the

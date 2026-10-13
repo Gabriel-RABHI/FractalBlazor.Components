@@ -2,7 +2,7 @@ using FractalBlazor.Components.Common.Contracts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace FractalBlazor.Components.Forms.Inputs
+namespace FractalBlazor.Components.Forms.Components.Switchers
 {
     /// <summary>
     /// Where the box of an <see cref="FbCheckbox{TAction}"/> sits along its content.

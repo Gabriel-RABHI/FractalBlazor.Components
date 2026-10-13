@@ -1,0 +1,8 @@
+@inherits EditorListBase
+
+<FbStack GS>
+    @foreach (var applicant in Applicants)
+    {
+        <FractalApplicantEditor Applicant="applicant" />
+    }
+</FbStack>

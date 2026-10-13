@@ -4,7 +4,7 @@ using FractalBlazor.Components.Common.Contracts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace FractalBlazor.Components.Forms.Inputs
+namespace FractalBlazor.Components.Forms.Components.Inputs
 {
     /// <summary>
     /// Numeric field on the native number input, for any .NET number type. The browser

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
-namespace FractalBlazor.Components.Forms.Icons
+namespace FractalBlazor.Components.Forms.Components.Icons
 {
     public partial class FbMaterialIcons
     {

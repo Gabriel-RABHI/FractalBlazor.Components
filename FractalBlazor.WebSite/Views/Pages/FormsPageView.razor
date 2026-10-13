@@ -41,15 +41,17 @@
                 <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_checks[5]" Circle Bottom>
                     <FbStack PM WFL WRM MinHeight="5rem" JVC><FbText S>Bottom : alignée en bas du contenu</FbText></FbStack>
                 </FbCheckbox>
-                <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_checks[6]" Mirror Top>
-                    <FbStack GS>
-                        <FbText S B>Conditions d’utilisation</FbText>
-                        <FbText S Muted>
-                            Le contenu peut être n’importe quel balisage : un titre, un paragraphe,
-                            une carte… La case suit son alignement.
-                        </FbText>
-                    </FbStack>
-                </FbCheckbox>
+                <FbStackItem MM>
+                    <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_checks[6]" Mirror Top>
+                        <FbStack GS>
+                            <FbText S B>Conditions d’utilisation</FbText>
+                            <FbText S Muted>
+                                Le contenu peut être n’importe quel balisage : un titre, un paragraphe,
+                                une carte… La case suit son alignement.
+                            </FbText>
+                        </FbStack>
+                    </FbCheckbox>
+                </FbStackItem>
             </FbStack>
         </FbGridItem>
     </FbGridContainer>

@@ -1,7 +1,7 @@
 using FractalBlazor.Components.Common.Attributes;
 using FractalBlazor.Components.Common.Contracts;
 using FractalBlazor.Components.Forms;
-using FractalBlazor.Components.Forms.Inputs;
+using FractalBlazor.Components.Forms.Components.Selectors;
 using FractalBlazor.Components.Forms.Mapping;
 using FractalBlazor.Components.Layout.Abstracts;
 using Microsoft.AspNetCore.Components;

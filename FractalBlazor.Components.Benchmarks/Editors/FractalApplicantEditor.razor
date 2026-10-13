@@ -1,0 +1,24 @@
+@* Each field sends its action to the applicant, which updates itself. *@
+<FbRow GS JVC>
+    <FbInputText TAction="ApplicantDto.SetFirstName" Handler="Applicant" Value="@Applicant.FirstName">
+        <StartContent><FbText S Subtle>First Name</FbText></StartContent>
+    </FbInputText>
+    <FbInputText TAction="ApplicantDto.SetLastName" Handler="Applicant" Value="@Applicant.LastName">
+        <StartContent><FbText S Subtle>Last Name</FbText></StartContent>
+    </FbInputText>
+    <FbInputText TAction="ApplicantDto.SetCity" Handler="Applicant" Value="@Applicant.City">
+        <StartContent><FbText S Subtle>City</FbText></StartContent>
+    </FbInputText>
+    <FbInputDate TAction="ApplicantDto.SetBirthDate" Handler="Applicant" Value="@DateOnly.FromDateTime(Applicant.BirthDate)">
+        <StartContent><FbText S Subtle>Birth Date</FbText></StartContent>
+    </FbInputDate>
+    <FbSelect TValue="ApplicantStatus" TAction="ApplicantDto.SetStatus" Handler="Applicant" Value="@Applicant.Status"
+              Items="ApplicantDto.Statuses">
+        <StartContent><FbText S Subtle>Status</FbText></StartContent>
+    </FbSelect>
+</FbRow>
+
+@code {
+    [Parameter]
+    public ApplicantDto Applicant { get; set; } = default!;
+}

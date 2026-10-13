@@ -1,4 +1,5 @@
-using FractalBlazor.Components.Forms.Icons;
+using FractalBlazor.Components.Forms.Components.Display;
+using FractalBlazor.Components.Forms.Components.Icons;
 using FractalBlazor.Components.Layout;
 
 namespace FractalBlazor.Components.Tests.Forms;
@@ -31,7 +32,7 @@ public sealed class IconTests : BunitContext
     {
         var flags = Render<FbIcon>(p => p.Add(x => x.Icon, FbMaterialIcons.Check).Add(x => x.L, true).Add(x => x.Muted, true));
         var enums = Render<FbIcon>(p => p.Add(x => x.Icon, FbMaterialIcons.Check).Add(x => x.Size, FbSpacing.L)
-            .Add(x => x.Color, FractalBlazor.Components.Forms.Display.FbTextColor.Muted));
+            .Add(x => x.Color, FbTextColor.Muted));
 
         Assert.Equal("fb-icon fb-icon-l fb-fg-muted", flags.Find("svg").GetAttribute("class"));
         Assert.Equal(flags.Find("svg").GetAttribute("class"), enums.Find("svg").GetAttribute("class"));

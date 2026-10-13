@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using FractalBlazor.Components.Common.Contracts;
 using FractalBlazor.Components.Forms;
-using FractalBlazor.Components.Forms.Inputs;
+using FractalBlazor.Components.Forms.Components.Panels;
 
 namespace FractalBlazor.Components.Tests.Forms;
 

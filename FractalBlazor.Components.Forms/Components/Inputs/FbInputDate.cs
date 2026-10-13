@@ -3,7 +3,7 @@ using FractalBlazor.Components.Common.Contracts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace FractalBlazor.Components.Forms.Inputs
+namespace FractalBlazor.Components.Forms.Components.Inputs
 {
     /// <summary>
     /// Date field on the native date input: the browser provides the calendar, in the

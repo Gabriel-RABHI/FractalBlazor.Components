@@ -1,4 +1,4 @@
-using FractalBlazor.Components.Forms.Icons;
+using FractalBlazor.Components.Forms.Components.Icons;
 using FractalBlazor.Components.Forms.Mapping;
 using FractalBlazor.WebSite.StateModel;
 

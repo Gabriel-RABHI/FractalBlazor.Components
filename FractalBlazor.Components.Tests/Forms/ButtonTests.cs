@@ -1,5 +1,5 @@
-using FractalBlazor.Components.Forms.Icons;
-using FractalBlazor.Components.Forms.Inputs;
+using FractalBlazor.Components.Forms.Components.Actions;
+using FractalBlazor.Components.Forms.Components.Icons;
 using FractalBlazor.Components.Forms.Theming.Constants;
 
 namespace FractalBlazor.Components.Tests.Forms;

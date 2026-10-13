@@ -167,7 +167,8 @@ namespace FractalBlazor.Components.Layout
             builder.OpenElement(0, "div");
             builder.AddAttribute(1, "id", _containerId);
             builder.AddAttribute(2, "class", $"fb-dropdown-container{(Block ? " fb-dropdown-block" : "")} {Classes}".TrimEnd());
-            builder.AddAttribute(3, "style", Style);
+            if (!string.IsNullOrWhiteSpace(Style))
+                builder.AddAttribute(3, "style", Style);
             if (IsOpen)
                 builder.AddAttribute(18, "onkeydown", EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDownAsync));
 

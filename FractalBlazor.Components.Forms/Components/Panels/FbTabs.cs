@@ -1,11 +1,12 @@
 using System.Collections.Concurrent;
 using FractalBlazor.Components.Common.Contracts;
+using FractalBlazor.Components.Forms.Components.Inputs;
 using FractalBlazor.Components.Forms.Mapping;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace FractalBlazor.Components.Forms.Inputs
+namespace FractalBlazor.Components.Forms.Components.Panels
 {
     /// <summary>
     /// A row of tabs that selects an index: <see cref="FbInputBase{TValue, TAction}.Value"/> is

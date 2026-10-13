@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Reflection;
-using FractalBlazor.Components.Forms.Display;
+using FractalBlazor.Components.Forms.Components.Display;
 using FractalBlazor.Components.Layout.Abstracts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;

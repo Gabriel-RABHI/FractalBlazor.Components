@@ -1,0 +1,8 @@
+@inherits EditorListBase
+
+<MudStack Spacing="2">
+    @foreach (var applicant in Applicants)
+    {
+        <MudApplicantEditor Applicant="applicant" />
+    }
+</MudStack>
