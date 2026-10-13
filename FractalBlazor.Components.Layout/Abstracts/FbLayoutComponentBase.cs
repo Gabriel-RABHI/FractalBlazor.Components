@@ -16,20 +16,19 @@ namespace FractalBlazor.Components.Layout.Abstracts
         private FbStyleMemo _classMemo;
 
         /// <summary>
-        /// Every value that shapes the layout classes, except the free-form <c>Classes</c>.
+        /// Class cache key of this level: every value that shapes the classes, except the
+        /// free-form <c>Classes</c>.
         /// </summary>
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        internal struct LayoutClassKey
+        internal struct LayoutKey
         {
-            public bool NoWrap;
+            public ComponentBaseState State;
             public bool ResponsiveContainer;
-            public FbBreaks Breakpoint;
-            public bool Under;
         }
 
         /// <summary>
-        /// Every parameter that shapes the layout inline style, except free-form strings.
-        /// Its raw bytes are the style cache key, hence <c>Pack = 1</c>: no padding bytes.
+        /// Every parameter of this level, except free-form strings. Its raw bytes are part of
+        /// the class cache key, hence <c>Pack = 1</c>: no padding bytes.
         /// </summary>
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         internal struct ComponentBaseState
@@ -69,25 +68,6 @@ namespace FractalBlazor.Components.Layout.Abstracts
             public bool IsInlineFlex { get => DisplayMode == FbBaseDisplayMode.InlineFlex; set { if (value) DisplayMode = FbBaseDisplayMode.InlineFlex; } }
 
             public bool IsGrid { get => DisplayMode == FbBaseDisplayMode.Grid; set { if (value) DisplayMode = FbBaseDisplayMode.Grid; } }
-
-            public string DisplayModeString
-            {
-                get
-                {
-                    switch (DisplayMode)
-                    {
-                        case FbBaseDisplayMode.Block: return "display:block;";
-                        case FbBaseDisplayMode.InlineBloc: return "display:inline-block;";
-                        case FbBaseDisplayMode.Flex: return "display:flex;";
-                        case FbBaseDisplayMode.InlineFlex: return "display:inline-flex;";
-                        case FbBaseDisplayMode.Table: return "display:table;";
-                        case FbBaseDisplayMode.TableRow: return "display:table-row;";
-                        case FbBaseDisplayMode.TableCell: return "display:table-cell;";
-                        case FbBaseDisplayMode.Grid: return "display:grid;";
-                    }
-                    return "";
-                }
-            }
         }
 
         private ComponentBaseState _state = new ComponentBaseState();
@@ -173,10 +153,7 @@ namespace FractalBlazor.Components.Layout.Abstracts
         // ************************************************************************************************ //
         // **********************************   PROTECTED PARAMETERS   ************************************ //
         // ************************************************************************************************ //
-        /// <summary>
-        /// Style cache key of this level.
-        /// </summary>
-        internal ComponentBaseState LayoutStyleKey => _state;
+        internal LayoutKey LayoutKeyValue => new() { State = _state, ResponsiveContainer = ResponsiveContainer };
 
         protected bool IsBlock { get => _state.IsBlock; set => _state.IsBlock = value; }
 
@@ -209,81 +186,98 @@ namespace FractalBlazor.Components.Layout.Abstracts
         protected bool ResponsiveContainer { get; set; }
 
         // -------------------------------- LEVEL AGGREGATES -------------------------------- //
-        protected string AggregatedStyles
-            => ResolveStyle(LayoutStyleKey, new FbStyleInputs(FlexBasis, Style), static component => component.BuildLayoutStyle());
+        /// <summary>
+        /// Inline style of this level: only what no atom can express, <see cref="Style"/>,
+        /// <see cref="FlexBasis"/> and a flex factor above <see cref="FbAtoms.MaxFlex"/>.
+        /// <c>null</c> when there is none, so that no attribute is rendered.
+        /// </summary>
+        protected string? AggregatedStyles
+            => ResolveStyle(LayoutKeyValue, new FbStyleInputs(FlexBasis, Style), static component => component.BuildLayoutStyle());
 
         /// <summary>
         /// Returns the style for <paramref name="key"/>: from this component's last render when
-        /// nothing changed, then from the shared cache when no free-form string is involved,
-        /// and only otherwise from <paramref name="build"/>.
+        /// nothing changed, otherwise from <paramref name="build"/>. Styles hold free-form
+        /// values only, so they are never shared.
         /// </summary>
-        private protected string ResolveStyle<TKey>(in TKey key, in FbStyleInputs inputs, Func<FbLayoutComponentBase, string> build)
+        private protected string? ResolveStyle<TKey>(in TKey key, in FbStyleInputs inputs, Func<FbLayoutComponentBase, string?> build)
             where TKey : unmanaged
-            => Resolve(ref _styleMemo, in key, in inputs, build);
+        {
+            if (_styleMemo.TryGet(in key, in inputs, out var style))
+                return style;
+
+            style = build(this);
+            _styleMemo.Set(in key, in inputs, style);
+            return style;
+        }
 
         /// <summary>
-        /// Same as <see cref="ResolveStyle"/> for the <c>class</c> attribute, whose only
-        /// free-form input is <see cref="Classes"/>. Each key type must always produce the
-        /// same classes: a component that adds its own class uses its own key type.
+        /// Returns the classes for <paramref name="key"/>: from this component's last render
+        /// when nothing changed, otherwise from the shared cache, where <paramref name="build"/>
+        /// runs once per state. <see cref="Classes"/> is appended for this component only. Each
+        /// key type must always produce the same classes: a component that adds its own class
+        /// uses its own key type.
         /// </summary>
         private protected string ResolveClasses<TKey>(in TKey key, Func<FbLayoutComponentBase, string> build)
             where TKey : unmanaged
-            => Resolve(ref _classMemo, in key, new FbStyleInputs(Classes, null), build);
-
-        private string Resolve<TKey>(ref FbStyleMemo memo, in TKey key, in FbStyleInputs inputs, Func<FbLayoutComponentBase, string> build)
-            where TKey : unmanaged
         {
-            if (memo.TryGet(in key, in inputs, out var value))
-                return value;
+            var inputs = new FbStyleInputs(Classes, null);
+            if (_classMemo.TryGet(in key, in inputs, out var classes))
+                return classes!;
 
-            var shareable = inputs.IsEmpty;
-            if (!shareable || !FbStyleCache<TKey>.TryGet(in key, out value))
-            {
-                value = build(this);
-                if (shareable)
-                    value = FbStyleCache<TKey>.Add(in key, value);
-            }
+            if (!FbClassCache<TKey>.TryGet(in key, out var shared))
+                shared = FbClassCache<TKey>.Add(in key, build(this));
+            classes = string.IsNullOrWhiteSpace(Classes) ? shared : FbClasses.Join(shared, Classes);
 
-            memo.Set(in key, in inputs, value);
-            return value;
+            _classMemo.Set(in key, in inputs, classes);
+            return classes;
         }
 
-        private protected string BuildLayoutStyle()
+        private protected string? BuildLayoutStyle()
+            => FbInlineStyle.Join(
+                _state._flex != int.MinValue && !FbAtoms.HasFlex(_state._flex) ? $"flex:{_state._flex}" : null,
+                string.IsNullOrWhiteSpace(FlexBasis) ? null : $"flex-basis:{FlexBasis}",
+                Style);
+
+        /// <summary>
+        /// Adds the atoms of this level: display, padding, margin, flex factor, selection and
+        /// visibility.
+        /// </summary>
+        private protected void AddLayoutAtoms(FbAtomLine line)
         {
             RenderingStatistics.AddComponentBaseStyleComputation();
 
-            return _state.DisplayModeString +
-                            (Padding != FbSpacing.None ? $"padding:{FbLayoutHelper.ToSpacingCss(Padding)};" : "") +
-                            (PaddingTop != FbSpacing.None ? $"padding-top:{FbLayoutHelper.ToSpacingCss(PaddingTop)};" : "") +
-                            (PaddingBottom != FbSpacing.None ? $"padding-bottom:{FbLayoutHelper.ToSpacingCss(PaddingBottom)};" : "") +
-                            (PaddingLeft != FbSpacing.None ? $"padding-left:{FbLayoutHelper.ToSpacingCss(PaddingLeft)};" : "") +
-                            (PaddingRight != FbSpacing.None ? $"padding-right:{FbLayoutHelper.ToSpacingCss(PaddingRight)};" : "") +
-                            (Margin != FbSpacing.None ? $"margin:{FbLayoutHelper.ToSpacingCss(Margin)};" : "") +
-                            (MarginTop != FbSpacing.None ? $"margin-top:{FbLayoutHelper.ToSpacingCss(MarginTop)};" : "") +
-                            (MarginBottom != FbSpacing.None ? $"margin-bottom:{FbLayoutHelper.ToSpacingCss(MarginBottom)};" : "") +
-                            (MarginLeft != FbSpacing.None ? $"margin-left:{FbLayoutHelper.ToSpacingCss(MarginLeft)};" : "") +
-                            (MarginRight != FbSpacing.None ? $"margin-right:{FbLayoutHelper.ToSpacingCss(MarginRight)};" : "") +
-                            (_state._flex != int.MinValue ? $"flex:{_state._flex};" : "") +
-                            (_state._noSelect ? $"-webkit-user-select: none;user-select: none;" : "") +
-                            (_state._canSelect ? $"-webkit-user-select: text;user-select: text;" : "") +
-                            (_state._hide ? "visibility:hidden;" : "") +
-                            (string.IsNullOrWhiteSpace(FlexBasis) ? "" : $"flex-basis:{FlexBasis};") +
-                            (string.IsNullOrWhiteSpace(Style) ? "" : Style + ";");
+            line.Set(FbAxis.Display, (int)DisplayMode);
+            line.SetBox(FbAxis.Padding, Padding, PaddingTop, PaddingBottom, PaddingLeft, PaddingRight);
+            line.SetBox(FbAxis.Margin, Margin, MarginTop, MarginBottom, MarginLeft, MarginRight);
+            if (FbAtoms.HasFlex(_state._flex))
+                line.Set(FbAxis.Flex, _state._flex);
+            if (_state._canSelect)
+                line.Set(FbAxis.UserSelect, FbAtoms.UserSelectText);
+            else if (_state._noSelect)
+                line.Set(FbAxis.UserSelect, FbAtoms.UserSelectNone);
+            if (_state._hide)
+                line.Set(FbAxis.Visibility, FbAtoms.Hidden);
         }
 
         // -------------------------------- LEVEL AGGREGATES -------------------------------- //
+        /// <summary>
+        /// Classes of this level: wrap and responsive classes, the atoms of this level, then
+        /// <see cref="Classes"/>.
+        /// </summary>
         protected string AggregatedClasses
-            => ResolveClasses(LayoutClassKeyValue, static component => component.BuildLayoutClasses());
+            => ResolveClasses(LayoutKeyValue, static component => component.BuildAtomizedLayoutClasses());
 
-        internal LayoutClassKey LayoutClassKeyValue => new()
+        private string BuildAtomizedLayoutClasses()
         {
-            NoWrap = _state._noWrap,
-            ResponsiveContainer = ResponsiveContainer,
-            Breakpoint = _state.ResponsiveBreakpoint,
-            Under = _state._responsiveUnder
-        };
+            var line = new FbAtomLine();
+            AddLayoutAtoms(line);
+            return line.Classes(BuildLayoutClasses(), null);
+        }
 
-        private protected string BuildLayoutClasses() => FbClasses.Join(Classes, WrapClassString, ResponsiveClassString);
+        /// <summary>
+        /// Named classes of this level, without atoms nor the free-form <see cref="Classes"/>.
+        /// </summary>
+        private protected string BuildLayoutClasses() => FbClasses.Join(WrapClassString, ResponsiveClassString);
 
         #endregion
 

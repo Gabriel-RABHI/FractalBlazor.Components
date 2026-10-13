@@ -63,54 +63,71 @@ namespace FractalBlazor.Components.Layout.Abstracts
         // ************************************************************************************************ //
 
         // -------------------------------- LEVEL AGGREGATES -------------------------------- //
-        protected new string AggregatedStyles
-            => ResolveStyle(SurfaceStyleKey, SurfaceStyleInputs, static component => ((FbLayoutSurfaceComponentBase)component).BuildSurfaceStyle());
+        /// <summary>
+        /// Inline style of this level: the layout one plus a custom hover offset.
+        /// </summary>
+        protected new string? AggregatedStyles
+            => ResolveStyle(SurfaceKeyValue, SurfaceStyleInputs, static component => ((FbLayoutSurfaceComponentBase)component).BuildSurfaceStyle());
 
         /// <summary>
-        /// Style cache key of this level: the layout key plus the radius.
+        /// Class cache key of this level: the layout key plus radius, fill, frame, hover and
+        /// outline.
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
         internal struct SurfaceKey
         {
-            public ComponentBaseState Layout;
+            public LayoutKey Layout;
             public FbSpacing Radius;
-        }
-
-        internal SurfaceKey SurfaceStyleKey => new() { Layout = LayoutStyleKey, Radius = _radius };
-
-        private protected FbStyleInputs SurfaceStyleInputs => new(FlexBasis, Style, HoverMixOffset);
-
-        private protected string BuildSurfaceStyle()
-            => BuildLayoutStyle() +
-               (string.IsNullOrWhiteSpace(HoverMixOffset) ? "" : $"--fb-hover-mix-offset:{HoverMixOffset};") +
-               (Radius != FbSpacing.None ? $"border-radius:{FbLayoutHelper.ToRadiusCss(Radius)};" : "");
-
-        // -------------------------------- LEVEL AGGREGATES -------------------------------- //
-        protected new string AggregatedClasses
-            => ResolveClasses(SurfaceClassKeyValue, static component => ((FbLayoutSurfaceComponentBase)component).BuildSurfaceClasses());
-
-        /// <summary>
-        /// Class cache key of this level: the layout key plus fill, frame, hover and outline.
-        /// </summary>
-        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
-        internal struct SurfaceClassKey
-        {
-            public LayoutClassKey Layout;
             public FbBackground Background;
             public FbFrame Frame;
             public bool Hover;
             public bool Outline;
         }
 
-        internal SurfaceClassKey SurfaceClassKeyValue => new()
+        internal SurfaceKey SurfaceKeyValue => new()
         {
-            Layout = LayoutClassKeyValue,
+            Layout = LayoutKeyValue,
+            Radius = _radius,
             Background = _background,
             Frame = _frame,
             Hover = Hover || !string.IsNullOrWhiteSpace(HoverMixOffset),
             Outline = _outline
         };
 
+        private protected FbStyleInputs SurfaceStyleInputs => new(FlexBasis, Style, HoverMixOffset);
+
+        private protected string? BuildSurfaceStyle()
+            => FbInlineStyle.Join(
+                BuildLayoutStyle(),
+                string.IsNullOrWhiteSpace(HoverMixOffset) ? null : $"--fb-hover-mix-offset:{HoverMixOffset}");
+
+        /// <summary>
+        /// Adds the atoms of this level and of the levels below: the radius.
+        /// </summary>
+        private protected void AddSurfaceAtoms(FbAtomLine line)
+        {
+            AddLayoutAtoms(line);
+            line.Set(FbAxis.Radius, (int)Radius);
+        }
+
+        // -------------------------------- LEVEL AGGREGATES -------------------------------- //
+        /// <summary>
+        /// Classes of this level: the named classes, fill, frame, hover and outline, then the
+        /// atoms of this level and of the levels below.
+        /// </summary>
+        protected new string AggregatedClasses
+            => ResolveClasses(SurfaceKeyValue, static component => ((FbLayoutSurfaceComponentBase)component).BuildAtomizedSurfaceClasses());
+
+        private string BuildAtomizedSurfaceClasses()
+        {
+            var line = new FbAtomLine();
+            AddSurfaceAtoms(line);
+            return line.Classes(BuildSurfaceClasses(), null);
+        }
+
+        /// <summary>
+        /// Named classes of this level and of the levels below, without atoms.
+        /// </summary>
         private protected string BuildSurfaceClasses()
             => FbClasses.Join(BuildLayoutClasses(), BackgroundClasses, FrameClass, HoverClassString, OutlineClassString);
 

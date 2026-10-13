@@ -24,17 +24,22 @@ public class FbGridContainer : FbLayoutSurfaceComponentBase
     };
 
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
-    private struct GridClassKey
+    private struct GridKey
     {
-        public SurfaceClassKey Surface;
+        public SurfaceKey Surface;
         public FbFrame Separator;
     }
 
     private string GridClasses
-        => ResolveClasses(new GridClassKey { Surface = SurfaceClassKeyValue, Separator = _separator },
+        => ResolveClasses(new GridKey { Surface = SurfaceKeyValue, Separator = _separator },
             static component => ((FbGridContainer)component).BuildGridClasses());
 
-    private string BuildGridClasses() => FbClasses.Join("fb-grid-container", BuildSurfaceClasses(), SeparatorClass);
+    private string BuildGridClasses()
+    {
+        var line = new FbAtomLine();
+        AddSurfaceAtoms(line);
+        return line.Classes(FbClasses.Join("fb-grid-container", BuildSurfaceClasses(), SeparatorClass), null);
+    }
 
     public FbGridContainer()
     {
@@ -448,12 +453,12 @@ public class FbGridContainer : FbLayoutSurfaceComponentBase
         builder.CloseElement();
     }
 
-    private string BuildStyle()
+    /// <summary>
+    /// Grid variables, then the inline style of the surface, so that <c>Style</c> comes last.
+    /// </summary>
+    private string? BuildStyle()
     {
         var css = new StringBuilder(256);
-        if (!string.IsNullOrWhiteSpace(base.AggregatedStyles))
-            css.Append(base.AggregatedStyles.Trim());
-
         Add(css, "--fb-grid-columns", Columns);
         Add(css, "--fb-grid-columns-xs", ColumnsXS);
         Add(css, "--fb-grid-columns-s", ColumnsS);
@@ -488,7 +493,9 @@ public class FbGridContainer : FbLayoutSurfaceComponentBase
         if (!string.IsNullOrWhiteSpace(AutoRows))
             Add(css, "--fb-grid-auto-rows", AutoRows);
 
-        return css.ToString();
+        css.Append(AggregatedStyles);
+
+        return css.Length == 0 ? null : css.ToString();
     }
 
     private static void Add(StringBuilder css, string property, int? value)

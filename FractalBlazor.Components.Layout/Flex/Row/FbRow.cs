@@ -42,20 +42,27 @@ namespace FractalBlazor.Components.Layout
             _ => ""
         };
 
+        /// <summary>
+        /// Atoms of a row built with its defaults: the <c>.fb-row</c> rule of the stylesheet
+        /// declares them, so a row only adds those that differ.
+        /// </summary>
+        internal static readonly FbAtomLine Baseline = new FbRow().DefaultAtoms();
+
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
-        private struct RowClassKey
+        private struct RowKey
         {
-            public SurfaceClassKey Surface;
+            public FlexKey Flex;
             public FbFrame Separator;
-            public bool Scrollable;
         }
 
-        private string RowClasses
-            => ResolveClasses(new RowClassKey { Surface = SurfaceClassKeyValue, Separator = _separator, Scrollable = Scrollable },
+        internal string RowClasses
+            => ResolveClasses(new RowKey { Flex = FlexKeyValue, Separator = _separator },
                 static component => ((FbRow)component).BuildRowClasses());
 
         private string BuildRowClasses()
-            => FbClasses.Join("fb-row", BuildSurfaceClasses(), SeparatorClass, Scrollable ? "fb-scrollable" : null);
+            => BuildAtomizedFlexClasses(
+                FbClasses.Join("fb-row", BuildSurfaceClasses(), SeparatorClass, Scrollable ? "fb-scrollable" : null),
+                Baseline);
         #endregion
 
         // ************************************************************************************************ //

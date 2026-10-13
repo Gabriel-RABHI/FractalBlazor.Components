@@ -7,19 +7,19 @@ public sealed class StyleCacheTests
 {
     private sealed class ProbeRow : FbRow
     {
-        public string Styles => AggregatedStyles;
-
-        public string SurfaceClasses => AggregatedClasses;
+        public string? Styles => AggregatedStyles;
     }
+
+    private static string Atom(string declaration) => FbAtoms.NameOf(declaration);
 
     [Fact]
     public void Identical_states_share_the_same_class_instance()
     {
-        var first = new ProbeRow { WBA = true, WFM = true, Hover = true };
-        var second = new ProbeRow { WBA = true, WFM = true, Hover = true };
+        var first = new ProbeRow { WBA = true, WFM = true, Hover = true, PL = true };
+        var second = new ProbeRow { WBA = true, WFM = true, Hover = true, PL = true };
 
-        Assert.Same(first.SurfaceClasses, second.SurfaceClasses);
-        Assert.Equal("fb-bg-accent fb-framed fb-framed-medium fb-hover", first.SurfaceClasses);
+        Assert.Same(first.RowClasses, second.RowClasses);
+        Assert.Equal($"fb-row fb-bg-accent fb-framed fb-framed-medium fb-hover {Atom("padding:var(--fb-space-l)")}", first.RowClasses);
     }
 
     [Fact]
@@ -28,28 +28,66 @@ public sealed class StyleCacheTests
         var first = new ProbeRow { WBA = true, Classes = "custom" };
         var second = new ProbeRow { WBA = true, Classes = "custom" };
 
-        Assert.Equal("custom fb-bg-accent", first.SurfaceClasses);
-        Assert.NotSame(first.SurfaceClasses, second.SurfaceClasses);
+        Assert.Equal("fb-row fb-bg-accent custom", first.RowClasses);
+        Assert.NotSame(first.RowClasses, second.RowClasses);
     }
 
     [Fact]
-    public void Identical_states_share_the_same_style_instance()
+    public void A_default_row_only_carries_its_base_class()
     {
-        var first = new ProbeRow { PL = true, GM = true, WRM = true };
-        var second = new ProbeRow { PL = true, GM = true, WRM = true };
-
-        Assert.Same(first.Styles, second.Styles);
+        Assert.Equal("fb-row", new ProbeRow().RowClasses);
+        Assert.Equal("fb-stack", new FbStack().StackClasses);
     }
 
     [Fact]
-    public void States_that_differ_only_by_radius_never_share_a_style()
+    public void A_row_only_adds_the_atoms_that_differ_from_its_base_rule()
+    {
+        var row = new ProbeRow { JVBl = true, GS = true, PVS = true, PHM = true, WRM = true, NoFlex = true };
+
+        string[] expected =
+        [
+            "fb-row",
+            Atom("flex:initial"),
+            Atom("padding-block:var(--fb-space-s)"),
+            Atom("padding-inline:var(--fb-space-m)"),
+            Atom("border-radius:var(--fb-radius-m)"),
+            Atom("align-items:baseline"),
+            Atom("gap:var(--fb-space-s)")
+        ];
+        Assert.Equal(string.Join(' ', expected), row.RowClasses);
+    }
+
+    [Fact]
+    public void Unequal_sides_get_one_atom_each()
+    {
+        var row = new ProbeRow { PTS = true, PBL = true };
+
+        Assert.Equal($"fb-row {Atom("padding-top:var(--fb-space-s)")} {Atom("padding-bottom:var(--fb-space-l)")}", row.RowClasses);
+    }
+
+    [Fact]
+    public void States_that_differ_only_by_radius_never_share_classes()
     {
         var large = new ProbeRow { PM = true, WRL = true };
         var small = new ProbeRow { PM = true, WRS = true };
 
-        Assert.NotEqual(large.Styles, small.Styles);
-        Assert.Contains("border-radius:var(--fb-radius-l)", large.Styles);
-        Assert.Contains("border-radius:var(--fb-radius-s)", small.Styles);
+        Assert.Contains(Atom("border-radius:var(--fb-radius-l)"), large.RowClasses.Split(' '));
+        Assert.Contains(Atom("border-radius:var(--fb-radius-s)"), small.RowClasses.Split(' '));
+    }
+
+    [Fact]
+    public void Rows_without_free_form_values_render_no_style()
+    {
+        Assert.Null(new ProbeRow { PL = true, GM = true, WRM = true, JHC = true }.Styles);
+    }
+
+    [Fact]
+    public void Free_form_values_stay_inline()
+    {
+        var row = new ProbeRow { Style = "color:red", MinHeight = "5rem", Flex = 20 };
+
+        Assert.Equal("flex:20;color:red;min-height:5rem;", row.Styles);
+        Assert.Contains(Atom("flex:initial"), row.RowClasses.Split(' '));
     }
 
     [Fact]
@@ -63,15 +101,15 @@ public sealed class StyleCacheTests
     }
 
     [Fact]
-    public void Hide_changes_the_style()
+    public void Hide_changes_the_classes()
     {
         var row = new ProbeRow { PS = true };
-        var visible = row.Styles;
+        var visible = row.RowClasses;
 
         row.Hide = true;
 
-        Assert.DoesNotContain("visibility:hidden", visible);
-        Assert.Contains("visibility:hidden", row.Styles);
+        Assert.DoesNotContain(Atom("visibility:hidden"), visible.Split(' '));
+        Assert.Contains(Atom("visibility:hidden"), row.RowClasses.Split(' '));
     }
 
     [Fact]
@@ -80,6 +118,7 @@ public sealed class StyleCacheTests
         var row = new ProbeRow { Style = "color:red" };
 
         Assert.Same(row.Styles, row.Styles);
+        Assert.Same(row.RowClasses, row.RowClasses);
     }
 
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]

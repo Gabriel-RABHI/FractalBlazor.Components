@@ -15,14 +15,21 @@ namespace FractalBlazor.Components.Layout
     {
         #region HIDDEN
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
-        private struct AnchorClassKey
+        private struct AnchorKey
         {
-            public SurfaceClassKey Surface;
+            public SurfaceKey Surface;
         }
 
         private string AnchorClasses
-            => ResolveClasses(new AnchorClassKey { Surface = SurfaceClassKeyValue },
-                static component => FbClasses.Join("fb-page-anchor", ((FbPageAnchor)component).BuildSurfaceClasses()));
+            => ResolveClasses(new AnchorKey { Surface = SurfaceKeyValue },
+                static component => ((FbPageAnchor)component).BuildAnchorClasses());
+
+        private string BuildAnchorClasses()
+        {
+            var line = new FbAtomLine();
+            AddSurfaceAtoms(line);
+            return line.Classes(FbClasses.Join("fb-page-anchor", BuildSurfaceClasses()), null);
+        }
         #endregion
 
         // ************************************************************************************************ //

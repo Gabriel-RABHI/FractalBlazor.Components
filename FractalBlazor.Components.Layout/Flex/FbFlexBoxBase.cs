@@ -13,7 +13,7 @@ namespace FractalBlazor.Components.Layout.Flex
     {
         #region HIDDEN
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        private struct FbFlexBoxBaseState
+        internal struct FbFlexBoxBaseState
         {
             public FbFlexBoxBaseState()
             {
@@ -49,14 +49,16 @@ namespace FractalBlazor.Components.Layout.Flex
         private FbFlexBoxBaseState _defaultState;
 
         /// <summary>
-        /// Style cache key of this level: the surface key plus the flexbox state.
+        /// Class cache key of this level: the surface key plus the flexbox state.
         /// </summary>
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        private struct FlexKey
+        internal struct FlexKey
         {
             public SurfaceKey Surface;
             public FbFlexBoxBaseState Flex;
         }
+
+        internal FlexKey FlexKeyValue => new() { Surface = SurfaceKeyValue, Flex = _state };
 
         public FbFlexBoxBase()
         {
@@ -74,7 +76,7 @@ namespace FractalBlazor.Components.Layout.Flex
             base.RestoreParameterDefaults();
             _state = _defaultState;
         }
-        
+
         // -------------- As flex item ------------ //
         protected FbSpacing Gutter { get => _state.Gutter; set => _state.Gutter = value; }
 
@@ -94,179 +96,20 @@ namespace FractalBlazor.Components.Layout.Flex
         // -------------- FbFlexDirection ------------ //
         protected FbFlexDirection Direction { get => _state._direction; set => _state._direction = value; }
 
-        private string DirectionString
-        {
-            get
-            {
-                switch (_state._direction)
-                {
-                    case FbFlexDirection.Row:
-                        return "row";
-                    case FbFlexDirection.RowReverse:
-                        return "row-reverse";
-                    case FbFlexDirection.Column:
-                        return "column";
-                    case FbFlexDirection.ColumnReverse:
-                        return "column-reverse";
-                }
-                return "";
-            }
-        }
-
         // -------------- FbFlexWrap ------------ //
         protected FbFlexWrap Wrap { get => _state._wrap; set => _state._wrap = value; }
-
-        private string WrapString
-        {
-            get
-            {
-                switch (_state._wrap)
-                {
-                    case FbFlexWrap.NoWrap:
-                        return "nowrap";
-                    case FbFlexWrap.Wrap:
-                        return "wrap";
-                    case FbFlexWrap.WrapReverse:
-                        return "wrap-reverse";
-                }
-                return "";
-            }
-        }
 
         // -------------- FbFlexJustify ------------ //
         protected FbFlexJustify Justify { get => _state._justify; set => _state._justify = value; }
 
-        private string JustifyString
-        {
-            get
-            {
-                switch (_state._justify)
-                {
-                    case FbFlexJustify.Start:
-                        return "flex-start";
-                    case FbFlexJustify.End:
-                        return "flex-end";
-                    case FbFlexJustify.Center:
-                        return "center";
-                    case FbFlexJustify.Stretch:
-                        return "stretch";
-                    case FbFlexJustify.SpaceBetween:
-                        return "space-between";
-                    case FbFlexJustify.SpaceAround:
-                        return "space-around";
-                    case FbFlexJustify.Evenly:
-                        return "space-evenly";
-                }
-                return "";
-            }
-        }
-
         // -------------- FbFlexAlignItems ------------ //
         protected FbFlexAlignItems AlignItems { get => _state._alignItems; set => _state._alignItems = value; }
-
-        private string AlignItemsString
-        {
-            get
-            {
-                switch (_state._alignItems)
-                {
-                    case FbFlexAlignItems.Start:
-                        return "flex-start";
-                    case FbFlexAlignItems.End:
-                        return "flex-end";
-                    case FbFlexAlignItems.Center:
-                        return "center";
-                    case FbFlexAlignItems.Baseline:
-                        return "baseline";
-                    case FbFlexAlignItems.Stretch:
-                        return "stretch";
-                }
-                return "";
-            }
-        }
 
         // -------------- FbFlexAlignContent ------------ //
         protected FbFlexAlignContent AlignContent { get => _state._alignContent; set => _state._alignContent = value; }
 
-        private string AlignContentString
-        {
-            get
-            {
-                switch (_state._alignContent)
-                {
-                    case FbFlexAlignContent.Start:
-                        return "flex-start";
-                    case FbFlexAlignContent.End:
-                        return "flex-end";
-                    case FbFlexAlignContent.Center:
-                        return "center";
-                    case FbFlexAlignContent.SpaceBetween:
-                        return "space-between";
-                    case FbFlexAlignContent.SpaceAround:
-                        return "space-around";
-                    case FbFlexAlignContent.Stretch:
-                        return "stretch";
-                }
-                return "";
-            }
-        }
-
         // -------------- FbFlexPlaceItems ------------ //
         protected FbFlexPlaceItems PlaceItems { get => _state._placeItems; set => _state._placeItems = value; }
-
-        private string PlaceItemsString
-        {
-            get
-            {
-                switch (_state._placeItems)
-                {
-                    case FbFlexPlaceItems.Center:
-                        return "center";
-                    case FbFlexPlaceItems.Normal:
-                        return "normal";
-                    case FbFlexPlaceItems.Start:
-                        return "start";
-                    case FbFlexPlaceItems.End:
-                        return "end";
-                    case FbFlexPlaceItems.SelfStart:
-                        return "self-start";
-                    case FbFlexPlaceItems.SelfEnd:
-                        return "self-end";
-                    case FbFlexPlaceItems.FlexStart:
-                        return "flex-start";
-                    case FbFlexPlaceItems.FlexEnd:
-                        return "flex-end";
-                    case FbFlexPlaceItems.Baseline:
-                        return "baseline";
-                    case FbFlexPlaceItems.Stretch:
-                        return "stretch";
-                    default:
-                        return "";
-                }
-            }
-        }
-
-        private string SelfAlignString
-        {
-            get
-            {
-                // auto | flex-start | flex-end | center | baseline | stretch
-                switch (_state._selfAlign)
-                {
-                    case FbFlexItemSelfAlign.Start:
-                        return "flex-start";
-                    case FbFlexItemSelfAlign.End:
-                        return "flex-end";
-                    case FbFlexItemSelfAlign.Center:
-                        return "center";
-                    case FbFlexItemSelfAlign.Stretch:
-                        return "stretch";
-                    case FbFlexItemSelfAlign.Baseline:
-                        return "baseline";
-                }
-                return "";
-            }
-        }
 
         // -------- Value assignation
         protected string? MinWidth { get; set; }
@@ -275,50 +118,12 @@ namespace FractalBlazor.Components.Layout.Flex
 
         protected bool MinWidthMinContent { get => _state._minWithSize == FbFlexSize.MinContent; set { if (value) _state._minWithSize = FbFlexSize.MinContent; } }
 
-        private string MinWithString
-        {
-            get
-            {
-                if (MinWidth != null)
-                    return MinWidth;
-
-                switch (_state._minWithSize)
-                {
-                    case FbFlexSize.MaxContent:
-                        return "max-content";
-                    case FbFlexSize.MinContent:
-                        return "min-content";
-                    default:
-                        return "";
-                }
-            }
-        }
-
         // -------- Value assignation
         protected string? MinHeight { get; set; }
 
         protected bool MinHeightMaxContent { get => _state._minHeightSize == FbFlexSize.MaxContent; set { if (value) _state._minHeightSize = FbFlexSize.MaxContent; } }
 
         protected bool MinHeightMinContent { get => _state._minHeightSize == FbFlexSize.MinContent; set { if (value) _state._minHeightSize = FbFlexSize.MinContent; } }
-
-        private string MinHeightString
-        {
-            get
-            {
-                if (MinHeight != null)
-                    return MinHeight;
-
-                switch (_state._minHeightSize)
-                {
-                    case FbFlexSize.MaxContent:
-                        return "max-content";
-                    case FbFlexSize.MinContent:
-                        return "min-content";
-                    default:
-                        return "";
-                }
-            }
-        }
 
         // -------- Value assignation
         protected string? MaxHeight { get; set; }
@@ -327,50 +132,72 @@ namespace FractalBlazor.Components.Layout.Flex
 
         protected bool MaxHeightMinContent { get => _state._maxHeightSize == FbFlexSize.MinContent; set { if (value) _state._maxHeightSize = FbFlexSize.MinContent; } }
 
-        private string MaxHeightString
-        {
-            get
-            {
-                if (MaxHeight != null)
-                    return MaxHeight;
-
-                switch (_state._maxHeightSize)
-                {
-                    case FbFlexSize.MaxContent:
-                        return "max-content";
-                    case FbFlexSize.MinContent:
-                        return "min-content";
-                    default:
-                        return "";
-                }
-            }
-        }
-
-        protected new string AggregatedStyles
+        /// <summary>
+        /// Inline style of this level: the surface one plus free-form sizes and the order,
+        /// grow and shrink factors, which have no atom.
+        /// </summary>
+        protected new string? AggregatedStyles
             => ResolveStyle(
-                new FlexKey { Surface = SurfaceStyleKey, Flex = _state },
+                FlexKeyValue,
                 new FbStyleInputs(FlexBasis, Style, HoverMixOffset, MinWidth, MinHeight, MaxHeight),
                 static component => ((FbFlexBoxBase)component).BuildFlexStyle());
 
-        private string BuildFlexStyle()
+        private string? BuildFlexStyle()
+            => FbInlineStyle.Join(
+                BuildSurfaceStyle(),
+                Grow != int.MinValue ? $"flex-grow:{Grow}" : null,
+                Shrink != int.MinValue ? $"flex-shrink:{Shrink}" : null,
+                Order != int.MinValue ? $"order:{Order}" : null,
+                MinWidth is null ? null : $"min-width:{MinWidth}",
+                MinHeight is null ? null : $"min-height:{MinHeight}",
+                MaxHeight is null ? null : $"max-height:{MaxHeight}");
+
+        /// <summary>
+        /// Adds the atoms of this level and of the levels below: position, direction, wrap,
+        /// alignments, gutter and sizes. A free-form size overrides its atom from the inline
+        /// style.
+        /// </summary>
+        private protected void AddFlexAtoms(FbAtomLine line)
         {
+            AddSurfaceAtoms(line);
             RenderingStatistics.AddFlexBoxBaseStyleComputation();
 
-            return $"position: relative;" +
-                            (_state._selfAlign == FbFlexItemSelfAlign.None ? "" : $"align-self:{SelfAlignString};") +
-                            $"flex-direction: {DirectionString}; flex-wrap: {WrapString}; justify-content: {JustifyString}; align-items: {AlignItemsString}; align-content: {AlignContentString}; " +
-                            (PlaceItemsString != "" ? $"place-items: {PlaceItemsString};" : "") +
-                            (Gutter != FbSpacing.None ? $"gap:{FbLayoutHelper.ToSpacingCss(Gutter)};" : "") +
-                            //(RowGutter != FbSpacing.None ? $"row-gap:{FbLayoutHelper.ToSpacingCss(RowGutter)};" : "") +
-                            //(ColumnGutter != FbSpacing.None ? $"column-gap:{FbLayoutHelper.ToSpacingCss(ColumnGutter)};" : "") +
-                            (Grow != int.MinValue ? $"flex-grow:{Grow};" : "") +
-                            (Shrink != int.MinValue ? $"flex-shrink:{Shrink};" : "") +
-                            (Order != int.MinValue ? $"order:{Order};" : "") +
-                            (MinWithString != "" ? $"min-width: {MinWithString};" : "") +
-                            (MinHeightString != "" ? $"min-height: {MinHeightString};" : "") +
-                            (MaxHeightString != "" ? $"max-height: {MaxHeightString};" : "") +
-                            (ColumnDisplay ? "flex-flow : column;" : "") +
-                            BuildSurfaceStyle();
+            line.Set(FbAxis.Position, FbAtoms.Relative);
+            line.Set(FbAxis.AlignSelf, (int)_state._selfAlign);
+            line.Set(FbAxis.FlexDirection, (int)_state._direction);
+            line.Set(FbAxis.FlexWrap, (int)_state._wrap);
+            line.Set(FbAxis.JustifyContent, (int)_state._justify);
+            line.Set(FbAxis.AlignItems, (int)_state._alignItems);
+            line.Set(FbAxis.AlignContent, (int)_state._alignContent);
+            line.Set(FbAxis.PlaceItems, (int)_state._placeItems);
+            line.Set(FbAxis.Gap, (int)Gutter);
+            line.Set(FbAxis.MinWidth, (int)_state._minWithSize);
+            line.Set(FbAxis.MinHeight, (int)_state._minHeightSize);
+            line.Set(FbAxis.MaxHeight, (int)_state._maxHeightSize);
+            if (ColumnDisplay)
+                line.Set(FbAxis.FlexFlow, FbAtoms.Column);
+        }
+
+        /// <summary>
+        /// The atoms of a component built with its constructor defaults only: what the base
+        /// rule of its class (<c>.fb-row</c>, <c>.fb-stack</c>) declares in the stylesheet.
+        /// </summary>
+        internal FbAtomLine DefaultAtoms()
+        {
+            var line = new FbAtomLine();
+            AddFlexAtoms(line);
+            return line;
+        }
+
+        /// <summary>
+        /// Classes of a flexbox: <paramref name="classes"/>, then the atoms that differ from
+        /// <paramref name="baseline"/>.
+        /// </summary>
+        private protected string BuildAtomizedFlexClasses(string classes, FbAtomLine baseline)
+        {
+            var line = new FbAtomLine();
+            AddFlexAtoms(line);
+            return line.Classes(classes, baseline);
         }
         #endregion
 

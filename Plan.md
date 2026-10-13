@@ -145,6 +145,15 @@ Les espacements (`Spacings`) et les rayons, ou courbures (`Corners`), sont des v
 
 - [x] **13.1 FbCheckbox personnalisé.** La case native, cachée mais focalisable et annoncée, porte l'état ; une case carrée (ou ronde, `Circle`) est dessinée avec le thème à côté d'un contenu quelconque, qui prend la largeur restante. `Mirror` la place à droite ; `Top`, `Center` (par défaut) et `Bottom` l'alignent sur un contenu plus haut, `Align` en donne la valeur calculée. Cochée, elle prend la couleur de texte Highlight, faite pour ressortir sur tous les fonds. Démonstration dans la page Formulaires.
 
+## Phase 14 — Classes atomiques
+
+Le HTML de 1 000 éditeurs pesait 3,9 Mo, dont 52 % de styles inline : 7 001 attributs pour 5 chaînes distinctes. La compression les efface presque sur le réseau, mais pas dans les lots de rendu d'Interactive Server, ni dans l'analyse du navigateur.
+
+- [x] **14.1 Atomes.** Chaque déclaration de mise en page issue d'une valeur énumérée (display, padding, marge, flex, rayon, direction, alignements, gutter…) devient une classe technique très courte, nommée d'après sa position dans la table `FbAtoms` : `fb-a` à `fb-z`, puis `fb-aa`… La table est ordonnée comme la feuille : une propriété suit le raccourci qu'elle surcharge. Deux côtés opposés égaux s'écrivent en un atome `padding-block` ou `padding-inline`.
+- [x] **14.2 Règles de base.** `.fb-row` et `.fb-stack` déclarent les valeurs de leur constructeur ; une rangée ou une pile n'ajoute que les atomes qui en diffèrent (une rangée par défaut n'a que `fb-row`). La section de la feuille est générée par `dotnet run --project FractalBlazor.Components.Tools -- atoms`, et un test vérifie qu'elle est à jour.
+- [x] **14.3 Cache.** La clé de chaque niveau réunit désormais tout l'état (style et classes) ; la chaîne `class` est mise en cache comme l'était le style, et les `Classes` libres s'ajoutent à la fin, composant par composant, sans priver le reste du cache. Le style inline ne porte plus que les valeurs libres, et n'est pas rendu quand il est vide. Le HTML de 1 000 éditeurs passe de 3 926 à 2 080 Ko, et l'allocation du premier rendu de 57,5 à 55,3 Mo. `FrozenDictionary` avec un verrou actif a été mesuré contre `ConcurrentDictionary` : 4 à 17 % plus lent en lecture, la clé étant hachée de la même façon ; le cache reste un `ConcurrentDictionary`.
+- [x] **14.4 Vérification.** Les styles calculés de chaque élément du site (35 propriétés, dimensions comprises) sont identiques avant et après, page par page.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :

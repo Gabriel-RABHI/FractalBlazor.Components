@@ -1,4 +1,5 @@
 using FractalBlazor.Components.Layout;
+using FractalBlazor.Components.Layout.Utilities;
 
 namespace FractalBlazor.Components.Tests.Layout;
 
@@ -21,7 +22,7 @@ public sealed class PageAnchorTests : BunitContext
         var anchor = cut.Find("div");
         Assert.Contains("fb-page-anchor", anchor.ClassList);
         Assert.Contains("fb-bg-surface", anchor.ClassList);
-        Assert.Contains("padding:", anchor.GetAttribute("style"));
+        Assert.Contains(FbAtoms.NameOf("padding:var(--fb-space-m)"), anchor.ClassList);
     }
 
     [Fact]
@@ -32,7 +33,7 @@ public sealed class PageAnchorTests : BunitContext
 
         Assert.Contains("fb-scrollable", stack.ClassList);
         Assert.Contains("fb-scrollable", row.ClassList);
-        Assert.DoesNotContain("overflow", stack.GetAttribute("style"));
+        Assert.False(stack.HasAttribute("style"));
     }
 
     [Fact]

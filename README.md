@@ -18,7 +18,7 @@ Composants Blazor ultra-légers pour la mise en page et les formulaires, avec un
 
 ## Principes
 
-- **Composants ultra-légers.** Ils implémentent `IComponent` directement, sans `ComponentBase`. Les chaînes `class` et `style` viennent d'un cache partagé, indexé par la valeur complète des paramètres.
+- **Composants ultra-légers.** Ils implémentent `IComponent` directement, sans `ComponentBase`. La mise en page s'écrit en classes techniques très courtes (`fb-a`, `fb-ab`…), une déclaration chacune, générées depuis une table C# ; une rangée ou une pile n'ajoute que celles qui diffèrent de sa règle de base. La chaîne `class` vient d'un cache partagé, indexé par la valeur complète des paramètres. Seules les valeurs libres (`Style`, `MinWidth`, `FlexBasis`…) restent en style inline.
 - **Les composants ne lisent pas le thème.** Ils posent des classes ; le thème est résolu en C#, sérialisé en variables CSS, et la cascade fait le reste.
 - **Une grammaire courte.** Des drapeaux booléens préfixés : `WB*` fond, `WF*` frame, `WR*` rayon, `P*` padding, `M*` marge, `G*` gutter, `J*` alignement. Une API enum les complète pour les valeurs calculées.
 - **Rendu ≠ fonctionnel.** `Muted` est un rendu ; `Error`, `Selected`, `Disabled` sont des variantes posées par `FbVariant`.

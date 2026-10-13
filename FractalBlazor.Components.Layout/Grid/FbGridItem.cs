@@ -71,14 +71,21 @@ public sealed class FbGridItem : FbLayoutSurfaceComponentBase
     private (FbGridItemAlignment AlignSelf, FbGridItemJustify JustifySelf) _defaults;
 
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
-    private struct ItemClassKey
+    private struct ItemKey
     {
-        public SurfaceClassKey Surface;
+        public SurfaceKey Surface;
     }
 
     private string ItemClasses
-        => ResolveClasses(new ItemClassKey { Surface = SurfaceClassKeyValue },
-            static component => FbClasses.Join("fb-grid-item", ((FbGridItem)component).BuildSurfaceClasses()));
+        => ResolveClasses(new ItemKey { Surface = SurfaceKeyValue },
+            static component => ((FbGridItem)component).BuildItemClasses());
+
+    private string BuildItemClasses()
+    {
+        var line = new FbAtomLine();
+        AddSurfaceAtoms(line);
+        return line.Classes(FbClasses.Join("fb-grid-item", BuildSurfaceClasses()), null);
+    }
 
     protected override void CaptureParameterDefaults()
     {
@@ -214,12 +221,12 @@ public sealed class FbGridItem : FbLayoutSurfaceComponentBase
         builder.CloseElement();
     }
 
-    private string BuildStyle()
+    /// <summary>
+    /// Grid variables, then the inline style of the surface, so that <c>Style</c> comes last.
+    /// </summary>
+    private string? BuildStyle()
     {
         var css = new StringBuilder(384);
-        if (!string.IsNullOrWhiteSpace(AggregatedStyles))
-            css.Append(AggregatedStyles.Trim());
-
         Add(css, "--fb-grid-column-span", ColumnSpan);
         AddResponsive(css, "column-span", ColumnSpanXS, ColumnSpanS, ColumnSpanM, ColumnSpanL, ColumnSpanXL, ColumnSpanXXL);
         Add(css, "--fb-grid-column-start", ColumnStart);
@@ -232,15 +239,9 @@ public sealed class FbGridItem : FbLayoutSurfaceComponentBase
         AddResponsive(css, "order", OrderXS, OrderS, OrderM, OrderL, OrderXL, OrderXXL);
         Add(css, "--fb-grid-align-self", FbGridCss.ItemAlignment(AlignSelf));
         Add(css, "--fb-grid-justify-self", FbGridCss.ItemAlignment(JustifySelf));
+        css.Append(AggregatedStyles);
 
-        if (!string.IsNullOrWhiteSpace(Style))
-        {
-            css.Append(Style.Trim());
-            if (css[^1] != ';')
-                css.Append(';');
-        }
-
-        return css.ToString();
+        return css.Length == 0 ? null : css.ToString();
     }
 
     private static void AddResponsive(StringBuilder css, string name, int? xs, int? s, int? m, int? l, int? xl, int? xxl)

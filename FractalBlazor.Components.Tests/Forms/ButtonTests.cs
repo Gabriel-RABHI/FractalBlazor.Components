@@ -1,6 +1,7 @@
 using FractalBlazor.Components.Forms.Components.Actions;
 using FractalBlazor.Components.Forms.Components.Icons;
 using FractalBlazor.Components.Forms.Theming.Constants;
+using FractalBlazor.Components.Layout.Utilities;
 
 namespace FractalBlazor.Components.Tests.Forms;
 
@@ -16,7 +17,8 @@ public sealed class ButtonTests : BunitContext
         Assert.Contains("fb-bg-accent", button.ClassList);
         Assert.Contains("fb-framed-medium", button.ClassList);
         Assert.Contains("fb-hover", button.ClassList);
-        Assert.Contains("border-radius:var(--fb-radius-m)", button.GetAttribute("style"));
+        Assert.Contains(FbAtoms.NameOf("border-radius:var(--fb-radius-m)"), button.ClassList);
+        Assert.False(button.HasAttribute("style"));
         Assert.Equal("Save", button.TextContent);
     }
 

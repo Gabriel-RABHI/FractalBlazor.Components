@@ -1,14 +1,19 @@
+using FractalBlazor.Components.Layout.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Benchmarks.Lists
 {
     /// <summary>
-    /// What FbRow would be as an ordinary ComponentBase: same flags, same markup, classes and
-    /// styles built at each render. It isolates the cost of the component model.
+    /// What FbRow would be as an ordinary ComponentBase: same flags, same markup, classes
+    /// built at each render. It isolates the cost of the component model.
     /// </summary>
     public sealed class PlainRow : ComponentBase
     {
+        private static readonly string PaddingL = " " + FbAtoms.NameOf("padding:var(--fb-space-l)");
+        private static readonly string RadiusM = " " + FbAtoms.NameOf("border-radius:var(--fb-radius-m)");
+        private static readonly string GapM = " " + FbAtoms.NameOf("gap:var(--fb-space-m)");
+
         [Parameter] public bool PL { get; set; }
         [Parameter] public bool GM { get; set; }
         [Parameter] public bool WBA { get; set; }
@@ -19,14 +24,10 @@ namespace FractalBlazor.Components.Benchmarks.Lists
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "div");
-            builder.AddAttribute(1, "style",
-                "display:flex;flex-direction:row;justify-content:stretch;align-items:center;flex:1;" +
-                (PL ? "padding:var(--fb-space-l);" : "") +
-                (GM ? "gap:var(--fb-space-m);" : "") +
-                (WRM ? "border-radius:var(--fb-radius-m);" : ""));
-            builder.AddAttribute(2, "class",
-                "fb-row" + (WBA ? " fb-bg-accent" : "") + (WFM ? " fb-framed fb-framed-medium" : ""));
-            builder.AddContent(3, ChildContent);
+            builder.AddAttribute(1, "class",
+                "fb-row" + (WBA ? " fb-bg-accent" : "") + (WFM ? " fb-framed fb-framed-medium" : "") +
+                (PL ? PaddingL : "") + (WRM ? RadiusM : "") + (GM ? GapM : ""));
+            builder.AddContent(2, ChildContent);
             builder.CloseElement();
         }
     }

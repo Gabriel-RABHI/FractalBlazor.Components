@@ -71,8 +71,12 @@ for what Layout cannot render (a native `input`, an `svg`, a `button`).
 
 ## Principles already in place
 
-- Components derive from `FbComponentBase` (`IComponent`), not `ComponentBase`; class and style
-  strings come from caches keyed by parameter values.
+- Components derive from `FbComponentBase` (`IComponent`), not `ComponentBase`; class strings
+  come from a cache keyed by the complete parameter values.
+- Layout declarations are atoms: very short generated classes (`fb-a`, `fb-ab`…) defined by the
+  `FbAtoms` table. Only free-form values stay inline. Never edit the atoms section of
+  `fb-components-layout.css` by hand: change the table, then run
+  `dotnet run --project FractalBlazor.Components.Tools -- atoms`.
 - Components do not read the theme: they set classes and redirect CSS variables. Every color is
   a `color-mix()` in oklab between two anchors; a variant only redirects anchors.
 - Short boolean flags are the main API (`WB*`, `WF*`, `WR*`, `P*`, `M*`, `G*`, `J*`), completed

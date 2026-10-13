@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using FractalBlazor.Components.Layout.Abstracts;
+using FractalBlazor.Components.Layout.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
@@ -29,26 +30,24 @@ namespace FractalBlazor.Components.Layout
             _selfAlign = _defaultSelfAlign;
         }
 
-        private string VerticalAlignString
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
+        private struct ItemKey
         {
-            get
-            {
-                // auto | flex-start | flex-end | center | baseline | stretch
-                switch (_selfAlign)
-                {
-                    case FbFlexItemSelfAlign.Start:
-                        return "flex-start";
-                    case FbFlexItemSelfAlign.End:
-                        return "flex-end";
-                    case FbFlexItemSelfAlign.Center:
-                        return "center";
-                    case FbFlexItemSelfAlign.Stretch:
-                        return "stretch";
-                    case FbFlexItemSelfAlign.Baseline:
-                        return "baseline";
-                }
-                return "";
-            }
+            public SurfaceKey Surface;
+            public FbFlexItemSelfAlign SelfAlign;
+        }
+
+        private string ItemClasses
+            => ResolveClasses(new ItemKey { Surface = SurfaceKeyValue, SelfAlign = _selfAlign },
+                static component => ((FbRowItem)component).BuildItemClasses());
+
+        private string BuildItemClasses()
+        {
+            var line = new FbAtomLine();
+            AddSurfaceAtoms(line);
+            line.Set(FbAxis.FlexWrap, (int)FbFlexWrap.Wrap);
+            line.Set(FbAxis.AlignSelf, (int)_selfAlign);
+            return line.Classes(BuildSurfaceClasses(), null);
         }
         #endregion
 
@@ -67,22 +66,6 @@ namespace FractalBlazor.Components.Layout
         /// </summary>
         [Parameter]
         public EventCallback OnClick { get; set; }
-
-        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
-        private struct ItemKey
-        {
-            public SurfaceKey Surface;
-            public FbFlexItemSelfAlign SelfAlign;
-        }
-
-        private string ComputedStyle
-            => ResolveStyle(new ItemKey { Surface = SurfaceStyleKey, SelfAlign = _selfAlign }, SurfaceStyleInputs,
-                static component => ((FbRowItem)component).BuildItemStyle());
-
-        private string BuildItemStyle()
-            => BuildSurfaceStyle() +
-               "flex-wrap: wrap;" +
-               (_selfAlign != FbFlexItemSelfAlign.None ? $"align-self:{VerticalAlignString};" : "");
 
         // -------- In Row
         /// <summary>
@@ -124,8 +107,8 @@ namespace FractalBlazor.Components.Layout
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "div");
-            builder.AddAttribute(2, "style", ComputedStyle);
-            builder.AddAttribute(3, "class", AggregatedClasses);
+            builder.AddAttribute(2, "style", AggregatedStyles);
+            builder.AddAttribute(3, "class", ItemClasses);
             if (OnClick.HasDelegate)
                 builder.AddAttribute(4, "onclick", OnClick);
             builder.AddContent(5, ChildContent);

@@ -1,4 +1,5 @@
 using FractalBlazor.Components.Layout;
+using FractalBlazor.Components.Layout.Utilities;
 
 namespace FractalBlazor.Components.Tests.Layout;
 
@@ -34,22 +35,22 @@ public sealed class DeclarativeParametersTests : BunitContext
     public void Constructor_defaults_come_back_after_an_override()
     {
         var cut = Render<FbRow>(p => p.Add(x => x.JHC, true));
-        Assert.Contains("justify-content: center", cut.Find("div").GetAttribute("style"));
+        Assert.Contains(FbAtoms.NameOf("justify-content:center"), cut.Find("div").ClassList);
 
         cut.Render(p => p.Add(x => x.JHC, false));
 
-        Assert.Contains("justify-content: stretch", cut.Find("div").GetAttribute("style"));
+        Assert.Equal(["fb-row"], cut.Find("div").ClassList);
     }
 
     [Fact]
     public void Spacing_flag_turned_off_removes_the_padding()
     {
         var cut = Render<FbRow>(p => p.Add(x => x.PL, true));
-        Assert.Contains("padding:", cut.Find("div").GetAttribute("style"));
+        Assert.Contains(FbAtoms.NameOf("padding:var(--fb-space-l)"), cut.Find("div").ClassList);
 
         cut.Render(p => p.Add(x => x.PL, false));
 
-        Assert.DoesNotContain("padding:", cut.Find("div").GetAttribute("style"));
+        Assert.DoesNotContain(FbAtoms.NameOf("padding:var(--fb-space-l)"), cut.Find("div").ClassList);
     }
 
     [Fact]

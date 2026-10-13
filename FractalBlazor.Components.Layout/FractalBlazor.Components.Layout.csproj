@@ -16,6 +16,8 @@
   <ItemGroup>
     <SupportedPlatform Include="browser" />
     <InternalsVisibleTo Include="FractalBlazor.Components.Tests" />
+    <InternalsVisibleTo Include="FractalBlazor.Components.Tools" />
+    <InternalsVisibleTo Include="FractalBlazor.Components.Benchmarks" />
   </ItemGroup>
 
   <ItemGroup>
