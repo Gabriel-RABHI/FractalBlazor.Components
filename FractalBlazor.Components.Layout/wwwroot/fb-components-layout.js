@@ -54,6 +54,76 @@ window.FractalBlazor = window.FractalBlazor || {};
         return { dispose: () => observer.disconnect() };
     };
 
+    //------ Modal drawer (FbDrawer) ------//
+
+    // Listeners of each open drawer, removed before the state closes it.
+    const drawers = new WeakMap();
+
+    function isOutside(dialog, event) {
+        const rect = dialog.getBoundingClientRect();
+        return event.clientX < rect.left || event.clientX > rect.right
+            || event.clientY < rect.top || event.clientY > rect.bottom;
+    }
+
+    /**
+     * Shows `dialog` as a modal: the page becomes inert and the focus stays inside. Escape,
+     * a click on the backdrop and any close request of the browser call `OnDismiss` on
+     * `dotnet`, and the dialog stays open: the state decides, then calls `closeDrawer`.
+     */
+    fb.showDrawer = function (dialog, dotnet) {
+        if (!dialog || drawers.has(dialog)) return;
+
+        // A click on the backdrop targets the dialog, outside its box. The press must start
+        // there too: selecting text inside and releasing outside is not a dismissal.
+        let pressedOutside = false;
+        const dismiss = () => dotnet.invokeMethodAsync('OnDismiss');
+        const listeners = {
+            cancel: event => {
+                event.preventDefault();
+                dismiss();
+            },
+            pointerdown: event => {
+                pressedOutside = event.target === dialog && isOutside(dialog, event);
+            },
+            click: event => {
+                if (pressedOutside && event.target === dialog && isOutside(dialog, event))
+                    dismiss();
+                pressedOutside = false;
+            },
+            // Closed by the browser despite the cancelled request: the state must follow.
+            close: dismiss
+        };
+        for (const [type, listener] of Object.entries(listeners))
+            dialog.addEventListener(type, listener);
+        drawers.set(dialog, listeners);
+
+        if (!dialog.open)
+            dialog.showModal();
+    };
+
+    /**
+     * Closes `dialog`, which gives the focus back to where it was, and resolves once its
+     * exit transition is over, so that its content can go.
+     */
+    fb.closeDrawer = function (dialog) {
+        if (!dialog) return Promise.resolve();
+
+        const listeners = drawers.get(dialog);
+        if (listeners) {
+            for (const [type, listener] of Object.entries(listeners))
+                dialog.removeEventListener(type, listener);
+            drawers.delete(dialog);
+        }
+        if (!dialog.open) return Promise.resolve();
+
+        dialog.close();
+        const transitions = dialog.getAnimations({ subtree: true })
+            .filter(animation => animation.effect && animation.effect.target === dialog)
+            .map(animation => animation.finished.catch(() => { }));
+        const timeout = new Promise(resolve => setTimeout(resolve, 500));
+        return Promise.race([Promise.all(transitions), timeout]);
+    };
+
     //------ Show when over (FbShowWhenOver, FbShowWhenOverPerformance) ------//
 
     const over = {

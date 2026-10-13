@@ -902,6 +902,233 @@ html {
 }
 
 /**********************************************************************************/
+/* DRAWER */
+/* FbDrawer: a frame per mode and side (.fb-drawer-inline.fb-drawer-left…) and a panel
+   that carries the surface. --fb-drawer-size is the width of a side drawer, the height of
+   a top or bottom one; --fb-drawer-scrim, the veil of the modal modes. These rules come
+   before the atoms, which keep the upper hand on the panel. */
+
+/* Inline: the frame grows to the size of the panel, which slides in from its edge. */
+.fb-drawer-inline {
+    display: flex;
+    flex: none;
+    align-self: stretch;
+    overflow: hidden;
+    visibility: hidden;
+    transition: width 0.2s ease, height 0.2s ease, visibility 0s 0.2s;
+}
+
+.fb-drawer-inline.fb-drawer-open {
+    visibility: visible;
+    transition: width 0.2s ease, height 0.2s ease, visibility 0s;
+}
+
+.fb-drawer-inline:is(.fb-drawer-left, .fb-drawer-right) {
+    width: 0;
+}
+
+.fb-drawer-inline:is(.fb-drawer-top, .fb-drawer-bottom) {
+    height: 0;
+    flex-direction: column;
+}
+
+.fb-drawer-inline:is(.fb-drawer-left, .fb-drawer-top) {
+    justify-content: flex-end;
+}
+
+.fb-drawer-inline.fb-drawer-open:is(.fb-drawer-left, .fb-drawer-right),
+.fb-drawer-inline:is(.fb-drawer-left, .fb-drawer-right) > .fb-drawer-panel {
+    width: var(--fb-drawer-size, 18rem);
+}
+
+.fb-drawer-inline.fb-drawer-open:is(.fb-drawer-top, .fb-drawer-bottom),
+.fb-drawer-inline:is(.fb-drawer-top, .fb-drawer-bottom) > .fb-drawer-panel {
+    height: var(--fb-drawer-size, 18rem);
+}
+
+.fb-drawer-panel {
+    flex: none;
+    box-sizing: border-box;
+    overflow: auto;
+}
+
+/* Inline modal: over the nearest positioned ancestor, with a veil limited to it. */
+.fb-drawer-inline-modal {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    overflow: hidden;
+    visibility: hidden;
+    transition: visibility 0s 0.2s;
+}
+
+.fb-drawer-inline-modal.fb-drawer-open {
+    visibility: visible;
+    transition: visibility 0s;
+}
+
+.fb-drawer-scrim {
+    position: absolute;
+    inset: 0;
+    background: var(--fb-drawer-scrim, color-mix(in oklab, var(--fb-bg-low-anchor) 45%, transparent));
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.fb-drawer-open > .fb-drawer-scrim {
+    opacity: 1;
+}
+
+.fb-drawer-inline-modal > .fb-drawer-panel {
+    position: absolute;
+    transition: transform 0.2s ease;
+}
+
+.fb-drawer-inline-modal:is(.fb-drawer-left, .fb-drawer-right) > .fb-drawer-panel {
+    top: 0;
+    bottom: 0;
+    width: var(--fb-drawer-size, 18rem);
+    max-width: 100%;
+}
+
+.fb-drawer-inline-modal:is(.fb-drawer-top, .fb-drawer-bottom) > .fb-drawer-panel {
+    left: 0;
+    right: 0;
+    height: var(--fb-drawer-size, 18rem);
+    max-height: 100%;
+}
+
+.fb-drawer-inline-modal.fb-drawer-left > .fb-drawer-panel {
+    left: 0;
+    transform: translateX(-100%);
+}
+
+.fb-drawer-inline-modal.fb-drawer-right > .fb-drawer-panel {
+    right: 0;
+    transform: translateX(100%);
+}
+
+.fb-drawer-inline-modal.fb-drawer-top > .fb-drawer-panel {
+    top: 0;
+    transform: translateY(-100%);
+}
+
+.fb-drawer-inline-modal.fb-drawer-bottom > .fb-drawer-panel {
+    bottom: 0;
+    transform: translateY(100%);
+}
+
+.fb-drawer-inline-modal.fb-drawer-open > .fb-drawer-panel {
+    transform: none;
+}
+
+/* Modal: a native dialog, both frame and panel, on top of the whole screen. The browser
+   rules of a dialog are reset without specificity, so that the surface flags apply. */
+:where(.fb-drawer-modal) {
+    position: fixed;
+    margin: 0;
+    padding: 0;
+    border: none;
+    max-width: 100%;
+    max-height: 100%;
+    color: inherit;
+    background: none;
+}
+
+.fb-drawer-modal {
+    transition: transform 0.2s ease, overlay 0.2s allow-discrete, display 0.2s allow-discrete;
+}
+
+.fb-drawer-modal:is(.fb-drawer-left, .fb-drawer-right) {
+    top: 0;
+    bottom: 0;
+    width: var(--fb-drawer-size, 18rem);
+    height: 100%;
+}
+
+.fb-drawer-modal:is(.fb-drawer-top, .fb-drawer-bottom) {
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: var(--fb-drawer-size, 18rem);
+}
+
+.fb-drawer-modal.fb-drawer-left {
+    left: 0;
+    right: auto;
+}
+
+.fb-drawer-modal.fb-drawer-right {
+    left: auto;
+    right: 0;
+}
+
+.fb-drawer-modal.fb-drawer-top {
+    top: 0;
+    bottom: auto;
+}
+
+.fb-drawer-modal.fb-drawer-bottom {
+    top: auto;
+    bottom: 0;
+}
+
+.fb-drawer-modal.fb-drawer-left:not([open]) {
+    transform: translateX(-100%);
+}
+
+.fb-drawer-modal.fb-drawer-right:not([open]) {
+    transform: translateX(100%);
+}
+
+.fb-drawer-modal.fb-drawer-top:not([open]) {
+    transform: translateY(-100%);
+}
+
+.fb-drawer-modal.fb-drawer-bottom:not([open]) {
+    transform: translateY(100%);
+}
+
+.fb-drawer-modal::backdrop {
+    background: var(--fb-drawer-scrim, color-mix(in oklab, var(--fb-bg-low-anchor) 45%, transparent));
+    transition: opacity 0.2s ease, overlay 0.2s allow-discrete, display 0.2s allow-discrete;
+}
+
+.fb-drawer-modal:not([open])::backdrop {
+    opacity: 0;
+}
+
+@starting-style {
+    .fb-drawer-modal.fb-drawer-left[open] {
+        transform: translateX(-100%);
+    }
+
+    .fb-drawer-modal.fb-drawer-right[open] {
+        transform: translateX(100%);
+    }
+
+    .fb-drawer-modal.fb-drawer-top[open] {
+        transform: translateY(-100%);
+    }
+
+    .fb-drawer-modal.fb-drawer-bottom[open] {
+        transform: translateY(100%);
+    }
+
+    .fb-drawer-modal[open]::backdrop {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fb-drawer,
+    .fb-drawer > *,
+    .fb-drawer::backdrop {
+        transition: none;
+    }
+}
+
+/**********************************************************************************/
 /* SHOW WHEN VISIBLE */
 .fb-show-when-visible-wait {
     text-align: center;
