@@ -204,12 +204,15 @@
 }
 
 /* Checkbox: the native input is hidden but stays focusable and announced; the box is
-   drawn with the theme next to its content, which takes the remaining width. Checked,
+   drawn with the theme next to its content. The checkbox takes the whole width of its
+   container, in a column as in a row, and the content takes what the box leaves. Checked,
    it takes the Highlight text color, made to stand out on every background, and the mark
    takes the current background. */
 .fb-check {
     position: relative;
     display: flex;
+    box-sizing: border-box;
+    width: 100%;
     align-items: center;
     gap: var(--fb-space-m);
     cursor: pointer;
