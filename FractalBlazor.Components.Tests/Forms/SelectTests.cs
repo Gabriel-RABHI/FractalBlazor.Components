@@ -175,7 +175,7 @@ public sealed class SelectTests : BunitContext
     {
         var cut = Render<FbSelect<Country?, SetCountryAction>>(p => p
             .Add(x => x.Items, AddressState.Countries)
-            .Add(x => x.Disabled, true));
+            .Add(x => x.D, true));
 
         Assert.Equal("-1", cut.Find("[role=combobox]").GetAttribute("tabindex"));
         Assert.DoesNotContain("onclick", cut.Find(".fb-dropdown-anchor").OuterHtml);

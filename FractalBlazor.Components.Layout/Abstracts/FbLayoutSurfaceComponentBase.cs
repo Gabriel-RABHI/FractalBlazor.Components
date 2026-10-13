@@ -31,7 +31,7 @@ namespace FractalBlazor.Components.Layout.Abstracts
             }
         }
 
-        private string OutlineClassString => EOutline ? "fb-eoutline" : "";
+        private string OutlineClassString => EO ? "fb-eo" : "";
 
         private FbSpacing Radius { get => _radius; set => _radius = value; }
 
@@ -175,7 +175,7 @@ namespace FractalBlazor.Components.Layout.Abstracts
         /// Enable -> Outline
         /// </summary>
         [Parameter]
-        public bool EOutline { get => _outline; set { if (value) _outline = true; } }
+        public bool EO { get => _outline; set { if (value) _outline = true; } }
 
         /// <summary>
         /// With -> Radius -> None: square corners, even when the component defaults round them.

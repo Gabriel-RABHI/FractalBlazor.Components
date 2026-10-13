@@ -201,6 +201,10 @@ Un outil du site, ouvert par un bouton icône de l'en-tête dans un tiroir large
 - [x] **20.4 Documentation.** README.
 - [x] **20.5 Retours.** Les colonnes ne gardent que les parties qui mènent à un flag commençant par la saisie, sans tenir compte des majuscules : le reste est masqué, non grisé. Les premiers flags tiennent dans une grille de six cases à hauteur fixe ; leur nombre passe sur la ligne du titre. Un trait sépare les colonnes. Le bouton d'effacement reste en place, masqué quand le champ est vide : le champ ne change plus de hauteur.
 
+## Phase 21 — Noms courts
+
+- [x] **21.1 Flags renommés.** `FRow`, `FColumn`, `FRowDense`, `FColumnDense` deviennent `FR`, `FC`, `FRD`, `FCD` (Flow → Rows → Dense) ; `EOutline` devient `EO` et sa classe `fb-eo` ; `Disabled` devient `D` sur les boutons et les champs, le code lisant `IsDisabled`. Une classe de flag aussi courte pourrait porter le nom d'un atome : `FbAtoms` saute les noms réservés (`fb-eo`).
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :

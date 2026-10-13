@@ -93,8 +93,8 @@ html {
     --fb-frame-border-color: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-strong-mix));
 }
 
-/* EOutline */
-.fb-eoutline {
+/* EO */
+.fb-eo {
     outline: var(--fb-outline-size) solid var(--fb-frame-border-color);
     outline-offset: 0;
 }

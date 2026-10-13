@@ -77,9 +77,10 @@ for what Layout cannot render (a native `input`, an `svg`, a `button`).
   `FbAtoms` table. Only free-form values stay inline. Never edit the atoms section of
   `fb-components-layout.css` by hand: change the table, then run
   `dotnet run --project FractalBlazor.Components.Tools -- atoms`.
-- A class set by a flag is named after it: `WBA` → `fb-wba`, `WFM` → `fb-wfm`, `EOutline` →
-  `fb-eoutline`, `VO_XL` → `fb-vo-xl`, `Muted` → `fb-muted`. CSS variables keep their names
-  (`--fb-bg-accent`): they are the contract of the theme.
+- A class set by a flag is named after it: `WBA` → `fb-wba`, `WFM` → `fb-wfm`, `EO` →
+  `fb-eo`, `VO_XL` → `fb-vo-xl`, `Muted` → `fb-muted`. CSS variables keep their names
+  (`--fb-bg-accent`): they are the contract of the theme. A class of one or two letters
+  after `fb-` could be the name of an atom: add it to `FbAtoms.Reserved`, which atoms skip.
 - Icons that belong to a component (a check mark, a chevron) are drawn by the stylesheet with
   `mask` and `currentColor`, on an empty element; `FbIcon` renders inline SVG for the icons
   chosen by the user.

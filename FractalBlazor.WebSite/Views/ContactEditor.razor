@@ -42,7 +42,7 @@
         <FbButton Handler="Item" Action="@(new ContactState.Reset())" Icon="@FbMaterialIcons.RestartAlt" WBN>
             <FbText S>Réinitialiser</FbText>
         </FbButton>
-        <FbButton Variant="@FbThemeVariants.Selected" Icon="@FbMaterialIcons.Save" Disabled="@(!Item.IsComplete)">
+        <FbButton Variant="@FbThemeVariants.Selected" Icon="@FbMaterialIcons.Save" D="@(!Item.IsComplete)">
             <FbText S>Enregistrer</FbText>
         </FbButton>
     </FbRow>

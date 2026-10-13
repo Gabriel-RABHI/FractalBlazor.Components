@@ -56,12 +56,12 @@ public sealed class DeclarativeParametersTests : BunitContext
     [Fact]
     public void Outline_follows_the_flag()
     {
-        var cut = Render<FbRow>(p => p.Add(x => x.EOutline, true));
-        Assert.Contains("fb-eoutline", cut.Find("div").ClassList);
+        var cut = Render<FbRow>(p => p.Add(x => x.EO, true));
+        Assert.Contains("fb-eo", cut.Find("div").ClassList);
 
-        cut.Render(p => p.Add(x => x.EOutline, false));
+        cut.Render(p => p.Add(x => x.EO, false));
 
-        Assert.DoesNotContain("fb-eoutline", cut.Find("div").ClassList);
+        Assert.DoesNotContain("fb-eo", cut.Find("div").ClassList);
     }
 
     [Fact]

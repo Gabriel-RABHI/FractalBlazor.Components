@@ -26,7 +26,7 @@ public sealed class TabsTests : BunitContext
             .Add(x => x.Items, Items)
             .Add(x => x.Value, value)
             .Add(x => x.ValueChanged, changed)
-            .Add(x => x.Disabled, disabled));
+            .Add(x => x.D, disabled));
 
     [Fact]
     public void Each_item_is_a_tab_rendered_by_its_view()

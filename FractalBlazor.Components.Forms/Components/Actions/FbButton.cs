@@ -70,8 +70,14 @@ namespace FractalBlazor.Components.Forms.Components.Actions
         [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
+        /// <summary>
+        /// Disabled: the button sends nothing and renders with the <c>Disabled</c> variant,
+        /// unless <see cref="Variant"/> says otherwise.
+        /// </summary>
         [Parameter]
-        public bool Disabled { get; set; }
+        public bool D { get => IsDisabled; set => IsDisabled = value; }
+
+        private bool IsDisabled { get; set; }
 
         /// <summary>
         /// Functional state of the button: <c>Selected</c>, <c>Error</c>, <c>Success</c>…
@@ -118,17 +124,17 @@ namespace FractalBlazor.Components.Forms.Components.Actions
         /// </summary>
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            var variantStyle = FbVariantScope.Style(FbVariantScope.Effective(Variant, Disabled), ThemeContext);
+            var variantStyle = FbVariantScope.Style(FbVariantScope.Effective(Variant, IsDisabled), ThemeContext);
             var style = AggregatedStyles;
 
             builder.OpenElement(0, "button");
             builder.AddAttribute(1, "type", Submit ? "submit" : "button");
             builder.AddAttribute(2, "class", FbVariantScope.WithClass(ButtonClasses, variantStyle));
             builder.AddAttribute(3, "style", variantStyle is null ? style : variantStyle + style);
-            builder.AddAttribute(4, "disabled", Disabled);
+            builder.AddAttribute(4, "disabled", IsDisabled);
             builder.AddAttribute(5, "title", Title);
             builder.AddAttribute(6, "aria-label", Title);
-            if (!Disabled && (OnClick.HasDelegate || (Handler is not null && Action is not null)))
+            if (!IsDisabled && (OnClick.HasDelegate || (Handler is not null && Action is not null)))
                 builder.AddAttribute(7, "onclick", EventCallback.Factory.Create<MouseEventArgs>(this, HandleClickAsync));
             builder.AddContent(8, _content);
             builder.CloseElement();
@@ -155,7 +161,7 @@ namespace FractalBlazor.Components.Forms.Components.Actions
 
         private Task HandleClickAsync(MouseEventArgs args)
         {
-            if (Disabled)
+            if (IsDisabled)
                 return Task.CompletedTask;
 
             if (Handler is not null && Action is not null)

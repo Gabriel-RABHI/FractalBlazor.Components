@@ -694,7 +694,7 @@ Les chaînes de redirection sont construites une fois par combinaison (variante,
 
 Les filets ont une épaisseur fixe de `1px`. Leur force visuelle dépend uniquement des tokens `frame-*-mix`.
 
-Les composants dérivés de `FbLayoutSurfaceComponentBase` exposent le booléen `EOutline` pour ajouter un outline utilisant la couleur calculée de la frame courante :
+Les composants dérivés de `FbLayoutSurfaceComponentBase` exposent le drapeau `EO` (Enable → Outline) pour ajouter un outline utilisant la couleur calculée de la frame courante :
 
 ```css
 outline: var(--fb-outline-size) solid var(--fb-frame-border-color);
@@ -793,7 +793,7 @@ Le scope rétablit aussi `color: var(--fb-fg-default)`, si bien qu'un texte brut
 
 #### Variante d'un contrôle
 
-Les contrôles (champs, listes, cases, interrupteurs, onglets, boutons) ne s'enveloppent pas dans un scope. Quand leur `Variant` ou `Disabled` le demande, leur élément racine porte lui-même la classe `fb-variant` et les mêmes redirections dans son `style` :
+Les contrôles (champs, listes, cases, interrupteurs, onglets, boutons) ne s'enveloppent pas dans un scope. Quand leur `Variant` ou le drapeau `D` (désactivé) le demande, leur élément racine porte lui-même la classe `fb-variant` et les mêmes redirections dans son `style` :
 
 ```html
 <div class="fb-row … fb-control fb-field fb-variant"

@@ -73,7 +73,7 @@ namespace FractalBlazor.Components.Forms.Components.Selectors
             builder.OpenComponent<FbDropDown>(0);
             builder.AddAttribute(1, nameof(FbDropDown.IsOpen), _open);
             builder.AddAttribute(2, nameof(FbDropDown.IsOpenChanged), EventCallback.Factory.Create<bool>(this, SetOpen));
-            builder.AddAttribute(3, nameof(FbDropDown.AutoToggle), !Disabled);
+            builder.AddAttribute(3, nameof(FbDropDown.AutoToggle), !IsDisabled);
             builder.AddAttribute(4, nameof(FbDropDown.Block), true);
             builder.AddAttribute(5, nameof(FbDropDown.Classes), RootClasses($"fb-control fb-select {Classes}".TrimEnd()));
             builder.AddAttribute(6, nameof(FbDropDown.Style), VariantStyle);
@@ -90,18 +90,18 @@ namespace FractalBlazor.Components.Forms.Components.Selectors
             builder.OpenElement(0, "div");
             builder.AddAttribute(1, "class", "fb-select-anchor");
             builder.AddAttribute(2, "role", "combobox");
-            builder.AddAttribute(3, "tabindex", Disabled ? "-1" : "0");
+            builder.AddAttribute(3, "tabindex", IsDisabled ? "-1" : "0");
             builder.AddAttribute(4, "aria-haspopup", "listbox");
             builder.AddAttribute(5, "aria-expanded", _open ? "true" : "false");
             builder.AddAttribute(6, "aria-controls", $"{_id}-list");
             builder.AddAttribute(7, "aria-activedescendant", _open && _active >= 0 ? OptionId(_active) : null);
-            builder.AddAttribute(8, "aria-disabled", Disabled ? "true" : null);
+            builder.AddAttribute(8, "aria-disabled", IsDisabled ? "true" : null);
             builder.AddAttribute(9, "data-fb-nav-keys", true);
             builder.AddAttribute(10, "onkeydown", EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDownAsync));
             builder.AddElementReferenceCapture(11, element => _anchorElement = element);
 
             builder.OpenComponent<FbRow>(12);
-            builder.AddAttribute(13, nameof(FbRow.EOutline), _open);
+            builder.AddAttribute(13, nameof(FbRow.EO), _open);
             builder.AddAttribute(14, nameof(FbRow.WFS), _open);
             builder.AddAttribute(15, nameof(FbRow.WFM), !_open);
             builder.AddAttribute(16, nameof(FbRow.WBA), true);
@@ -220,7 +220,7 @@ namespace FractalBlazor.Components.Forms.Components.Selectors
 
         private async Task SelectAsync(int index)
         {
-            if (Disabled || index < 0 || index >= Items.Count)
+            if (IsDisabled || index < 0 || index >= Items.Count)
                 return;
 
             _shown = Items[index];
@@ -234,7 +234,7 @@ namespace FractalBlazor.Components.Forms.Components.Selectors
 
         private Task HandleKeyDownAsync(KeyboardEventArgs args)
         {
-            if (Disabled || Items.Count == 0)
+            if (IsDisabled || Items.Count == 0)
                 return Task.CompletedTask;
 
             switch (args.Key)

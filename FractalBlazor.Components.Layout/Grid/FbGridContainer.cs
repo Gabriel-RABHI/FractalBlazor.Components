@@ -211,28 +211,28 @@ public class FbGridContainer : FbLayoutSurfaceComponentBase
     public bool GCX { get => ColumnGap == FbSpacing.X; set { if (value) ColumnGap = FbSpacing.X; } }
 
     /// <summary>
-    /// Flow -> Row
+    /// Flow -> Rows
     /// </summary>
     [Parameter]
-    public bool FRow { get => AutoFlow == FbGridAutoFlow.Row; set { if (value) AutoFlow = FbGridAutoFlow.Row; } }
+    public bool FR { get => AutoFlow == FbGridAutoFlow.Row; set { if (value) AutoFlow = FbGridAutoFlow.Row; } }
 
     /// <summary>
-    /// Flow -> Column 
+    /// Flow -> Columns
     /// </summary>
     [Parameter]
-    public bool FColumn { get => AutoFlow == FbGridAutoFlow.Column; set { if (value) AutoFlow = FbGridAutoFlow.Column; } }
+    public bool FC { get => AutoFlow == FbGridAutoFlow.Column; set { if (value) AutoFlow = FbGridAutoFlow.Column; } }
 
     /// <summary>
-    /// Flow -> Row Dense
+    /// Flow -> Rows -> Dense
     /// </summary>
     [Parameter]
-    public bool FRowDense { get => AutoFlow == FbGridAutoFlow.RowDense; set { if (value) AutoFlow = FbGridAutoFlow.RowDense; } }
+    public bool FRD { get => AutoFlow == FbGridAutoFlow.RowDense; set { if (value) AutoFlow = FbGridAutoFlow.RowDense; } }
 
     /// <summary>
-    /// Flow -> Column Dense
+    /// Flow -> Columns -> Dense
     /// </summary>
     [Parameter]
-    public bool FColumnDense { get => AutoFlow == FbGridAutoFlow.ColumnDense; set { if (value) AutoFlow = FbGridAutoFlow.ColumnDense; } }
+    public bool FCD { get => AutoFlow == FbGridAutoFlow.ColumnDense; set { if (value) AutoFlow = FbGridAutoFlow.ColumnDense; } }
 
     /// <summary>
     /// Optional raw CSS grid-template-columns value. When set, it takes precedence

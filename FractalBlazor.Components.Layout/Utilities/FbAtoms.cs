@@ -169,7 +169,7 @@ namespace FractalBlazor.Components.Layout.Utilities
             AddSize(FbAxis.MinHeight, "min-height");
             AddSize(FbAxis.MaxHeight, "max-height");
 
-            Names = [.. Enumerable.Range(0, _declarations.Count).Select(NameAt)];
+            Names = BuildNames(_declarations.Count);
             _byDeclaration = _declarations.Select((declaration, atom) => (declaration, atom)).ToDictionary(entry => entry.declaration, entry => entry.atom);
         }
 
@@ -249,6 +249,27 @@ namespace FractalBlazor.Components.Layout.Utilities
         {
             _declarations.Add(declaration);
             return (short)(_declarations.Count - 1);
+        }
+
+        /// <summary>
+        /// Short classes set by flags, named after them (<c>EO</c> gives <c>fb-eo</c>): no atom
+        /// takes them.
+        /// </summary>
+        private static readonly HashSet<string> Reserved = ["fb-eo"];
+
+        /// <summary>
+        /// The names of <paramref name="count"/> atoms, in order, skipping the reserved ones.
+        /// </summary>
+        private static string[] BuildNames(int count)
+        {
+            var names = new string[count];
+            for (int atom = 0, index = 0; atom < count; index++)
+            {
+                var name = NameAt(index);
+                if (!Reserved.Contains(name))
+                    names[atom++] = name;
+            }
+            return names;
         }
 
         /// <summary>

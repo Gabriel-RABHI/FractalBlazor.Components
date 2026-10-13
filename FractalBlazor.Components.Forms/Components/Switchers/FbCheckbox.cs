@@ -88,7 +88,7 @@ namespace FractalBlazor.Components.Forms.Components.Switchers
             builder.AddAttribute(4, "type", "checkbox");
             builder.AddAttribute(5, "class", InputClass);
             builder.AddAttribute(6, "checked", Value);
-            builder.AddAttribute(7, "disabled", Disabled);
+            builder.AddAttribute(7, "disabled", IsDisabled);
             builder.AddAttribute(8, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, HandleChangeAsync));
             builder.CloseElement();
 

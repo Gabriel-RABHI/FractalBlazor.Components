@@ -90,7 +90,7 @@ public sealed class ToggleTests : BunitContext
     public void Disabled_checkbox_sends_nothing()
     {
         var state = new NewsletterState();
-        var cut = Render<FbCheckbox<SubscribeAction>>(p => p.Add(x => x.Handler, state).Add(x => x.Disabled, true));
+        var cut = Render<FbCheckbox<SubscribeAction>>(p => p.Add(x => x.Handler, state).Add(x => x.D, true));
 
         cut.Find("input").Change(true);
 
@@ -112,7 +112,7 @@ public sealed class ToggleTests : BunitContext
     public void Disabled_switch_sends_nothing()
     {
         var state = new NewsletterState();
-        var cut = Render<FbSwitch<SubscribeAction>>(p => p.Add(x => x.Handler, state).Add(x => x.Disabled, true));
+        var cut = Render<FbSwitch<SubscribeAction>>(p => p.Add(x => x.Handler, state).Add(x => x.D, true));
 
         cut.Find("input").Change(true);
 

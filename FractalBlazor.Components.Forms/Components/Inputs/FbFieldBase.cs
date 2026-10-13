@@ -84,7 +84,7 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
         protected override void BuildControl(RenderTreeBuilder builder)
         {
             builder.OpenComponent<FbRow>(0);
-            builder.AddAttribute(1, nameof(FbRow.EOutline), _hasFocus);
+            builder.AddAttribute(1, nameof(FbRow.EO), _hasFocus);
             builder.AddAttribute(2, nameof(FbRow.WFS), _hasFocus);
             builder.AddAttribute(3, nameof(FbRow.WFM), !_hasFocus);
             builder.AddAttribute(4, nameof(FbRow.GS), true);
@@ -108,7 +108,7 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
             builder.AddAttribute(3, "class", "fb-control-input");
             builder.AddAttribute(4, "value", _text);
             builder.AddAttribute(5, "placeholder", Placeholder);
-            builder.AddAttribute(6, "disabled", Disabled);
+            builder.AddAttribute(6, "disabled", IsDisabled);
             AddInputAttributes(builder);
             builder.AddAttribute(8, Immediate ? "oninput" : "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, HandleChangeAsync));
             builder.AddAttribute(9, "onkeyup", EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyUpAsync));

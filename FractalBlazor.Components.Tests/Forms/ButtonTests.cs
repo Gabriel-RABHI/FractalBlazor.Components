@@ -64,7 +64,7 @@ public sealed class ButtonTests : BunitContext
         var cut = Render<FbButton>(p => p
             .Add(x => x.Handler, state)
             .Add(x => x.Action, new ResetAction())
-            .Add(x => x.Disabled, true));
+            .Add(x => x.D, true));
 
         Assert.True(cut.Find("button").HasAttribute("disabled"));
         Assert.DoesNotContain("onclick", cut.Markup);

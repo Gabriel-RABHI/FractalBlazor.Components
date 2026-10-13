@@ -68,7 +68,7 @@ public sealed class InputTextTests : BunitContext
         var state = new PersonState();
         var cut = Render<FbInputText<RenameAction>>(p => p
             .Add(x => x.Handler, state)
-            .Add(x => x.Disabled, true));
+            .Add(x => x.D, true));
 
         Assert.True(cut.Find("input").HasAttribute("disabled"));
         var root = cut.Find(".fb-field");

@@ -15,7 +15,7 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
     /// which makes <c>@bind-Value</c> possible without cost when it is not used.
     /// </summary>
     /// <remarks>
-    /// When <see cref="Variant"/> or <see cref="Disabled"/> asks for it, the root element of the
+    /// When <see cref="Variant"/> or <see cref="D"/> asks for it, the root element of the
     /// control carries the variant itself (<see cref="RootClasses"/>, <see cref="VariantStyle"/>);
     /// otherwise the field inherits the variant of its parent. Switching to <c>Error</c> while
     /// typing only changes attributes of that element, so the DOM, and the focus, stay in place.
@@ -45,11 +45,16 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
         public object? Handler { get; set; }
 
         /// <summary>
-        /// Disables the field and renders it with the <c>Disabled</c> variant, unless
+        /// Disabled: disables the field and renders it with the <c>Disabled</c> variant, unless
         /// <see cref="Variant"/> says otherwise.
         /// </summary>
         [Parameter]
-        public bool Disabled { get; set; }
+        public bool D { get => IsDisabled; set => IsDisabled = value; }
+
+        /// <summary>
+        /// Whether the field is disabled, as <see cref="D"/> asks.
+        /// </summary>
+        protected bool IsDisabled { get; private set; }
 
         /// <summary>
         /// Functional state of the field: <c>Error</c>, <c>Warning</c>, <c>Success</c>…
@@ -66,7 +71,7 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
         /// <summary>
         /// Variant actually applied, or <c>null</c> to inherit the parent one.
         /// </summary>
-        protected string? EffectiveVariant => FbVariantScope.Effective(Variant, Disabled);
+        protected string? EffectiveVariant => FbVariantScope.Effective(Variant, IsDisabled);
 
         /// <summary>
         /// Sends <paramref name="value"/> to the state, then to <see cref="ValueChanged"/>.
@@ -74,7 +79,7 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
         /// </summary>
         protected async Task CommitAsync(TValue value)
         {
-            if (Disabled)
+            if (IsDisabled)
                 return;
 
             if (Handler is not null)

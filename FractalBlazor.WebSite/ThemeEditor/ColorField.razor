@@ -10,7 +10,7 @@
         <FbRowItem Style="min-width:4.5rem;justify-content:flex-end"><code>@Value</code></FbRowItem>
         <FbButton WBN WFN PVS PHS Title="Copier la couleur" Icon="@FbMaterialIcons.ContentCopy" OnClick="CopyAsync" />
         <FbButton WBN WFN PVS PHS Title="@(Clipboard is null ? "Aucune couleur copiée" : $"Coller {Clipboard}")"
-                  Icon="@FbMaterialIcons.ContentPaste" Disabled="@(Clipboard is null || Clipboard == Value)" OnClick="PasteAsync" />
+                  Icon="@FbMaterialIcons.ContentPaste" D="@(Clipboard is null || Clipboard == Value)" OnClick="PasteAsync" />
     </EndContent>
 </FbInputColor>
 

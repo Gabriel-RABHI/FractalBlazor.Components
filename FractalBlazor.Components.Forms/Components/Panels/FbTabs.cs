@@ -72,7 +72,7 @@ namespace FractalBlazor.Components.Forms.Components.Panels
                 builder.AddAttribute(9, "class", selected ? "fb-tab fb-tab-selected" : "fb-tab");
                 builder.AddAttribute(10, "aria-selected", selected ? "true" : "false");
                 builder.AddAttribute(11, "tabindex", index == focusable ? "0" : "-1");
-                builder.AddAttribute(12, "disabled", Disabled);
+                builder.AddAttribute(12, "disabled", IsDisabled);
                 builder.AddAttribute(13, "onclick", EventCallback.Factory.Create(this, () => CommitAsync(tab)));
                 builder.AddElementReferenceCapture(14, element => _tabs[tab] = element);
                 BuildLabel(builder, 15, Items[index]);
@@ -95,7 +95,7 @@ namespace FractalBlazor.Components.Forms.Components.Panels
 
         private async Task HandleKeyDownAsync(KeyboardEventArgs args)
         {
-            if (Disabled || Items.Count == 0)
+            if (IsDisabled || Items.Count == 0)
                 return;
 
             var current = FocusableIndex;

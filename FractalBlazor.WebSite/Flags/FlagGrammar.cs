@@ -90,11 +90,11 @@ internal sealed class FlagGrammar
         grammar.Add([Word("Invert", "Swaps the light and dark anchors", "Theme")], "FbVariant", "FbLayoutVariant");
         grammar.Add(
             [
-                Word("Disabled", "Disabled", "Behavior"),
+                Word("D", "Disabled", "Behavior"),
                 Word("Submit", "Submits the enclosing form", "Behavior")
             ],
             "FbButton");
-        grammar.Add([Word("Disabled", "Disabled", "Behavior")], "FbInputBase");
+        grammar.Add([Word("D", "Disabled", "Behavior")], "FbInputBase");
         grammar.Add([Word("Immediate", "Sends each keystroke", "Behavior")], "FbFieldBase");
         return grammar;
     }
@@ -174,15 +174,13 @@ internal sealed class FlagGrammar
         Prefix("E", "Enable", "Feature",
         [
             Word("S", "Selection", "Feature"),
-            Word("Outline", "Outline", "Feature")
+            Word("O", "Outline", "Feature")
         ]),
         Prefix("D", "Disable", "Feature", [Word("S", "Selection", "Feature")]),
         Prefix("F", "Flow", "Grid",
         [
-            Word("Row", "Rows", "Flow"),
-            Word("Column", "Columns", "Flow"),
-            Word("RowDense", "Rows, dense", "Flow"),
-            Word("ColumnDense", "Columns, dense", "Flow")
+            Word("R", "Rows", "Flow", [Word("D", "Dense", "Flow")]),
+            Word("C", "Columns", "Flow", [Word("D", "Dense", "Flow")])
         ]),
         Word("NoFlex", "Keeps its content size", "Layout"),
         Word("Scrollable", "Scrolls its content", "Layout"),
@@ -308,6 +306,12 @@ internal sealed class FlagGrammar
     ];
 
     private static Part Word(string code, string meaning, string category) => new(code, meaning, category, true, []);
+
+    /// <summary>
+    /// A complete part that more parts can follow: <c>FR</c> is a flag, <c>FRD</c> another.
+    /// </summary>
+    private static Part Word(string code, string meaning, string category, params Part[][] children)
+        => new(code, meaning, category, true, children.SelectMany(group => group).ToList());
 
     private static Part Prefix(string code, string meaning, string category, params Part[][] children)
         => new(code, meaning, category, false, children.SelectMany(group => group).ToList());

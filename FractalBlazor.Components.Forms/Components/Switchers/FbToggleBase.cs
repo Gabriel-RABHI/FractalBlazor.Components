@@ -38,7 +38,7 @@ namespace FractalBlazor.Components.Forms.Components.Switchers
             builder.AddAttribute(5, "class", InputClass);
             builder.AddAttribute(6, "role", InputRole);
             builder.AddAttribute(7, "checked", Value);
-            builder.AddAttribute(8, "disabled", Disabled);
+            builder.AddAttribute(8, "disabled", IsDisabled);
             builder.AddAttribute(9, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, HandleChangeAsync));
             builder.CloseElement();
             builder.AddContent(10, ChildContent);

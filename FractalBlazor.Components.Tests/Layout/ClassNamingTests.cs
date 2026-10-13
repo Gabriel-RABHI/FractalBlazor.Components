@@ -14,14 +14,14 @@ public sealed class ClassNamingTests : BunitContext
             .Add(x => x.WBA, true)
             .Add(x => x.WFM, true)
             .Add(x => x.WSL, true)
-            .Add(x => x.EOutline, true)
+            .Add(x => x.EO, true)
             .Add(x => x.WNTW, true));
 
         var classes = cut.Find("div").ClassList;
         Assert.Contains("fb-wba", classes);
         Assert.Contains("fb-wfm", classes);
         Assert.Contains("fb-wsl", classes);
-        Assert.Contains("fb-eoutline", classes);
+        Assert.Contains("fb-eo", classes);
         Assert.Contains("fb-wntw", classes);
     }
 
