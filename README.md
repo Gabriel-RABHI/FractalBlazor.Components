@@ -20,7 +20,7 @@ Composants Blazor ultra-légers pour la mise en page et les formulaires, avec un
 
 - **Composants ultra-légers.** Ils implémentent `IComponent` directement, sans `ComponentBase`. La mise en page s'écrit en classes techniques très courtes (`fb-a`, `fb-ab`…), une déclaration chacune, générées depuis une table C# ; une rangée ou une pile n'ajoute que celles qui diffèrent de sa règle de base. La chaîne `class` vient d'un cache partagé, indexé par la valeur complète des paramètres. Seules les valeurs libres (`Style`, `MinWidth`, `FlexBasis`…) restent en style inline.
 - **Les composants ne lisent pas le thème.** Ils posent des classes ; le thème est résolu en C#, sérialisé en variables CSS, et la cascade fait le reste.
-- **Une grammaire courte.** Des drapeaux booléens préfixés : `WB*` fond, `WF*` frame, `WR*` rayon, `P*` padding, `M*` marge, `G*` gutter, `J*` alignement. Une API enum les complète pour les valeurs calculées. Le DOM parle la même langue : un drapeau donne une classe de son nom (`WBA` → `fb-wba`, `WFM` → `fb-wfm`, `Muted` → `fb-muted`).
+- **Une grammaire courte.** Des drapeaux booléens préfixés : `WB*` fond, `WF*` frame, `WR*` rayon, `P*` padding, `M*` marge, `G*` gutter, `J*` alignement. Une API enum les complète pour les valeurs calculées. Le DOM parle la même langue : un drapeau donne une classe de son nom (`WBA` → `fb-wba`, `WFM` → `fb-wfm`, `Muted` → `fb-muted`). Dans la démo, l'assistant des flags (bouton ⚑ de l'en-tête) les retrouve par leurs lettres ou par composant : `PHS` se lit Padding → Horizontal → Small.
 - **Rendu ≠ fonctionnel.** `Muted` est un rendu ; `Error`, `Selected`, `Disabled` sont des variantes posées par `FbVariant`.
 - **Layout autonome.** `FractalBlazor.Components.Layout` ne dépend pas de Forms et préfixe tout son CSS par `fb-` : il cohabite avec MudBlazor ou Radzen.
 - **State-first.** Les champs envoient des actions à un objet d'état ; la vue est choisie d'après le type de l'état.
@@ -269,6 +269,12 @@ Il est contrôlé par `IsOpen` : Échap, un clic sur le voile ou une demande du 
     <FbDynamicView TSelector="ViewSelector" Item="Item.Menu" Selector="ViewSelector.Summary" />
 </FbDrawer>
 ```
+
+## Assistant des flags
+
+Le bouton ⚑ de l'en-tête de la démo ouvre, dans un tiroir à droite, un assistant pour retrouver un drapeau. Le champ Flag filtre les drapeaux qui commencent par sa saisie ; les cinq premiers s'affichent en haut, lus partie par partie. Les lettres se choisissent aussi colonne par colonne : la première liste les débuts possibles, chaque choix ouvre la suivante, groupée par catégorie (Direction, Spacing…). Des lettres qui se lisent de deux façons sélectionnent les deux : `PL` est Padding → Large, et le début de Padding → Left → Small. La recherche de composants, par nom ou partie de nom, restreint les drapeaux ; choisir un composant le place dans la recherche.
+
+Le site lit les drapeaux sur les composants eux-mêmes : chaque composant public de Layout et de Forms, chacun de ses paramètres booléens. Une grammaire par famille dit ce que signifient les lettres, car elles changent de sens d'une famille à l'autre (`M` ouvre une marge dans une row, c'est la taille moyenne d'un `FbText`). Un test échoue si un drapeau n'est pas expliqué. L'état de l'assistant reçoit ce catalogue par une interface déclarée dans le modèle (`IFlagCatalog`), qui ne connaît aucun composant.
 
 ## Performances
 

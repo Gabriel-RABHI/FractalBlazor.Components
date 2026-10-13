@@ -198,7 +198,7 @@ Un outil du site, ouvert par un bouton icône de l'en-tête dans un tiroir large
 - [x] **20.1 Le catalogue.** Le site lit les flags sur les composants eux-mêmes : chaque composant public de Layout et Forms, chacun de ses paramètres booléens. Une grammaire dit ce que signifient les lettres, par famille (mise en page, texte, icône, points de rupture, mots) : `PHS` se lit Padding → Horizontal → Small, `PL` Padding → Large, `PLS` Padding → Left → Small. Un test échoue si un flag n'est pas expliqué. L'état reçoit le catalogue par une interface (`IFlagCatalog`).
 - [x] **20.2 L'état de l'assistant.** Le champ Flag, éditable ; les colonnes de lettres : la première liste les débuts possibles, chaque choix ouvre la colonne suivante, groupée par catégorie ; les flags qui commencent par la saisie, les cinq premiers en haut ; la colonne des composants, filtrée par nom ou partie de nom, qui restreint les flags. Choisir un composant le place dans la recherche.
 - [x] **20.3 La vue.** Un bouton dans l'en-tête, large comme compact ; un tiroir modal à droite, assez large, dont les colonnes passent à la ligne sur un écran étroit.
-- [ ] **20.4 Documentation.** README.
+- [x] **20.4 Documentation.** README.
 
 ## Critères de fin
 
