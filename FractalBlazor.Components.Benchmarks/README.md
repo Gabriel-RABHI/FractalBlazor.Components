@@ -28,34 +28,49 @@ FractalBlazor rend deux fois plus vite que MudBlazor et Radzen, et près de quat
 
 ## Pile d'éditeurs (`EditorBenchmarks`)
 
-Rendu de 1 000 éditeurs empilés, un par candidat. Le DTO `ApplicantDto` porte un prénom, un nom, une ville, une date de naissance (`DateTime`) et un statut parmi `Pending`, `Review`, `Admitted` et `Fail` ; les 1 000 candidats sont générés avec une graine fixe. Chaque ligne édite les cinq champs, avec leur libellé :
+Rendu de 1 000 éditeurs empilés, un par candidat. Le DTO `ApplicantDto` porte un prénom, un nom, une ville, une date de naissance (`DateTime`), un statut parmi `Pending`, `Review`, `Admitted` et `Fail`, et une case `Interviewed` ; les 1 000 candidats sont générés avec une graine fixe. Chaque ligne édite cinq champs, avec leur libellé : trois textes, la case et le statut. La date n'est pas éditée : chaque bibliothèque l'affiche à sa façon (voir plus bas), ce qui fausserait la comparaison.
 
-- **FractalBlazor** : un `FbStack` de `FbRow`, chacune avec trois `FbInputText`, un `FbInputDate` et un `FbSelect`, le libellé en `StartContent`. Chaque champ envoie son action au DTO, qui se met à jour lui-même ;
-- **MudBlazor** : un `MudStack` de `MudStack Row`, chacune avec trois `MudTextField`, un `MudDatePicker` et un `MudSelect` à quatre `MudSelectItem`, en variante `Outlined`, liés par `@bind-Value`, avec le `MudPopoverProvider` qu'une application place dans sa mise en page ;
-- **Radzen** : un `RadzenStack` de `RadzenStack` horizontaux, chacun avec cinq `RadzenFormField` en variante `Outlined` autour de trois `RadzenTextBox`, d'un `RadzenDatePicker` et d'un `RadzenDropDown`, liés par `@bind-Value` ;
-- **Fluent UI** : un `FluentStack` de `FluentStack` horizontaux, chacun avec trois `FluentTextInput`, un `FluentDatePicker` et un `FluentSelect`, avec leur `Label`, liés par `@bind-Value`.
+- **FractalBlazor** : un `FbStack` de `FbRow`, chacune avec trois `FbInputText` (libellé en `StartContent`), un `FbCheckbox` et un `FbSelect`. Chaque champ envoie son action au DTO, qui se met à jour lui-même ;
+- **MudBlazor** : un `MudStack` de `MudStack Row`, chacune avec trois `MudTextField` en variante `Outlined`, un `MudCheckBox` avec son `Label` et un `MudSelect` à quatre `MudSelectItem`, liés par `@bind-Value`, avec le `MudPopoverProvider` qu'une application place dans sa mise en page ;
+- **Radzen** : un `RadzenStack` de `RadzenStack` horizontaux, chacun avec trois `RadzenTextBox` et un `RadzenDropDown` dans des `RadzenFormField` en variante `Outlined`, et un `RadzenCheckBox` relié à son `RadzenLabel` par son nom, comme le montre la documentation de Radzen, liés par `@bind-Value` ;
+- **Fluent UI** : un `FluentStack` de `FluentStack` horizontaux, chacun avec trois `FluentTextInput`, un `FluentCheckbox` et un `FluentSelect`, avec leur `Label`, liés par `@bind-Value`.
 
-`Rerender` passe chaque candidat au statut suivant.
+`Rerender` passe chaque candidat au statut suivant et coche ou décoche sa case.
 
-| Bibliothèque | FirstRender | Mémoire | Rerender | Mémoire | HTML produit |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| FractalBlazor | 173 ms | 55,3 Mo | 34,0 ms | 3,6 Mo | 2 080 Ko |
-| Radzen | 458 ms | 151,1 Mo | 292,0 ms | 49,6 Mo | 14 071 Ko |
-| Fluent UI | 511 ms | 184,6 Mo | 300,6 ms | 58,7 Mo | 8 424 Ko |
-| MudBlazor | 1 779 ms | 628,7 Mo | 104,4 ms | 14,1 Mo | 7 326 Ko |
+| Bibliothèque | FirstRender | Mémoire | Rerender | Mémoire |
+| --- | ---: | ---: | ---: | ---: |
+| FractalBlazor | 141 ms | 50,3 Mo | 29,1 ms | 3,2 Mo |
+| Radzen | 233 ms | 69,3 Mo | 90,4 ms | 12,3 Mo |
+| Fluent UI | 318 ms | 96,0 Mo | 122,9 ms | 20,7 Mo |
+| MudBlazor | 1 151 ms | 404,9 Mo | 125,1 ms | 16,9 Mo |
 
-Au premier rendu, FractalBlazor est 2,6 fois plus rapide que Radzen, 3 fois plus que Fluent UI et 10 fois plus que MudBlazor ; au re-rendu, 3 fois plus rapide que MudBlazor et près de 9 fois plus que Radzen et Fluent UI. Son HTML est le plus léger, de 3,5 à 7 fois.
+Au premier rendu, FractalBlazor est 1,6 fois plus rapide que Radzen, 2,2 fois plus que Fluent UI et 8 fois plus que MudBlazor ; au re-rendu, de 3 à 4,3 fois plus rapide, avec 4 à 6 fois moins de mémoire.
 
-Ce que chaque bibliothèque rend explique une part des écarts :
+| HTML de la page | Brut | gzip | Brotli | Éléments |
+| --- | ---: | ---: | ---: | ---: |
+| FractalBlazor | 2 170 Ko | 63 Ko | 48 Ko | 32 001 |
+| Radzen | 3 885 Ko | 184 Ko | 131 Ko | 40 001 |
+| Fluent UI | 1 849 Ko | 131 Ko | 81 Ko | 23 001 |
+| MudBlazor | 5 954 Ko | 173 Ko | 99 Ko | 49 002 |
 
-- **Le calendrier.** `FbInputDate` s'appuie sur le calendrier natif du navigateur. Radzen et Fluent UI rendent le calendrier complet de chaque sélecteur de date, même fermé : un mois entier par ligne, rendu à nouveau à chaque re-rendu. MudBlazor ne le rend qu'à l'ouverture.
-- **Le provider de MudBlazor.** Chaque `MudDatePicker` et chaque `MudSelect` inscrit son popover auprès du `MudPopoverProvider`, qui rend 2 000 conteneurs. Sans provider, irréaliste dans une application, MudBlazor mettait 1 062 ms et 342 Mo au premier rendu (ShortRun).
-- **Les web components.** Fluent UI rend des éléments personnalisés (`<fluent-text-input>`, `<fluent-field>`) : le navigateur fait ensuite une partie du travail en les instanciant, ce que cette mesure côté serveur ne voit pas.
+Fluent UI produit le HTML brut le plus court, mais ses web components (`<fluent-text-input>`, `<fluent-checkbox>`) construisent ensuite leur propre DOM dans le navigateur, ce que cette mesure côté serveur ne voit pas ; ses identifiants aléatoires se compressent aussi mal. Compressé, le HTML de FractalBlazor est le plus léger, de 1,7 à 2,9 fois.
+
+Ce que chaque bibliothèque rend pèse sur les écarts :
+
+- **Le provider de MudBlazor.** Chaque `MudSelect` inscrit son popover auprès du `MudPopoverProvider`, qui rend 1 000 conteneurs : c'est l'essentiel du coût de son premier rendu.
 - **Les listes fermées.** Aucune bibliothèque ne rend les options d'une liste fermée : `FbDropDown` ne rend son contenu qu'une fois ouvert.
+- **Le calendrier.** Avec un champ de date à la place de la case (`FbInputDate`, `MudDatePicker`, `RadzenDatePicker`, `FluentDatePicker`), les écarts se creusent : `FbInputDate` s'appuie sur le calendrier natif du navigateur, MudBlazor ne rend le sien qu'à l'ouverture, mais Radzen et Fluent UI rendent un mois entier par ligne, même fermé, et le rendent à nouveau à chaque re-rendu. Mesure du même jour :
+
+| Avec un champ de date | FirstRender | Rerender | HTML produit |
+| --- | ---: | ---: | ---: |
+| FractalBlazor | 173 ms | 34,0 ms | 2 080 Ko |
+| Radzen | 458 ms | 292,0 ms | 14 071 Ko |
+| Fluent UI | 511 ms | 300,6 ms | 8 424 Ko |
+| MudBlazor | 1 779 ms | 104,4 ms | 7 326 Ko |
 
 Les champs des quatre bibliothèques injectent `IJSRuntime`, que `HtmlRenderer` ne fournit pas ; `NoJSRuntime` le remplace, et n'est appelé ni au rendu ni au re-rendu.
 
-Avec les styles inline, le HTML de FractalBlazor pesait 3 926 Ko, dont 52 % d'attributs `style` (7 001 attributs pour 5 chaînes distinctes), pour 57,5 Mo alloués au premier rendu. Les classes atomiques le ramènent à 2 080 Ko ; compressé, il passe de 89 à 68 Ko en gzip et de 54 à 51 Ko en Brotli.
+Avec les styles inline, le HTML de FractalBlazor pesait 3 926 Ko dans la version avec date, dont 52 % d'attributs `style` (7 001 attributs pour 5 chaînes distinctes), pour 57,5 Mo alloués au premier rendu. Les classes atomiques le ramènent à 2 080 Ko ; compressé, il passe de 89 à 68 Ko en gzip et de 54 à 51 Ko en Brotli.
 
 ## Lancer les mesures
 

@@ -4,7 +4,7 @@
     <FluentTextInput Label="First Name" @bind-Value="Applicant.FirstName" />
     <FluentTextInput Label="Last Name" @bind-Value="Applicant.LastName" />
     <FluentTextInput Label="City" @bind-Value="Applicant.City" />
-    <FluentDatePicker TValue="DateTime" Label="Birth Date" @bind-Value="Applicant.BirthDate" />
+    <FluentCheckbox Label="Interviewed" @bind-Value="Applicant.Interviewed" />
     <FluentSelect TOption="ApplicantStatus" TValue="ApplicantStatus" Label="Status" Items="ApplicantDto.Statuses"
                   @bind-Value="Applicant.Status" />
 </FluentStack>

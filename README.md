@@ -214,15 +214,15 @@ Ouvrir une page ne notifie que l'ancienne entrée, la nouvelle et la zone de con
 
 ## Performances
 
-Rendu côté serveur de 1 000 lignes encadrées, puis de 1 000 éditeurs à cinq champs (texte, date, liste), face à MudBlazor, Radzen et Fluent UI. Détails, méthode et limites dans [FractalBlazor.Components.Benchmarks](FractalBlazor.Components.Benchmarks/README.md).
+Rendu côté serveur de 1 000 lignes encadrées, puis de 1 000 éditeurs à cinq champs (trois textes, une case, une liste), face à MudBlazor, Radzen et Fluent UI. Détails, méthode et limites dans [FractalBlazor.Components.Benchmarks](FractalBlazor.Components.Benchmarks/README.md).
 
 | Scénario | FractalBlazor | MudBlazor | Radzen | Fluent UI |
 | --- | ---: | ---: | ---: | ---: |
 | Lignes, premier rendu | 4,21 ms | 8,99 ms | 8,51 ms | 16,23 ms |
 | Lignes, re-rendu | 1,23 ms | 3,17 ms | 3,64 ms | 4,79 ms |
-| Éditeurs, premier rendu | 173 ms | 1 779 ms | 458 ms | 511 ms |
-| Éditeurs, re-rendu | 34 ms | 104 ms | 292 ms | 301 ms |
-| Éditeurs, HTML produit | 2 080 Ko | 7 326 Ko | 14 071 Ko | 8 424 Ko |
+| Éditeurs, premier rendu | 141 ms | 1 151 ms | 233 ms | 318 ms |
+| Éditeurs, re-rendu | 29 ms | 125 ms | 90 ms | 123 ms |
+| Éditeurs, HTML compressé (gzip) | 63 Ko | 173 Ko | 184 Ko | 131 Ko |
 
 ## Développement
 

@@ -19,8 +19,8 @@ namespace FractalBlazor.Components.Benchmarks.Editors
         public sealed record SetFirstName(string Value) : IStateAction<string>;
         public sealed record SetLastName(string Value) : IStateAction<string>;
         public sealed record SetCity(string Value) : IStateAction<string>;
-        public sealed record SetBirthDate(DateOnly? Value) : IStateAction<DateOnly?>;
         public sealed record SetStatus(ApplicantStatus Value) : IStateAction<ApplicantStatus>;
+        public sealed record SetInterviewed(bool Value) : IStateAction<bool>;
 
         private static readonly string[] FirstNames = ["Ada", "Alan", "Grace", "Linus", "Margaret", "Dennis", "Barbara", "Ken", "Frances", "Edsger"];
         private static readonly string[] LastNames = ["Lovelace", "Turing", "Hopper", "Torvalds", "Hamilton", "Ritchie", "Liskov", "Thompson", "Allen", "Dijkstra"];
@@ -38,19 +38,17 @@ namespace FractalBlazor.Components.Benchmarks.Editors
 
         public ApplicantStatus Status { get; set; }
 
+        public bool Interviewed { get; set; }
+
         public void Handle(SetFirstName action) => FirstName = action.Value;
 
         public void Handle(SetLastName action) => LastName = action.Value;
 
         public void Handle(SetCity action) => City = action.Value;
 
-        public void Handle(SetBirthDate action)
-        {
-            if (action.Value is { } date)
-                BirthDate = date.ToDateTime(TimeOnly.MinValue);
-        }
-
         public void Handle(SetStatus action) => Status = action.Value;
+
+        public void Handle(SetInterviewed action) => Interviewed = action.Value;
 
         /// <summary>
         /// The same <paramref name="count"/> applicants at each call.
@@ -67,7 +65,8 @@ namespace FractalBlazor.Components.Benchmarks.Editors
                     LastName = LastNames[random.Next(LastNames.Length)],
                     City = Cities[random.Next(Cities.Length)],
                     BirthDate = new DateTime(1960, 1, 1).AddDays(random.Next(365 * 45)),
-                    Status = Statuses[random.Next(Statuses.Count)]
+                    Status = Statuses[random.Next(Statuses.Count)],
+                    Interviewed = random.Next(2) == 1
                 };
             }
             return applicants;

@@ -16,13 +16,16 @@ namespace FractalBlazor.Components.Benchmarks.Editors
         protected override void OnInitialized() => Current = this;
 
         /// <summary>
-        /// Moves every applicant to the next status, so each editor renders again with a new
-        /// value.
+        /// Moves every applicant to the next status and toggles its check box, so each editor
+        /// renders again with new values.
         /// </summary>
         public Task BumpAsync() => InvokeAsync(() =>
         {
             foreach (var applicant in Applicants)
+            {
                 applicant.Status = (ApplicantStatus)(((int)applicant.Status + 1) % ApplicantDto.Statuses.Count);
+                applicant.Interviewed = !applicant.Interviewed;
+            }
             StateHasChanged();
         });
     }

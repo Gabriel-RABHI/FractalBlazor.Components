@@ -10,15 +10,20 @@
     <RadzenFormField Text="City" Variant="Radzen.Variant.Outlined">
         <RadzenTextBox @bind-Value="Applicant.City" />
     </RadzenFormField>
-    <RadzenFormField Text="Birth Date" Variant="Radzen.Variant.Outlined">
-        <RadzenDatePicker TValue="DateTime" @bind-Value="Applicant.BirthDate" DateFormat="d" />
-    </RadzenFormField>
+    @* The check box and its label, linked by name, as the Radzen documentation shows them. *@
+    <RadzenStack Orientation="Radzen.Orientation.Horizontal" Gap="0.5rem">
+        <RadzenCheckBox TValue="bool" @bind-Value="Applicant.Interviewed" Name="@_name" />
+        <RadzenLabel Text="Interviewed" Component="@_name" />
+    </RadzenStack>
     <RadzenFormField Text="Status" Variant="Radzen.Variant.Outlined">
         <RadzenDropDown TValue="ApplicantStatus" Data="ApplicantDto.Statuses" @bind-Value="Applicant.Status" />
     </RadzenFormField>
 </RadzenStack>
 
 @code {
+    private static int _count;
+    private readonly string _name = "interviewed" + Interlocked.Increment(ref _count);
+
     [Parameter]
     public ApplicantDto Applicant { get; set; } = default!;
 }

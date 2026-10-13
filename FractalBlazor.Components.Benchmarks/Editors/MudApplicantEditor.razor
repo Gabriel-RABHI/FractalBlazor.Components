@@ -3,7 +3,7 @@
     <MudTextField T="string" @bind-Value="Applicant.FirstName" Label="First Name" Variant="Variant.Outlined" Margin="Margin.Dense" />
     <MudTextField T="string" @bind-Value="Applicant.LastName" Label="Last Name" Variant="Variant.Outlined" Margin="Margin.Dense" />
     <MudTextField T="string" @bind-Value="Applicant.City" Label="City" Variant="Variant.Outlined" Margin="Margin.Dense" />
-    <MudDatePicker Date="Applicant.BirthDate" DateChanged="SetBirthDate" Label="Birth Date" Variant="Variant.Outlined" Margin="Margin.Dense" />
+    <MudCheckBox T="bool" @bind-Value="Applicant.Interviewed" Label="Interviewed" Dense />
     <MudSelect T="ApplicantStatus" @bind-Value="Applicant.Status" Label="Status" Variant="Variant.Outlined" Margin="Margin.Dense">
         @foreach (var status in ApplicantDto.Statuses)
         {
@@ -15,10 +15,4 @@
 @code {
     [Parameter]
     public ApplicantDto Applicant { get; set; } = default!;
-
-    private void SetBirthDate(DateTime? date)
-    {
-        if (date is { } value)
-            Applicant.BirthDate = value;
-    }
 }
