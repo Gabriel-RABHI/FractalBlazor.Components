@@ -2,9 +2,11 @@
 
 @for (var i = 0; i < Rows; i++)
 {
+    // The child content runs after the loop: it must capture this row, not the loop variable.
+    var row = i;
     <MudPaper Outlined Elevation="0" Class="pa-4">
         <MudStack Row Spacing="2">
-            <MudText Typo="Typo.body2" Color="Color.Secondary">Row @i, generation @Generation</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary">Row @row, generation @Generation</MudText>
         </MudStack>
     </MudPaper>
 }

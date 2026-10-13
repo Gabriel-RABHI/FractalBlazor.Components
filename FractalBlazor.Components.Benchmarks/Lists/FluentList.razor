@@ -3,9 +3,11 @@
 
 @for (var i = 0; i < Rows; i++)
 {
+    // The child content runs after the loop: it must capture this row, not the loop variable.
+    var row = i;
     <FluentCard Appearance="CardAppearance.Outline">
         <FluentStack Orientation="Microsoft.FluentUI.AspNetCore.Components.Orientation.Horizontal" HorizontalGap="8px">
-            <FluentText Size="TextSize.Size200">Row @i, generation @Generation</FluentText>
+            <FluentText Size="TextSize.Size200">Row @row, generation @Generation</FluentText>
         </FluentStack>
     </FluentCard>
 }

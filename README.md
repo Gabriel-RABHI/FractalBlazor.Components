@@ -218,11 +218,12 @@ Rendu côté serveur de 1 000 lignes encadrées, puis de 1 000 éditeurs à cinq
 
 | Scénario | FractalBlazor | MudBlazor | Radzen | Fluent UI |
 | --- | ---: | ---: | ---: | ---: |
-| Lignes, premier rendu | 4,21 ms | 8,99 ms | 8,51 ms | 16,23 ms |
-| Lignes, re-rendu | 1,23 ms | 3,17 ms | 3,64 ms | 4,79 ms |
-| Éditeurs, premier rendu | 140 ms | 1 108 ms | 210 ms | 282 ms |
-| Éditeurs, re-rendu | 28 ms | 119 ms | 82 ms | 120 ms |
-| Éditeurs, HTML compressé (gzip) | 57 Ko | 173 Ko | 184 Ko | 131 Ko |
+| Lignes, premier rendu | 4,29 ms | 8,81 ms | 12,53 ms | 16,14 ms |
+| Lignes, re-rendu | 1,26 ms | 3,20 ms | 4,23 ms | 4,79 ms |
+| Éditeurs, premier rendu | 131,5 ms | 1 107,5 ms | 203,6 ms | 280,2 ms |
+| Éditeurs, re-rendu | 27,4 ms | 118,9 ms | 84,2 ms | 112,0 ms |
+| Éditeurs, HTML brut | 1 519 Ko | 5 955 Ko | 3 885 Ko | 1 850 Ko |
+| Éditeurs, HTML gzip | 60 Ko | 175 Ko | 175 Ko | 131 Ko |
 
 ## Développement
 

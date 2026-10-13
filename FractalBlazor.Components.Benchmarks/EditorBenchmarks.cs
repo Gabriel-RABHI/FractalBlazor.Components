@@ -1,14 +1,9 @@
 using BenchmarkDotNet.Attributes;
 using FractalBlazor.Components.Benchmarks.Editors;
-using FractalBlazor.Components.Forms;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.FluentUI.AspNetCore.Components;
-using Microsoft.JSInterop;
-using MudBlazor.Services;
-using Radzen;
 
 namespace FractalBlazor.Components.Benchmarks
 {
@@ -35,14 +30,7 @@ namespace FractalBlazor.Components.Benchmarks
         [GlobalSetup(Target = nameof(FirstRender))]
         public void Setup()
         {
-            var services = new ServiceCollection();
-            services.AddLogging();
-            services.AddSingleton<IJSRuntime, NoJSRuntime>();
-            services.AddFractalBlazor();
-            services.AddMudServices();
-            services.AddRadzenComponents();
-            services.AddFluentUIComponents();
-            _services = services.BuildServiceProvider();
+            _services = Scenarios.CreateServices();
             _applicants = ApplicantDto.Generate(Rows);
         }
 
@@ -80,13 +68,7 @@ namespace FractalBlazor.Components.Benchmarks
         private Task RenderListAsync() => _renderer.Dispatcher.InvokeAsync(() =>
         {
             var parameters = ParameterView.FromDictionary(new Dictionary<string, object?> { [nameof(EditorListBase.Applicants)] = _applicants });
-            return Library switch
-            {
-                Library.MudBlazor => _renderer.RenderComponentAsync<MudEditorList>(parameters),
-                Library.Radzen => _renderer.RenderComponentAsync<RadzenEditorList>(parameters),
-                Library.FluentUI => _renderer.RenderComponentAsync<FluentEditorList>(parameters),
-                _ => _renderer.RenderComponentAsync<FractalEditorList>(parameters)
-            };
+            return _renderer.RenderComponentAsync(Scenarios.Editors(Library), parameters);
         });
     }
 }

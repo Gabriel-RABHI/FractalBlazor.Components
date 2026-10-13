@@ -3,9 +3,11 @@
 
 @for (var i = 0; i < Rows; i++)
 {
+    // The child content runs after the loop: it must capture this row, not the loop variable.
+    var row = i;
     <RadzenCard Variant="Radzen.Variant.Outlined" class="rz-p-4">
         <RadzenStack Orientation="Radzen.Orientation.Horizontal" Gap="0.5rem">
-            <RadzenText TextStyle="TextStyle.Body2">Row @i, generation @Generation</RadzenText>
+            <RadzenText TextStyle="TextStyle.Body2">Row @row, generation @Generation</RadzenText>
         </RadzenStack>
     </RadzenCard>
 }

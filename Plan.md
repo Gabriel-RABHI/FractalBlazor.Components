@@ -71,7 +71,7 @@ Chaque changement est vérifié contre ces règles. Une étape qui en viole une 
 - [x] **4.1 Avertissements.** Supprimer explicitement BL0007 dans les bibliothèques (inhérent au DSL booléen), corriger les autres avertissements. Objectif : zéro avertissement dans les bibliothèques.
 - [x] **4.2 Dépendances.** Retirer SixLabors.ImageSharp de `Tools`. La version 3.2.0 reste vulnérable et exige une licence Six Labors pour les builds Release ; un lecteur PNG minimal fondé sur `ZLibStream` produit exactement la même palette.
 - [x] **4.3 JS regroupé.** Regrouper les fonctions JS sous l'objet global `FractalBlazor` et mettre à jour les appels d'interop.
-- [x] **4.4 Mesure.** Ajouter un projet BenchmarkDotNet qui compare le rendu de N `FbRow` à un équivalent fondé sur `ComponentBase` et à MudBlazor, et noter les résultats. La première mesure montrait FractalBlazor plus lent que `ComponentBase` : les chaînes `class` sont désormais mises en cache comme les styles.
+- [x] **4.4 Mesure.** Ajouter un projet BenchmarkDotNet qui compare le rendu de N `FbRow` à un équivalent fondé sur `ComponentBase` et à MudBlazor, et noter les résultats. Les chaînes `class` sont mises en cache comme les styles.
 - [x] **4.5 Publication.** README complet, README de Grid corrigé, licence renseignée, métadonnées NuGet (`Directory.Build.props`, version 0.1.0-preview, documentation XML), workflow CI (build sans avertissement, tests, paquets).
 
 ## Phase 5 — Éditeur de thème
@@ -108,7 +108,7 @@ Les bibliothèques génériques restent `Layout`, `Forms` et `Common` ; `Benchma
 - [x] **8.1 Bibliothèque FractalBlazor.WebSite.** Bibliothèque Razor (`SupportedPlatform browser`) qui reçoit les états de `FractalBlazor.Demo.States` (supprimé), les vues, l'éditeur de thème, les exemples et `ViewSelector`. Elle expose `AddFractalBlazorWebSite()`, le composant racine `WebSiteApplication` (mode de thème initial en paramètre), le cookie du thème (`ThemeCookie`) et ses ressources `fb-website.css` et `fb-website.js`.
 - [x] **8.2 FractalBlazor.WebSite.ServerSide.** `FractalBlazor.Components` est renommé. Sa page d'accueil lit le cookie pendant le rendu serveur et rend `WebSiteApplication` en `InteractiveServer`.
 - [x] **8.3 FractalBlazor.WebSite.ClientSide.** Application WebAssembly autonome qui référence `FractalBlazor.WebSite`. Le mode initial est lu dans le cookie par JS avant le premier rendu, et un script de `index.html` pose le `color-scheme` avant le chargement de Blazor.
-- [x] **8.4 Registre de vues en WebAssembly.** Mesuré dans l'hôte WebAssembly (Debug) : le premier parcours des assemblies chargées (48) prend environ 34 ms, plus 10 ms pour `FbViewSelector`. Le registre reste tel quel : ne parcourir que les assemblies qui référencent `FractalBlazor.Components.Common` ne ferait gagner que quelques dizaines de millisecondes. Une vue doit vivre dans une assembly déjà chargée quand son modèle est rendu pour la première fois : c'est le cas ici, états et vues partagent `FractalBlazor.WebSite`.
+- [x] **8.4 Registre de vues en WebAssembly.** Le registre parcourt les assemblies chargées au premier rendu d'un sélecteur, et reste tel quel. Une vue doit vivre dans une assembly déjà chargée quand son modèle est rendu pour la première fois : c'est le cas ici, états et vues partagent `FractalBlazor.WebSite`.
 - [x] **8.5 Documentation et outillage.** README (structure de la solution, lancement des deux hôtes), configurations de lancement, CI.
 
 ## Phase 9 — Le modèle d'état dans son propre projet
@@ -147,23 +147,29 @@ Les espacements (`Spacings`) et les rayons, ou courbures (`Corners`), sont des v
 
 ## Phase 14 — Classes atomiques
 
-Le HTML de 1 000 éditeurs pesait 3,9 Mo, dont 52 % de styles inline : 7 001 attributs pour 5 chaînes distinctes. La compression les efface presque sur le réseau, mais pas dans les lots de rendu d'Interactive Server, ni dans l'analyse du navigateur.
+Les styles inline des composants de mise en page répétaient les mêmes chaînes d'un élément à l'autre, dans le HTML comme dans les lots de rendu.
 
 - [x] **14.1 Atomes.** Chaque déclaration de mise en page issue d'une valeur énumérée (display, padding, marge, flex, rayon, direction, alignements, gutter…) devient une classe technique très courte, nommée d'après sa position dans la table `FbAtoms` : `fb-a` à `fb-z`, puis `fb-aa`… La table est ordonnée comme la feuille : une propriété suit le raccourci qu'elle surcharge. Deux côtés opposés égaux s'écrivent en un atome `padding-block` ou `padding-inline`.
 - [x] **14.2 Règles de base.** `.fb-row` et `.fb-stack` déclarent les valeurs de leur constructeur ; une rangée ou une pile n'ajoute que les atomes qui en diffèrent (une rangée par défaut n'a que `fb-row`). La section de la feuille est générée par `dotnet run --project FractalBlazor.Components.Tools -- atoms`, et un test vérifie qu'elle est à jour.
-- [x] **14.3 Cache.** La clé de chaque niveau réunit désormais tout l'état (style et classes) ; la chaîne `class` est mise en cache comme l'était le style, et les `Classes` libres s'ajoutent à la fin, composant par composant, sans priver le reste du cache. Le style inline ne porte plus que les valeurs libres, et n'est pas rendu quand il est vide. Le HTML de 1 000 éditeurs passe de 3 926 à 2 080 Ko, et l'allocation du premier rendu de 57,5 à 55,3 Mo. `FrozenDictionary` avec un verrou actif a été mesuré contre `ConcurrentDictionary` : 4 à 17 % plus lent en lecture, la clé étant hachée de la même façon ; le cache reste un `ConcurrentDictionary`.
+- [x] **14.3 Cache.** La clé de chaque niveau réunit désormais tout l'état (style et classes) ; la chaîne `class` est mise en cache comme l'était le style, et les `Classes` libres s'ajoutent à la fin, composant par composant, sans priver le reste du cache. Le style inline ne porte plus que les valeurs libres, et n'est pas rendu quand il est vide. Le cache reste un `ConcurrentDictionary`.
 - [x] **14.4 Vérification.** Les styles calculés de chaque élément du site (35 propriétés, dimensions comprises) sont identiques avant et après, page par page.
 
 ## Phase 15 — Classes nommées comme les drapeaux, icônes en CSS
 
 - [x] **15.1 Une classe par drapeau, du nom du drapeau.** `WBS`, `WBA`, `WBH` donnent `fb-wbs`, `fb-wba`, `fb-wbh` ; `WFL`, `WFM`, `WFS` donnent `fb-wfl`, `fb-wfm`, `fb-wfs` (au lieu de `fb-framed fb-framed-light`…) ; `WSL`, `WSM`, `WSS` donnent `fb-wsl`… sur les rangées, les piles et les grilles ; `EOutline` donne `fb-eoutline`, `WNTW` `fb-wntw`, `VO_XL` et `VU_XL` `fb-vo-xl` et `fb-vu-xl` ; `Subtle`, `Muted` et `Highlight` donnent `fb-subtle`, `fb-muted` et `fb-highlight` sur `FbText` et `FbIcon`. Les variables CSS gardent leur nom. La classe morte `fb-fg-default` est supprimée.
 - [x] **15.2 Icônes des composants en CSS.** La coche de `FbCheckbox`, le chevron de `FbSelect` et la coche de l'option choisie sont dessinés par la feuille de style (`mask` et `currentColor`) sur un élément vide, au lieu d'un SVG inline à chaque instance. `FbIcon` garde le SVG inline pour les icônes de l'utilisateur.
-- [x] **15.3 Vérification.** Styles calculés identiques sur onze écrans du site, liste ouverte comprise ; même boîte, même couleur et même opacité pour chaque icône. Le HTML de 1 000 éditeurs passe de 2 170 à 1 685 Ko et de 32 001 à 28 001 éléments.
+- [x] **15.3 Vérification.** Styles calculés identiques sur onze écrans du site, liste ouverte comprise ; même boîte, même couleur et même opacité pour chaque icône.
 
 ## Phase 16 — Variante portée par la racine du contrôle
 
 - [x] **16.1 Plus d'enveloppe.** Les champs, listes, cases, interrupteurs, onglets et boutons ne s'enveloppent plus dans une `div.fb-theme-scope`. Leur variante (`Variant`, ou `Disabled`) est posée sur leur élément racine : la classe `fb-variant` et les redirections dans son `style`. `:where(.fb-variant)` recalcule les couleurs sans spécificité, si bien que les règles du composant gardent la main. Passer à `Error` pendant la saisie ne change que deux attributs du même élément : le DOM et le focus restent en place.
 - [x] **16.2 Vérification.** Styles calculés identiques sur le site, enveloppes exclues. Seule différence : une case posée sur un fond Accent dessine sa coche avec ce fond, et non plus avec le fond Surface que l'enveloppe rétablissait. Le focus du champ « Nom » reste sur le même élément en passant d'`Error` à normal et inversement.
+
+## Phase 17 — Mesures vérifiables
+
+- [x] **17.1 Taille du HTML.** `dotnet run -c Release --project FractalBlazor.Components.Benchmarks -- html` rend chaque scénario comme les benchmarks et affiche la taille du HTML (brut, gzip, Brotli), son nombre d'éléments, et les appels JavaScript faits au rendu, au re-rendu et à la destruction. Les services et les composants de chaque scénario sont communs aux benchmarks et à cette commande.
+- [x] **17.2 FbDropDown n'appelle plus le script pour rien.** Il appelait `destroyDropdown` à chaque fermeture et à chaque destruction, même quand `initDropdown` n'avait jamais tourné : une liste jamais ouverte, ou prérendue, coûtait un appel JavaScript en quittant la page. Il ne détruit plus que ce qu'il a initialisé.
+- [x] **17.3 Documentation.** Les README ne présentent que des mesures relancées sur le code du commit qui les contient.
 
 ## Critères de fin
 

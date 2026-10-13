@@ -1,14 +1,9 @@
 using BenchmarkDotNet.Attributes;
-using FractalBlazor.Components.Benchmarks.Editors;
 using FractalBlazor.Components.Benchmarks.Lists;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.FluentUI.AspNetCore.Components;
-using Microsoft.JSInterop;
-using MudBlazor.Services;
-using Radzen;
 
 namespace FractalBlazor.Components.Benchmarks
 {
@@ -40,16 +35,7 @@ namespace FractalBlazor.Components.Benchmarks
         public int Rows { get; set; }
 
         [GlobalSetup(Target = nameof(FirstRender))]
-        public void Setup()
-        {
-            var services = new ServiceCollection();
-            services.AddLogging();
-            services.AddSingleton<IJSRuntime, NoJSRuntime>();
-            services.AddMudServices();
-            services.AddRadzenComponents();
-            services.AddFluentUIComponents();
-            _services = services.BuildServiceProvider();
-        }
+        public void Setup() => _services = Scenarios.CreateServices();
 
         /// <summary>
         /// The list is rendered once; each invocation of <see cref="Rerender"/> then renders
@@ -85,14 +71,7 @@ namespace FractalBlazor.Components.Benchmarks
         private Task RenderListAsync() => _renderer.Dispatcher.InvokeAsync(() =>
         {
             var parameters = ParameterView.FromDictionary(new Dictionary<string, object?> { [nameof(ListBase.Rows)] = Rows });
-            return Library switch
-            {
-                Library.FractalBlazor => _renderer.RenderComponentAsync<FractalList>(parameters),
-                Library.MudBlazor => _renderer.RenderComponentAsync<MudList>(parameters),
-                Library.Radzen => _renderer.RenderComponentAsync<RadzenList>(parameters),
-                Library.FluentUI => _renderer.RenderComponentAsync<FluentList>(parameters),
-                _ => _renderer.RenderComponentAsync<PlainList>(parameters)
-            };
+            return _renderer.RenderComponentAsync(Scenarios.List(Library), parameters);
         });
     }
 }
