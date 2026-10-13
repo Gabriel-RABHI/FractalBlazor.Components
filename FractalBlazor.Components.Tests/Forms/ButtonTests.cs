@@ -68,7 +68,8 @@ public sealed class ButtonTests : BunitContext
 
         Assert.True(cut.Find("button").HasAttribute("disabled"));
         Assert.DoesNotContain("onclick", cut.Markup);
-        Assert.Contains("var(--fb-disabled-bg-low-anchor)", cut.Find("div.fb-theme-scope").GetAttribute("style"));
+        Assert.Contains("fb-variant", cut.Find("button").ClassList);
+        Assert.Contains("var(--fb-disabled-bg-low-anchor)", cut.Find("button").GetAttribute("style"));
     }
 
     [Fact]
@@ -76,7 +77,9 @@ public sealed class ButtonTests : BunitContext
     {
         var cut = Render<FbButton>(p => p.Add(x => x.Variant, FbThemeVariants.Error));
 
-        Assert.Contains("var(--fb-error-bg-low-anchor)", cut.Find("div.fb-theme-scope").GetAttribute("style"));
+        Assert.Contains("fb-variant", cut.Find("button").ClassList);
+        Assert.Contains("var(--fb-error-bg-low-anchor)", cut.Find("button").GetAttribute("style"));
+        Assert.Empty(cut.FindAll(".fb-theme-scope"));
     }
 
     [Fact]

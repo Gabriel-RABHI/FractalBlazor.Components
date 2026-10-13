@@ -588,7 +588,7 @@ Les formules existantes en `oklab` restent statiques et relatives aux variables 
 
 `Subtle`, `Muted` et `Highlight` utilisent la même formule avec leur mix respectif.
 
-Ces formules doivent être déclarées à la fois sur `:root` et sur `.fb-theme-scope`. Un scope de variante redéfinit les variables actives sur son propre élément ; les variables calculées doivent donc être redéclarées sur ce même élément pour être réévaluées à partir de ces nouvelles valeurs, et non simplement héritées du parent.
+Ces formules doivent être déclarées à la fois sur `:root`, sur `.fb-theme-scope` et sur `:where(.fb-variant)` (voir « Variante d'un contrôle »). Un scope de variante redéfinit les variables actives sur son propre élément ; les variables calculées doivent donc être redéclarées sur ce même élément pour être réévaluées à partir de ces nouvelles valeurs, et non simplement héritées du parent.
 
 Les couleurs de frame vont de l’ncre basse des filets vers leur ancre haute, au mix temporaire Light/Medium/Strong :
 
@@ -790,6 +790,17 @@ Pour `Error`, le rendu est de la forme :
 Le rendu réel contient la redirection de tous les tokens de `LayoutColors` et `FormColors`. Il ne contient aucune valeur calculée en C# et aucune classe propre à `Error`.
 
 Le scope rétablit aussi `color: var(--fb-fg-default)`, si bien qu'un texte brut placé dans `Error` prend la couleur de la variante.
+
+#### Variante d'un contrôle
+
+Les contrôles (champs, listes, cases, interrupteurs, onglets, boutons) ne s'enveloppent pas dans un scope. Quand leur `Variant` ou `Disabled` le demande, leur élément racine porte lui-même la classe `fb-variant` et les mêmes redirections dans son `style` :
+
+```html
+<div class="fb-row … fb-control fb-field fb-variant"
+     style="--fb-bg-low-anchor:var(--fb-error-bg-low-anchor);…">
+```
+
+Les formules sont redéclarées sur `:where(.fb-variant)`, de spécificité nulle : les règles propres au composant (`fb-wba`, `fb-control`…) gardent la main, comme lorsqu'elles s'appliquaient à l'enfant d'un scope. Sans variante, l'élément n'a ni la classe ni le style, et le contrôle hérite de la variante de son parent. Passer à `Error` pendant la saisie ne change que deux attributs du même élément : le DOM, et le focus, restent en place.
 
 Un thème ou une branche inconnus lèvent une exception explicite dans `FbTheme`. Une variante inconnue lève une `KeyNotFoundException` quand un `FbThemeContext` est présent. Le contexte est absent quand un `FbTheme` statique entoure une page interactive : les valeurs en cascade ne franchissent pas la frontière de mode de rendu. La variante est alors acceptée telle quelle.
 

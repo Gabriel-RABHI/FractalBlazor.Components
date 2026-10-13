@@ -31,16 +31,17 @@ namespace FractalBlazor.Components.Forms.Components.Switchers
         protected override void BuildControl(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "label");
-            builder.AddAttribute(1, "class", $"fb-control fb-toggle {Classes}".TrimEnd());
-            builder.OpenElement(2, "input");
-            builder.AddAttribute(3, "type", "checkbox");
-            builder.AddAttribute(4, "class", InputClass);
-            builder.AddAttribute(5, "role", InputRole);
-            builder.AddAttribute(6, "checked", Value);
-            builder.AddAttribute(7, "disabled", Disabled);
-            builder.AddAttribute(8, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, HandleChangeAsync));
+            builder.AddAttribute(1, "class", RootClasses($"fb-control fb-toggle {Classes}".TrimEnd()));
+            builder.AddAttribute(2, "style", VariantStyle);
+            builder.OpenElement(3, "input");
+            builder.AddAttribute(4, "type", "checkbox");
+            builder.AddAttribute(5, "class", InputClass);
+            builder.AddAttribute(6, "role", InputRole);
+            builder.AddAttribute(7, "checked", Value);
+            builder.AddAttribute(8, "disabled", Disabled);
+            builder.AddAttribute(9, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, HandleChangeAsync));
             builder.CloseElement();
-            builder.AddContent(9, ChildContent);
+            builder.AddContent(10, ChildContent);
             builder.CloseElement();
         }
 

@@ -22,7 +22,6 @@ namespace FractalBlazor.Components.Forms.Components.Actions
     /// </remarks>
     public class FbButton : FbLayoutSurfaceComponentBase
     {
-        private readonly RenderFragment _button;
         private readonly RenderFragment _content;
 
         public FbButton()
@@ -34,7 +33,6 @@ namespace FractalBlazor.Components.Forms.Components.Actions
             PVM = true;
             PHL = true;
             Hover = true;
-            _button = BuildButton;
             _content = BuildContent;
         }
 
@@ -114,15 +112,19 @@ namespace FractalBlazor.Components.Forms.Components.Actions
             }
         }
 
+        /// <summary>
+        /// The button carries its variant itself: the variant class and the redirections of its
+        /// anchors, before its own inline style.
+        /// </summary>
         protected override void BuildRenderTree(RenderTreeBuilder builder)
-            => FbVariantScope.Build(builder, FbVariantScope.Effective(Variant, Disabled), ThemeContext, _button);
-
-        private void BuildButton(RenderTreeBuilder builder)
         {
+            var variantStyle = FbVariantScope.Style(FbVariantScope.Effective(Variant, Disabled), ThemeContext);
+            var style = AggregatedStyles;
+
             builder.OpenElement(0, "button");
             builder.AddAttribute(1, "type", Submit ? "submit" : "button");
-            builder.AddAttribute(2, "class", ButtonClasses);
-            builder.AddAttribute(3, "style", AggregatedStyles);
+            builder.AddAttribute(2, "class", FbVariantScope.WithClass(ButtonClasses, variantStyle));
+            builder.AddAttribute(3, "style", variantStyle is null ? style : variantStyle + style);
             builder.AddAttribute(4, "disabled", Disabled);
             builder.AddAttribute(5, "title", Title);
             builder.AddAttribute(6, "aria-label", Title);

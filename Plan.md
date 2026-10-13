@@ -160,6 +160,11 @@ Le HTML de 1 000 éditeurs pesait 3,9 Mo, dont 52 % de styles inline : 7 001 att
 - [x] **15.2 Icônes des composants en CSS.** La coche de `FbCheckbox`, le chevron de `FbSelect` et la coche de l'option choisie sont dessinés par la feuille de style (`mask` et `currentColor`) sur un élément vide, au lieu d'un SVG inline à chaque instance. `FbIcon` garde le SVG inline pour les icônes de l'utilisateur.
 - [x] **15.3 Vérification.** Styles calculés identiques sur onze écrans du site, liste ouverte comprise ; même boîte, même couleur et même opacité pour chaque icône. Le HTML de 1 000 éditeurs passe de 2 170 à 1 685 Ko et de 32 001 à 28 001 éléments.
 
+## Phase 16 — Variante portée par la racine du contrôle
+
+- [x] **16.1 Plus d'enveloppe.** Les champs, listes, cases, interrupteurs, onglets et boutons ne s'enveloppent plus dans une `div.fb-theme-scope`. Leur variante (`Variant`, ou `Disabled`) est posée sur leur élément racine : la classe `fb-variant` et les redirections dans son `style`. `:where(.fb-variant)` recalcule les couleurs sans spécificité, si bien que les règles du composant gardent la main. Passer à `Error` pendant la saisie ne change que deux attributs du même élément : le DOM et le focus restent en place.
+- [x] **16.2 Vérification.** Styles calculés identiques sur le site, enveloppes exclues. Seule différence : une case posée sur un fond Accent dessine sa coche avec ce fond, et non plus avec le fond Surface que l'enveloppe rétablissait. Le focus du champ « Nom » reste sur le même élément en passant d'`Error` à normal et inversement.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :

@@ -75,10 +75,11 @@ namespace FractalBlazor.Components.Forms.Components.Selectors
             builder.AddAttribute(2, nameof(FbDropDown.IsOpenChanged), EventCallback.Factory.Create<bool>(this, SetOpen));
             builder.AddAttribute(3, nameof(FbDropDown.AutoToggle), !Disabled);
             builder.AddAttribute(4, nameof(FbDropDown.Block), true);
-            builder.AddAttribute(5, nameof(FbDropDown.Classes), $"fb-control fb-select {Classes}".TrimEnd());
-            builder.AddAttribute(6, nameof(FbDropDown.DropDownClasses), "fb-select-zone");
-            builder.AddAttribute(7, nameof(FbDropDown.ChildContent), _anchor);
-            builder.AddAttribute(8, nameof(FbDropDown.DropDownContent), _zone);
+            builder.AddAttribute(5, nameof(FbDropDown.Classes), RootClasses($"fb-control fb-select {Classes}".TrimEnd()));
+            builder.AddAttribute(6, nameof(FbDropDown.Style), VariantStyle);
+            builder.AddAttribute(7, nameof(FbDropDown.DropDownClasses), "fb-select-zone");
+            builder.AddAttribute(8, nameof(FbDropDown.ChildContent), _anchor);
+            builder.AddAttribute(9, nameof(FbDropDown.DropDownContent), _zone);
             builder.CloseComponent();
         }
 

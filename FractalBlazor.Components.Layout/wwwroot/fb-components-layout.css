@@ -4,8 +4,11 @@
     --fb-outline-size: 1px;
 }
 
+/* A control that carries its own variant (fb-variant) recomputes the colors on its root
+   element, with no specificity, so that its own rules keep the upper hand. */
 :root,
-.fb-theme-scope {
+.fb-theme-scope,
+:where(.fb-variant) {
     --fb-current-bg-surface-mix: var(--fb-bg-surface-mix);
     --fb-current-bg-accent-offset: var(--fb-bg-accent-offset);
     --fb-current-bg-highlight-offset: var(--fb-bg-highlight-offset);

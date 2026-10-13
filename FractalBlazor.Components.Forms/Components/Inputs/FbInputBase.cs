@@ -15,21 +15,14 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
     /// which makes <c>@bind-Value</c> possible without cost when it is not used.
     /// </summary>
     /// <remarks>
-    /// The field always renders inside a neutral <c>div.fb-theme-scope</c>. It only redirects
-    /// the theme anchors when <see cref="Variant"/> or <see cref="Disabled"/> asks for it,
-    /// so a field without a variant inherits the variant of its parent, and switching to
-    /// <c>Error</c> while typing keeps the DOM, and the focus, in place.
+    /// When <see cref="Variant"/> or <see cref="Disabled"/> asks for it, the root element of the
+    /// control carries the variant itself (<see cref="RootClasses"/>, <see cref="VariantStyle"/>);
+    /// otherwise the field inherits the variant of its parent. Switching to <c>Error</c> while
+    /// typing only changes attributes of that element, so the DOM, and the focus, stay in place.
     /// </remarks>
     public abstract class FbInputBase<TValue, TAction> : FbComponentBase
         where TAction : IStateAction<TValue>
     {
-        private readonly RenderFragment _control;
-
-        protected FbInputBase()
-        {
-            _control = BuildControl;
-        }
-
         [CascadingParameter]
         public FbThemeContext? ThemeContext { get; set; }
 
@@ -92,11 +85,27 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
         }
 
         /// <summary>
-        /// Renders the control itself, inside the variant scope.
+        /// Redirections of the effective variant, to put in the <c>style</c> of the root element,
+        /// or <c>null</c> without a variant. Computed before each <see cref="BuildControl"/>.
+        /// </summary>
+        protected string? VariantStyle { get; private set; }
+
+        /// <summary>
+        /// Classes of the root element: <paramref name="classes"/>, plus the variant class when
+        /// the control carries a variant.
+        /// </summary>
+        protected string RootClasses(string classes) => FbVariantScope.WithClass(classes, VariantStyle);
+
+        /// <summary>
+        /// Renders the control, whose root element takes <see cref="RootClasses"/> and
+        /// <see cref="VariantStyle"/>.
         /// </summary>
         protected abstract void BuildControl(RenderTreeBuilder builder);
 
         protected sealed override void BuildRenderTree(RenderTreeBuilder builder)
-            => FbVariantScope.Build(builder, EffectiveVariant, ThemeContext, _control);
+        {
+            VariantStyle = FbVariantScope.Style(EffectiveVariant, ThemeContext);
+            BuildControl(builder);
+        }
     }
 }

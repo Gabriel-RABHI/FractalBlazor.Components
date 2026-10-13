@@ -71,7 +71,9 @@ public sealed class InputTextTests : BunitContext
             .Add(x => x.Disabled, true));
 
         Assert.True(cut.Find("input").HasAttribute("disabled"));
-        Assert.Contains("var(--fb-disabled-bg-low-anchor)", cut.Find("div.fb-theme-scope").GetAttribute("style"));
+        var root = cut.Find(".fb-field");
+        Assert.Contains("fb-variant", root.ClassList);
+        Assert.Contains("var(--fb-disabled-bg-low-anchor)", root.GetAttribute("style"));
 
         cut.Find("input").Change("Grace");
         Assert.Equal("Ada", state.Name);
@@ -82,19 +84,24 @@ public sealed class InputTextTests : BunitContext
     {
         var cut = Render<FbInputText<RenameAction>>();
 
-        Assert.False(cut.Find("div.fb-theme-scope").HasAttribute("style"));
+        var root = cut.Find(".fb-field");
+        Assert.DoesNotContain("fb-variant", root.ClassList);
+        Assert.False(root.HasAttribute("style"));
+        Assert.Empty(cut.FindAll(".fb-theme-scope"));
     }
 
     [Fact]
-    public void Switching_to_error_keeps_the_same_structure()
+    public void Switching_to_error_only_changes_the_root_attributes()
     {
         var cut = Render<FbInputText<RenameAction>>();
-        Assert.NotNull(cut.Find("div.fb-theme-scope input"));
+        var structure = cut.FindAll("*").Select(element => element.TagName).ToList();
 
         cut.Render(p => p.Add(x => x.Variant, FbThemeVariants.Error));
 
-        Assert.NotNull(cut.Find("div.fb-theme-scope input"));
-        Assert.Contains("var(--fb-error-bg-low-anchor)", cut.Find("div.fb-theme-scope").GetAttribute("style"));
+        Assert.Equal(structure, cut.FindAll("*").Select(element => element.TagName));
+        var root = cut.Find(".fb-field");
+        Assert.Contains("fb-variant", root.ClassList);
+        Assert.Contains("var(--fb-error-bg-low-anchor)", root.GetAttribute("style"));
     }
 
     [Fact]

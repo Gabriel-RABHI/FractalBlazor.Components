@@ -81,25 +81,26 @@ namespace FractalBlazor.Components.Forms.Components.Switchers
         protected override void BuildControl(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "label");
-            builder.AddAttribute(1, "class", CssClass);
+            builder.AddAttribute(1, "class", RootClasses(CssClass));
+            builder.AddAttribute(2, "style", VariantStyle);
 
-            builder.OpenElement(2, "input");
-            builder.AddAttribute(3, "type", "checkbox");
-            builder.AddAttribute(4, "class", InputClass);
-            builder.AddAttribute(5, "checked", Value);
-            builder.AddAttribute(6, "disabled", Disabled);
-            builder.AddAttribute(7, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, HandleChangeAsync));
+            builder.OpenElement(3, "input");
+            builder.AddAttribute(4, "type", "checkbox");
+            builder.AddAttribute(5, "class", InputClass);
+            builder.AddAttribute(6, "checked", Value);
+            builder.AddAttribute(7, "disabled", Disabled);
+            builder.AddAttribute(8, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, HandleChangeAsync));
             builder.CloseElement();
 
             // The box and its mark are drawn by the stylesheet.
-            builder.OpenElement(8, "span");
-            builder.AddAttribute(9, "class", "fb-check-box");
-            builder.AddAttribute(10, "aria-hidden", "true");
+            builder.OpenElement(9, "span");
+            builder.AddAttribute(10, "class", "fb-check-box");
+            builder.AddAttribute(11, "aria-hidden", "true");
             builder.CloseElement();
 
-            builder.OpenElement(15, "span");
-            builder.AddAttribute(16, "class", "fb-check-content");
-            builder.AddContent(17, ChildContent);
+            builder.OpenElement(12, "span");
+            builder.AddAttribute(13, "class", "fb-check-content");
+            builder.AddContent(14, ChildContent);
             builder.CloseElement();
 
             builder.CloseElement();

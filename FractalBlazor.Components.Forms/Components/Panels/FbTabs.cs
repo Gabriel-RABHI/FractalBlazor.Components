@@ -53,10 +53,11 @@ namespace FractalBlazor.Components.Forms.Components.Panels
         protected override void BuildControl(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "div");
-            builder.AddAttribute(1, "class", string.IsNullOrWhiteSpace(Classes) ? "fb-tabs" : "fb-tabs " + Classes);
-            builder.AddAttribute(2, "role", "tablist");
-            builder.AddAttribute(3, "data-fb-nav-keys", true);
-            builder.AddAttribute(4, "onkeydown", EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDownAsync));
+            builder.AddAttribute(1, "class", RootClasses(string.IsNullOrWhiteSpace(Classes) ? "fb-tabs" : "fb-tabs " + Classes));
+            builder.AddAttribute(2, "style", VariantStyle);
+            builder.AddAttribute(3, "role", "tablist");
+            builder.AddAttribute(4, "data-fb-nav-keys", true);
+            builder.AddAttribute(5, "onkeydown", EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDownAsync));
 
             var focusable = FocusableIndex;
             for (var index = 0; index < Items.Count; index++)
@@ -64,17 +65,17 @@ namespace FractalBlazor.Components.Forms.Components.Panels
                 var tab = index;
                 var selected = index == Value;
 
-                builder.OpenElement(5, "button");
+                builder.OpenElement(6, "button");
                 builder.SetKey(index);
-                builder.AddAttribute(6, "type", "button");
-                builder.AddAttribute(7, "role", "tab");
-                builder.AddAttribute(8, "class", selected ? "fb-tab fb-tab-selected" : "fb-tab");
-                builder.AddAttribute(9, "aria-selected", selected ? "true" : "false");
-                builder.AddAttribute(10, "tabindex", index == focusable ? "0" : "-1");
-                builder.AddAttribute(11, "disabled", Disabled);
-                builder.AddAttribute(12, "onclick", EventCallback.Factory.Create(this, () => CommitAsync(tab)));
-                builder.AddElementReferenceCapture(13, element => _tabs[tab] = element);
-                BuildLabel(builder, 14, Items[index]);
+                builder.AddAttribute(7, "type", "button");
+                builder.AddAttribute(8, "role", "tab");
+                builder.AddAttribute(9, "class", selected ? "fb-tab fb-tab-selected" : "fb-tab");
+                builder.AddAttribute(10, "aria-selected", selected ? "true" : "false");
+                builder.AddAttribute(11, "tabindex", index == focusable ? "0" : "-1");
+                builder.AddAttribute(12, "disabled", Disabled);
+                builder.AddAttribute(13, "onclick", EventCallback.Factory.Create(this, () => CommitAsync(tab)));
+                builder.AddElementReferenceCapture(14, element => _tabs[tab] = element);
+                BuildLabel(builder, 15, Items[index]);
                 builder.CloseElement();
             }
 

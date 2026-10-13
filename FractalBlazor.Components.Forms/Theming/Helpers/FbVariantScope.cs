@@ -1,35 +1,46 @@
 using FractalBlazor.Components.Forms.Theming.Constants;
 using FractalBlazor.Components.Forms.Theming.Registry;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
 
 namespace FractalBlazor.Components.Forms.Theming.Helpers;
 
 /// <summary>
-/// Neutral <c>div.fb-theme-scope</c> rendered around a control. It only redirects the theme
-/// anchors when a variant is given, so a control without a variant inherits the one of its
-/// parent, and switching variant keeps the DOM, and the focus, in place.
+/// Variant of a control, applied on its own root element: the <see cref="Class"/> class
+/// recomputes the theme colors there, and <see cref="Style"/> redirects the anchors. A control
+/// without a variant gets neither and inherits the variant of its parent; switching variant
+/// only changes two attributes of the same element, so the DOM, and the focus, stay in place.
 /// </summary>
 internal static class FbVariantScope
 {
+    /// <summary>
+    /// Class of a root element that carries its own variant, named after the <c>Variant</c>
+    /// parameter.
+    /// </summary>
+    public const string Class = "fb-variant";
+
     /// <summary>
     /// Variant applied to a control: its own, else <c>Disabled</c> when disabled, else none.
     /// </summary>
     public static string? Effective(string? variant, bool disabled)
         => !string.IsNullOrWhiteSpace(variant) ? variant : disabled ? FbThemeVariants.Disabled : null;
 
-    public static void Build(RenderTreeBuilder builder, string? variant, FbThemeContext? context, RenderFragment content)
+    /// <summary>
+    /// Redirections that apply <paramref name="variant"/> on an element, or <c>null</c> without
+    /// a variant. A variant unknown to the theme of <paramref name="context"/> throws.
+    /// </summary>
+    public static string? Style(string? variant, FbThemeContext? context)
     {
-        var normalized = variant is null ? null : FbThemeVariants.Normalize(variant);
-        if (normalized is not null)
-            context?.Theme.GetVariant(normalized);
+        if (variant is null)
+            return null;
 
-        builder.OpenRegion(0);
-        builder.OpenElement(0, "div");
-        builder.AddAttribute(1, "class", "fb-theme-scope");
-        builder.AddAttribute(2, "style", normalized is null ? null : FbThemeCssWriter.BuildVariantReferences(normalized));
-        builder.AddContent(3, content);
-        builder.CloseElement();
-        builder.CloseRegion();
+        var normalized = FbThemeVariants.Normalize(variant);
+        context?.Theme.GetVariant(normalized);
+        return FbThemeCssWriter.BuildVariantReferences(normalized);
     }
+
+    /// <summary>
+    /// <paramref name="classes"/> with <see cref="Class"/> when <paramref name="style"/> applies a
+    /// variant.
+    /// </summary>
+    public static string WithClass(string classes, string? style)
+        => style is null ? classes : classes + " " + Class;
 }
