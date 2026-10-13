@@ -1,0 +1,12 @@
+@* A link that leaves the application, as an icon alone: in the header of a wide screen. *@
+@attribute [ViewFor<ViewSelector>(typeof(ExternalLinkState), ViewSelector.Summary)]
+
+<a class="fb-site-link" href="@Item.Url" target="_blank" rel="noopener noreferrer"
+   title="@MenuIntents.Label(Item.Intent)" aria-label="@MenuIntents.Label(Item.Intent)">
+    <FbIcon Icon="@MenuIntents.Icon(Item.Intent)" M />
+</a>
+
+@code {
+    [Parameter]
+    public ExternalLinkState Item { get; set; } = default!;
+}

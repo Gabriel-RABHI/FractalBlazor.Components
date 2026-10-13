@@ -1,20 +1,25 @@
 @* The application shell. Each area is a state rendered by the view declared for its type:
    this view only lays them out, in a page anchor that fills the window. The layout follows
-   the screen state, which the width sensor keeps informed: under 1024 px the menu on the
-   left moves into a drawer opened from the header, and the header takes its compact view
-   (Summary). *@
+   the screen state, which the width sensor keeps informed. Under 1024 px the header takes
+   its compact view (Summary) and gains a second line: the button of the drawer that now
+   carries the menu on the left, and the trail of the open page. *@
 @attribute [ViewFor<ViewSelector>(typeof(RootState), ViewSelector.Viewer)]
 
 <FbPageAnchor>
     <FbWidthSensor TAction="ScreenState.SetWidth" Handler="Item.Screen" Value="Item.Screen.Width" />
     <FbStack>
-        <FbRow NoFlex MultiLine GM PL JVC WFL>
+        <FbStack NoFlex WFL WSL>
+            <FbRow NoFlex GM PHL PVM JVC>
+                <FbDynamicView TSelector="ViewSelector" Item="Item.Header" Selector="HeaderView" />
+            </FbRow>
             @if (Item.Screen.Compact)
             {
-                <FbDynamicView TSelector="ViewSelector" Item="Item.Navigation.Drawer" Selector="ViewSelector.Viewer" />
+                <FbRow NoFlex GS PHL PVS JVC>
+                    <FbDynamicView TSelector="ViewSelector" Item="Item.Navigation.Drawer" Selector="ViewSelector.Viewer" />
+                    <FbDynamicView TSelector="ViewSelector" Item="Item.Navigation.Content" Selector="ViewSelector.Summary" />
+                </FbRow>
             }
-            <FbDynamicView TSelector="ViewSelector" Item="Item.Header" Selector="HeaderView" />
-        </FbRow>
+        </FbStack>
         <FbRow JVSt>
             @if (!Item.Screen.Compact)
             {

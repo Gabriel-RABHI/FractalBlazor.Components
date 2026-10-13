@@ -2,9 +2,9 @@
    aligned on the left. It re-renders alone when its selection changes. *@
 @attribute [ViewFor<ViewSelector>(typeof(SectionState), ViewSelector.Viewer)]
 
-<FbButton Handler="Item" Action="@Select" Icon="@MenuIntents.Icon(Item.Intent)"
-          WBH="@Item.IsSelected" WBN="@(!Item.IsSelected)" WFN PVS PHM Style="justify-content:flex-start">
-    <FbText S Highlight="@Item.IsSelected" Muted="@(!Item.IsSelected)">@MenuIntents.Label(Item.Intent)</FbText>
+<FbButton Handler="Item" Action="@Select" WBH="@Item.IsSelected" WBN="@(!Item.IsSelected)" WFN PVS PHM
+          Style="justify-content:flex-start">
+    <FbText S NW Highlight="@Item.IsSelected" Muted="@(!Item.IsSelected)">@MenuIntents.Label(Item.Intent)</FbText>
 </FbButton>
 
 @code {

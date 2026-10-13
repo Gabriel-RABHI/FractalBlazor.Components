@@ -132,6 +132,19 @@ public sealed class ScreenTests
     }
 
     [Fact]
+    public void The_drawer_follows_the_menu_it_carries()
+    {
+        var drawer = CountNotifications(Drawer);
+
+        Section(MenuItemIntent.Compositions).Handle(new SelectableEntryState.Select());
+        Assert.False(Drawer.HasMenu);
+
+        Section(MenuItemIntent.Components).Handle(new SelectableEntryState.Select());
+        Assert.True(Drawer.HasMenu);
+        Assert.Equal(2, drawer());
+    }
+
+    [Fact]
     public void Widening_the_screen_closes_the_menus_it_no_longer_shows()
     {
         Resize(FbWidthClass.S);

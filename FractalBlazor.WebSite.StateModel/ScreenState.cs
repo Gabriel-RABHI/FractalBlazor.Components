@@ -79,16 +79,20 @@ namespace FractalBlazor.WebSite.StateModel
     }
 
     /// <summary>
-    /// The drawer that carries the menu on the left on a narrow screen.
+    /// The drawer that carries the menu on the left on a narrow screen. It notifies when
+    /// the menu changes too: its button only shows for a section that has a menu.
     /// </summary>
     public sealed class MenuDrawerState : PopupState
     {
         public MenuDrawerState(SideMenuState menu)
         {
             Menu = menu;
+            menu.OnStateChanged += NotifyStateChanged;
         }
 
         public SideMenuState Menu { get; }
+
+        public bool HasMenu => Menu.Entries.Count > 0;
     }
 
     /// <summary>

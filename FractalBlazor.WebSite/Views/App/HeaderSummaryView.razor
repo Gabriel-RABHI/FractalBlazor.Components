@@ -1,9 +1,9 @@
-@* The compact header, on a narrow screen: the name, then a menu that holds the sections
-   and the links. *@
+@* The compact header, under 1024 px: the name, then a menu that holds the sections and the
+   links. *@
 @attribute [ViewFor<ViewSelector>(typeof(HeaderState), ViewSelector.Summary)]
 
 <FbIcon Icon="@FbMaterialIcons.ViewQuilt" L Highlight />
-<FbText L B>@Item.Name</FbText>
+<FbText L B NW>@Item.Name</FbText>
 <FbRowSpacer />
 <FbDynamicView TSelector="ViewSelector" Item="Item.Menu" Selector="ViewSelector.Viewer" />
 

@@ -1,0 +1,26 @@
+@* The trail of the open page, on the second line of the compact header: its section, its
+   group, then the page itself, unless the section is the page. It re-renders when another
+   page opens. *@
+@attribute [ViewFor<ViewSelector>(typeof(ContentState), ViewSelector.Summary)]
+
+@if (Item.Link is { } link)
+{
+    <FbText M NW Muted="@(!IsSectionPage(link))">@MenuIntents.Label(link.Section.Intent)</FbText>
+    @if (link.Group is { } group)
+    {
+        <FbIcon Icon="@FbMaterialIcons.PlayArrow" S Subtle />
+        <FbText M NW Muted>@MenuIntents.Label(group.Intent)</FbText>
+    }
+    @if (!IsSectionPage(link))
+    {
+        <FbIcon Icon="@FbMaterialIcons.PlayArrow" S Subtle />
+        <FbText M NW>@MenuIntents.Label(link.Intent)</FbText>
+    }
+}
+
+@code {
+    [Parameter]
+    public ContentState Item { get; set; } = default!;
+
+    private static bool IsSectionPage(PageLinkState link) => ReferenceEquals(link, link.Section.Home);
+}
