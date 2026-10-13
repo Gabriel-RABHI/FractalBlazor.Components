@@ -1,5 +1,6 @@
 @* The header on a wide screen, inside the bar of the application view: the name on the
-   left; on the right, the sections of the top menu, then the links as icons. *@
+   left; on the right, the sections of the top menu, the flag assistant, then the links as
+   icons. *@
 @attribute [ViewFor<ViewSelector>(typeof(HeaderState), ViewSelector.Viewer)]
 
 <FbIcon Icon="@FbMaterialIcons.ViewQuilt" L Highlight />
@@ -9,6 +10,7 @@
 {
     <FbDynamicView @key="section" TSelector="ViewSelector" Item="section" Selector="ViewSelector.Viewer" />
 }
+<FbDynamicView TSelector="ViewSelector" Item="Item.Flags" Selector="ViewSelector.Viewer" />
 @foreach (var link in Item.Links)
 {
     <FbDynamicView @key="link" TSelector="ViewSelector" Item="link" Selector="ViewSelector.Summary" />

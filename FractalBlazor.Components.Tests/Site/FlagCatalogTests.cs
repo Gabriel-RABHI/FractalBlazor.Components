@@ -1,5 +1,7 @@
+using FractalBlazor.WebSite;
 using FractalBlazor.WebSite.Flags;
 using FractalBlazor.WebSite.StateModel;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FractalBlazor.Components.Tests.Site;
 
@@ -47,10 +49,32 @@ public sealed class FlagCatalogTests
     }
 
     [Fact]
+    public void Flags_keep_the_order_of_their_grammar_even_when_shared_by_two_families()
+    {
+        var sizes = Catalog.Flags
+            .Where(flag => flag.Components.Contains("FbText") && flag.Tokens[0].Category == "Size")
+            .Select(flag => flag.Name);
+
+        Assert.Equal(["XS", "S", "M", "L", "XL", "XXL"], sizes);
+        Assert.Contains("FbIcon", Flag("S", "FbText").Components);
+    }
+
+    [Fact]
     public void A_generic_component_is_named_as_in_the_markup()
     {
         Assert.Contains("FbCheckbox", Catalog.Components);
         Assert.DoesNotContain(Catalog.Components, component => component.Contains('`'));
+    }
+
+    [Fact]
+    public void The_site_registers_the_whole_catalog()
+    {
+        using var services = new ServiceCollection().AddFractalBlazorWebSite().BuildServiceProvider();
+
+        var catalog = services.GetRequiredService<IFlagCatalog>();
+
+        Assert.Equal(Catalog.Flags.Count, catalog.Flags.Count);
+        Assert.NotEmpty(catalog.Flags);
     }
 
     [Fact]

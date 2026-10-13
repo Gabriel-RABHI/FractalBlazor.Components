@@ -1,0 +1,129 @@
+@* The flag assistant: a button in the header and the wide drawer it opens on the right.
+   Every field, part and component only sends an action; the state computes the columns,
+   the matches and the components, and this view re-renders alone. *@
+@attribute [ViewFor<ViewSelector>(typeof(FlagAssistantState), ViewSelector.Viewer)]
+
+<FbButton Handler="Item" Action="@Toggle" Icon="@FbMaterialIcons.Flag" Title="Assistant des flags"
+          WBH="@Item.IsOpen" WBN="@(!Item.IsOpen)" WFN PVS PHS />
+<FbDrawer Modal Right IsOpen="@Item.IsOpen" IsOpenChanged="@SetOpen" Title="Assistant des flags" Size="76rem" WFL>
+    <FbStack NoFlex GL PL JVS>
+        <FbRow NoFlex GS JVC>
+            <FbIcon Icon="@FbMaterialIcons.Flag" M Highlight />
+            <FbText L B>Assistant des flags</FbText>
+            <FbRowSpacer />
+            <FbButton Handler="Item" Action="@Toggle" Icon="@FbMaterialIcons.Close" Title="Fermer" WBN WFN PVS PHS />
+        </FbRow>
+
+        @* The first flags that start with the field, read part by part. *@
+        <FbStack NoFlex GS JVS>
+            @foreach (var flag in Item.Matches.Take(MatchesShown))
+            {
+                <FbButton @key="flag" Handler="Item" Action="@(new FlagAssistantState.ChooseFlag(flag.Name))" WBN WFN PVS PHS
+                          Style="justify-content:flex-start">
+                    <FbText M B NW>@flag.Name</FbText>
+                    <FbText M Muted>: @flag.Meaning</FbText>
+                </FbButton>
+            }
+            @if (Item.Matches.Count > MatchesShown)
+            {
+                <FbStackItem PHS>
+                    <FbText S Subtle>… et @(Item.Matches.Count - MatchesShown) autres</FbText>
+                </FbStackItem>
+            }
+            else if (Item.Matches.Count == 0)
+            {
+                <FbStackItem PHS>
+                    <FbText S Muted>Aucun flag ne commence par « @Item.Query ».</FbText>
+                </FbStackItem>
+            }
+        </FbStack>
+
+        <FbStackSeparator WFL />
+
+        <FbRow NoFlex MultiLine GL JVS>
+            @* At least two columns wide: on a narrow screen, the components go below. *@
+            <FbRow MultiLine GL JVS MinWidth="min(32rem, 100%)">
+                @foreach (var column in Item.Columns)
+                {
+                    <FbStack @key="column.Index" NoFlex GS JVS Style="width:15rem">
+                        @if (column.Index == 0)
+                        {
+                            <FbText S B Subtle>Flag</FbText>
+                            <FbInputText TAction="FlagAssistantState.SetQuery" Handler="Item" Value="@Item.Query" Immediate
+                                         Placeholder="P__">
+                                <EndContent>
+                                    @if (Item.Query.Length > 0)
+                                    {
+                                        <FbButton Handler="Item" Action="@ClearQuery" Icon="@FbMaterialIcons.Close" Title="Effacer"
+                                                  WBN WFN PVS PHS />
+                                    }
+                                </EndContent>
+                            </FbInputText>
+                        }
+                        @foreach (var group in column.Groups)
+                        {
+                            <FbStackItem MTS>
+                                <FbText S B Subtle>@group.Category</FbText>
+                            </FbStackItem>
+                            @foreach (var choice in group.Choices)
+                            {
+                                <FbRow NoFlex GS JVC>
+                                    <FbRowItem Style="min-width:3.5rem;flex:none">
+                                        <FbText M B NW Muted="@(choice.State == FlagChoiceState.Other)">@choice.Token.Code</FbText>
+                                    </FbRowItem>
+                                    <FbButton Handler="Item" Action="@(new FlagAssistantState.ChooseToken(column.Index, choice.Token))"
+                                              Variant="@(choice.State == FlagChoiceState.Selected ? FbThemeVariants.Selected : null)"
+                                              WBH="@(choice.State == FlagChoiceState.Selected)"
+                                              WBA="@(choice.State == FlagChoiceState.Possible)"
+                                              WBN="@(choice.State == FlagChoiceState.Other)"
+                                              WFN PVS PHM Style="flex:1">
+                                        <FbText S NW Subtle="@(choice.State == FlagChoiceState.Other)">@choice.Token.Meaning</FbText>
+                                    </FbButton>
+                                </FbRow>
+                            }
+                        }
+                    </FbStack>
+                }
+            </FbRow>
+
+            <FbStack NoFlex GS JVS Style="width:18rem">
+                <FbText S B Subtle>Composants</FbText>
+                <FbInputText TAction="FlagAssistantState.SetComponentQuery" Handler="Item" Value="@Item.ComponentQuery" Immediate
+                             Placeholder="FbRow, Text…">
+                    <StartContent>
+                        <FbIcon Icon="@FbMaterialIcons.Search" Subtle />
+                    </StartContent>
+                    <EndContent>
+                        @if (Item.ComponentQuery.Length > 0)
+                        {
+                            <FbButton Handler="Item" Action="@ClearComponentQuery" Icon="@FbMaterialIcons.Close" Title="Effacer"
+                                      WBN WFN PVS PHS />
+                        }
+                    </EndContent>
+                </FbInputText>
+                <FbRow NoFlex MultiLine GS>
+                    @foreach (var component in Item.Components)
+                    {
+                        var chosen = string.Equals(component, Item.ComponentQuery.Trim(), StringComparison.OrdinalIgnoreCase);
+                        <FbButton @key="component" Handler="Item" Action="@(new FlagAssistantState.ChooseComponent(component))"
+                                  WBH="@chosen" WBN="@(!chosen)" WFM WRX PVS PHM>
+                            <FbText S NW Highlight="@chosen">@component</FbText>
+                        </FbButton>
+                    }
+                </FbRow>
+            </FbStack>
+        </FbRow>
+    </FbStack>
+</FbDrawer>
+
+@code {
+    private const int MatchesShown = 5;
+    private static readonly PopupState.Toggle Toggle = new();
+    private static readonly FlagAssistantState.ClearQuery ClearQuery = new();
+    private static readonly FlagAssistantState.ClearComponentQuery ClearComponentQuery = new();
+
+    [Parameter]
+    public FlagAssistantState Item { get; set; } = default!;
+
+    private void SetOpen(bool open) => Item.Handle(new PopupState.SetOpen(open));
+}

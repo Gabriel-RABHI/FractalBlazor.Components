@@ -17,13 +17,11 @@ public sealed class ComponentFlagCatalog : IFlagCatalog
     // Parameters that hold a state rather than a flag written in the markup.
     private static readonly HashSet<string> NotFlags = ["IsOpen"];
 
+    // A single constructor without parameters: dependency injection would otherwise pick one
+    // that takes a list of assemblies, and pass it an empty one.
     public ComponentFlagCatalog()
-        : this([typeof(FbRow).Assembly, typeof(FbButton).Assembly])
     {
-    }
-
-    public ComponentFlagCatalog(IEnumerable<Assembly> assemblies)
-    {
+        Assembly[] assemblies = [typeof(FbRow).Assembly, typeof(FbButton).Assembly];
         var grammar = FlagGrammar.Build();
         var flags = new Dictionary<(string Name, string Meaning), (FlagGrammar.Reading Reading, SortedSet<string> Components)>();
         var components = new SortedSet<string>(StringComparer.Ordinal);
@@ -41,9 +39,14 @@ public sealed class ComponentFlagCatalog : IFlagCatalog
                     reading = FlagGrammar.Unexplained(property.Name);
                 }
 
+                // The same name and meaning in two families (S, Small, for texts and icons) is
+                // one flag, ranked where the grammar first spells it.
                 var key = (property.Name, string.Join(" → ", reading.Tokens.Select(token => token.Meaning)));
                 if (!flags.TryGetValue(key, out var entry))
-                    flags[key] = entry = (reading, new SortedSet<string>(StringComparer.Ordinal));
+                    entry = (reading, new SortedSet<string>(StringComparer.Ordinal));
+                else if (reading.Order < entry.Reading.Order)
+                    entry = (reading, entry.Components);
+                flags[key] = entry;
                 entry.Components.Add(component);
                 components.Add(component);
             }
