@@ -171,6 +171,17 @@ Les styles inline des composants de mise en page répétaient les mêmes chaîne
 - [x] **17.2 FbDropDown n'appelle plus le script pour rien.** Il appelait `destroyDropdown` à chaque fermeture et à chaque destruction, même quand `initDropdown` n'avait jamais tourné : une liste jamais ouverte, ou prérendue, coûtait un appel JavaScript en quittant la page. Il ne détruit plus que ce qu'il a initialisé.
 - [x] **17.3 Documentation.** Les README ne présentent que des mesures relancées sur le code du commit qui les contient.
 
+## Phase 18 — Écran piloté par l'état
+
+La structure de l'écran ne dépend plus de media queries : un capteur envoie à l'état la catégorie de largeur de sa zone, l'état en déduit ses modes, et les vues choisissent leur mise en page avec des `if`. Les grilles restent en CSS pour l'intérieur des pages.
+
+- [x] **18.1 Catégories de largeur.** `FbWidthClass` (Common) : `Base` sous 512 px, puis `XS`, `S`, `M`, `L`, `XL`, `XXL` aux seuils des drapeaux `VO_*`/`VU_*` et de la grille. L'énumération est ordonnée : un état compare `Width < FbWidthClass.M`. `FbWidthClasses` porte les seuils, seule source pour le capteur.
+- [ ] **18.2 FbWidthSensor.** Composant de Components, basé sur une action comme les champs (`TAction`, `Handler`, `Value`, `ValueChanged`). Il observe la largeur de son parent (`ResizeObserver`) et n'appelle .NET que quand la catégorie change.
+- [ ] **18.3 FbDrawer.** Composant de Layout, contrôlé par `IsOpen` et `IsOpenChanged`, avec les drapeaux de surface. Côtés `Left`, `Right`, `Top`, `Bottom` ; trois modes : `Modal`, par-dessus tout l'écran, sur un `<dialog>` natif (focus piégé puis rendu, Échap, voile) ; `Inline`, à sa place dans la mise en page, qu'il pousse ; `InlineModal`, à sa place mais par-dessus sa zone, avec un voile limité à celle-ci.
+- [ ] **18.4 ScreenState.** L'état de l'écran du site : la catégorie de largeur, le menu en tiroir sous `M` (768 px), l'en-tête réduit sous `S` (640 px), et l'ouverture du tiroir, refermé quand une page s'ouvre.
+- [ ] **18.5 Le site.** L'application suit `ScreenState` : sous 768 px, le menu de gauche passe dans un tiroir ouvert par un bouton de l'en-tête ; sous 640 px, les sections de l'en-tête passent dans un sous-menu.
+- [ ] **18.6 Démonstration et documentation.** La page « Mise en page » montre les trois modes du tiroir ; README.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :
