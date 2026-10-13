@@ -199,6 +199,7 @@ Un outil du site, ouvert par un bouton icône de l'en-tête dans un tiroir large
 - [x] **20.2 L'état de l'assistant.** Le champ Flag, éditable ; les colonnes de lettres : la première liste les débuts possibles, chaque choix ouvre la colonne suivante, groupée par catégorie ; les flags qui commencent par la saisie, les cinq premiers en haut ; la colonne des composants, filtrée par nom ou partie de nom, qui restreint les flags. Choisir un composant le place dans la recherche.
 - [x] **20.3 La vue.** Un bouton dans l'en-tête, large comme compact ; un tiroir modal à droite, assez large, dont les colonnes passent à la ligne sur un écran étroit.
 - [x] **20.4 Documentation.** README.
+- [x] **20.5 Retours.** Les colonnes ne gardent que les parties qui mènent à un flag commençant par la saisie, sans tenir compte des majuscules : le reste est masqué, non grisé. Les premiers flags tiennent dans une grille de six cases à hauteur fixe ; leur nombre passe sur la ligne du titre. Un trait sépare les colonnes. Le bouton d'effacement reste en place, masqué quand le champ est vide : le champ ne change plus de hauteur.
 
 ## Critères de fin
 

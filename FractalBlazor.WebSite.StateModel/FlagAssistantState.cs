@@ -136,6 +136,10 @@ namespace FractalBlazor.WebSite.StateModel
                 : _catalog.Components.Where(component => component.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
+        /// <summary>
+        /// The columns keep only the parts that lead to a flag starting with the field: typed
+        /// <c>M</c>, the first column shows Margin, MultiLine… and hides the rest.
+        /// </summary>
         private List<FlagColumn> BuildColumns()
         {
             // When nothing matches, the parts the letters spell stay selected: the columns show
@@ -151,9 +155,14 @@ namespace FractalBlazor.WebSite.StateModel
                         continue;
 
                     var matches = IsMatch(flag);
-                    var state = Covers(flag, index + 1, Query) && (matches || !anyMatch) ? FlagChoiceState.Selected
-                        : matches ? FlagChoiceState.Possible
-                        : FlagChoiceState.Other;
+                    FlagChoiceState state;
+                    if (Covers(flag, index + 1, Query) && (matches || !anyMatch))
+                        state = FlagChoiceState.Selected;
+                    else if (matches)
+                        state = FlagChoiceState.Possible;
+                    else
+                        continue;
+
                     var token = flag.Tokens[index];
                     var at = choices.FindIndex(choice => choice.Token == token);
                     if (at < 0)
@@ -197,14 +206,13 @@ namespace FractalBlazor.WebSite.StateModel
     }
 
     /// <summary>
-    /// How a part relates to the flag field: spelled by it, still possible, or leading to
-    /// no flag that starts with it. Ordered from the strongest.
+    /// How a part relates to the flag field: spelled by it, or still possible after it.
+    /// Ordered from the strongest.
     /// </summary>
     public enum FlagChoiceState
     {
         Selected,
-        Possible,
-        Other
+        Possible
     }
 
     public sealed record FlagChoice(FlagToken Token, FlagChoiceState State);

@@ -11,77 +11,53 @@
             <FbIcon Icon="@FbMaterialIcons.Flag" M Highlight />
             <FbText L B>Assistant des flags</FbText>
             <FbRowSpacer />
+            <FbText S Muted NW>@Count</FbText>
             <FbButton Handler="Item" Action="@Toggle" Icon="@FbMaterialIcons.Close" Title="Fermer" WBN WFN PVS PHS />
         </FbRow>
 
-        @* The first flags that start with the field, read part by part. *@
-        <FbStack NoFlex GS JVS>
-            @foreach (var flag in Item.Matches.Take(MatchesShown))
+        @* The first flags that start with the field, one per cell. The grid always has the
+           same cells, empty or not: its height does not move while typing. *@
+        <FbGridContainer TemplateColumns="repeat(auto-fill, minmax(min(18rem, 100%), 1fr))" AutoRows="3.5rem" GS>
+            @for (var i = 0; i < MatchesShown; i++)
             {
-                <FbButton @key="flag" Handler="Item" Action="@(new FlagAssistantState.ChooseFlag(flag.Name))" WBN WFN PVS PHS
-                          Style="justify-content:flex-start">
-                    <FbText M B NW>@flag.Name</FbText>
-                    <FbText M Muted>: @flag.Meaning</FbText>
-                </FbButton>
+                var flag = i < Item.Matches.Count ? Item.Matches[i] : null;
+                <FbGridItem @key="i">
+                    @if (flag is not null)
+                    {
+                        <FbButton Handler="Item" Action="@(new FlagAssistantState.ChooseFlag(flag.Name))" WBA WFL WRM PHM
+                                  Style="flex-direction:column;align-items:flex-start;justify-content:center;gap:0;width:100%;height:100%">
+                            <FbText M B NW>@flag.Name</FbText>
+                            <FbText S Muted NW TR>@flag.Meaning</FbText>
+                        </FbButton>
+                    }
+                </FbGridItem>
             }
-            @if (Item.Matches.Count > MatchesShown)
-            {
-                <FbStackItem PHS>
-                    <FbText S Subtle>… et @(Item.Matches.Count - MatchesShown) autres</FbText>
-                </FbStackItem>
-            }
-            else if (Item.Matches.Count == 0)
-            {
-                <FbStackItem PHS>
-                    <FbText S Muted>Aucun flag ne commence par « @Item.Query ».</FbText>
-                </FbStackItem>
-            }
-        </FbStack>
+        </FbGridContainer>
 
         <FbStackSeparator WFL />
 
-        <FbRow NoFlex MultiLine GL JVS>
-            @* At least two columns wide: on a narrow screen, the components go below. *@
-            <FbRow MultiLine GL JVS MinWidth="min(32rem, 100%)">
-                @foreach (var column in Item.Columns)
+        @* Columns separated by a line; on a narrow screen, the components go below. *@
+        <FbRow NoFlex MultiLine GM JVS WSL>
+            <FbRow MultiLine GM JVS WSL PRM MinWidth="min(32rem, 100%)">
+                <FbStack NoFlex GS JVS PRM MinWidth="13rem">
+                    <FbText S B Subtle>Flag</FbText>
+                    <FbInputText TAction="FlagAssistantState.SetQuery" Handler="Item" Value="@Item.Query" Immediate
+                                 Placeholder="P__">
+                        <EndContent>
+                            @* Always there, hidden while empty: the field keeps its height. *@
+                            <FbButton Handler="Item" Action="@ClearQuery" Icon="@FbMaterialIcons.Close" Title="Effacer"
+                                      WBN WFN PVS PHS Style="@HiddenWhenEmpty(Item.Query)" />
+                        </EndContent>
+                    </FbInputText>
+                    @if (Item.Columns.Count > 0)
+                    {
+                        @Choices(Item.Columns[0])
+                    }
+                </FbStack>
+                @foreach (var column in Item.Columns.Skip(1))
                 {
-                    <FbStack @key="column.Index" NoFlex GS JVS Style="width:15rem">
-                        @if (column.Index == 0)
-                        {
-                            <FbText S B Subtle>Flag</FbText>
-                            <FbInputText TAction="FlagAssistantState.SetQuery" Handler="Item" Value="@Item.Query" Immediate
-                                         Placeholder="P__">
-                                <EndContent>
-                                    @if (Item.Query.Length > 0)
-                                    {
-                                        <FbButton Handler="Item" Action="@ClearQuery" Icon="@FbMaterialIcons.Close" Title="Effacer"
-                                                  WBN WFN PVS PHS />
-                                    }
-                                </EndContent>
-                            </FbInputText>
-                        }
-                        @foreach (var group in column.Groups)
-                        {
-                            <FbStackItem MTS>
-                                <FbText S B Subtle>@group.Category</FbText>
-                            </FbStackItem>
-                            @foreach (var choice in group.Choices)
-                            {
-                                <FbRow NoFlex GS JVC>
-                                    <FbRowItem Style="min-width:3.5rem;flex:none">
-                                        <FbText M B NW Muted="@(choice.State == FlagChoiceState.Other)">@choice.Token.Code</FbText>
-                                    </FbRowItem>
-                                    <FbButton Handler="Item" Action="@(new FlagAssistantState.ChooseToken(column.Index, choice.Token))"
-                                              Variant="@(choice.State == FlagChoiceState.Selected ? FbThemeVariants.Selected : null)"
-                                              WBH="@(choice.State == FlagChoiceState.Selected)"
-                                              WBA="@(choice.State == FlagChoiceState.Possible)"
-                                              WBN="@(choice.State == FlagChoiceState.Other)"
-                                              WFN PVS PHM Style="flex:1">
-                                        <FbText S NW Subtle="@(choice.State == FlagChoiceState.Other)">@choice.Token.Meaning</FbText>
-                                    </FbButton>
-                                </FbRow>
-                            }
-                        }
+                    <FbStack @key="column.Index" NoFlex GS JVS PRM MinWidth="11rem">
+                        @Choices(column)
                     </FbStack>
                 }
             </FbRow>
@@ -94,11 +70,8 @@
                         <FbIcon Icon="@FbMaterialIcons.Search" Subtle />
                     </StartContent>
                     <EndContent>
-                        @if (Item.ComponentQuery.Length > 0)
-                        {
-                            <FbButton Handler="Item" Action="@ClearComponentQuery" Icon="@FbMaterialIcons.Close" Title="Effacer"
-                                      WBN WFN PVS PHS />
-                        }
+                        <FbButton Handler="Item" Action="@ClearComponentQuery" Icon="@FbMaterialIcons.Close" Title="Effacer"
+                                  WBN WFN PVS PHS Style="@HiddenWhenEmpty(Item.ComponentQuery)" />
                     </EndContent>
                 </FbInputText>
                 <FbRow NoFlex MultiLine GS>
@@ -117,7 +90,7 @@
 </FbDrawer>
 
 @code {
-    private const int MatchesShown = 5;
+    private const int MatchesShown = 6;
     private static readonly PopupState.Toggle Toggle = new();
     private static readonly FlagAssistantState.ClearQuery ClearQuery = new();
     private static readonly FlagAssistantState.ClearComponentQuery ClearComponentQuery = new();
@@ -125,5 +98,40 @@
     [Parameter]
     public FlagAssistantState Item { get; set; } = default!;
 
+    private string Count => Item.Matches.Count switch
+    {
+        0 => $"Aucun flag ne commence par « {Item.Query} »",
+        1 => "1 flag",
+        var count => $"{count} flags"
+    };
+
     private void SetOpen(bool open) => Item.Handle(new PopupState.SetOpen(open));
+
+    private static string? HiddenWhenEmpty(string text) => text.Length > 0 ? null : "visibility:hidden";
+
+    /// <summary>
+    /// The parts of a column, under the title of their kind: the selected ones stand out.
+    /// </summary>
+    private RenderFragment Choices(FlagColumn column) => @<text>
+        @foreach (var group in column.Groups)
+        {
+            <FbStackItem MTS>
+                <FbText S B Subtle>@group.Category</FbText>
+            </FbStackItem>
+            @foreach (var choice in group.Choices)
+            {
+                var selected = choice.State == FlagChoiceState.Selected;
+                <FbRow NoFlex GS JVC>
+                    <FbRowItem Style="min-width:3.5rem;flex:none">
+                        <FbText M B NW>@choice.Token.Code</FbText>
+                    </FbRowItem>
+                    <FbButton Handler="Item" Action="@(new FlagAssistantState.ChooseToken(column.Index, choice.Token))"
+                              Variant="@(selected ? FbThemeVariants.Selected : null)" WBH="@selected" WBA="@(!selected)"
+                              WFN PVS PHM Style="flex:1">
+                        <FbText S NW>@choice.Token.Meaning</FbText>
+                    </FbButton>
+                </FbRow>
+            }
+        }
+    </text>;
 }

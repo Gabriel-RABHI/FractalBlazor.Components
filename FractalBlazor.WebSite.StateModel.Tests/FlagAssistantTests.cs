@@ -19,6 +19,9 @@ public sealed class FlagAssistantTests
     private FlagChoiceState State(int column, FlagToken token)
         => _assistant.Columns[column].Groups.SelectMany(group => group.Choices).Single(choice => choice.Token == token).State;
 
+    private bool Shows(int column, FlagToken token)
+        => _assistant.Columns[column].Groups.SelectMany(group => group.Choices).Any(choice => choice.Token == token);
+
     private IEnumerable<string> Categories(int column) => _assistant.Columns[column].Groups.Select(group => group.Category);
 
     [Fact]
@@ -38,7 +41,8 @@ public sealed class FlagAssistantTests
         Type("P");
 
         Assert.Equal(FlagChoiceState.Selected, State(0, Padding));
-        Assert.Equal(FlagChoiceState.Other, State(0, Margin));
+        Assert.False(Shows(0, Margin));
+        Assert.False(Shows(0, NoFlex));
         Assert.Equal(["Spacing", "Direction"], Categories(1));
         Assert.Equal(FlagChoiceState.Possible, State(1, Left));
         Assert.Equal(["PS", "PL", "PHS", "PLS", "PLL"], Matches);
@@ -61,9 +65,9 @@ public sealed class FlagAssistantTests
         Type("PLS");
 
         Assert.Equal(FlagChoiceState.Selected, State(1, Left));
-        Assert.Equal(FlagChoiceState.Other, State(1, Large));
+        Assert.False(Shows(1, Large));
         Assert.Equal(FlagChoiceState.Selected, State(2, Small));
-        Assert.Equal(FlagChoiceState.Other, State(2, Large));
+        Assert.False(Shows(2, Large));
         Assert.Equal(["PLS"], Matches);
     }
 
@@ -92,13 +96,27 @@ public sealed class FlagAssistantTests
     }
 
     [Fact]
+    public void A_letter_whatever_its_case_hides_the_parts_that_lead_elsewhere()
+    {
+        Type("m");
+
+        Assert.Equal(["Spacing", "Size"], Categories(0));
+        Assert.Equal(FlagChoiceState.Selected, State(0, Margin));
+        Assert.Equal(FlagChoiceState.Selected, State(0, Medium));
+        Assert.False(Shows(0, Padding));
+        Assert.False(Shows(0, Bold));
+        Assert.False(Shows(0, NoFlex));
+    }
+
+    [Fact]
     public void Letters_that_lead_nowhere_keep_their_path_selected()
     {
         Type("PQ");
 
         Assert.Empty(_assistant.Matches);
         Assert.Equal(FlagChoiceState.Selected, State(0, Padding));
-        Assert.Equal(FlagChoiceState.Other, State(1, Small));
+        Assert.False(Shows(0, Margin));
+        Assert.Single(_assistant.Columns);
     }
 
     [Fact]
