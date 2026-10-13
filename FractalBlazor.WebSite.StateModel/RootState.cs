@@ -16,7 +16,8 @@ namespace FractalBlazor.WebSite.StateModel
         public const string LinkedInUrl = "https://www.linkedin.com/";
 
         /// <param name="themeModeStore">Keeps the theme mode chosen in the footer.</param>
-        public RootState(IThemeModeStore themeModeStore)
+        /// <param name="flagCatalog">The flags of the libraries, for the flag assistant.</param>
+        public RootState(IThemeModeStore themeModeStore, IFlagCatalog flagCatalog)
         {
             Navigation = new NavigationState();
             Header = new HeaderState(
@@ -58,7 +59,8 @@ namespace FractalBlazor.WebSite.StateModel
                 [
                     new ExternalLinkState(MenuItemIntent.LinkedIn, LinkedInUrl),
                     new ExternalLinkState(MenuItemIntent.GitHub, RepositoryUrl)
-                ]);
+                ],
+                new FlagAssistantState(flagCatalog));
             Footer = new FooterState("Composants Blazor state-first", new ThemeSelectorState(themeModeStore));
             Screen = new ScreenState(Navigation.Drawer, Header.Menu);
 

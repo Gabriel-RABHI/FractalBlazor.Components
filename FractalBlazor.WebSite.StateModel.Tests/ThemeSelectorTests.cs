@@ -8,7 +8,7 @@ public sealed class ThemeSelectorTests
 
     public ThemeSelectorTests()
     {
-        _theme = new RootState(_store).Footer.Theme;
+        _theme = new RootState(_store, new TestFlagCatalog()).Footer.Theme;
         _theme.OnStateChanged += () => _notifications++;
     }
 

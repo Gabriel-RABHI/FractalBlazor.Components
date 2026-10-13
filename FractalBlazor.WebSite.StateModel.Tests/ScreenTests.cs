@@ -8,7 +8,7 @@ namespace FractalBlazor.WebSite.StateModel.Tests;
 /// </summary>
 public sealed class ScreenTests
 {
-    private readonly RootState _root = new(new RecordingThemeModeStore());
+    private readonly RootState _root = new(new RecordingThemeModeStore(), new TestFlagCatalog());
 
     private ScreenState Screen => _root.Screen;
 

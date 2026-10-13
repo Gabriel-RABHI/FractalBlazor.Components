@@ -7,7 +7,7 @@ namespace FractalBlazor.WebSite.StateModel.Tests;
 /// </summary>
 public sealed class NavigationTests
 {
-    private readonly RootState _root = new(new RecordingThemeModeStore());
+    private readonly RootState _root = new(new RecordingThemeModeStore(), new TestFlagCatalog());
 
     private SectionState Section(MenuItemIntent intent) => _root.Header.Sections.Single(s => s.Intent == intent);
 

@@ -1,19 +1,25 @@
 namespace FractalBlazor.WebSite.StateModel
 {
     /// <summary>
-    /// The header: the name of the application, the sections of the top menu, and links to
-    /// other sites. On a narrow screen, the sections and the links move into
-    /// <see cref="Menu"/>.
+    /// The header: the name of the application, the sections of the top menu, links to
+    /// other sites, and the flag assistant. On a narrow screen, the sections and the links
+    /// move into <see cref="Menu"/>.
     /// </summary>
     public sealed class HeaderState
     {
-        public HeaderState(string name, IReadOnlyList<SectionState> sections, IReadOnlyList<ExternalLinkState> links)
+        public HeaderState(string name, IReadOnlyList<SectionState> sections, IReadOnlyList<ExternalLinkState> links, FlagAssistantState flags)
         {
             Name = name;
             Sections = sections;
             Links = links;
+            Flags = flags;
             Menu = new HeaderMenuState(this);
         }
+
+        /// <summary>
+        /// The flag assistant, opened from its button in the header.
+        /// </summary>
+        public FlagAssistantState Flags { get; }
 
         public string Name { get; }
 
