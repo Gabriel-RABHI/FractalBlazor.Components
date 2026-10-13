@@ -15,7 +15,8 @@ public sealed partial class InteropConventionTests
         var script = File.ReadAllText(Path.Combine(root, "FractalBlazor.Components.Layout/wwwroot/fb-components-layout.js"));
         var defined = Definition().Matches(script).Select(m => m.Groups[1].Value).ToHashSet();
 
-        var called = Directory.EnumerateFiles(Path.Combine(root, "FractalBlazor.Components.Layout"), "*.cs", SearchOption.AllDirectories)
+        var called = new[] { "FractalBlazor.Components.Layout", "FractalBlazor.Components.Forms" }
+            .SelectMany(project => Directory.EnumerateFiles(Path.Combine(root, project), "*.cs", SearchOption.AllDirectories))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}"))
             .SelectMany(path => Call().Matches(File.ReadAllText(path)).Select(m => m.Groups[1].Value))
             .ToHashSet();

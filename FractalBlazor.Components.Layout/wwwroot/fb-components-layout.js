@@ -23,6 +23,37 @@ window.FractalBlazor = window.FractalBlazor || {};
         return { dispose: () => observer.disconnect() };
     };
 
+    //------ Width (FbWidthSensor) ------//
+
+    /**
+     * Reports to .NET the width category of the box that contains `element`, each time it
+     * changes, and only then. `thresholds` are the lower bounds, in pixels, of the categories
+     * above the first one. Returns a handle whose `dispose()` stops the observation.
+     */
+    fb.observeWidth = function (element, dotnet, thresholds) {
+        // A parent displayed as contents has no box: measure the first one above it.
+        let box = element.parentElement;
+        while (box && getComputedStyle(box).display === 'contents')
+            box = box.parentElement;
+        if (!box)
+            return { dispose: () => { } };
+
+        let category = -1;
+        const observer = new ResizeObserver(entries => {
+            const entry = entries[0];
+            const width = entry.borderBoxSize?.[0]?.inlineSize ?? entry.contentRect.width;
+            let next = 0;
+            while (next < thresholds.length && width >= thresholds[next])
+                next++;
+            if (next !== category) {
+                category = next;
+                dotnet.invokeMethodAsync('OnWidthClassChanged', category);
+            }
+        });
+        observer.observe(box);
+        return { dispose: () => observer.disconnect() };
+    };
+
     //------ Show when over (FbShowWhenOver, FbShowWhenOverPerformance) ------//
 
     const over = {

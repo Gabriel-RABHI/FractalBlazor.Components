@@ -68,6 +68,13 @@
 }
 
 /**********************************************************************************/
+/* WIDTH SENSOR */
+/* The sensor only gives the script a hold on its parent, which it measures. */
+.fb-width-sensor {
+    display: none;
+}
+
+/**********************************************************************************/
 /* TABS */
 /* A row of tabs that only selects an index. The labels are views (FbText…): redirecting
    --fb-fg-default colors them, muted at rest and highlighted when selected. */
