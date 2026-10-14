@@ -1,8 +1,8 @@
-@* The compact header, under 1024 px: the name, the flag assistant, then a menu that holds
-   the sections and the links. *@
+@* The compact header, under 1024 px: the logo and the name, the flag assistant, then a menu
+   that holds the sections and the links. *@
 @attribute [ViewFor<ViewSelector>(typeof(HeaderState), ViewSelector.Summary)]
 
-<FbIcon Icon="@FbMaterialIcons.ViewQuilt" L Highlight />
+<FbImage Src="@HeaderView.Logo" L />
 <FbText L B NW>@Item.Name</FbText>
 <FbRowSpacer />
 <FbDynamicView TSelector="ViewSelector" Item="Item.Flags" Selector="ViewSelector.Viewer" />

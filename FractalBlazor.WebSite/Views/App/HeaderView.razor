@@ -1,9 +1,9 @@
-@* The header on a wide screen, inside the bar of the application view: the name on the
-   left; on the right, the sections of the top menu, the flag assistant, then the links as
-   icons. *@
+@* The header on a wide screen, inside the bar of the application view: the logo and the
+   name on the left; on the right, the sections of the top menu, the flag assistant, then the
+   links as icons. The logo is decorative: the name beside it says the same. *@
 @attribute [ViewFor<ViewSelector>(typeof(HeaderState), ViewSelector.Viewer)]
 
-<FbIcon Icon="@FbMaterialIcons.ViewQuilt" L Highlight />
+<FbImage Src="@Logo" L />
 <FbText L B NW>@Item.Name</FbText>
 <FbRowSpacer />
 @foreach (var section in Item.Sections)
@@ -17,6 +17,11 @@
 }
 
 @code {
+    /// <summary>
+    /// The logo of the site, served from the static assets of this library.
+    /// </summary>
+    internal const string Logo = "_content/FractalBlazor.WebSite/images/logo-fractal-blazor-small-64.png";
+
     [Parameter]
     public HeaderState Item { get; set; } = default!;
 }

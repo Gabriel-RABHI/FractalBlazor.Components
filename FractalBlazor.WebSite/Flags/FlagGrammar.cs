@@ -45,6 +45,7 @@ internal sealed class FlagGrammar
             "FbRowItem", "FbStackItem", "FbRowSeparator", "FbStackSeparator", "FbGridContainer", "FbGridItem");
         grammar.Add(Text(), "FbText");
         grammar.Add(Icon(), "FbIcon");
+        grammar.Add(Sizes(), "FbImage");
         grammar.Add(Breaks(), "FbRowBreak", "FbStackBreak");
         grammar.Add(
             [
@@ -284,11 +285,16 @@ internal sealed class FlagGrammar
 
     private static Part[] Icon() =>
     [
+        .. Sizes(),
+        .. Colors()
+    ];
+
+    private static Part[] Sizes() =>
+    [
         Word("S", "Small", "Size"),
         Word("M", "Medium", "Size"),
         Word("L", "Large", "Size"),
-        Word("X", "Extra large", "Size"),
-        .. Colors()
+        Word("X", "Extra large", "Size")
     ];
 
     private static Part[] Colors() =>

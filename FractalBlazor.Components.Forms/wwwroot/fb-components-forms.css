@@ -407,6 +407,32 @@
     vertical-align: -0.5em;
 }
 
+/**********************************************************************************/
+/* IMAGES */
+/* Sized like the icons, by their height: the width follows the ratio of the image. */
+.fb-image {
+    display: inline-block;
+    flex: none;
+    width: auto;
+    height: 1.25em;
+    vertical-align: -0.25em;
+}
+
+.fb-image-s {
+    height: 1em;
+    vertical-align: -0.125em;
+}
+
+.fb-image-l {
+    height: 1.5em;
+    vertical-align: -0.375em;
+}
+
+.fb-image-x {
+    height: 2em;
+    vertical-align: -0.5em;
+}
+
 /* The text colors, sampled on the gradient of the active variant like the backgrounds and
    frames of the Layout stylesheet, and computed at the same places: the theme, a variant, a
    fill, a hovered element. A text sits at 100% - (1 - mix) * (100% - neutral): its mix, moved
