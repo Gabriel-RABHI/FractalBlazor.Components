@@ -1,5 +1,6 @@
 using FractalBlazor.Components.Forms.Theming.Model;
 using FractalBlazor.Components.Layout.Colors;
+using FractalBlazor.Components.Layout.Theming.Helpers;
 using FractalBlazor.Components.Layout.Theming.Model;
 
 namespace FractalBlazor.Components.Forms.Theming.Constants;
@@ -30,22 +31,10 @@ public static class FbThemeDefaults
             MasterTint = new FbThemeMasterTint
             {
                 ColorTint = FbThemeBaseColors.GetColor(FbThemeBaseColorsIndex.Sky),
-                TintMix = "0%"
+                TintMix = "5%"
             },
-            SurfaceMix = new FbThemeLayoutSurfaceMix
-            {
-                NeutralMix = "0%",
-                SurfaceOffset = "5%",
-                AccentOffset = "15%",
-                HighlightOffset = "45%",
-                HoverOffset = "10%"
-            },
-            BordersMix = new FbThemeLayoutBordersMix
-            {
-                LightMix = "5%",
-                MediumMix = "10%",
-                StrongMix = "15%"
-            },
+            SurfaceMix = FbLayoutThemeDefaults.Create().SurfaceMix,
+            BordersMix = FbLayoutThemeDefaults.Create().BordersMix,
             TextVariantMix = new FbThemeFormTextVariantMix
             {
                 SubtleHighMix = "40%",
@@ -56,18 +45,21 @@ public static class FbThemeDefaults
             Variants =
             [
                 Variant(FbThemeVariants.Default, FbThemeBaseColorsIndex.Zinc, light),
-                Variant(FbThemeVariants.Selected, FbThemeBaseColorsIndex.Blue, light),
-                Variant(FbThemeVariants.Error, FbThemeBaseColorsIndex.Rose, light),
-                Variant(FbThemeVariants.Warning, FbThemeBaseColorsIndex.Amber, light),
+                DarkVariant(FbThemeVariants.Selected, FbThemeBaseColorsIndex.Blue, light),
+                DarkVariant(FbThemeVariants.Error, FbThemeBaseColorsIndex.Red, light),
+                DarkVariant(FbThemeVariants.Warning, FbThemeBaseColorsIndex.Orange, light),
                 Variant(FbThemeVariants.Disabled, FbThemeBaseColorsIndex.Gray, light,
                     FbThemeBaseShadesIndex._950, FbThemeBaseShadesIndex._700, FbThemeBaseShadesIndex._500),
-                Variant(FbThemeVariants.Success, FbThemeBaseColorsIndex.Emerald, light),
-                Variant(FbThemeVariants.Info, FbThemeBaseColorsIndex.Sky, light)
+                DarkVariant(FbThemeVariants.Success, FbThemeBaseColorsIndex.Green, light),
+                DarkVariant(FbThemeVariants.Info, FbThemeBaseColorsIndex.Sky, light)
             ]
         };
 
     private static FbThemeColorVariant Variant(string name, FbThemeBaseColorsIndex color, bool light)
         => Variant(name, color, light, FbThemeBaseShadesIndex._950, FbThemeBaseShadesIndex._500, FbThemeBaseShadesIndex._50);
+
+    private static FbThemeColorVariant DarkVariant(string name, FbThemeBaseColorsIndex color, bool light)
+        => Variant(name, color, light, FbThemeBaseShadesIndex._990, FbThemeBaseShadesIndex._500, FbThemeBaseShadesIndex._50);
 
     /// <summary>
     /// A gradient from <paramref name="dark"/> to <paramref name="bright"/> in the dark branch,

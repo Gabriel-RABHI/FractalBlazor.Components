@@ -20,32 +20,32 @@
         <FbGridItem>
             <FbStack GM>
                 <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_checks[0]">
-                    <FbStack PM WFL WRM><FbText S>Par défaut : case à gauche, centrée</FbText></FbStack>
+                    <FbStack PM WFL WRM><FbText>Par défaut : case à gauche, centrée</FbText></FbStack>
                 </FbCheckbox>
                 <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_checks[1]" Mirror>
-                    <FbStack PM WFL WRM><FbText S>Mirror : case à droite</FbText></FbStack>
+                    <FbStack PM WFL WRM><FbText>Mirror : case à droite</FbText></FbStack>
                 </FbCheckbox>
                 <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_checks[2]" Circle>
-                    <FbStack PM WFL WRM><FbText S>Circle : case ronde</FbText></FbStack>
+                    <FbStack PM WFL WRM><FbText>Circle : case ronde</FbText></FbStack>
                 </FbCheckbox>
                 <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_checks[3]" Circle Top>
-                    <FbStack PM WFL WRM MinHeight="5rem" JVC><FbText S>Top : alignée en haut du contenu</FbText></FbStack>
+                    <FbStack PM WFL WRM MinHeight="5rem" JVC><FbText>Top : alignée en haut du contenu</FbText></FbStack>
                 </FbCheckbox>
             </FbStack>
         </FbGridItem>
         <FbGridItem>
             <FbStack GM>
                 <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_checks[4]" Circle Center>
-                    <FbStack PM WFL WRM MinHeight="5rem" JVC><FbText S>Center : centrée sur le contenu</FbText></FbStack>
+                    <FbStack PM WFL WRM MinHeight="5rem" JVC><FbText>Center : centrée sur le contenu</FbText></FbStack>
                 </FbCheckbox>
                 <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_checks[5]" Circle Bottom>
-                    <FbStack PM WFL WRM MinHeight="5rem" JVC><FbText S>Bottom : alignée en bas du contenu</FbText></FbStack>
+                    <FbStack PM WFL WRM MinHeight="5rem" JVC><FbText>Bottom : alignée en bas du contenu</FbText></FbStack>
                 </FbCheckbox>
                 <FbStackItem MM>
                     <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_checks[6]" Mirror Top>
                         <FbStack GS>
-                            <FbText S B>Conditions d’utilisation</FbText>
-                            <FbText S Muted>
+                            <FbText B>Conditions d’utilisation</FbText>
+                            <FbText Muted>
                                 Le contenu peut être n’importe quel balisage : un titre, un paragraphe,
                                 une carte… La case suit son alignement.
                             </FbText>

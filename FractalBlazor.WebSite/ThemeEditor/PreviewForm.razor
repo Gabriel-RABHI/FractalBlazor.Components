@@ -5,7 +5,7 @@
 <FbStack GL>
     <FbRowItem Style="width:18rem">
         <FbSelect TValue="string" TAction="FbSetValue<string>" Items="FbThemeVariants.Standard" @bind-Value="Model.FormVariant">
-            <StartContent><FbText S Subtle>Variante</FbText></StartContent>
+            <StartContent><FbText Subtle>Variante</FbText></StartContent>
         </FbSelect>
     </FbRowItem>
 
@@ -17,40 +17,38 @@
                     <StartContent><FbIcon Icon="@FbMaterialIcons.Person" Subtle /></StartContent>
                 </FbInputText>
                 <FbInputText TAction="FbSetValue<string>" @bind-Value="_email" Placeholder="adresse@exemple.fr">
-                    <StartContent><FbText S Subtle>Courriel</FbText></StartContent>
+                    <StartContent><FbText Subtle>Courriel</FbText></StartContent>
                 </FbInputText>
                 <FbRow GM>
                     <FbInputNumber TValue="int" TAction="FbSetValue<int>" @bind-Value="_seats" Min="1" Max="50">
-                        <StartContent><FbText S Subtle>Places</FbText></StartContent>
+                        <StartContent><FbText Subtle>Places</FbText></StartContent>
                     </FbInputNumber>
                     <FbInputDate TAction="FbSetValue<DateOnly?>" @bind-Value="_start">
-                        <StartContent><FbText S Subtle>Début</FbText></StartContent>
+                        <StartContent><FbText Subtle>Début</FbText></StartContent>
                     </FbInputDate>
                 </FbRow>
                 <FbSelect TValue="string" TAction="FbSetValue<string>" @bind-Value="_plan" Items="Plans">
-                    <StartContent><FbText S Subtle>Formule</FbText></StartContent>
+                    <StartContent><FbText Subtle>Formule</FbText></StartContent>
                 </FbSelect>
                 <FbInputRange TValue="int" TAction="FbSetValue<int>" @bind-Value="_budget" Min="0" Max="1000" Step="50" Immediate>
-                    <StartContent><FbText S Subtle>Budget</FbText></StartContent>
-                    <EndContent><FbText S>@_budget €</FbText></EndContent>
+                    <StartContent><FbText Subtle>Budget</FbText></StartContent>
+                    <EndContent><FbText>@_budget €</FbText></EndContent>
                 </FbInputRange>
                 <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_terms"><FbText S>J’accepte les conditions</FbText></FbCheckbox>
                 <FbSwitch TAction="FbSetValue<bool>" @bind-Value="_notifications"><FbText S>Notifications</FbText></FbSwitch>
                 <FbRow GS JHE>
-                    <FbButton WBN><FbText S>Annuler</FbText></FbButton>
-                    <FbTheme Branch="Dark" Scoped>
-                        <FbButton Variant="@FbThemeVariants.Selected" D="@(!_terms)"><FbText S>Envoyer</FbText></FbButton>
-                    </FbTheme>
+                    <FbButton WBN><FbText>Annuler</FbText></FbButton>
+                    <FbButton Variant="@FbThemeVariants.Selected" D="@(!_terms)"><FbText>Envoyer</FbText></FbButton>
                 </FbRow>
             </FbStack>
 
             <FbStack GS PL WBH WFL WRL MinWidth="14rem">
                 <FbText M B>Récapitulatif</FbText>
-                <FbRow GS JHS><FbText S Subtle>Nom</FbText><FbText S Highlight>@(_name.Length == 0 ? "—" : _name)</FbText></FbRow>
-                <FbRow GS JHS><FbText S Subtle>Courriel</FbText><FbText S>@(_email.Length == 0 ? "—" : _email)</FbText></FbRow>
-                <FbRow GS JHS><FbText S Subtle>Places</FbText><FbText S>@_seats</FbText></FbRow>
-                <FbRow GS JHS><FbText S Subtle>Formule</FbText><FbText S>@_plan</FbText></FbRow>
-                <FbRow GS JHS><FbText S Subtle>Budget</FbText><FbText S>@_budget €</FbText></FbRow>
+                <FbRow GS JHS><FbText Subtle>Nom</FbText><FbText S Highlight>@(_name.Length == 0 ? "—" : _name)</FbText></FbRow>
+                <FbRow GS JHS><FbText Subtle>Courriel</FbText><FbText S>@(_email.Length == 0 ? "—" : _email)</FbText></FbRow>
+                <FbRow GS JHS><FbText Subtle>Places</FbText><FbText S>@_seats</FbText></FbRow>
+                <FbRow GS JHS><FbText Subtle>Formule</FbText><FbText S>@_plan</FbText></FbRow>
+                <FbRow GS JHS><FbText Subtle>Budget</FbText><FbText S>@_budget €</FbText></FbRow>
                 <FbVariant Variant="@(_terms ? FbThemeVariants.Success : FbThemeVariants.Warning)">
                     <FbRow GS PS WBA WRM>
                         <FbIcon Icon="@(_terms ? FbMaterialIcons.CheckCircle : FbMaterialIcons.Info)" />

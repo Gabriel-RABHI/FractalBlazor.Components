@@ -25,31 +25,34 @@ public static class FbLayoutThemeDefaults
             {
                 LightMix = "5%",
                 MediumMix = "10%",
-                StrongMix = "15%"
+                StrongMix = "20%"
             },
             SurfaceMix = new FbThemeLayoutSurfaceMix
             {
                 NeutralMix = "0%",
-                SurfaceOffset = "5%",
-                AccentOffset = "15%",
-                HighlightOffset = "45%",
+                SurfaceOffset = "2%",
+                AccentOffset = "6%",
+                HighlightOffset = "35%",
                 HoverOffset = "10%"
             },
             Variants =
             [
                 Variant(FbLayoutThemeVariants.Default, FbThemeBaseColorsIndex.Zinc),
-                Variant(FbLayoutThemeVariants.Selected, FbThemeBaseColorsIndex.Blue),
-                Variant(FbLayoutThemeVariants.Error, FbThemeBaseColorsIndex.Rose),
-                Variant(FbLayoutThemeVariants.Warning, FbThemeBaseColorsIndex.Amber),
+                DarkVariant(FbLayoutThemeVariants.Selected, FbThemeBaseColorsIndex.Blue),
+                DarkVariant(FbLayoutThemeVariants.Error, FbThemeBaseColorsIndex.Red),
+                DarkVariant(FbLayoutThemeVariants.Warning, FbThemeBaseColorsIndex.Orange),
                 Variant(FbLayoutThemeVariants.Disabled, FbThemeBaseColorsIndex.Gray,
                     FbThemeBaseShadesIndex._950, FbThemeBaseShadesIndex._700, FbThemeBaseShadesIndex._500),
-                Variant(FbLayoutThemeVariants.Success, FbThemeBaseColorsIndex.Emerald),
-                Variant(FbLayoutThemeVariants.Info, FbThemeBaseColorsIndex.Sky)
+                DarkVariant(FbLayoutThemeVariants.Success, FbThemeBaseColorsIndex.Green),
+                DarkVariant(FbLayoutThemeVariants.Info, FbThemeBaseColorsIndex.Sky)
             ]
         };
 
     private static FbLayoutThemeVariant Variant(string name, FbThemeBaseColorsIndex color)
         => Variant(name, color, FbThemeBaseShadesIndex._950, FbThemeBaseShadesIndex._500, FbThemeBaseShadesIndex._50);
+
+    private static FbLayoutThemeVariant DarkVariant(string name, FbThemeBaseColorsIndex color)
+        => Variant(name, color, FbThemeBaseShadesIndex._990, FbThemeBaseShadesIndex._500, FbThemeBaseShadesIndex._50);
 
     private static FbLayoutThemeVariant Variant(string name, FbThemeBaseColorsIndex color,
         FbThemeBaseShadesIndex low, FbThemeBaseShadesIndex mid, FbThemeBaseShadesIndex high)

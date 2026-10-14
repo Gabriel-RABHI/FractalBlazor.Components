@@ -2,8 +2,10 @@
 @attribute [ViewFor<ViewSelector>(typeof(PageLinkState), ViewSelector.Viewer)]
 
 <FbButton Handler="Item" Action="@Select" Icon="@MenuIntents.Icon(Item.Intent)"
-          WBH="@Item.IsSelected" WBN="@(!Item.IsSelected)" WFN PVS PHM Style="justify-content:flex-start">
-    <FbText M Highlight="@Item.IsSelected" Muted="@(!Item.IsSelected)">@MenuIntents.Label(Item.Intent)</FbText>
+          WBA="@Item.IsSelected" WBN="@(!Item.IsSelected)" WFN PVS PHM Style="justify-content:flex-start">
+    <FbRow Hover>
+        <FbText M Highlight="@Item.IsSelected" Muted="@(!Item.IsSelected)">@MenuIntents.Label(Item.Intent)</FbText>
+    </FbRow>
 </FbButton>
 
 @code {

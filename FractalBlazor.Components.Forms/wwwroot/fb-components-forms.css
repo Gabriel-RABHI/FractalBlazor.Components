@@ -194,10 +194,10 @@
     cursor: pointer;
 }
 
-.fb-select-option:hover,
-.fb-select-option-active {
-    background-color: var(--fb-bg-highlight);
-}
+    .fb-select-option:hover,
+    .fb-select-option-active {
+        background-color: var(--fb-bg-accent);
+    }
 
 /**********************************************************************************/
 /* BUTTON */

@@ -8,17 +8,17 @@
         <FbRowItem Style="width:16rem">
             <FbSelect TValue="DrawerMode" TAction="DrawerDemoState.SetMode" Handler="Item" Value="@Item.Mode"
                       Items="DrawerDemoState.Modes">
-                <StartContent><FbText S Subtle>Mode</FbText></StartContent>
+                <StartContent><FbText Subtle>Mode</FbText></StartContent>
             </FbSelect>
         </FbRowItem>
         <FbRowItem Style="width:11rem">
             <FbSelect TValue="DrawerSide" TAction="DrawerDemoState.SetSide" Handler="Item" Value="@Item.Side"
                       Items="DrawerDemoState.Sides">
-                <StartContent><FbText S Subtle>Côté</FbText></StartContent>
+                <StartContent><FbText Subtle>Côté</FbText></StartContent>
             </FbSelect>
         </FbRowItem>
         <FbButton Handler="Item" Action="@Toggle" Icon="@(Item.IsOpen ? FbMaterialIcons.MenuOpen : FbMaterialIcons.Menu)" PVS PHM>
-            <FbText S>@(Item.IsOpen ? "Fermer" : "Ouvrir")</FbText>
+            <FbText>@(Item.IsOpen ? "Fermer" : "Ouvrir")</FbText>
         </FbButton>
     </FbRow>
 
