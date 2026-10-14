@@ -38,11 +38,11 @@
 
         @* Columns separated by a line; on a narrow screen, the components go below. *@
         <FbRow NoFlex MultiLine GM JVS WSL>
-            <FbRow MultiLine GM JVS WSL PRM MinWidth="min(32rem, 100%)">
+            <FbRow MultiLine GM JVS PRM MinWidth="min(32rem, 100%)">
                 <FbStack NoFlex GS JVS PRM MinWidth="13rem">
                     <FbText S B Subtle>Flag</FbText>
                     <FbInputText TAction="FlagAssistantState.SetQuery" Handler="Item" Value="@Item.Query" Immediate
-                                 Placeholder="P__">
+                                 Placeholder="PVS">
                         <EndContent>
                             @* Always there, hidden while empty: the field keeps its height. *@
                             <FbButton Handler="Item" Action="@ClearQuery" Icon="@FbMaterialIcons.Close" Title="Effacer"
@@ -56,7 +56,7 @@
                 </FbStack>
                 @foreach (var column in Item.Columns.Skip(1))
                 {
-                    <FbStack @key="column.Index" NoFlex GS JVS PRM MinWidth="11rem">
+                    <FbStack @key="column.Index" NoFlex GS JVS PRM MinWidth="11rem" WBA WFM PM WRM>
                         @Choices(column)
                     </FbStack>
                 }
@@ -90,7 +90,7 @@
 </FbDrawer>
 
 @code {
-    private const int MatchesShown = 6;
+    private const int MatchesShown = 2;
     private static readonly PopupState.Toggle Toggle = new();
     private static readonly FlagAssistantState.ClearQuery ClearQuery = new();
     private static readonly FlagAssistantState.ClearComponentQuery ClearComponentQuery = new();
@@ -115,7 +115,7 @@
     private RenderFragment Choices(FlagColumn column) => @<text>
         @foreach (var group in column.Groups)
         {
-            <FbStackItem MTS>
+            <FbStackItem MVM>
                 <FbText S B Subtle>@group.Category</FbText>
             </FbStackItem>
             @foreach (var choice in group.Choices)
@@ -127,7 +127,7 @@
                     </FbRowItem>
                     <FbButton Handler="Item" Action="@(new FlagAssistantState.ChooseToken(column.Index, choice.Token))"
                               Variant="@(selected ? FbThemeVariants.Selected : null)" WBH="@selected" WBA="@(!selected)"
-                              WFN PVS PHM Style="flex:1">
+                              WFN PVS PHM Style="flex:1" WFM>
                         <FbText S NW>@choice.Token.Meaning</FbText>
                     </FbButton>
                 </FbRow>

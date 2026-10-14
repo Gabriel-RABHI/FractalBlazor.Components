@@ -3,8 +3,8 @@
 @attribute [ViewFor<ViewSelector>(typeof(MenuGroupState), ViewSelector.Viewer)]
 
 <FbStack NoFlex GS JVS>
-    <FbStackItem PHM MTS>
-        <FbText XS B Subtle>@MenuIntents.Label(Item.Intent)</FbText>
+    <FbStackItem PHM PVL>
+        <FbText S B Subtle>@MenuIntents.Label(Item.Intent)</FbText>
     </FbStackItem>
     @foreach (var page in Item.Pages)
     {

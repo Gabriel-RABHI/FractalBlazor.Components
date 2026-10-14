@@ -24,4 +24,8 @@
     <ProjectReference Include="..\FractalBlazor.WebSite.StateModel\FractalBlazor.WebSite.StateModel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Samples\" />
+  </ItemGroup>
+
 </Project>

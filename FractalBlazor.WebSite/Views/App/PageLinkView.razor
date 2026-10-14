@@ -3,7 +3,7 @@
 
 <FbButton Handler="Item" Action="@Select" Icon="@MenuIntents.Icon(Item.Intent)"
           WBH="@Item.IsSelected" WBN="@(!Item.IsSelected)" WFN PVS PHM Style="justify-content:flex-start">
-    <FbText S Highlight="@Item.IsSelected" Muted="@(!Item.IsSelected)">@MenuIntents.Label(Item.Intent)</FbText>
+    <FbText M Highlight="@Item.IsSelected" Muted="@(!Item.IsSelected)">@MenuIntents.Label(Item.Intent)</FbText>
 </FbButton>
 
 @code {
