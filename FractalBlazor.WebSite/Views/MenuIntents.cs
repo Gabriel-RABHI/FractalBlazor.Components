@@ -26,9 +26,18 @@ namespace FractalBlazor.WebSite.Views
             MenuItemIntent.DropDown => FbMaterialIcons.ArrowDropDownCircle,
             MenuItemIntent.Updatable => FbMaterialIcons.Sync,
             MenuItemIntent.Templates => FbMaterialIcons.Dashboard,
-            MenuItemIntent.GitHub => FbMaterialIcons.Code,
-            MenuItemIntent.LinkedIn => FbMaterialIcons.Work,
             _ => FbMaterialIcons.Circle
+        };
+
+        /// <summary>
+        /// The image that stands for an intent instead of an icon, the logo of a brand, or
+        /// <c>null</c>.
+        /// </summary>
+        public static string? Image(MenuItemIntent intent) => intent switch
+        {
+            MenuItemIntent.GitHub => SiteImages.GitHub,
+            MenuItemIntent.LinkedIn => SiteImages.LinkedIn,
+            _ => null
         };
     }
 }

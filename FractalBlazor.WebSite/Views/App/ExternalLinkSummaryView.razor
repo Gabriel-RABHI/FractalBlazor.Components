@@ -3,7 +3,14 @@
 
 <a class="fb-site-link" href="@Item.Url" target="_blank" rel="noopener noreferrer"
    title="@MenuIntents.Label(Item.Intent)" aria-label="@MenuIntents.Label(Item.Intent)">
-    <FbIcon Icon="@MenuIntents.Icon(Item.Intent)" M />
+    @if (MenuIntents.Image(Item.Intent) is { } image)
+    {
+        <FbIconImage Src="@image" M />
+    }
+    else
+    {
+        <FbIcon Icon="@MenuIntents.Icon(Item.Intent)" M />
+    }
 </a>
 
 @code {

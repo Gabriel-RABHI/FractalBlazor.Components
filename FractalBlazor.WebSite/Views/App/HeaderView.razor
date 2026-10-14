@@ -3,7 +3,7 @@
    links as icons. The logo is decorative: the name beside it says the same. *@
 @attribute [ViewFor<ViewSelector>(typeof(HeaderState), ViewSelector.Viewer)]
 
-<FbIconImage Src="@Logo" L />
+<FbIconImage Src="@SiteImages.Logo" L />
 <FbText L B NW>@Item.Name</FbText>
 <FbRowSpacer />
 @foreach (var section in Item.Sections)
@@ -17,11 +17,6 @@
 }
 
 @code {
-    /// <summary>
-    /// The logo of the site, served from the static assets of this library.
-    /// </summary>
-    internal const string Logo = "_content/FractalBlazor.WebSite/images/logo-fractal-blazor-small-64.png";
-
     [Parameter]
     public HeaderState Item { get; set; } = default!;
 }

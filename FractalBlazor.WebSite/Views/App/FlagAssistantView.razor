@@ -3,12 +3,14 @@
    the matches and the components, and this view re-renders alone. *@
 @attribute [ViewFor<ViewSelector>(typeof(FlagAssistantState), ViewSelector.Viewer)]
 
-<FbButton Handler="Item" Action="@Toggle" Icon="@FbMaterialIcons.Flag" Title="Assistant des flags"
-          WBH="@Item.IsOpen" WBN="@(!Item.IsOpen)" WFN PVS PHS />
+<FbButton Handler="Item" Action="@Toggle" Title="Assistant des flags"
+          WBH="@Item.IsOpen" WBN="@(!Item.IsOpen)" WFN PVS PHS>
+    <FbIconImage Src="@SiteImages.Tool" />
+</FbButton>
 <FbDrawer Modal Right IsOpen="@Item.IsOpen" IsOpenChanged="@SetOpen" Title="Assistant des flags" Size="76rem" WFL>
     <FbStack NoFlex GL PL JVS>
         <FbRow NoFlex GS JVC>
-            <FbIcon Icon="@FbMaterialIcons.Flag" M Highlight />
+            <FbIconImage Src="@SiteImages.Tool" M />
             <FbText L B>Assistant des flags</FbText>
             <FbRowSpacer />
             <FbText S Muted NW>@Count</FbText>

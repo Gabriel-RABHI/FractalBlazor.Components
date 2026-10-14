@@ -1,7 +1,14 @@
 @attribute [ViewFor<ViewSelector>(typeof(ExternalLinkState), ViewSelector.Viewer)]
 
 <a class="fb-site-link" href="@Item.Url" target="_blank" rel="noopener noreferrer">
-    <FbIcon Icon="@MenuIntents.Icon(Item.Intent)" />
+    @if (MenuIntents.Image(Item.Intent) is { } image)
+    {
+        <FbIconImage Src="@image" />
+    }
+    else
+    {
+        <FbIcon Icon="@MenuIntents.Icon(Item.Intent)" />
+    }
     <span>@MenuIntents.Label(Item.Intent)</span>
 </a>
 
