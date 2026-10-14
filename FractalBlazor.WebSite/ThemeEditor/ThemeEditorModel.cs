@@ -11,9 +11,9 @@ namespace FractalBlazor.WebSite.ThemeEditor
 {
     /// <summary>
     /// Values edited from the default theme: the spacings, corners and typography of the
-    /// theme, and the mixes and anchors of each branch. Every branch keeps its own values:
-    /// switching from Dark to Light and back loses nothing, and <see cref="Setup"/> declares
-    /// every branch that was opened. Every change bumps <see cref="Version"/>;
+    /// theme, and the mixes, master tint and anchors of each branch. Every branch keeps its
+    /// own values: switching from Dark to Light and back loses nothing, and
+    /// <see cref="Setup"/> declares every branch that was opened. Every change bumps <see cref="Version"/>;
     /// <see cref="Setup"/> is rebuilt only then, so the preview theme is resolved again only
     /// when something was really edited.
     /// </summary>
@@ -80,6 +80,10 @@ namespace FractalBlazor.WebSite.ThemeEditor
         public double TextMuted { get => Current.TextMuted; set => Set(ref Current.TextMuted, value); }
         public double TextDefault { get => Current.TextDefault; set => Set(ref Current.TextDefault, value); }
         public double TextHighlight { get => Current.TextHighlight; set => Set(ref Current.TextHighlight, value); }
+
+        // -------- Master tint of the edited branch: the color every anchor leans toward, and how far
+        public string TintColor { get => Current.TintColor; set => SetColor(ref Current.TintColor, value); }
+        public double TintMix { get => Current.TintMix; set => Set(ref Current.TintMix, value); }
 
         // -------- Spacings and corners, in rem: values of the theme, shared by its branches
         public double SpaceS { get => _spaceS; set => Set(ref _spaceS, value); }
@@ -337,6 +341,9 @@ namespace FractalBlazor.WebSite.ThemeEditor
             var original = values.Original;
 
             var branch = new StringBuilder();
+            AppendGroup(branch, BranchIndent, "MasterTint", "FbThemeMasterTint",
+                Value("ColorTint", values.TintColor, original.MasterTint.ColorTint?.ToLowerInvariant()),
+                MixValue("TintMix", values.TintMix, original.MasterTint.TintMix));
             AppendGroup(branch, BranchIndent, "SurfaceMix", "FbThemeLayoutSurfaceMix",
                 MixValue("SurfaceMix", values.SurfaceMix, original.SurfaceMix.SurfaceMix),
                 MixValue("AccentOffset", values.AccentOffset, original.SurfaceMix.AccentOffset),
@@ -417,6 +424,11 @@ namespace FractalBlazor.WebSite.ThemeEditor
 
         private static FbThemeBranch BuildBranch(string name, BranchValues values) => new(name)
         {
+            MasterTint = new FbThemeMasterTint
+            {
+                ColorTint = values.TintColor,
+                TintMix = Css(values.TintMix)
+            },
             SurfaceMix = new FbThemeLayoutSurfaceMix
             {
                 SurfaceMix = Css(values.SurfaceMix),
@@ -458,11 +470,14 @@ namespace FractalBlazor.WebSite.ThemeEditor
             public readonly FbResolvedTheme Original;
             public readonly Dictionary<string, Anchors> Anchors = new(StringComparer.OrdinalIgnoreCase);
             public double SurfaceMix, AccentOffset, HighlightOffset, HoverOffset, FrameLight, FrameMedium, FrameStrong,
-                TextSubtle, TextMuted, TextDefault, TextHighlight;
+                TextSubtle, TextMuted, TextDefault, TextHighlight, TintMix;
+            public string TintColor;
 
             public BranchValues(ThemeEditorModel model, FbResolvedTheme original)
             {
                 Original = original;
+                TintColor = original.MasterTint.ColorTint!.ToLowerInvariant();
+                TintMix = Percent(original.MasterTint.TintMix);
                 SurfaceMix = Percent(original.SurfaceMix.SurfaceMix);
                 AccentOffset = Percent(original.SurfaceMix.AccentOffset);
                 HighlightOffset = Percent(original.SurfaceMix.HighlightOffset);
@@ -489,8 +504,13 @@ namespace FractalBlazor.WebSite.ThemeEditor
                 SurfaceMix, AccentOffset, HighlightOffset, HoverOffset,
                 FrameLight, FrameMedium, FrameStrong,
                 TextSubtle, TextMuted, TextDefault, TextHighlight,
-                Anchors.ToDictionary(pair => pair.Key, pair => pair.Value.Capture()));
+                Anchors.ToDictionary(pair => pair.Key, pair => pair.Value.Capture()),
+                TintColor, TintMix);
 
+            /// <summary>
+            /// Takes back a saved branch. A save older than the master tint keeps the tint of
+            /// the default theme.
+            /// </summary>
             public void Restore(BranchSnapshot saved)
             {
                 SurfaceMix = saved.SurfaceMix; AccentOffset = saved.AccentOffset;
@@ -498,6 +518,8 @@ namespace FractalBlazor.WebSite.ThemeEditor
                 FrameLight = saved.FrameLight; FrameMedium = saved.FrameMedium; FrameStrong = saved.FrameStrong;
                 TextSubtle = saved.TextSubtle; TextMuted = saved.TextMuted;
                 TextDefault = saved.TextDefault; TextHighlight = saved.TextHighlight;
+                TintColor = HexColor(saved.TintColor) ?? TintColor;
+                TintMix = saved.TintMix ?? TintMix;
 
                 foreach (var (name, anchors) in saved.Anchors ?? [])
                 {
@@ -536,6 +558,24 @@ namespace FractalBlazor.WebSite.ThemeEditor
             field = value;
             Version++;
         }
+
+        /// <summary>
+        /// Sets a color from the picker; a value that is not a hexadecimal color is ignored.
+        /// </summary>
+        private void SetColor(ref string field, string value)
+        {
+            var color = HexColor(value);
+            if (color is null || field == color)
+                return;
+            field = color;
+            Version++;
+        }
+
+        /// <summary>
+        /// The lowercase form of a <c>#RGB</c> or <c>#RRGGBB</c> color, or <c>null</c>.
+        /// </summary>
+        private static string? HexColor(string? value)
+            => value is { Length: 4 or 7 } && value[0] == '#' && value.Skip(1).All(char.IsAsciiHexDigit) ? value.ToLowerInvariant() : null;
 
         private void SetCss(ref string field, string value)
         {
@@ -618,16 +658,13 @@ namespace FractalBlazor.WebSite.ThemeEditor
             /// </summary>
             internal void Restore(AnchorSnapshot saved)
             {
-                _currentBgLow = Color(saved.BgLow) ?? _currentBgLow;
-                _currentBgHigh = Color(saved.BgHigh) ?? _currentBgHigh;
-                _currentFgLow = Color(saved.FgLow) ?? _currentFgLow;
-                _currentFgHigh = Color(saved.FgHigh) ?? _currentFgHigh;
-                _currentFrameLow = Color(saved.FrameLow);
-                _currentFrameHigh = Color(saved.FrameHigh);
+                _currentBgLow = HexColor(saved.BgLow) ?? _currentBgLow;
+                _currentBgHigh = HexColor(saved.BgHigh) ?? _currentBgHigh;
+                _currentFgLow = HexColor(saved.FgLow) ?? _currentFgLow;
+                _currentFgHigh = HexColor(saved.FgHigh) ?? _currentFgHigh;
+                _currentFrameLow = HexColor(saved.FrameLow);
+                _currentFrameHigh = HexColor(saved.FrameHigh);
             }
-
-            private static string? Color(string? value)
-                => value is { Length: 4 or 7 } && value[0] == '#' && value.Skip(1).All(char.IsAsciiHexDigit) ? value.ToLowerInvariant() : null;
 
             /// <summary>
             /// Whether the frame lines have their own anchors. Turned on, they start from the

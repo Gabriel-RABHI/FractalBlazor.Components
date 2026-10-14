@@ -6,19 +6,20 @@ namespace FractalBlazor.Components.Layout.Theming.Helpers;
 
 public static class FbLayoutThemeDefaults
 {
+    /// <summary>
+    /// The default Layout theme: the anchors of each variant come from the base palette, and
+    /// the master tint draws them all slightly toward sky blue.
+    /// </summary>
     public static FbLayoutThemeSetup Create()
-    {
-        var masterTint = new FbThemeMasterTint
-        {
-            ColorTint = FbThemeBaseColors.GetColor(FbThemeBaseColorsIndex.Sky),
-            TintPercent = 5
-        };
-
-        return new FbLayoutThemeSetup("Default")
+        => new("Default")
         {
             Spacings = FbThemeLayoutSpacings.Default,
             Corners = FbThemeLayoutCorners.Default,
-            MasterTint = masterTint,
+            MasterTint = new FbThemeMasterTint
+            {
+                ColorTint = FbThemeBaseColors.GetColor(FbThemeBaseColorsIndex.Sky),
+                TintMix = "5%"
+            },
             BordersMix = new FbThemeLayoutBordersMix
             {
                 LightMix = "8%",
@@ -34,27 +35,23 @@ public static class FbLayoutThemeDefaults
             },
             Variants =
             [
-                Variant(FbLayoutThemeVariants.Default, FbThemeBaseColorsIndex.Zinc, masterTint),
-                Variant(FbLayoutThemeVariants.Selected, FbThemeBaseColorsIndex.Blue, masterTint),
-                Variant(FbLayoutThemeVariants.Error, FbThemeBaseColorsIndex.Rose, masterTint),
-                Variant(FbLayoutThemeVariants.Warning, FbThemeBaseColorsIndex.Amber, masterTint),
-                Variant(FbLayoutThemeVariants.Disabled, FbThemeBaseColorsIndex.Gray, masterTint),
-                Variant(FbLayoutThemeVariants.Success, FbThemeBaseColorsIndex.Emerald, masterTint),
-                Variant(FbLayoutThemeVariants.Info, FbThemeBaseColorsIndex.Sky, masterTint)
+                Variant(FbLayoutThemeVariants.Default, FbThemeBaseColorsIndex.Zinc),
+                Variant(FbLayoutThemeVariants.Selected, FbThemeBaseColorsIndex.Blue),
+                Variant(FbLayoutThemeVariants.Error, FbThemeBaseColorsIndex.Rose),
+                Variant(FbLayoutThemeVariants.Warning, FbThemeBaseColorsIndex.Amber),
+                Variant(FbLayoutThemeVariants.Disabled, FbThemeBaseColorsIndex.Gray),
+                Variant(FbLayoutThemeVariants.Success, FbThemeBaseColorsIndex.Emerald),
+                Variant(FbLayoutThemeVariants.Info, FbThemeBaseColorsIndex.Sky)
             ]
         };
-    }
 
-    private static FbLayoutThemeVariant Variant(
-        string name,
-        FbThemeBaseColorsIndex color,
-        FbThemeMasterTint masterTint)
+    private static FbLayoutThemeVariant Variant(string name, FbThemeBaseColorsIndex color)
         => new(name)
         {
             LayoutColors = new FbThemeLayoutColors
             {
-                LowAnchor = FbThemeBaseColors.GetColor(color, FbThemeBaseShadesIndex._950, masterTint),
-                HighAnchor = FbThemeBaseColors.GetColor(color, FbThemeBaseShadesIndex._50, masterTint)
+                LowAnchor = FbThemeBaseColors.GetColor(color, FbThemeBaseShadesIndex._950),
+                HighAnchor = FbThemeBaseColors.GetColor(color, FbThemeBaseShadesIndex._50)
             }
         };
 }

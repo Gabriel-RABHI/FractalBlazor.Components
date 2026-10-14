@@ -87,9 +87,11 @@ public sealed class FbThemeLayoutSurfaceMix
 public sealed class FbThemeMasterTint
 {
     public string? ColorTint { get; init; }
-    public int TintPercent { get; init; }
+    public string? TintMix { get; init; }
 }
 ```
+
+La teinte générale (`MasterTint`) fait pencher toutes les ancres d'un thème, ou d'une branche Forms, vers `ColorTint`, de `TintMix` (un pourcentage CSS, de `0%` à `100%`). Chaque ancre garde sa luminosité : seules sa teinte et sa saturation bougent. Une teinte colorée attire toutes les couleurs vers elle ; une teinte grise baisse l'intensité de toutes. Comme chaque couleur des feuilles mélange deux ancres, toutes suivent. `ColorTint` et `TintMix` s'héritent séparément.
 
 Les espacements S/M/L/X alimentent les margins, paddings et gutters. Les rayons S/M/L/X alimentent les `border-radius`. Les frames Light/Medium/Strong définissent leur force par leur taux de mélange ; leur épaisseur est fixée à `1px`.
 
@@ -450,6 +452,17 @@ Le même principe s'applique aux couleurs de premier plan et aux frames :
 ```
 
 Ces variables sont des valeurs sources. Elles ne sont jamais consommées directement par les classes CSS des composants.
+
+Quand la teinte générale est active (`TintMix` au-dessus de `0%`), le bloc la déclare une fois, et chaque ancre la lit. L'ancre est mélangée, dans l'espace Oklab, avec la teinte ramenée à sa propre luminosité, que le C# calcule :
+
+```css
+/* Thème Layout par défaut : Zinc 950 teinté à 5 % vers Sky 500 */
+--fb-tint-color:#00A6F4;
+--fb-tint-mix:5%;
+--fb-default-bg-low-anchor:color-mix(in oklab,#09090B,oklch(from var(--fb-tint-color) 0.1408 c h) var(--fb-tint-mix));
+```
+
+Une ancre qui n'est pas hexadécimale est mélangée avec la teinte telle quelle, sans garder sa luminosité. À `0%`, les ancres sont écrites telles que déclarées. `FbThemeContrast` applique la même teinte avant de mesurer les contrastes.
 
 Les paramètres Main et Branch, qui ne changent pas avec la variante, sont également émis dans le bloc du thème. Ils conservent leur préfixe `default` lorsqu'un alias actif est nécessaire :
 

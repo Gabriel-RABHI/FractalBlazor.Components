@@ -1,3 +1,4 @@
+using FractalBlazor.Components.Layout.Colors;
 using FractalBlazor.Components.Layout.Theming.Contracts;
 using FractalBlazor.Components.Layout.Theming.Helpers;
 using FractalBlazor.Components.Layout.Theming.Model;
@@ -93,12 +94,10 @@ public sealed class FbLayoutThemeRegistry : IFbLayoutThemeRegistry
             X = Required(FindThemeValue(theme, value => value.Corners?.X), "Corners.X")
         };
 
-        var masterTintDefinition = FindThemeSetting(theme, value => value.MasterTint)
-            ?? throw new InvalidOperationException("The value 'MasterTint' is not resolved.");
         var masterTint = new FbThemeMasterTint
         {
-            ColorTint = Required(masterTintDefinition.ColorTint, "MasterTint.ColorTint"),
-            TintPercent = masterTintDefinition.TintPercent
+            ColorTint = Required(FindThemeValue(theme, value => value.MasterTint?.ColorTint), "MasterTint.ColorTint"),
+            TintMix = Required(FindThemeValue(theme, value => value.MasterTint?.TintMix), "MasterTint.TintMix")
         };
 
         var bordersMix = new FbThemeLayoutBordersMix
@@ -193,19 +192,6 @@ public sealed class FbLayoutThemeRegistry : IFbLayoutThemeRegistry
         return null;
     }
 
-    private static T? FindThemeSetting<T>(FbLayoutThemeSetup theme, Func<FbLayoutThemeSetup, T?> selector)
-        where T : class
-    {
-        for (var current = theme; current is not null; current = current.Parent)
-        {
-            var value = selector(current);
-            if (value is not null)
-                return value;
-        }
-
-        return null;
-    }
-
     private static string? FindVariantValue(
         FbLayoutThemeSetup theme,
         string variantName,
@@ -288,9 +274,9 @@ public sealed class FbLayoutThemeRegistry : IFbLayoutThemeRegistry
         if (value is null)
             return;
 
-        ValidateValues([value.ColorTint]);
-        if (value.TintPercent is < 0 or > 100)
-            throw new InvalidOperationException("MasterTint.TintPercent must be between 0 and 100.");
+        ValidateValues([value.ColorTint, value.TintMix]);
+        if (value.TintMix is not null && !(FbColorMath.TryParsePercent(value.TintMix, out var mix) && mix is >= 0d and <= 100d))
+            throw new InvalidOperationException("MasterTint.TintMix must be a percentage between 0% and 100%.");
     }
 
     private static void ValidateValues(FbThemeLayoutBordersMix? values)

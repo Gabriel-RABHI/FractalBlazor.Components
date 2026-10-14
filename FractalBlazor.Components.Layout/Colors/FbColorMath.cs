@@ -24,6 +24,29 @@ namespace FractalBlazor.Components.Layout.Colors
         }
 
         /// <summary>
+        /// Same result as the stylesheets give an anchor under a master tint:
+        /// <c>color-mix(in oklab, anchor, oklch(from tint L c h) percent%)</c>, where L is the
+        /// lightness of the anchor. The anchor keeps its lightness; its hue and chroma move
+        /// toward those of <paramref name="tint"/>. A gray tint only lowers the chroma.
+        /// </summary>
+        public static string Tint(string anchor, string tint, double percent)
+        {
+            var a = ToOklab(ParseHex(anchor));
+            var b = ToOklab(ParseHex(tint));
+            var t = Math.Clamp(percent, 0d, 100d) / 100d;
+            var tinted = new Oklab(
+                a.L,
+                a.A + ((b.A - a.A) * t),
+                a.B + ((b.B - a.B) * t));
+            return ToHex(FromOklab(tinted));
+        }
+
+        /// <summary>
+        /// The Oklab lightness of a color, from 0 (black) to 1 (white).
+        /// </summary>
+        public static double Lightness(string color) => ToOklab(ParseHex(color)).L;
+
+        /// <summary>
         /// WCAG 2.2 contrast ratio between two colors, from 1 to 21.
         /// </summary>
         public static double ContrastRatio(string first, string second)

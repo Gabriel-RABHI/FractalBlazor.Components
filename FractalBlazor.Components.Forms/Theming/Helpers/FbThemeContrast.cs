@@ -97,6 +97,16 @@ public static class FbThemeContrast
             return new FbContrastReport(theme.Name, theme.Branch, entries, skipped);
         }
 
+        var tint = theme.MasterTint;
+        var tinted = tint.IsActive;
+        if (tinted && !FbColorMath.IsHexColor(tint.ColorTint))
+        {
+            skipped.Add("All variants: the master tint is not a #RGB or #RRGGBB color, the ratios ignore it.");
+            tinted = false;
+        }
+        FbColorMath.TryParsePercent(tint.TintMix, out var tintMix);
+        string Tint(string anchor) => FbColorMath.Tint(anchor, tint.ColorTint!, tintMix);
+
         foreach (var name in theme.VariantOrder)
         {
             var variant = theme.GetVariant(name);
@@ -113,6 +123,10 @@ public static class FbThemeContrast
                 skipped.Add($"{name}: an anchor is not a #RGB or #RRGGBB color.");
                 continue;
             }
+
+            // The anchors the stylesheets paint: under the master tint, as the CSS writer sets them.
+            if (tinted)
+                (bgLow, bgHigh, fgLow, fgHigh) = (Tint(bgLow!), Tint(bgHigh!), Tint(fgLow!), Tint(fgHigh!));
 
             // Same formulas as the stylesheets: accent and highlight are offsets from the surface.
             var surface = FbColorMath.Mix(bgLow!, bgHigh!, surfaceMix);

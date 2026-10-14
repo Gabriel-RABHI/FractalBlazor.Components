@@ -24,11 +24,16 @@ namespace FractalBlazor.WebSite.ThemeEditor
         public const int CurrentFormat = 1;
     }
 
+    /// <summary>
+    /// The values of one branch. The master tint came later: a save without it reads
+    /// <c>null</c> and keeps the tint of the default theme.
+    /// </summary>
     internal sealed record BranchSnapshot(
         double SurfaceMix, double AccentOffset, double HighlightOffset, double HoverOffset,
         double FrameLight, double FrameMedium, double FrameStrong,
         double TextSubtle, double TextMuted, double TextDefault, double TextHighlight,
-        Dictionary<string, AnchorSnapshot> Anchors);
+        Dictionary<string, AnchorSnapshot> Anchors,
+        string? TintColor = null, double? TintMix = null);
 
     internal sealed record AnchorSnapshot(
         string BgLow, string BgHigh, string FgLow, string FgHigh, string? FrameLow, string? FrameHigh);

@@ -33,8 +33,9 @@ public static class FbLayoutThemeCssWriter
 
         FbThemeCssNames.AppendColorScheme(builder, theme.GetVariant(FbLayoutThemeVariants.Default).LayoutColors.LowAnchor);
 
+        FbThemeCssNames.AppendTint(builder, theme.MasterTint);
         foreach (var variantName in theme.VariantOrder)
-            AppendVariant(builder, theme.GetVariant(variantName));
+            AppendVariant(builder, theme.GetVariant(variantName), theme.MasterTint);
 
         AppendReference(builder, "space-s", "default-space-s");
         AppendReference(builder, "space-m", "default-space-m");
@@ -59,15 +60,15 @@ public static class FbLayoutThemeCssWriter
             FbThemeCssNames.Normalize(FbLayoutThemeVariants.Normalize(variant)),
             foreground: false, invert);
 
-    private static void AppendVariant(StringBuilder builder, FbResolvedLayoutThemeVariant variant)
+    private static void AppendVariant(StringBuilder builder, FbResolvedLayoutThemeVariant variant, FbThemeMasterTint tint)
     {
         var name = variant.Name;
-        AppendVariant(builder, name, "bg-low-anchor", variant.LayoutColors.LowAnchor);
-        AppendVariant(builder, name, "bg-high-anchor", variant.LayoutColors.HighAnchor);
+        AppendVariant(builder, name, "bg-low-anchor", variant.LayoutColors.LowAnchor, tint);
+        AppendVariant(builder, name, "bg-high-anchor", variant.LayoutColors.HighAnchor, tint);
     }
 
-    private static void AppendVariant(StringBuilder builder, string variant, string token, string? value)
-        => Append(builder, FbThemeCssNames.ValueName(variant, token), value);
+    private static void AppendVariant(StringBuilder builder, string variant, string token, string? value, FbThemeMasterTint tint)
+        => Append(builder, FbThemeCssNames.ValueName(variant, token), value is null ? null : FbThemeCssNames.Tinted(value, tint));
 
     private static void Append(StringBuilder builder, string name, string? value)
     {

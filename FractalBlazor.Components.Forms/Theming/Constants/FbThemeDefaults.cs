@@ -28,7 +28,7 @@ public static class FbThemeDefaults
         => new()
         {
             ColorTint = FbThemeBaseColors.GetColor(FbThemeBaseColorsIndex.Sky),
-            TintPercent = 15
+            TintMix = "0%"
         };
 
     private static FbThemeLayoutSurfaceMix CreateSurfaceMix()

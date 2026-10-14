@@ -51,8 +51,9 @@ public static class FbThemeCssWriter
 
         FbThemeCssNames.AppendColorScheme(builder, theme.GetVariant(FbThemeVariants.Default).LayoutColors.LowAnchor);
 
+        FbThemeCssNames.AppendTint(builder, theme.MasterTint);
         foreach (var variantName in theme.VariantOrder)
-            AppendVariant(builder, theme.GetVariant(variantName));
+            AppendVariant(builder, theme.GetVariant(variantName), theme.MasterTint);
 
         AppendReference(builder, "space-s", "default-space-s");
         AppendReference(builder, "space-m", "default-space-m");
@@ -81,24 +82,24 @@ public static class FbThemeCssWriter
             FbThemeCssNames.Normalize(FbThemeVariants.Normalize(variant)),
             foreground: true, invert);
 
-    private static void AppendVariant(StringBuilder builder, FbResolvedThemeVariant variant)
+    private static void AppendVariant(StringBuilder builder, FbResolvedThemeVariant variant, FbThemeMasterTint tint)
     {
         var name = variant.Name;
-        AppendVariant(builder, name, "bg-low-anchor", variant.LayoutColors.LowAnchor);
-        AppendVariant(builder, name, "bg-high-anchor", variant.LayoutColors.HighAnchor);
-        AppendVariant(builder, name, "fg-low-anchor", variant.FormColors.LowAnchor);
-        AppendVariant(builder, name, "fg-high-anchor", variant.FormColors.HighAnchor);
+        AppendVariant(builder, name, "bg-low-anchor", variant.LayoutColors.LowAnchor, tint);
+        AppendVariant(builder, name, "bg-high-anchor", variant.LayoutColors.HighAnchor, tint);
+        AppendVariant(builder, name, "fg-low-anchor", variant.FormColors.LowAnchor, tint);
+        AppendVariant(builder, name, "fg-high-anchor", variant.FormColors.HighAnchor, tint);
 
         // Written only when declared: an undefined frame anchor lets the CSS fall back to the
         // background anchors.
         if (variant.FrameColors.LowAnchor is not null)
-            AppendVariant(builder, name, "frame-low-anchor", variant.FrameColors.LowAnchor);
+            AppendVariant(builder, name, "frame-low-anchor", variant.FrameColors.LowAnchor, tint);
         if (variant.FrameColors.HighAnchor is not null)
-            AppendVariant(builder, name, "frame-high-anchor", variant.FrameColors.HighAnchor);
+            AppendVariant(builder, name, "frame-high-anchor", variant.FrameColors.HighAnchor, tint);
     }
 
-    private static void AppendVariant(StringBuilder builder, string variant, string token, string? value)
-        => Append(builder, FbThemeCssNames.ValueName(variant, token), value);
+    private static void AppendVariant(StringBuilder builder, string variant, string token, string? value, FbThemeMasterTint tint)
+        => Append(builder, FbThemeCssNames.ValueName(variant, token), value is null ? null : FbThemeCssNames.Tinted(value, tint));
 
     private static void Append(StringBuilder builder, string name, string? value)
     {

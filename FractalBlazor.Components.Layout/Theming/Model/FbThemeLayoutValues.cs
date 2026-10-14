@@ -59,11 +59,30 @@ public sealed class FbThemeLayoutColors
     public string? HighAnchor { get; init; }
 }
 
+/// <summary>
+/// The tint every color of a theme, or of a branch, leans toward. Every anchor keeps its
+/// lightness and moves its hue and chroma toward <see cref="ColorTint"/> by
+/// <see cref="TintMix"/>: a colored tint draws all the hues toward it, a gray one lowers the
+/// intensity of every hue. Since each color of the stylesheets mixes two anchors, all of them
+/// follow.
+/// </summary>
 public sealed class FbThemeMasterTint
 {
+    /// <summary>
+    /// The color the anchors lean toward.
+    /// </summary>
     public string? ColorTint { get; init; }
 
-    public int TintPercent { get; init; }
+    /// <summary>
+    /// How far the anchors lean, as a CSS percentage: <c>0%</c> leaves them as declared,
+    /// <c>100%</c> gives them the hue and chroma of <see cref="ColorTint"/>.
+    /// </summary>
+    public string? TintMix { get; init; }
+
+    /// <summary>
+    /// Whether the tint changes anything: a color, and a mix above <c>0%</c>.
+    /// </summary>
+    public bool IsActive => !string.IsNullOrWhiteSpace(ColorTint) && FbColorMath.TryParsePercent(TintMix, out var mix) && mix > 0d;
 }
 
 public static class FbThemeCssNames
@@ -189,6 +208,44 @@ public static class FbThemeCssNames
         var scheme = FbColorMath.ColorSchemeOf(pageBackground);
         if (scheme is not null)
             builder.Append("color-scheme:").Append(scheme).Append(';');
+    }
+
+    /// <summary>
+    /// The tint the anchors lean toward, and how far: set by <see cref="AppendTint"/>.
+    /// </summary>
+    public const string TintColor = "--fb-tint-color";
+
+    public const string TintMix = "--fb-tint-mix";
+
+    /// <summary>
+    /// Declares the master tint, when it changes anything: <c>--fb-tint-color</c> and
+    /// <c>--fb-tint-mix</c>, which every tinted anchor reads.
+    /// </summary>
+    public static void AppendTint(StringBuilder builder, FbThemeMasterTint tint)
+    {
+        if (!tint.IsActive)
+            return;
+
+        AppendDeclaration(builder, TintColor, tint.ColorTint!);
+        AppendDeclaration(builder, TintMix, tint.TintMix!);
+    }
+
+    /// <summary>
+    /// An anchor under the master tint. A hexadecimal anchor keeps its lightness: it is mixed
+    /// with the tint brought to that lightness, so only its hue and chroma move. Any other CSS
+    /// color is mixed with the tint as it is. Without an active tint, the anchor is returned
+    /// unchanged.
+    /// </summary>
+    public static string Tinted(string anchor, FbThemeMasterTint tint)
+    {
+        if (!tint.IsActive)
+            return anchor;
+
+        if (!FbColorMath.IsHexColor(anchor))
+            return $"color-mix(in oklab,{anchor},var({TintColor}) var({TintMix}))";
+
+        var lightness = FbColorMath.Lightness(anchor).ToString("0.####", System.Globalization.CultureInfo.InvariantCulture);
+        return $"color-mix(in oklab,{anchor},oklch(from var({TintColor}) {lightness} c h) var({TintMix}))";
     }
 
     public static void AppendDeclaration(StringBuilder builder, string name, string value)

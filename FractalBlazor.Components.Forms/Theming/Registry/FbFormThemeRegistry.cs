@@ -3,6 +3,7 @@ using FractalBlazor.Components.Forms.Contracts;
 using FractalBlazor.Components.Forms.Theming.Constants;
 using FractalBlazor.Components.Forms.Theming.Model;
 using FractalBlazor.Components.Forms.Theming.Solver;
+using FractalBlazor.Components.Layout.Colors;
 using FractalBlazor.Components.Layout.Theming.Model;
 
 namespace FractalBlazor.Components.Forms.Theming.Registry;
@@ -163,12 +164,10 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
             HighlightHighMix = Required(FindBranchValue(theme, branchName, value => value.TextVariantMix?.HighlightHighMix), $"{branchName}.TextVariant.HighlightHighMix")
         };
 
-        var masterTintDefinition = FindBranchSetting(theme, branchName, value => value.MasterTint)
-            ?? throw new InvalidOperationException($"The value '{branchName}.MasterTint' is not resolved.");
         var masterTint = new FbThemeMasterTint
         {
-            ColorTint = Required(masterTintDefinition.ColorTint, $"{branchName}.MasterTint.ColorTint"),
-            TintPercent = masterTintDefinition.TintPercent
+            ColorTint = Required(FindBranchValue(theme, branchName, value => value.MasterTint?.ColorTint), $"{branchName}.MasterTint.ColorTint"),
+            TintMix = Required(FindBranchValue(theme, branchName, value => value.MasterTint?.TintMix), $"{branchName}.MasterTint.TintMix")
         };
 
         var bordersMix = new FbThemeLayoutBordersMix
@@ -315,23 +314,6 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
         return null;
     }
 
-    private static T? FindBranchSetting<T>(FbThemeSetup theme, string branchName, Func<FbThemeBranch, T?> selector)
-        where T : class
-    {
-        for (var current = theme; current is not null; current = current.Parent)
-        {
-            var branch = current.Branches.FirstOrDefault(value => value.Name.Equals(branchName, StringComparison.OrdinalIgnoreCase));
-            if (branch is null)
-                continue;
-
-            var value = selector(branch);
-            if (value is not null)
-                return value;
-        }
-
-        return null;
-    }
-
     private static string? FindVariantValue(
         FbThemeSetup theme,
         string branchName,
@@ -439,9 +421,9 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
         if (value is null)
             return;
 
-        Validate([value.ColorTint]);
-        if (value.TintPercent is < 0 or > 100)
-            throw new InvalidOperationException("MasterTint.TintPercent must be between 0 and 100.");
+        Validate([value.ColorTint, value.TintMix]);
+        if (value.TintMix is not null && !(FbColorMath.TryParsePercent(value.TintMix, out var mix) && mix is >= 0d and <= 100d))
+            throw new InvalidOperationException("MasterTint.TintMix must be a percentage between 0% and 100%.");
     }
     
     private static void ValidateValues(FbThemeLayoutBordersMix? value)

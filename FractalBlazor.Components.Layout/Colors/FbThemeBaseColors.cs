@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using FractalBlazor.Components.Layout.Theming.Model;
 
 namespace FractalBlazor.Components.Layout.Colors
 {
@@ -69,26 +68,6 @@ namespace FractalBlazor.Components.Layout.Colors
 
         public static string GetColor(FbThemeBaseColorsIndex color, FbThemeBaseShadesIndex shade = FbThemeBaseShadesIndex._500)
             => FbBaseColors[(int)color, (int)shade];
-
-        /// <summary>
-        /// Samples a base color and applies the branch-wide master tint.
-        /// </summary>
-        public static string GetColor(
-            FbThemeBaseColorsIndex color,
-            FbThemeBaseShadesIndex shade,
-            FbThemeMasterTint masterTint,
-            double gamma = 0d)
-        {
-            ArgumentNullException.ThrowIfNull(masterTint);
-
-            if (masterTint.TintPercent is < 0 or > 100)
-                throw new ArgumentOutOfRangeException(nameof(masterTint), "The tint percentage must be between 0 and 100.");
-
-            var sourceColor = GetColor(color, shade);
-            var tintColor = masterTint.TintPercent == 0 ? sourceColor : masterTint.ColorTint;
-
-            return GetColor(color, shade, gamma, tintColor!, masterTint.TintPercent / 100d);
-        }
 
         /// <summary>
         /// Return color with corrections.

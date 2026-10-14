@@ -115,6 +115,12 @@
                                   Value="@Model.Branch" ValueChanged="Model.SelectBranch">
                             <StartContent><FbRowItem Style="min-width:6.5rem"><FbText S Subtle>Branche</FbText></FbRowItem></StartContent>
                         </FbSelect>
+                        <ColorField Label="Teinte" @bind-Value="Model.TintColor" @bind-Clipboard="Model.CopiedColor" />
+                        <ValueSlider Label="Mélange teinte" @bind-Value="Model.TintMix" />
+                        <FbText XS Muted>
+                            Toutes les ancres de la branche penchent vers la teinte en gardant leur luminosité. Un gris
+                            baisse l’intensité de toutes les couleurs.
+                        </FbText>
                         <FbSelect TValue="string" TAction="FbSetValue<string>" Items="Model.VariantNames"
                                   @bind-Value="Model.SelectedVariant">
                             <StartContent><FbRowItem Style="min-width:6.5rem"><FbText S Subtle>Variante</FbText></FbRowItem></StartContent>
