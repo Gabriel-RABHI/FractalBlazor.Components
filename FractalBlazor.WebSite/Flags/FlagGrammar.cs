@@ -45,7 +45,7 @@ internal sealed class FlagGrammar
             "FbRowItem", "FbStackItem", "FbRowSeparator", "FbStackSeparator", "FbGridContainer", "FbGridItem");
         grammar.Add(Text(), "FbText");
         grammar.Add(Icon(), "FbIcon");
-        grammar.Add(Sizes(), "FbImage");
+        grammar.Add(Sizes(), "FbIconImage");
         grammar.Add(Breaks(), "FbRowBreak", "FbStackBreak");
         grammar.Add(
             [

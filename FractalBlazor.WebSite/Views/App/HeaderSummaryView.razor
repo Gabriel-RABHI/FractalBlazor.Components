@@ -2,7 +2,7 @@
    that holds the sections and the links. *@
 @attribute [ViewFor<ViewSelector>(typeof(HeaderState), ViewSelector.Summary)]
 
-<FbImage Src="@HeaderView.Logo" X />
+<FbIconImage Src="@HeaderView.Logo" X />
 <FbText L B NW>@Item.Name</FbText>
 <FbRowSpacer />
 <FbDynamicView TSelector="ViewSelector" Item="Item.Flags" Selector="ViewSelector.Viewer" />

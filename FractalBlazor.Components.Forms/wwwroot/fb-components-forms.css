@@ -408,9 +408,9 @@
 }
 
 /**********************************************************************************/
-/* IMAGES */
+/* ICON IMAGES */
 /* Sized like the icons, by their height: the width follows the ratio of the image. */
-.fb-image {
+.fb-icon-image {
     display: inline-block;
     flex: none;
     width: auto;
@@ -418,17 +418,17 @@
     vertical-align: -0.25em;
 }
 
-.fb-image-s {
+.fb-icon-image-s {
     height: 1em;
     vertical-align: -0.125em;
 }
 
-.fb-image-l {
+.fb-icon-image-l {
     height: 1.5em;
     vertical-align: -0.375em;
 }
 
-.fb-image-x {
+.fb-icon-image-x {
     height: 2em;
     vertical-align: -0.5em;
 }

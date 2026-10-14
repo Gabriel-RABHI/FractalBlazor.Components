@@ -10,11 +10,17 @@ namespace FractalBlazor.Components.Forms.Components.Display
     /// text; its width follows the ratio of the image. A logo in a header, a picture beside a
     /// label.
     /// </summary>
-    /// <example><c>&lt;FbImage Src="images/logo.png" Alt="FractalBlazor" L /&gt;</c></example>
-    public sealed class FbImage : FbComponentBase
+    /// <example><c>&lt;FbIconImage Src="images/logo.png" Alt="FractalBlazor" L /&gt;</c></example>
+    public sealed class FbIconImage : FbComponentBase
     {
         private static readonly string[] SizeClasses =
-            { "fb-image", "fb-image fb-image-s", "fb-image fb-image-m", "fb-image fb-image-l", "fb-image fb-image-x" };
+        {
+            "fb-icon-image",
+            "fb-icon-image fb-icon-image-s",
+            "fb-icon-image fb-icon-image-m",
+            "fb-icon-image fb-icon-image-l",
+            "fb-icon-image fb-icon-image-x"
+        };
 
         private FbSpacing _size;
 

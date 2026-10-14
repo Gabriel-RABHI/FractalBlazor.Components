@@ -3,7 +3,7 @@
    links as icons. The logo is decorative: the name beside it says the same. *@
 @attribute [ViewFor<ViewSelector>(typeof(HeaderState), ViewSelector.Viewer)]
 
-<FbImage Src="@Logo" L />
+<FbIconImage Src="@Logo" L />
 <FbText L B NW>@Item.Name</FbText>
 <FbRowSpacer />
 @foreach (var section in Item.Sections)
