@@ -104,7 +104,7 @@ namespace FractalBlazor.Components.Forms.Components.Selectors
             builder.AddAttribute(13, nameof(FbRow.EO), _open);
             builder.AddAttribute(14, nameof(FbRow.WFS), _open);
             builder.AddAttribute(15, nameof(FbRow.WFM), !_open);
-            builder.AddAttribute(16, nameof(FbRow.WBA), true);
+            builder.AddAttribute(16, nameof(FbRow.WBS), true);
             builder.AddAttribute(17, nameof(FbRow.WRM), true);
             builder.AddAttribute(18, nameof(FbRow.PVS), true);
             builder.AddAttribute(19, nameof(FbRow.PHM), true);

@@ -90,7 +90,7 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
             builder.AddAttribute(4, nameof(FbRow.GS), true);
             builder.AddAttribute(5, nameof(FbRow.PVS), true);
             builder.AddAttribute(6, nameof(FbRow.PHM), true);
-            builder.AddAttribute(7, nameof(FbRow.WBA), true);
+            builder.AddAttribute(7, nameof(FbRow.WBS), true);
             builder.AddAttribute(8, nameof(FbRow.WRM), true);
             builder.AddAttribute(9, nameof(FbRow.DS), true);
             builder.AddAttribute(10, nameof(FbRow.JVC), true);
