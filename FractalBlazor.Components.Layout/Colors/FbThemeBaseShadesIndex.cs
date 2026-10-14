@@ -2,6 +2,8 @@
 {
     public enum FbThemeBaseShadesIndex : int
     {
+        _990,
+        _980,
         _950,
         _900,
         _800,

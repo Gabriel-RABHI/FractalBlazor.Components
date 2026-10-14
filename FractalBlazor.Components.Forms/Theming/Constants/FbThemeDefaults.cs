@@ -88,8 +88,10 @@ public static class FbThemeDefaults
 
     /// <summary>
     /// The shade at the same distance from the other end of the palette: 950 gives 50, 700
-    /// gives 300, 500 stays.
+    /// gives 300, 500 stays. 980 and 990 have no light counterpart: they give 50, the lightest.
     /// </summary>
     private static FbThemeBaseShadesIndex Mirror(FbThemeBaseShadesIndex shade)
-        => (FbThemeBaseShadesIndex)((int)FbThemeBaseShadesIndex._50 - (int)shade);
+        => (FbThemeBaseShadesIndex)Math.Min(
+            (int)FbThemeBaseShadesIndex._950 + (int)FbThemeBaseShadesIndex._50 - (int)shade,
+            (int)FbThemeBaseShadesIndex._50);
 }

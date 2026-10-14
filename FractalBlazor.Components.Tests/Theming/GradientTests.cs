@@ -55,10 +55,23 @@ public sealed class GradientTests
     [Fact]
     public void The_neutral_and_offsets_stay_percentages_and_the_mixes_become_fractions()
     {
-        var css = FbThemeCssWriter.ToCssVariables(_registry.Resolve(_registry.Default.Name, FbThemeBranches.Dark));
+        var theme = new FbThemeSetup("Mixes", _registry.Default)
+        {
+            Branches =
+            [
+                new FbThemeBranch(FbThemeBranches.Dark)
+                {
+                    SurfaceMix = new FbThemeLayoutSurfaceMix { NeutralMix = "3%", SurfaceOffset = "5%", AccentOffset = "15%", HighlightOffset = "45%", HoverOffset = "10%" },
+                    BordersMix = new FbThemeLayoutBordersMix { LightMix = "5%", MediumMix = "12.5%", StrongMix = "20%" },
+                    TextVariantMix = new FbThemeFormTextVariantMix { SubtleHighMix = "40%", MutedHighMix = "60%", DefaultHighMix = "80%", HighlightHighMix = "95%" }
+                }
+            ]
+        };
 
-        Assert.Contains("--fb-neutral-mix:0%;--fb-surface-offset:5%;--fb-accent-offset:15%;--fb-highlight-offset:45%;--fb-hover-offset:10%;", css);
-        Assert.Contains("--fb-frame-light-mix:0.05;--fb-frame-medium-mix:0.1;--fb-frame-strong-mix:0.15;", css);
+        var css = FbThemeCssWriter.ToCssVariables(_registry.Resolve(theme, FbThemeBranches.Dark));
+
+        Assert.Contains("--fb-neutral-mix:3%;--fb-surface-offset:5%;--fb-accent-offset:15%;--fb-highlight-offset:45%;--fb-hover-offset:10%;", css);
+        Assert.Contains("--fb-frame-light-mix:0.05;--fb-frame-medium-mix:0.125;--fb-frame-strong-mix:0.2;", css);
         Assert.Contains("--fb-fg-subtle-mix:0.4;--fb-fg-muted-mix:0.6;--fb-fg-default-mix:0.8;--fb-fg-highlight-mix:0.95;", css);
     }
 
@@ -137,7 +150,7 @@ public sealed class GradientTests
         var theme = new FbLayoutThemeRegistry().Resolve("Default");
         var css = FbLayoutThemeCssWriter.ToCssVariables(theme);
 
-        Assert.Contains("--fb-neutral-mix:0%;--fb-surface-offset:5%;", css);
+        Assert.Contains($"--fb-neutral-mix:{theme.SurfaceMix.NeutralMix};--fb-surface-offset:{theme.SurfaceMix.SurfaceOffset};", css);
         Assert.Contains("--fb-default-mid-anchor:", css);
         Assert.EndsWith("--fb-low-anchor:var(--fb-default-low-anchor);--fb-mid-anchor:var(--fb-default-mid-anchor);--fb-high-anchor:var(--fb-default-high-anchor);", css);
     }
@@ -171,13 +184,15 @@ public sealed class GradientTests
     {
         var theme = _registry.Resolve(_registry.Default.Name, FbThemeBranches.Dark);
         var colors = theme.GetVariant(FbThemeVariants.Default).LayoutColors;
+        var accent = Percent(theme.SurfaceMix.NeutralMix) + Percent(theme.SurfaceMix.AccentOffset);
+        var text = FbColorMath.Relative(Percent(theme.TextVariant.DefaultHighMix), accent);
 
         var entry = FbThemeContrast.Analyze(theme).Entries.Single(value =>
             value.Variant == FbThemeVariants.Default && value.Background == FbContrastBackground.Accent && value.Text == FbContrastText.Default);
 
-        // An accent block on the page: neutral 0 % + 15 %; its default text at 80 % from there.
-        Assert.Equal(FbColorMath.Sample(colors.LowAnchor, colors.MidAnchor, colors.HighAnchor, 15), entry.BackgroundColor);
-        Assert.Equal(FbColorMath.Sample(colors.LowAnchor, colors.MidAnchor, colors.HighAnchor, 83), entry.TextColor);
+        // An accent block on the page: the neutral plus the accent offset; its default text from there.
+        Assert.Equal(FbColorMath.Sample(colors.LowAnchor, colors.MidAnchor, colors.HighAnchor, accent), entry.BackgroundColor);
+        Assert.Equal(FbColorMath.Sample(colors.LowAnchor, colors.MidAnchor, colors.HighAnchor, text), entry.TextColor);
     }
 
     [Fact]
@@ -185,9 +200,12 @@ public sealed class GradientTests
     {
         var theme = _registry.Resolve(_registry.Default.Name, FbThemeBranches.Dark);
         var colors = theme.GetVariant(FbThemeVariants.Default).LayoutColors;
+        var surface = Percent(theme.SurfaceMix.NeutralMix) + Percent(theme.SurfaceMix.SurfaceOffset);
 
         var entry = FbThemeContrast.Analyze(theme, inverted: true).Entries.First(value => value.Variant == FbThemeVariants.Default);
 
-        Assert.Equal(FbColorMath.Sample(colors.HighAnchor, colors.MidAnchor, colors.LowAnchor, 5), entry.BackgroundColor);
+        Assert.Equal(FbColorMath.Sample(colors.HighAnchor, colors.MidAnchor, colors.LowAnchor, surface), entry.BackgroundColor);
     }
+
+    private static double Percent(string? value) => FbColorMath.TryParsePercent(value, out var percent) ? percent : double.NaN;
 }
