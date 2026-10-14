@@ -5,12 +5,12 @@
 
 <FbButton Handler="Item" Action="@Toggle" Title="Assistant des flags"
           WBH="@Item.IsOpen" WBN="@(!Item.IsOpen)" WFN PVS PHS>
-    <FbIconImage Src="@SiteImages.Tool" />
+    <FbIconImage Src="@SiteImages.Tool" L />
 </FbButton>
 <FbDrawer Modal Right IsOpen="@Item.IsOpen" IsOpenChanged="@SetOpen" Title="Assistant des flags" Size="76rem" WFL>
     <FbStack NoFlex GL PL JVS>
         <FbRow NoFlex GS JVC>
-            <FbIconImage Src="@SiteImages.Tool" M />
+            <FbIconImage Src="@SiteImages.Tool" L />
             <FbText L B>Assistant des flags</FbText>
             <FbRowSpacer />
             <FbText S Muted NW>@Count</FbText>

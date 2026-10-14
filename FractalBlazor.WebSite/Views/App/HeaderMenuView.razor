@@ -8,18 +8,20 @@
                   WBH="@Item.IsOpen" WBN="@(!Item.IsOpen)" WFN PVS PHS />
     </ChildContent>
     <DropDownContent>
-        <FbStack NoFlex GS PS JVS WBS WFL WRM>
+        <FbStack NoFlex GS PL JVS WBS WFL WRM>
             @foreach (var section in Item.Header.Sections)
             {
                 <FbDynamicView @key="section" TSelector="ViewSelector" Item="section" Selector="ViewSelector.Viewer" />
             }
-            <FbStackSeparator />
+            <FbStackSeparator MM />
+            <FbStack PM GM>
             @foreach (var link in Item.Header.Links)
             {
                 <FbStackItem @key="link" PHM PVS>
                     <FbDynamicView TSelector="ViewSelector" Item="link" Selector="ViewSelector.Viewer" />
                 </FbStackItem>
             }
+            </FbStack>
         </FbStack>
     </DropDownContent>
 </FbDropDown>
