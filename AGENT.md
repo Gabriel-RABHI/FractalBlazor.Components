@@ -95,6 +95,18 @@ for what Layout cannot render (a native `input`, an `svg`, a `button`).
 - An editor never throws away what the user edited: switching a branch, a tab or an item keeps
   the edits, and only an explicit, confirmed reset discards them.
 
+## Design conventions
+
+- Surfaces that need to stand out are always Surface (`WBS`): the outline of an area, the
+  background of a card or a panel, the background of an input and of other components.
+- Elements that need to stand out are always Accent (`WBA`): small elements, rarely large
+  surfaces.
+- Highlight backgrounds (`WBH`) are for active elements: buttons in "filled" mode, a few parts
+  of components such as the handle of a slider, and specific full-color backgrounds (the color
+  of a progress bar or of a spinner). Highlight is mainly there to show the full color of the
+  theme variants.
+- Most text is medium size (`M`).
+
 ## Conventions
 
 - Code, comments and commit messages in English; design documents (`Plan.md`, `Theming.md`,
