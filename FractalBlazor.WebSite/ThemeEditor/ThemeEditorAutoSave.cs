@@ -10,7 +10,13 @@ namespace FractalBlazor.WebSite.ThemeEditor
     /// </summary>
     public sealed class ThemeEditorAutoSave(ThemeEditorModel model, IJSRuntime js)
     {
-        private const string Key = "fb-theme-editor";
+        private const string Key = "fb-theme-editor-2";
+
+        /// <summary>
+        /// Where the editor saved before the three-anchor gradient. Read when there is no newer
+        /// save, never written: the older session stays in the browser as it was.
+        /// </summary>
+        private const string PreviousKey = "fb-theme-editor";
 
         private bool _restored;
         private string? _saved;
@@ -27,14 +33,16 @@ namespace FractalBlazor.WebSite.ThemeEditor
 
             try
             {
-                var json = await js.InvokeAsync<string?>("fbWebSite.loadText", Key);
+                var json = await js.InvokeAsync<string?>("fbWebSite.loadText", Key)
+                    ?? await js.InvokeAsync<string?>("fbWebSite.loadText", PreviousKey);
                 if (json is not null)
                 {
                     var saved = JsonSerializer.Deserialize(json, ThemeEditorJson.Default.ThemeEditorSnapshot);
-                    if (saved?.Format == ThemeEditorSnapshot.CurrentFormat)
+                    if (saved?.Format is ThemeEditorSnapshot.CurrentFormat or ThemeEditorSnapshot.PreviousFormat)
                     {
                         model.Restore(saved);
-                        _saved = json;
+                        // An older session is saved again under the new key at the next render.
+                        _saved = saved.Format == ThemeEditorSnapshot.CurrentFormat ? json : null;
                         _restored = true;
                         return true;
                     }

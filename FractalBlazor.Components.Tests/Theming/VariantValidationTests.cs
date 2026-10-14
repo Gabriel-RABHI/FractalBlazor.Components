@@ -43,7 +43,7 @@ public sealed class VariantValidationTests : BunitContext
     {
         var cut = Render<FbVariant>(p => p.Add(x => x.Variant, "Custom"));
 
-        Assert.Contains("--fb-custom-bg-low-anchor", cut.Find("div").GetAttribute("style"));
+        Assert.Contains("--fb-custom-low-anchor", cut.Find("div").GetAttribute("style"));
     }
 
     [Fact]
@@ -58,6 +58,6 @@ public sealed class VariantValidationTests : BunitContext
     {
         var cut = Render<FbLayoutVariant>(p => p.Add(x => x.Variant, "Error"));
 
-        Assert.Contains("--fb-error-bg-low-anchor", cut.Find("div").GetAttribute("style"));
+        Assert.Contains("--fb-error-low-anchor", cut.Find("div").GetAttribute("style"));
     }
 }

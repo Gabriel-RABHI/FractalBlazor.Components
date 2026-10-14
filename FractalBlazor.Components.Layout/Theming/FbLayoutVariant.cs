@@ -22,8 +22,8 @@ public sealed class FbLayoutVariant : FbComponentBase
     public string Style { get; set; } = "";
 
     /// <summary>
-    /// Exchanges the low and high background anchors: a dark variant renders light and the
-    /// other way round.
+    /// Reverses the gradient of the variant, its low and high anchors exchanged: a dark variant
+    /// renders light and the other way round.
     /// </summary>
     [Parameter]
     public bool Invert { get; set; }

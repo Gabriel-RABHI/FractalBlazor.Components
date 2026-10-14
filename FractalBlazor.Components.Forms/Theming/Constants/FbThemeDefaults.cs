@@ -5,9 +5,9 @@ using FractalBlazor.Components.Layout.Theming.Model;
 namespace FractalBlazor.Components.Forms.Theming.Constants;
 
 /// <summary>
-/// The default theme, tuned in the theme editor: low surfaces with strong accent and
-/// highlight offsets, a marked hover, and hand-picked background, text and frame anchors for
-/// every variant of both branches.
+/// The default theme: the gradient of every variant comes from the base palette, shades 950,
+/// 500 and 50 in the dark branch and the other way round in the light one. Disabled keeps a
+/// short gradient, 950 / 700 / 500, so that its texts stay dim.
 /// </summary>
 public static class FbThemeDefaults
 {
@@ -19,99 +19,77 @@ public static class FbThemeDefaults
             Typography = FbThemeFormTypography.Default,
             Branches =
             [
-                CreateDarkBranch(),
-                CreateLightBranch()
+                CreateBranch(FbThemeBranches.Dark, light: false),
+                CreateBranch(FbThemeBranches.Light, light: true)
             ]
         };
 
-    private static FbThemeMasterTint CreateMasterTint()
-        => new()
-        {
-            ColorTint = FbThemeBaseColors.GetColor(FbThemeBaseColorsIndex.Sky),
-            TintMix = "0%"
-        };
-
-    private static FbThemeLayoutSurfaceMix CreateSurfaceMix()
-        => new()
-        {
-            SurfaceMix = "3%",
-            AccentOffset = "30%",
-            HighlightOffset = "85%",
-            HoverOffset = "15%"
-        };
-
-    private static FbThemeBranch CreateDarkBranch()
-        => new(FbThemeBranches.Dark)
-        {
-            MasterTint = CreateMasterTint(),
-            TextVariantMix = new FbThemeFormTextVariantMix
-            {
-                DefaultHighMix = "75%",
-                SubtleHighMix = "20%",
-                MutedHighMix = "35%",
-                HighlightHighMix = "100%"
-            },
-            BordersMix = new FbThemeLayoutBordersMix
-            {
-                LightMix = "8%",
-                MediumMix = "20%",
-                StrongMix = "45%"
-            },
-            SurfaceMix = CreateSurfaceMix(),
-            Variants =
-            [
-                Variant(FbThemeVariants.Default, "#15151e", "#292a2e", "#303240", "#f0f3f4", "#1b1b27", "#686d97"),
-                Variant(FbThemeVariants.Selected, "#0d0c1d", "#163cfe", "#2448ff", "#e5f2ff", "#141051", "#395afe"),
-                Variant(FbThemeVariants.Error, "#270707", "#fb0404", "#a02222", "#febebe", "#330a0a", "#fb0404"),
-                Variant(FbThemeVariants.Warning, "#1d1002", "#ff8800", "#ff7300", "#d2b5a3", "#2b1803", "#ff8800"),
-                Variant(FbThemeVariants.Disabled, "#191e29", "#242a33", "#2d394e", "#4f5963", "#191e29", "#3d4552"),
-                Variant(FbThemeVariants.Success, "#062d1e", "#03c700", "#66ff00", "#c2ffe8", "#084f34", "#03c700"),
-                Variant(FbThemeVariants.Info, "#02122c", "#009dff", "#00adff", "#90ddfe", "#092b62", "#009dff")
-            ]
-        };
-
-    private static FbThemeBranch CreateLightBranch()
-        => new(FbThemeBranches.Light)
-        {
-            MasterTint = CreateMasterTint(),
-            TextVariantMix = new FbThemeFormTextVariantMix
-            {
-                DefaultHighMix = "75%",
-                SubtleHighMix = "30%",
-                MutedHighMix = "50%",
-                HighlightHighMix = "100%"
-            },
-            BordersMix = new FbThemeLayoutBordersMix
-            {
-                LightMix = "8%",
-                MediumMix = "20%",
-                StrongMix = "45%"
-            },
-            SurfaceMix = CreateSurfaceMix(),
-            Variants =
-            [
-                Variant(FbThemeVariants.Default, "#ffffff", "#e2e3e9", "#deedf2", "#1d1d2f", "#e3e3e3", "#484a61"),
-                Variant(FbThemeVariants.Selected, "#e5f2ff", "#526eff", "#9ecfff", "#0a1b43", "#e5f2ff", "#002aff"),
-                Variant(FbThemeVariants.Error, "#fde7e7", "#fb0404", "#fde7f0", "#480505", "#fde7e7", "#fb0404"),
-                Variant(FbThemeVariants.Warning, "#fff4e5", "#ffa200", "#fff9e5", "#331600", "#fee5c3", "#d18400"),
-                Variant(FbThemeVariants.Disabled, "#eef2f6", "#b5bbc4", "#eef2f6", "#848994", "#ebebeb", "#6a717c"),
-                Variant(FbThemeVariants.Success, "#e8fdec", "#00ff4c", "#e8fdeb", "#001916", "#e8fdec", "#00992e"),
-                Variant(FbThemeVariants.Info, "#e5f5ff", "#00adff", "#e5f5ff", "#010f18", "#e5f5ff", "#00adff")
-            ]
-        };
-
-    private static FbThemeColorVariant Variant(
-        string name,
-        string layoutLow,
-        string layoutHigh,
-        string formLow,
-        string formHigh,
-        string frameLow,
-        string frameHigh)
+    private static FbThemeBranch CreateBranch(string name, bool light)
         => new(name)
         {
-            LayoutColors = new FbThemeLayoutColors { LowAnchor = layoutLow, HighAnchor = layoutHigh },
-            FormColors = new FbThemeFormColors { LowAnchor = formLow, HighAnchor = formHigh },
-            FrameColors = new FbThemeFormColors { LowAnchor = frameLow, HighAnchor = frameHigh }
+            MasterTint = new FbThemeMasterTint
+            {
+                ColorTint = FbThemeBaseColors.GetColor(FbThemeBaseColorsIndex.Sky),
+                TintMix = "0%"
+            },
+            SurfaceMix = new FbThemeLayoutSurfaceMix
+            {
+                NeutralMix = "0%",
+                SurfaceOffset = "5%",
+                AccentOffset = "15%",
+                HighlightOffset = "45%",
+                HoverOffset = "10%"
+            },
+            BordersMix = new FbThemeLayoutBordersMix
+            {
+                LightMix = "5%",
+                MediumMix = "10%",
+                StrongMix = "15%"
+            },
+            TextVariantMix = new FbThemeFormTextVariantMix
+            {
+                SubtleHighMix = "40%",
+                MutedHighMix = "60%",
+                DefaultHighMix = "80%",
+                HighlightHighMix = "95%"
+            },
+            Variants =
+            [
+                Variant(FbThemeVariants.Default, FbThemeBaseColorsIndex.Zinc, light),
+                Variant(FbThemeVariants.Selected, FbThemeBaseColorsIndex.Blue, light),
+                Variant(FbThemeVariants.Error, FbThemeBaseColorsIndex.Rose, light),
+                Variant(FbThemeVariants.Warning, FbThemeBaseColorsIndex.Amber, light),
+                Variant(FbThemeVariants.Disabled, FbThemeBaseColorsIndex.Gray, light,
+                    FbThemeBaseShadesIndex._950, FbThemeBaseShadesIndex._700, FbThemeBaseShadesIndex._500),
+                Variant(FbThemeVariants.Success, FbThemeBaseColorsIndex.Emerald, light),
+                Variant(FbThemeVariants.Info, FbThemeBaseColorsIndex.Sky, light)
+            ]
         };
+
+    private static FbThemeColorVariant Variant(string name, FbThemeBaseColorsIndex color, bool light)
+        => Variant(name, color, light, FbThemeBaseShadesIndex._950, FbThemeBaseShadesIndex._500, FbThemeBaseShadesIndex._50);
+
+    /// <summary>
+    /// A gradient from <paramref name="dark"/> to <paramref name="bright"/> in the dark branch,
+    /// reversed in the light one: the light branch reads the shades from the other end of the
+    /// palette.
+    /// </summary>
+    private static FbThemeColorVariant Variant(string name, FbThemeBaseColorsIndex color, bool light,
+        FbThemeBaseShadesIndex dark, FbThemeBaseShadesIndex mid, FbThemeBaseShadesIndex bright)
+        => new(name)
+        {
+            LayoutColors = new FbThemeLayoutColors
+            {
+                LowAnchor = FbThemeBaseColors.GetColor(color, light ? Mirror(dark) : dark),
+                MidAnchor = FbThemeBaseColors.GetColor(color, light ? Mirror(mid) : mid),
+                HighAnchor = FbThemeBaseColors.GetColor(color, light ? Mirror(bright) : bright)
+            }
+        };
+
+    /// <summary>
+    /// The shade at the same distance from the other end of the palette: 950 gives 50, 700
+    /// gives 300, 500 stays.
+    /// </summary>
+    private static FbThemeBaseShadesIndex Mirror(FbThemeBaseShadesIndex shade)
+        => (FbThemeBaseShadesIndex)((int)FbThemeBaseShadesIndex._50 - (int)shade);
 }

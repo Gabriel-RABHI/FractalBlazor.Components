@@ -1,59 +1,124 @@
 /**********************************************************************************/
-/* BACKGROUNDS */
+/* COLORS */
 :root {
     --fb-outline-size: 1px;
 }
 
-/* A control that carries its own variant (fb-variant) recomputes the colors on its root
-   element, with no specificity, so that its own rules keep the upper hand. */
+/* Every color is a position on the gradient of the active variant: three anchors, at 0 %,
+   50 % and 100 % (--fb-low-anchor, --fb-mid-anchor, --fb-high-anchor). The page sits at the
+   neutral of the theme; a filled block moves the neutral by the offset of its fill, paints
+   the gradient there, and places its texts and frames from that new neutral. The neutral and
+   the offsets are percentages; the text and frame mixes are fractions. */
+
+/* The neutral of a filled block: the neutral of its nearest filled ancestor, plus its offset.
+   A custom property cannot read its own inherited value, so each depth has its own variable,
+   chosen by counting the filled ancestors: six levels, deeper blocks start again from the
+   fifth. A theme, the page one or a scoped one, sets every depth to its neutral: the first
+   fill inside it starts from there, whatever its depth in the page. */
+:root,
+.fb-theme {
+    --fb-neutral-0: var(--fb-neutral-mix);
+    --fb-neutral-1: var(--fb-neutral-mix);
+    --fb-neutral-2: var(--fb-neutral-mix);
+    --fb-neutral-3: var(--fb-neutral-mix);
+    --fb-neutral-4: var(--fb-neutral-mix);
+    --fb-neutral-5: var(--fb-neutral-mix);
+    --fb-neutral: var(--fb-neutral-mix);
+}
+
+:is(.fb-wbs, .fb-wba, .fb-wbh):not(:is(.fb-wbs, .fb-wba, .fb-wbh) *) {
+    --fb-neutral-1: min(100%, calc(var(--fb-neutral-0) + var(--fb-fill-offset)));
+    --fb-neutral: var(--fb-neutral-1);
+}
+
+:is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh):not(:is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) *) {
+    --fb-neutral-2: min(100%, calc(var(--fb-neutral-1) + var(--fb-fill-offset)));
+    --fb-neutral: var(--fb-neutral-2);
+}
+
+:is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh):not(:is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) *) {
+    --fb-neutral-3: min(100%, calc(var(--fb-neutral-2) + var(--fb-fill-offset)));
+    --fb-neutral: var(--fb-neutral-3);
+}
+
+:is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh):not(:is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) *) {
+    --fb-neutral-4: min(100%, calc(var(--fb-neutral-3) + var(--fb-fill-offset)));
+    --fb-neutral: var(--fb-neutral-4);
+}
+
+:is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh):not(:is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) *) {
+    --fb-neutral-5: min(100%, calc(var(--fb-neutral-4) + var(--fb-fill-offset)));
+    --fb-neutral: var(--fb-neutral-5);
+}
+
+:is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) :is(.fb-wbs, .fb-wba, .fb-wbh) {
+    --fb-neutral-6: min(100%, calc(var(--fb-neutral-5) + var(--fb-fill-offset)));
+    --fb-neutral: var(--fb-neutral-6);
+}
+
+/* The neutral the colors are computed from: the neutral of the block, plus the hover offset
+   while a hoverable element is hovered. */
 :root,
 .fb-theme-scope,
-:where(.fb-variant) {
-    --fb-current-bg-surface-mix: var(--fb-bg-surface-mix);
-    --fb-current-bg-accent-offset: var(--fb-bg-accent-offset);
-    --fb-current-bg-highlight-offset: var(--fb-bg-highlight-offset);
-    --fb-current-frame-light-mix: var(--fb-frame-light-mix);
-    --fb-current-frame-medium-mix: var(--fb-frame-medium-mix);
-    --fb-current-frame-strong-mix: var(--fb-frame-strong-mix);
-    --fb-bg-surface: color-mix(in oklab, var(--fb-bg-low-anchor), var(--fb-bg-high-anchor) var(--fb-current-bg-surface-mix));
-    --fb-bg-accent: color-mix(in oklab, var(--fb-bg-surface), var(--fb-bg-high-anchor) var(--fb-current-bg-accent-offset));
-    --fb-bg-highlight: color-mix(in oklab, var(--fb-bg-surface), var(--fb-bg-high-anchor) var(--fb-current-bg-highlight-offset));
-    --fb-current-bg: var(--fb-bg-surface);
+:where(.fb-variant),
+.fb-wbs,
+.fb-wba,
+.fb-wbh {
+    --fb-current-neutral: var(--fb-neutral);
 }
 
 .fb-hover {
-    --fb-hover-mix-offset: var(--fb-bg-hover-offset);
+    --fb-hover-mix-offset: var(--fb-hover-offset);
 }
 
 .fb-hover:hover {
-    --fb-current-bg-surface-mix: clamp(0%, calc(var(--fb-bg-surface-mix) + var(--fb-hover-mix-offset)), 100%);
-    --fb-current-bg-accent-offset: clamp(0%, calc(var(--fb-bg-accent-offset) + var(--fb-hover-mix-offset)), 100%);
-    --fb-current-bg-highlight-offset: clamp(0%, calc(var(--fb-bg-highlight-offset) + var(--fb-hover-mix-offset)), 100%);
-    --fb-current-frame-light-mix: clamp(0%, calc(var(--fb-frame-light-mix) + var(--fb-hover-mix-offset)), 100%);
-    --fb-current-frame-medium-mix: clamp(0%, calc(var(--fb-frame-medium-mix) + var(--fb-hover-mix-offset)), 100%);
-    --fb-current-frame-strong-mix: clamp(0%, calc(var(--fb-frame-strong-mix) + var(--fb-hover-mix-offset)), 100%);
-    --fb-bg-surface: color-mix(in oklab, var(--fb-bg-low-anchor), var(--fb-bg-high-anchor) var(--fb-current-bg-surface-mix));
-    --fb-bg-accent: color-mix(in oklab, var(--fb-bg-surface), var(--fb-bg-high-anchor) var(--fb-current-bg-accent-offset));
-    --fb-bg-highlight: color-mix(in oklab, var(--fb-bg-surface), var(--fb-bg-high-anchor) var(--fb-current-bg-highlight-offset));
+    --fb-current-neutral: min(100%, calc(var(--fb-neutral) + var(--fb-hover-mix-offset)));
 }
 
+/* The colors, sampled on the gradient: from the low to the middle anchor over the first half,
+   from the middle to the high anchor over the second. They are computed where the neutral or
+   the anchors change (the theme, a variant, a fill, a hovered element) and inherited
+   everywhere else. A control that carries its own variant (fb-variant) recomputes them on its
+   root element, with no specificity, so that its own rules keep the upper hand.
+   --fb-current-bg is the background of the block; --fb-bg-surface, --fb-bg-accent and
+   --fb-bg-highlight the background a fill of each kind would take there. Frames sit at
+   100% - (1 - mix) * (100% - neutral): their mix, moved toward the end of the gradient as the
+   neutral rises. */
+:root,
+.fb-theme-scope,
+:where(.fb-variant),
+.fb-wbs,
+.fb-wba,
+.fb-wbh,
+.fb-hover:hover {
+    --fb-current-bg: color-mix(in oklab, color-mix(in oklab, var(--fb-low-anchor), var(--fb-mid-anchor) clamp(0%, calc(var(--fb-current-neutral) * 2), 100%)), var(--fb-high-anchor) clamp(0%, calc(var(--fb-current-neutral) * 2 - 100%), 100%));
+    --fb-bg-surface: color-mix(in oklab, color-mix(in oklab, var(--fb-low-anchor), var(--fb-mid-anchor) clamp(0%, calc((var(--fb-current-neutral) + var(--fb-surface-offset)) * 2), 100%)), var(--fb-high-anchor) clamp(0%, calc((var(--fb-current-neutral) + var(--fb-surface-offset)) * 2 - 100%), 100%));
+    --fb-bg-accent: color-mix(in oklab, color-mix(in oklab, var(--fb-low-anchor), var(--fb-mid-anchor) clamp(0%, calc((var(--fb-current-neutral) + var(--fb-accent-offset)) * 2), 100%)), var(--fb-high-anchor) clamp(0%, calc((var(--fb-current-neutral) + var(--fb-accent-offset)) * 2 - 100%), 100%));
+    --fb-bg-highlight: color-mix(in oklab, color-mix(in oklab, var(--fb-low-anchor), var(--fb-mid-anchor) clamp(0%, calc((var(--fb-current-neutral) + var(--fb-highlight-offset)) * 2), 100%)), var(--fb-high-anchor) clamp(0%, calc((var(--fb-current-neutral) + var(--fb-highlight-offset)) * 2 - 100%), 100%));
+    --fb-frame-light: color-mix(in oklab, color-mix(in oklab, var(--fb-low-anchor), var(--fb-mid-anchor) clamp(0%, calc((100% - (1 - var(--fb-frame-light-mix)) * (100% - var(--fb-current-neutral))) * 2), 100%)), var(--fb-high-anchor) clamp(0%, calc((100% - (1 - var(--fb-frame-light-mix)) * (100% - var(--fb-current-neutral))) * 2 - 100%), 100%));
+    --fb-frame-medium: color-mix(in oklab, color-mix(in oklab, var(--fb-low-anchor), var(--fb-mid-anchor) clamp(0%, calc((100% - (1 - var(--fb-frame-medium-mix)) * (100% - var(--fb-current-neutral))) * 2), 100%)), var(--fb-high-anchor) clamp(0%, calc((100% - (1 - var(--fb-frame-medium-mix)) * (100% - var(--fb-current-neutral))) * 2 - 100%), 100%));
+    --fb-frame-strong: color-mix(in oklab, color-mix(in oklab, var(--fb-low-anchor), var(--fb-mid-anchor) clamp(0%, calc((100% - (1 - var(--fb-frame-strong-mix)) * (100% - var(--fb-current-neutral))) * 2), 100%)), var(--fb-high-anchor) clamp(0%, calc((100% - (1 - var(--fb-frame-strong-mix)) * (100% - var(--fb-current-neutral))) * 2 - 100%), 100%));
+}
+
+/* The page sits at the neutral. */
 html {
-    background-color: var(--fb-bg-surface);
+    background-color: var(--fb-current-bg);
 }
 
-/* Fills, named after their flags: WBS, WBA, WBH */
+/* Fills, named after their flags: WBS, WBA, WBH. Each one gives its offset to the depth rules
+   above and paints the gradient at its new neutral. */
 .fb-wbs {
-    --fb-current-bg: var(--fb-bg-surface);
+    --fb-fill-offset: var(--fb-surface-offset);
     background-color: var(--fb-current-bg);
 }
 
 .fb-wba {
-    --fb-current-bg: var(--fb-bg-accent);
+    --fb-fill-offset: var(--fb-accent-offset);
     background-color: var(--fb-current-bg);
 }
 
 .fb-wbh {
-    --fb-current-bg: var(--fb-bg-highlight);
+    --fb-fill-offset: var(--fb-highlight-offset);
     background-color: var(--fb-current-bg);
 }
 
@@ -81,20 +146,20 @@ html {
     border-bottom: 1px solid var(--fb-frame-border-color);
 }
 
-/* Frame strength: a mix between the current background and the high anchor */
+/* Frame strength: a frame color of the block, placed from its neutral */
 .fb-wfl,
 .fb-wsl {
-    --fb-frame-border-color: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-light-mix));
+    --fb-frame-border-color: var(--fb-frame-light);
 }
 
 .fb-wfm,
 .fb-wsm {
-    --fb-frame-border-color: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-medium-mix));
+    --fb-frame-border-color: var(--fb-frame-medium);
 }
 
 .fb-wfs,
 .fb-wss {
-    --fb-frame-border-color: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-strong-mix));
+    --fb-frame-border-color: var(--fb-frame-strong);
 }
 
 /* EO: a ring around the box, outside its frame. A shadow, since the frame is an outline: a
@@ -108,17 +173,17 @@ html {
 
 .fb-separator-light-frame {
     flex-basis: 1px;
-    background: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-light-mix));
+    background: var(--fb-frame-light);
 }
 
 .fb-separator-medium-frame {
     flex-basis: 1px;
-    background: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-medium-mix));
+    background: var(--fb-frame-medium);
 }
 
 .fb-separator-strong-frame {
     flex-basis: 1px;
-    background: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-strong-mix));
+    background: var(--fb-frame-strong);
 }
 
 /**********************************************************************************/
@@ -796,14 +861,14 @@ html {
 
 .fb-prog-path-back {
     /* Track: the medium frame color of the current background. */
-    stroke: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-medium-mix));
+    stroke: var(--fb-frame-medium);
 }
 
 .fb-prog-path {
     stroke-dasharray: 35,200;
     stroke-dashoffset: 0;
-    /* Arc: the high background anchor, so the spinner follows the active variant. */
-    stroke: var(--fb-bg-high-anchor);
+    /* Arc: the middle anchor, so the spinner follows the active variant. */
+    stroke: var(--fb-mid-anchor);
     animation: fb-dash 1.5s ease-in-out infinite;
     stroke-linecap: round;
 }
@@ -850,7 +915,7 @@ html {
     min-width: 0;
     min-height: 0;
     scrollbar-width: thin;
-    scrollbar-color: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-strong-mix)) transparent;
+    scrollbar-color: var(--fb-frame-strong) transparent;
 }
 
 /* A flex item never shrinks below its content by default. Every box between the anchor and
@@ -974,7 +1039,7 @@ html {
 .fb-drawer-scrim {
     position: absolute;
     inset: 0;
-    background: var(--fb-drawer-scrim, color-mix(in oklab, var(--fb-bg-low-anchor) 45%, transparent));
+    background: var(--fb-drawer-scrim, color-mix(in oklab, var(--fb-low-anchor) 45%, transparent));
     opacity: 0;
     transition: opacity 0.2s ease;
 }
@@ -1094,7 +1159,7 @@ html {
 }
 
 .fb-drawer-modal::backdrop {
-    background: var(--fb-drawer-scrim, color-mix(in oklab, var(--fb-bg-low-anchor) 45%, transparent));
+    background: var(--fb-drawer-scrim, color-mix(in oklab, var(--fb-low-anchor) 45%, transparent));
     transition: opacity 0.2s ease, overlay 0.2s allow-discrete, display 0.2s allow-discrete;
 }
 

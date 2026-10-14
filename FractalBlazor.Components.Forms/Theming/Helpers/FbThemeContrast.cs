@@ -70,13 +70,15 @@ public sealed class FbContrastReport
 /// <summary>
 /// Computes the colors produced by the stylesheet formulas and their WCAG contrast. Mixing
 /// percentages keeps the palette coherent but guarantees no contrast: this report is the check.
+/// Each background is a block filled at the first level, on the page: the neutral of the
+/// branch moved by the offset of its fill.
 /// </summary>
 public static class FbThemeContrast
 {
     /// <param name="theme">Resolved theme, as <c>IFbFormThemeRegistry.Resolve</c> returns it.</param>
     /// <param name="inverted">
-    /// Analyze the variants as <c>&lt;FbVariant Invert&gt;</c> renders them: background and
-    /// foreground anchors exchanged.
+    /// Analyze the variants as <c>&lt;FbVariant Invert&gt;</c> renders them: the gradient
+    /// reversed.
     /// </param>
     public static FbContrastReport Analyze(FbResolvedTheme theme, bool inverted = false)
     {
@@ -85,7 +87,8 @@ public static class FbThemeContrast
         var entries = new List<FbContrastEntry>();
         var skipped = new List<string>();
 
-        if (!TryPercent(theme.SurfaceMix.SurfaceMix, out var surfaceMix)
+        if (!TryPercent(theme.SurfaceMix.NeutralMix, out var neutral)
+            || !TryPercent(theme.SurfaceMix.SurfaceOffset, out var surfaceOffset)
             || !TryPercent(theme.SurfaceMix.AccentOffset, out var accentOffset)
             || !TryPercent(theme.SurfaceMix.HighlightOffset, out var highlightOffset)
             || !TryPercent(theme.TextVariant.SubtleHighMix, out var subtleMix)
@@ -107,18 +110,29 @@ public static class FbThemeContrast
         FbColorMath.TryParsePercent(tint.TintMix, out var tintMix);
         string Tint(string anchor) => FbColorMath.Tint(anchor, tint.ColorTint!, tintMix);
 
+        // The neutral of each background: the fill offset added to the neutral of the page.
+        var backgrounds = new[]
+        {
+            (FbContrastBackground.Surface, Math.Min(100d, neutral + surfaceOffset)),
+            (FbContrastBackground.Accent, Math.Min(100d, neutral + accentOffset)),
+            (FbContrastBackground.Highlight, Math.Min(100d, neutral + highlightOffset))
+        };
+        var texts = new[]
+        {
+            (FbContrastText.Subtle, subtleMix),
+            (FbContrastText.Muted, mutedMix),
+            (FbContrastText.Default, defaultMix),
+            (FbContrastText.Highlight, highlightMix)
+        };
+
         foreach (var name in theme.VariantOrder)
         {
-            var variant = theme.GetVariant(name);
-            var bgLow = variant.LayoutColors.LowAnchor;
-            var bgHigh = variant.LayoutColors.HighAnchor;
-            var fgLow = variant.FormColors.LowAnchor;
-            var fgHigh = variant.FormColors.HighAnchor;
+            var colors = theme.GetVariant(name).LayoutColors;
+            var (low, mid, high) = (colors.LowAnchor, colors.MidAnchor, colors.HighAnchor);
             if (inverted)
-                (bgLow, bgHigh, fgLow, fgHigh) = (fgHigh, fgLow, bgHigh, bgLow);
+                (low, high) = (high, low);
 
-            if (!FbColorMath.IsHexColor(bgLow) || !FbColorMath.IsHexColor(bgHigh)
-                || !FbColorMath.IsHexColor(fgLow) || !FbColorMath.IsHexColor(fgHigh))
+            if (!FbColorMath.IsHexColor(low) || !FbColorMath.IsHexColor(mid) || !FbColorMath.IsHexColor(high))
             {
                 skipped.Add($"{name}: an anchor is not a #RGB or #RRGGBB color.");
                 continue;
@@ -126,28 +140,14 @@ public static class FbThemeContrast
 
             // The anchors the stylesheets paint: under the master tint, as the CSS writer sets them.
             if (tinted)
-                (bgLow, bgHigh, fgLow, fgHigh) = (Tint(bgLow!), Tint(bgHigh!), Tint(fgLow!), Tint(fgHigh!));
+                (low, mid, high) = (Tint(low!), Tint(mid!), Tint(high!));
 
-            // Same formulas as the stylesheets: accent and highlight are offsets from the surface.
-            var surface = FbColorMath.Mix(bgLow!, bgHigh!, surfaceMix);
-            var backgrounds = new[]
+            foreach (var (background, blockNeutral) in backgrounds)
             {
-                (FbContrastBackground.Surface, surface),
-                (FbContrastBackground.Accent, FbColorMath.Mix(surface, bgHigh!, accentOffset)),
-                (FbContrastBackground.Highlight, FbColorMath.Mix(surface, bgHigh!, highlightOffset))
-            };
-            var texts = new[]
-            {
-                (FbContrastText.Subtle, FbColorMath.Mix(fgLow!, fgHigh!, subtleMix)),
-                (FbContrastText.Muted, FbColorMath.Mix(fgLow!, fgHigh!, mutedMix)),
-                (FbContrastText.Default, FbColorMath.Mix(fgLow!, fgHigh!, defaultMix)),
-                (FbContrastText.Highlight, FbColorMath.Mix(fgLow!, fgHigh!, highlightMix))
-            };
-
-            foreach (var (background, backgroundColor) in backgrounds)
-            {
-                foreach (var (text, textColor) in texts)
+                var backgroundColor = FbColorMath.Sample(low, mid, high, blockNeutral)!;
+                foreach (var (text, mix) in texts)
                 {
+                    var textColor = FbColorMath.Sample(low, mid, high, FbColorMath.Relative(mix, blockNeutral))!;
                     entries.Add(new FbContrastEntry(
                         name, background, text, backgroundColor, textColor,
                         FbColorMath.ContrastRatio(backgroundColor, textColor)));

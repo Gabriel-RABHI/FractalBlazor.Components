@@ -179,7 +179,8 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
 
         var surfaceMix = new FbThemeLayoutSurfaceMix
         {
-            SurfaceMix = Required(FindBranchValue(theme, branchName, value => value.SurfaceMix?.SurfaceMix), $"{branchName}.SurfaceMix.SurfaceMix"),
+            NeutralMix = Required(FindBranchValue(theme, branchName, value => value.SurfaceMix?.NeutralMix), $"{branchName}.SurfaceMix.NeutralMix"),
+            SurfaceOffset = Required(FindBranchValue(theme, branchName, value => value.SurfaceMix?.SurfaceOffset), $"{branchName}.SurfaceMix.SurfaceOffset"),
             AccentOffset = Required(FindBranchValue(theme, branchName, value => value.SurfaceMix?.AccentOffset), $"{branchName}.SurfaceMix.AccentOffset"),
             HighlightOffset = Required(FindBranchValue(theme, branchName, value => value.SurfaceMix?.HighlightOffset), $"{branchName}.SurfaceMix.HighlightOffset"),
             HoverOffset = Required(FindBranchValue(theme, branchName, value => value.SurfaceMix?.HoverOffset), $"{branchName}.SurfaceMix.HoverOffset")
@@ -218,26 +219,11 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
         var layoutColors = new FbThemeLayoutColors
         {
             LowAnchor = Pick(value => value.LayoutColors?.LowAnchor, value => value.LayoutColors.LowAnchor, $"{branchName}.{variantName}.LayoutColors.LowAnchor"),
+            MidAnchor = Pick(value => value.LayoutColors?.MidAnchor, value => value.LayoutColors.MidAnchor, $"{branchName}.{variantName}.LayoutColors.MidAnchor"),
             HighAnchor = Pick(value => value.LayoutColors?.HighAnchor, value => value.LayoutColors.HighAnchor, $"{branchName}.{variantName}.LayoutColors.HighAnchor")
         };
 
-        var formColors = new FbThemeFormColors
-        {
-            LowAnchor = Pick(value => value.FormColors?.LowAnchor, value => value.FormColors.LowAnchor, $"{branchName}.{variantName}.FormColors.LowAnchor"),
-            HighAnchor = Pick(value => value.FormColors?.HighAnchor, value => value.FormColors.HighAnchor, $"{branchName}.{variantName}.FormColors.HighAnchor")
-        };
-
-        // Optional: without frame anchors, the CSS falls back to the background ones.
-        string? Optional(Func<FbThemeColorVariant, string?> selector, Func<FbResolvedThemeVariant, string?> fallback)
-            => FindVariantValue(theme, branchName, variantName, selector) ?? (defaultVariant is null ? null : fallback(defaultVariant));
-
-        var frameColors = new FbThemeFormColors
-        {
-            LowAnchor = Optional(value => value.FrameColors?.LowAnchor, value => value.FrameColors.LowAnchor),
-            HighAnchor = Optional(value => value.FrameColors?.HighAnchor, value => value.FrameColors.HighAnchor)
-        };
-
-        return new FbResolvedThemeVariant(variantName, layoutColors, formColors, frameColors);
+        return new FbResolvedThemeVariant(variantName, layoutColors);
     }
 
     private static List<string> GetBranchNames(FbThemeSetup theme)
@@ -392,8 +378,6 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
                     throw new InvalidOperationException($"Branch '{branch.Name}' contains duplicate variant '{variant.Name}'.");
 
                 ValidateValues(variant.LayoutColors);
-                ValidateValues(variant.FormColors);
-                ValidateValues(variant.FrameColors);
             }
 
             ValidateValues(branch.MasterTint);
@@ -414,30 +398,52 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
         => Validate(value is null ? [] : [value.S, value.M, value.L, value.X]);
 
     private static void ValidateValues(FbThemeLayoutColors? value)
-        => Validate(value is null ? [] : [value.LowAnchor, value.HighAnchor]);
+        => Validate(value is null ? [] : [value.LowAnchor, value.MidAnchor, value.HighAnchor]);
 
     private static void ValidateValues(FbThemeMasterTint? value)
     {
         if (value is null)
             return;
 
-        Validate([value.ColorTint, value.TintMix]);
-        if (value.TintMix is not null && !(FbColorMath.TryParsePercent(value.TintMix, out var mix) && mix is >= 0d and <= 100d))
-            throw new InvalidOperationException("MasterTint.TintMix must be a percentage between 0% and 100%.");
+        Validate([value.ColorTint]);
+        ValidatePercents(("MasterTint.TintMix", value.TintMix));
     }
-    
+
     private static void ValidateValues(FbThemeLayoutBordersMix? value)
-        => Validate(value is null ? [] : [value.LightMix, value.MediumMix, value.StrongMix]);
+    {
+        if (value is not null)
+            ValidatePercents(("BordersMix.LightMix", value.LightMix), ("BordersMix.MediumMix", value.MediumMix),
+                ("BordersMix.StrongMix", value.StrongMix));
+    }
 
     private static void ValidateValues(FbThemeLayoutSurfaceMix? value)
-        => Validate(value is null ? [] : [value.SurfaceMix, value.AccentOffset, value.HighlightOffset, value.HoverOffset]);
-    
-    private static void ValidateValues(FbThemeFormColors? value)
-        => Validate(value is null ? [] : [value.LowAnchor, value.HighAnchor]);
-    
+    {
+        if (value is not null)
+            ValidatePercents(("SurfaceMix.NeutralMix", value.NeutralMix), ("SurfaceMix.SurfaceOffset", value.SurfaceOffset),
+                ("SurfaceMix.AccentOffset", value.AccentOffset), ("SurfaceMix.HighlightOffset", value.HighlightOffset),
+                ("SurfaceMix.HoverOffset", value.HoverOffset));
+    }
+
     private static void ValidateValues(FbThemeFormTextVariantMix? value)
-        => Validate(value is null ? [] : [value.DefaultHighMix, value.SubtleHighMix, value.MutedHighMix, value.HighlightHighMix]);
-    
+    {
+        if (value is not null)
+            ValidatePercents(("TextVariantMix.DefaultHighMix", value.DefaultHighMix), ("TextVariantMix.SubtleHighMix", value.SubtleHighMix),
+                ("TextVariantMix.MutedHighMix", value.MutedHighMix), ("TextVariantMix.HighlightHighMix", value.HighlightHighMix));
+    }
+
+    /// <summary>
+    /// The mixes are positions on the gradient: percentages between <c>0%</c> and <c>100%</c>.
+    /// A value left out is inherited.
+    /// </summary>
+    private static void ValidatePercents(params (string Name, string? Value)[] values)
+    {
+        foreach (var (name, value) in values)
+        {
+            if (value is not null)
+                FbThemeCssNames.ValidatePercent(value, name);
+        }
+    }
+
     private static void ValidateValues(FbThemeFormTypography? value)
         => Validate(value is null ? [] : [value.TextFontFamily, value.CodeFontFamily, value.FontSizeBase, value.LineHeight, value.ExtraSmallCoef, value.SmallCoef, value.MediumCoef, value.LargeCoef, value.ExtraLargeCoef, value.ExtraExtraLargeCoef, value.ThinWeight, value.DefaultWeight, value.BoldWeight, value.ExtraBoldWeight]);
 

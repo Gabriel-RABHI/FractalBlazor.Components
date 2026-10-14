@@ -29,6 +29,12 @@ public sealed class FbThemeLayoutCorners
     public static FbThemeLayoutCorners Rounded => new() { S = "0.25rem", M = "0.5rem", L = "0.875rem", X = "2rem" };
 }
 
+/// <summary>
+/// Positions of the frame lines on the gradient, relative to the neutral of their block and
+/// measured from the end of the gradient: a frame sits at
+/// <c>100 − (100 − mix) × (100 − neutral) / 100</c> percent. At a neutral of 0 %, it sits at
+/// its mix; the higher the neutral, the closer to the high anchor.
+/// </summary>
 public sealed class FbThemeLayoutBordersMix
 {
     public string? LightMix { get; init; }
@@ -38,24 +44,49 @@ public sealed class FbThemeLayoutBordersMix
     public string? StrongMix { get; init; }
 }
 
+/// <summary>
+/// The neutral of the page and how far each fill moves it. A filled block takes the neutral of
+/// its nearest filled ancestor, adds the offset of its fill, and paints the gradient there; its
+/// texts and frames are placed from this new neutral.
+/// </summary>
 public sealed class FbThemeLayoutSurfaceMix
 {
-    public string? SurfaceMix { get; init; }
+    /// <summary>
+    /// The neutral of the page, where the gradient starts: <c>0%</c> is the low anchor.
+    /// </summary>
+    public string? NeutralMix { get; init; }
+
+    public string? SurfaceOffset { get; init; }
 
     public string? AccentOffset { get; init; }
 
     public string? HighlightOffset { get; init; }
 
     /// <summary>
-    /// Added to the background, frame and text mixes while a hoverable surface is hovered.
+    /// Added to the neutral of a hoverable element while it is hovered.
     /// </summary>
     public string? HoverOffset { get; init; }
 }
 
+/// <summary>
+/// The gradient of a variant: three anchors, at 0 %, 50 % and 100 %. Backgrounds, texts and
+/// frames are all positions on it.
+/// </summary>
 public sealed class FbThemeLayoutColors
 {
+    /// <summary>
+    /// The color at 0 %: the page background at a neutral of 0 %.
+    /// </summary>
     public string? LowAnchor { get; init; }
 
+    /// <summary>
+    /// The color at 50 %.
+    /// </summary>
+    public string? MidAnchor { get; init; }
+
+    /// <summary>
+    /// The color at 100 %: the strongest text.
+    /// </summary>
     public string? HighAnchor { get; init; }
 }
 
@@ -63,8 +94,8 @@ public sealed class FbThemeLayoutColors
 /// The tint every color of a theme, or of a branch, leans toward. Every anchor keeps its
 /// lightness and moves its hue and chroma toward <see cref="ColorTint"/> by
 /// <see cref="TintMix"/>: a colored tint draws all the hues toward it, a gray one lowers the
-/// intensity of every hue. Since each color of the stylesheets mixes two anchors, all of them
-/// follow.
+/// intensity of every hue. Since each color of the stylesheets samples the anchors, all of
+/// them follow.
 /// </summary>
 public sealed class FbThemeMasterTint
 {
@@ -88,17 +119,16 @@ public sealed class FbThemeMasterTint
 public static class FbThemeCssNames
 {
     /// <summary>
-    /// Anchor pair redirected by a Layout variant: <c>bg-low-anchor</c> and <c>bg-high-anchor</c>.
+    /// The three anchors of a variant, at 0 %, 50 % and 100 % of its gradient.
     /// </summary>
-    public const string BackgroundAnchors = "bg";
+    public const string LowAnchor = "low-anchor";
 
-    /// <summary>
-    /// Anchor pair redirected by a Forms variant, on top of <see cref="BackgroundAnchors"/>.
-    /// </summary>
-    public const string ForegroundAnchors = "fg";
+    public const string MidAnchor = "mid-anchor";
+
+    public const string HighAnchor = "high-anchor";
 
     private const int ReferenceCacheCapacity = 256;
-    private static readonly ConcurrentDictionary<(string Variant, bool Foreground, bool Invert), string> _references = new();
+    private static readonly ConcurrentDictionary<(string Variant, bool Invert), string> _references = new();
 
     public static string Normalize(string name)
     {
@@ -144,54 +174,23 @@ public static class FbThemeCssNames
         => $"{ActiveName(token)}:var({ValueName(variant, sourceToken)});";
 
     /// <summary>
-    /// Builds the inline redirections that activate a variant: the background anchors, then,
-    /// when <paramref name="foreground"/> is set, the foreground anchors.
+    /// Builds the inline redirections that activate a variant: its three anchors.
     /// </summary>
     /// <param name="normalizedVariant">Variant name, already normalized for CSS.</param>
-    /// <param name="foreground">Also redirect the foreground anchors (Forms).</param>
     /// <param name="invert">
-    /// Turns a dark variant into a light one and the other way round, as <c>Conception.md</c>
-    /// describes: with foreground anchors, the background anchors take the foreground ones
-    /// (the absolute foreground becomes the absolute background) and the other way round;
-    /// with background anchors only, the low and high anchors are exchanged.
+    /// Reverses the gradient: the low and high anchors are exchanged, the middle one stays. A
+    /// dark variant renders light and the other way round.
     /// </param>
-    public static string VariantReferences(string normalizedVariant, bool foreground, bool invert)
+    public static string VariantReferences(string normalizedVariant, bool invert)
     {
-        var key = (normalizedVariant, foreground, invert);
+        var key = (normalizedVariant, invert);
         if (_references.TryGetValue(key, out var cached))
             return cached;
 
-        const string bgLow = "bg-low-anchor", bgHigh = "bg-high-anchor", fgLow = "fg-low-anchor", fgHigh = "fg-high-anchor",
-            frameLow = "frame-low-anchor", frameHigh = "frame-high-anchor";
-        var builder = new StringBuilder();
-        if (!invert)
-        {
-            builder.Append(ActiveReference(normalizedVariant, bgLow));
-            builder.Append(ActiveReference(normalizedVariant, bgHigh));
-            if (foreground)
-            {
-                builder.Append(ActiveReference(normalizedVariant, fgLow));
-                builder.Append(ActiveReference(normalizedVariant, fgHigh));
-            }
-        }
-        else if (foreground)
-        {
-            builder.Append(ActiveReference(normalizedVariant, bgLow, fgHigh));
-            builder.Append(ActiveReference(normalizedVariant, bgHigh, fgLow));
-            builder.Append(ActiveReference(normalizedVariant, fgLow, bgHigh));
-            builder.Append(ActiveReference(normalizedVariant, fgHigh, bgLow));
-        }
-        else
-        {
-            builder.Append(ActiveReference(normalizedVariant, bgLow, bgHigh));
-            builder.Append(ActiveReference(normalizedVariant, bgHigh, bgLow));
-        }
-
-        // Frame anchors, when the variant declares them. A reference to an undefined anchor
-        // leaves the active one unset, and the frames fall back to the background anchors.
-        builder.Append(ActiveReference(normalizedVariant, frameLow, invert ? frameHigh : frameLow));
-        builder.Append(ActiveReference(normalizedVariant, frameHigh, invert ? frameLow : frameHigh));
-        var references = builder.ToString();
+        var references =
+            ActiveReference(normalizedVariant, LowAnchor, invert ? HighAnchor : LowAnchor) +
+            ActiveReference(normalizedVariant, MidAnchor) +
+            ActiveReference(normalizedVariant, HighAnchor, invert ? LowAnchor : HighAnchor);
 
         if (_references.Count < ReferenceCacheCapacity)
             _references.TryAdd(key, references);
@@ -199,13 +198,61 @@ public static class FbThemeCssNames
     }
 
     /// <summary>
-    /// Declares <c>color-scheme</c> from the page background, so native widgets (date picker,
-    /// select list, scrollbars) follow the theme. Nothing is written when the background is
-    /// not a hexadecimal color.
+    /// Declares the positions of the gradient. The neutral and the offsets stay percentages,
+    /// so that they add up in CSS; the frame mixes become fractions, since CSS cannot multiply
+    /// two percentages.
     /// </summary>
-    public static void AppendColorScheme(StringBuilder builder, string? pageBackground)
+    public static void AppendGradient(StringBuilder builder, FbThemeLayoutSurfaceMix surface, FbThemeLayoutBordersMix borders)
     {
-        var scheme = FbColorMath.ColorSchemeOf(pageBackground);
+        AppendDeclaration(builder, "--fb-neutral-mix", surface.NeutralMix!);
+        AppendDeclaration(builder, "--fb-surface-offset", surface.SurfaceOffset!);
+        AppendDeclaration(builder, "--fb-accent-offset", surface.AccentOffset!);
+        AppendDeclaration(builder, "--fb-highlight-offset", surface.HighlightOffset!);
+        AppendDeclaration(builder, "--fb-hover-offset", surface.HoverOffset!);
+        AppendDeclaration(builder, "--fb-frame-light-mix", Fraction(borders.LightMix, "BordersMix.LightMix"));
+        AppendDeclaration(builder, "--fb-frame-medium-mix", Fraction(borders.MediumMix, "BordersMix.MediumMix"));
+        AppendDeclaration(builder, "--fb-frame-strong-mix", Fraction(borders.StrongMix, "BordersMix.StrongMix"));
+    }
+
+    /// <summary>
+    /// Declares the three anchors of a variant, under the master tint.
+    /// </summary>
+    public static void AppendAnchors(StringBuilder builder, string variant, FbThemeLayoutColors colors, FbThemeMasterTint tint)
+    {
+        AppendDeclaration(builder, ValueName(variant, LowAnchor), Tinted(colors.LowAnchor!, tint));
+        AppendDeclaration(builder, ValueName(variant, MidAnchor), Tinted(colors.MidAnchor!, tint));
+        AppendDeclaration(builder, ValueName(variant, HighAnchor), Tinted(colors.HighAnchor!, tint));
+    }
+
+    /// <summary>
+    /// A percentage of the theme as a fraction: <c>80%</c> gives <c>0.8</c>.
+    /// </summary>
+    public static string Fraction(string? percent, string name)
+    {
+        ValidatePercent(percent, name);
+        FbColorMath.TryParsePercent(percent, out var value);
+        return (value / 100d).ToString("0.######", System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    /// <summary>
+    /// Refuses a mix that is not a percentage between <c>0%</c> and <c>100%</c>.
+    /// </summary>
+    public static void ValidatePercent(string? value, string name)
+    {
+        if (!(value is not null && value.Trim().EndsWith('%') && FbColorMath.TryParsePercent(value, out var percent)
+              && percent is >= 0d and <= 100d))
+            throw new InvalidOperationException($"{name} must be a percentage between 0% and 100%.");
+    }
+
+    /// <summary>
+    /// Declares <c>color-scheme</c> from the page background, the gradient sampled at the
+    /// neutral, so native widgets (date picker, select list, scrollbars) follow the theme.
+    /// Nothing is written when an anchor is not a hexadecimal color.
+    /// </summary>
+    public static void AppendColorScheme(StringBuilder builder, FbThemeLayoutColors colors, string? neutralMix)
+    {
+        FbColorMath.TryParsePercent(neutralMix, out var neutral);
+        var scheme = FbColorMath.ColorSchemeOf(FbColorMath.Sample(colors.LowAnchor, colors.MidAnchor, colors.HighAnchor, neutral));
         if (scheme is not null)
             builder.Append("color-scheme:").Append(scheme).Append(';');
     }

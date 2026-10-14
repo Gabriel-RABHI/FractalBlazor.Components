@@ -22,8 +22,8 @@ public sealed class FbVariant : FbComponentBase
     public string Style { get; set; } = "";
 
     /// <summary>
-    /// Exchanges the background and foreground anchors of the variant: a dark variant renders
-    /// light and the other way round. A light card inside a dark page, without a new branch.
+    /// Reverses the gradient of the variant, its low and high anchors exchanged: a dark variant
+    /// renders light and the other way round. A light card inside a dark page, without a new branch.
     /// </summary>
     [Parameter]
     public bool Invert { get; set; }

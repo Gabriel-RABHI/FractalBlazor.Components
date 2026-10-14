@@ -109,7 +109,8 @@ public sealed class FbLayoutThemeRegistry : IFbLayoutThemeRegistry
 
         var surfaceMix = new FbThemeLayoutSurfaceMix
         {
-            SurfaceMix = Required(FindThemeValue(theme, value => value.SurfaceMix?.SurfaceMix), "SurfaceMix.SurfaceMix"),
+            NeutralMix = Required(FindThemeValue(theme, value => value.SurfaceMix?.NeutralMix), "SurfaceMix.NeutralMix"),
+            SurfaceOffset = Required(FindThemeValue(theme, value => value.SurfaceMix?.SurfaceOffset), "SurfaceMix.SurfaceOffset"),
             AccentOffset = Required(FindThemeValue(theme, value => value.SurfaceMix?.AccentOffset), "SurfaceMix.AccentOffset"),
             HighlightOffset = Required(FindThemeValue(theme, value => value.SurfaceMix?.HighlightOffset), "SurfaceMix.HighlightOffset"),
             HoverOffset = Required(FindThemeValue(theme, value => value.SurfaceMix?.HoverOffset), "SurfaceMix.HoverOffset")
@@ -146,6 +147,7 @@ public sealed class FbLayoutThemeRegistry : IFbLayoutThemeRegistry
         var colors = new FbThemeLayoutColors
         {
             LowAnchor = Pick(value => value.LayoutColors?.LowAnchor, value => value.LayoutColors.LowAnchor, $"{variantName}.LayoutColors.LowAnchor"),
+            MidAnchor = Pick(value => value.LayoutColors?.MidAnchor, value => value.LayoutColors.MidAnchor, $"{variantName}.LayoutColors.MidAnchor"),
             HighAnchor = Pick(value => value.LayoutColors?.HighAnchor, value => value.LayoutColors.HighAnchor, $"{variantName}.LayoutColors.HighAnchor")
         };
 
@@ -267,25 +269,44 @@ public sealed class FbLayoutThemeRegistry : IFbLayoutThemeRegistry
         => ValidateValues(values is null ? [] : [values.S, values.M, values.L, values.X]);
 
     private static void ValidateValues(FbThemeLayoutColors? values)
-        => ValidateValues(values is null ? [] : [values.LowAnchor, values.HighAnchor]);
+        => ValidateValues(values is null ? [] : [values.LowAnchor, values.MidAnchor, values.HighAnchor]);
 
     private static void ValidateValues(FbThemeMasterTint? value)
     {
         if (value is null)
             return;
 
-        ValidateValues([value.ColorTint, value.TintMix]);
-        if (value.TintMix is not null && !(FbColorMath.TryParsePercent(value.TintMix, out var mix) && mix is >= 0d and <= 100d))
-            throw new InvalidOperationException("MasterTint.TintMix must be a percentage between 0% and 100%.");
+        ValidateValues([value.ColorTint]);
+        ValidatePercents(("MasterTint.TintMix", value.TintMix));
     }
 
     private static void ValidateValues(FbThemeLayoutBordersMix? values)
-        => ValidateValues(values is null ? [] :
-            [values.LightMix, values.MediumMix, values.StrongMix]);
+    {
+        if (values is not null)
+            ValidatePercents(("BordersMix.LightMix", values.LightMix), ("BordersMix.MediumMix", values.MediumMix),
+                ("BordersMix.StrongMix", values.StrongMix));
+    }
 
     private static void ValidateValues(FbThemeLayoutSurfaceMix? values)
-        => ValidateValues(values is null ? [] :
-            [values.SurfaceMix, values.AccentOffset, values.HighlightOffset, values.HoverOffset]);
+    {
+        if (values is not null)
+            ValidatePercents(("SurfaceMix.NeutralMix", values.NeutralMix), ("SurfaceMix.SurfaceOffset", values.SurfaceOffset),
+                ("SurfaceMix.AccentOffset", values.AccentOffset), ("SurfaceMix.HighlightOffset", values.HighlightOffset),
+                ("SurfaceMix.HoverOffset", values.HoverOffset));
+    }
+
+    /// <summary>
+    /// The mixes are positions on the gradient: percentages between <c>0%</c> and <c>100%</c>.
+    /// A value left out is inherited.
+    /// </summary>
+    private static void ValidatePercents(params (string Name, string? Value)[] values)
+    {
+        foreach (var (name, value) in values)
+        {
+            if (value is not null)
+                FbThemeCssNames.ValidatePercent(value, name);
+        }
+    }
 
     private static void ValidateValues(IEnumerable<string?> values)
     {

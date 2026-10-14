@@ -24,6 +24,29 @@ namespace FractalBlazor.Components.Layout.Colors
         }
 
         /// <summary>
+        /// The color of a three-anchor gradient at <paramref name="percent"/>, as the stylesheets
+        /// sample it: from <paramref name="low"/> to <paramref name="mid"/> over the first half,
+        /// from <paramref name="mid"/> to <paramref name="high"/> over the second. <c>null</c>
+        /// when an anchor is not a <c>#RGB</c> or <c>#RRGGBB</c> color.
+        /// </summary>
+        public static string? Sample(string? low, string? mid, string? high, double percent)
+        {
+            if (!IsHexColor(low) || !IsHexColor(mid) || !IsHexColor(high))
+                return null;
+
+            var position = Math.Clamp(percent, 0d, 100d);
+            return position <= 50d ? Mix(low!, mid!, position * 2d) : Mix(mid!, high!, (position * 2d) - 100d);
+        }
+
+        /// <summary>
+        /// Where a text or a frame sits on the gradient: its <paramref name="mix"/>, moved toward
+        /// the end of the gradient as the <paramref name="neutral"/> of its block rises,
+        /// <c>100 − (100 − mix) × (100 − neutral) / 100</c>. All values in percent.
+        /// </summary>
+        public static double Relative(double mix, double neutral)
+            => 100d - ((100d - mix) * (100d - Math.Clamp(neutral, 0d, 100d)) / 100d);
+
+        /// <summary>
         /// Same result as the stylesheets give an anchor under a master tint:
         /// <c>color-mix(in oklab, anchor, oklch(from tint L c h) percent%)</c>, where L is the
         /// lightness of the anchor. The anchor keeps its lightness; its hue and chroma move

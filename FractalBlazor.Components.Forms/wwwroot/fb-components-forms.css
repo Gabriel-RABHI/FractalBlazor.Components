@@ -83,7 +83,7 @@
     gap: var(--fb-space-m);
     overflow-x: auto;
     scrollbar-width: none;
-    border-bottom: 1px solid color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-light-mix));
+    border-bottom: 1px solid var(--fb-frame-light);
 }
 
 .fb-tab {
@@ -103,7 +103,7 @@
 }
 
     .fb-tab:hover {
-        --fb-fg-default: color-mix(in oklab, var(--fb-fg-low-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-default-high-mix));
+        --fb-fg-default: color-mix(in oklab, color-mix(in oklab, var(--fb-low-anchor), var(--fb-mid-anchor) clamp(0%, calc((100% - (1 - var(--fb-fg-default-mix)) * (100% - var(--fb-current-neutral))) * 2), 100%)), var(--fb-high-anchor) clamp(0%, calc((100% - (1 - var(--fb-fg-default-mix)) * (100% - var(--fb-current-neutral))) * 2 - 100%), 100%));
     }
 
     .fb-tab-selected,
@@ -218,7 +218,7 @@
 }
 
 .fb-button:active {
-    --fb-hover-mix-offset: calc(var(--fb-bg-hover-offset) * 2);
+    --fb-hover-mix-offset: calc(var(--fb-hover-offset) * 2);
 }
 
 .fb-button:focus-visible {
@@ -284,7 +284,7 @@
     box-sizing: border-box;
     width: 1.25em;
     height: 1.25em;
-    border: 1px solid color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-strong-mix));
+    border: 1px solid var(--fb-frame-strong);
     border-radius: var(--fb-radius-s);
     color: var(--fb-current-bg);
     transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
@@ -343,7 +343,7 @@
     margin: 0;
     flex: none;
     border-radius: 1em;
-    background: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-strong-mix));
+    background: var(--fb-frame-strong);
     cursor: inherit;
     transition: background-color 0.15s ease-in-out;
 }
@@ -407,37 +407,34 @@
     vertical-align: -0.5em;
 }
 
-/* A control that carries its own variant (fb-variant) recomputes the colors on its root
-   element, with no specificity, so that its own rules keep the upper hand. */
+/* The text colors, sampled on the gradient of the active variant like the backgrounds and
+   frames of the Layout stylesheet, and computed at the same places: the theme, a variant, a
+   fill, a hovered element. A text sits at 100% - (1 - mix) * (100% - neutral): its mix, moved
+   toward the end of the gradient as the neutral of its block rises. A control that carries
+   its own variant (fb-variant) recomputes them on its root element, with no specificity, so
+   that its own rules keep the upper hand. */
 :root,
 .fb-theme-scope,
-:where(.fb-variant) {
-    color: var(--fb-fg-default);
-    --fb-current-fg-default-high-mix: var(--fb-fg-default-high-mix);
-    --fb-current-fg-subtle-high-mix: var(--fb-fg-subtle-high-mix);
-    --fb-current-fg-muted-high-mix: var(--fb-fg-muted-high-mix);
-    --fb-current-fg-highlight-high-mix: var(--fb-fg-highlight-high-mix);
-    --fb-fg-default: color-mix(in oklab, var(--fb-fg-low-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-default-high-mix));
-    --fb-fg-subtle: color-mix(in oklab, var(--fb-fg-low-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-subtle-high-mix));
-    --fb-fg-muted: color-mix(in oklab, var(--fb-fg-low-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-muted-high-mix));
-    --fb-fg-highlight: color-mix(in oklab, var(--fb-fg-low-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-highlight-high-mix));
+:where(.fb-variant),
+.fb-wbs,
+.fb-wba,
+.fb-wbh,
+.fb-hover:hover {
+    --fb-fg-subtle: color-mix(in oklab, color-mix(in oklab, var(--fb-low-anchor), var(--fb-mid-anchor) clamp(0%, calc((100% - (1 - var(--fb-fg-subtle-mix)) * (100% - var(--fb-current-neutral))) * 2), 100%)), var(--fb-high-anchor) clamp(0%, calc((100% - (1 - var(--fb-fg-subtle-mix)) * (100% - var(--fb-current-neutral))) * 2 - 100%), 100%));
+    --fb-fg-muted: color-mix(in oklab, color-mix(in oklab, var(--fb-low-anchor), var(--fb-mid-anchor) clamp(0%, calc((100% - (1 - var(--fb-fg-muted-mix)) * (100% - var(--fb-current-neutral))) * 2), 100%)), var(--fb-high-anchor) clamp(0%, calc((100% - (1 - var(--fb-fg-muted-mix)) * (100% - var(--fb-current-neutral))) * 2 - 100%), 100%));
+    --fb-fg-default: color-mix(in oklab, color-mix(in oklab, var(--fb-low-anchor), var(--fb-mid-anchor) clamp(0%, calc((100% - (1 - var(--fb-fg-default-mix)) * (100% - var(--fb-current-neutral))) * 2), 100%)), var(--fb-high-anchor) clamp(0%, calc((100% - (1 - var(--fb-fg-default-mix)) * (100% - var(--fb-current-neutral))) * 2 - 100%), 100%));
+    --fb-fg-highlight: color-mix(in oklab, color-mix(in oklab, var(--fb-low-anchor), var(--fb-mid-anchor) clamp(0%, calc((100% - (1 - var(--fb-fg-highlight-mix)) * (100% - var(--fb-current-neutral))) * 2), 100%)), var(--fb-high-anchor) clamp(0%, calc((100% - (1 - var(--fb-fg-highlight-mix)) * (100% - var(--fb-current-neutral))) * 2 - 100%), 100%));
     --fb-control-fg: var(--fb-fg-default);
     --fb-control-placeholder: var(--fb-fg-subtle);
     --fb-control-caret: var(--fb-fg-highlight);
-    --fb-control-selection: color-mix(in oklab, var(--fb-bg-high-anchor) 45%, transparent);
-    --fb-control-accent: var(--fb-bg-high-anchor);
-    --fb-control-accent-fg: var(--fb-bg-low-anchor);
+    --fb-control-selection: color-mix(in oklab, var(--fb-mid-anchor) 45%, transparent);
+    --fb-control-accent: var(--fb-mid-anchor);
+    --fb-control-accent-fg: var(--fb-low-anchor);
 }
 
-.fb-hover:hover {
-    --fb-current-fg-default-high-mix: clamp(0%, calc(var(--fb-fg-default-high-mix) + var(--fb-hover-mix-offset)), 100%);
-    --fb-current-fg-subtle-high-mix: clamp(0%, calc(var(--fb-fg-subtle-high-mix) + var(--fb-hover-mix-offset)), 100%);
-    --fb-current-fg-muted-high-mix: clamp(0%, calc(var(--fb-fg-muted-high-mix) + var(--fb-hover-mix-offset)), 100%);
-    --fb-current-fg-highlight-high-mix: clamp(0%, calc(var(--fb-fg-highlight-high-mix) + var(--fb-hover-mix-offset)), 100%);
-    --fb-fg-default: color-mix(in oklab, var(--fb-fg-low-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-default-high-mix));
-    --fb-fg-subtle: color-mix(in oklab, var(--fb-fg-low-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-subtle-high-mix));
-    --fb-fg-muted: color-mix(in oklab, var(--fb-fg-low-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-muted-high-mix));
-    --fb-fg-highlight: color-mix(in oklab, var(--fb-fg-low-anchor), var(--fb-fg-high-anchor) var(--fb-current-fg-highlight-high-mix));
+/* The text a block holds follows its colors. */
+:where(:root, .fb-theme-scope, .fb-variant, .fb-wbs, .fb-wba, .fb-wbh, .fb-hover:hover) {
+    color: var(--fb-fg-default);
 }
 
 @font-face {

@@ -14,41 +14,34 @@ public sealed class VariantTests : BunitContext
         var style = StyleOf(p => p.Add(x => x.Variant, FbThemeVariants.Error));
 
         Assert.Equal(
-            "--fb-bg-low-anchor:var(--fb-error-bg-low-anchor);" +
-            "--fb-bg-high-anchor:var(--fb-error-bg-high-anchor);" +
-            "--fb-fg-low-anchor:var(--fb-error-fg-low-anchor);" +
-            "--fb-fg-high-anchor:var(--fb-error-fg-high-anchor);" +
-            "--fb-frame-low-anchor:var(--fb-error-frame-low-anchor);" +
-            "--fb-frame-high-anchor:var(--fb-error-frame-high-anchor);",
+            "--fb-low-anchor:var(--fb-error-low-anchor);" +
+            "--fb-mid-anchor:var(--fb-error-mid-anchor);" +
+            "--fb-high-anchor:var(--fb-error-high-anchor);",
             style);
     }
 
     [Fact]
-    public void Invert_exchanges_the_background_and_foreground_anchors()
+    public void Invert_reverses_the_gradient()
     {
         var style = StyleOf(p => p.Add(x => x.Variant, FbThemeVariants.Error).Add(x => x.Invert, true));
 
         Assert.Equal(
-            "--fb-bg-low-anchor:var(--fb-error-fg-high-anchor);" +
-            "--fb-bg-high-anchor:var(--fb-error-fg-low-anchor);" +
-            "--fb-fg-low-anchor:var(--fb-error-bg-high-anchor);" +
-            "--fb-fg-high-anchor:var(--fb-error-bg-low-anchor);" +
-            "--fb-frame-low-anchor:var(--fb-error-frame-high-anchor);" +
-            "--fb-frame-high-anchor:var(--fb-error-frame-low-anchor);",
+            "--fb-low-anchor:var(--fb-error-high-anchor);" +
+            "--fb-mid-anchor:var(--fb-error-mid-anchor);" +
+            "--fb-high-anchor:var(--fb-error-low-anchor);",
             style);
     }
 
     [Fact]
-    public void Layout_invert_exchanges_the_background_anchors()
+    public void Layout_invert_reverses_the_gradient_too()
     {
         var style = Render<FractalBlazor.Components.Layout.Theming.FbLayoutVariant>(p => p.Add(x => x.Invert, true))
             .Find("div").GetAttribute("style");
 
         Assert.Equal(
-            "--fb-bg-low-anchor:var(--fb-default-bg-high-anchor);" +
-            "--fb-bg-high-anchor:var(--fb-default-bg-low-anchor);" +
-            "--fb-frame-low-anchor:var(--fb-default-frame-high-anchor);" +
-            "--fb-frame-high-anchor:var(--fb-default-frame-low-anchor);",
+            "--fb-low-anchor:var(--fb-default-high-anchor);" +
+            "--fb-mid-anchor:var(--fb-default-mid-anchor);" +
+            "--fb-high-anchor:var(--fb-default-low-anchor);",
             style);
     }
 
@@ -57,6 +50,6 @@ public sealed class VariantTests : BunitContext
     {
         var style = StyleOf(p => p.Add(x => x.Variant, ""));
 
-        Assert.StartsWith("--fb-bg-low-anchor:var(--fb-default-bg-low-anchor);", style);
+        Assert.StartsWith("--fb-low-anchor:var(--fb-default-low-anchor);", style);
     }
 }

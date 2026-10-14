@@ -21,18 +21,12 @@ public static class FbThemeCssWriter
         Append(builder, "--fb-default-radius-l", theme.Corners.L);
         Append(builder, "--fb-default-radius-x", theme.Corners.X);
 
-        Append(builder, "--fb-default-fg-default-high-mix", theme.TextVariant.DefaultHighMix);
-        Append(builder, "--fb-default-fg-subtle-high-mix", theme.TextVariant.SubtleHighMix);
-        Append(builder, "--fb-default-fg-muted-high-mix", theme.TextVariant.MutedHighMix);
-        Append(builder, "--fb-default-fg-highlight-high-mix", theme.TextVariant.HighlightHighMix);
-
-        Append(builder, "--fb-bg-surface-mix", theme.SurfaceMix.SurfaceMix);
-        Append(builder, "--fb-bg-accent-offset", theme.SurfaceMix.AccentOffset);
-        Append(builder, "--fb-bg-highlight-offset", theme.SurfaceMix.HighlightOffset);
-        Append(builder, "--fb-bg-hover-offset", theme.SurfaceMix.HoverOffset);
-        Append(builder, "--fb-frame-light-mix", theme.BordersMix.LightMix);
-        Append(builder, "--fb-frame-medium-mix", theme.BordersMix.MediumMix);
-        Append(builder, "--fb-frame-strong-mix", theme.BordersMix.StrongMix);
+        FbThemeCssNames.AppendGradient(builder, theme.SurfaceMix, theme.BordersMix);
+        // Fractions, like the frame mixes: a text sits at 100% - (1 - mix) * (100% - neutral).
+        Append(builder, "--fb-fg-subtle-mix", FbThemeCssNames.Fraction(theme.TextVariant.SubtleHighMix, "TextVariantMix.SubtleHighMix"));
+        Append(builder, "--fb-fg-muted-mix", FbThemeCssNames.Fraction(theme.TextVariant.MutedHighMix, "TextVariantMix.MutedHighMix"));
+        Append(builder, "--fb-fg-default-mix", FbThemeCssNames.Fraction(theme.TextVariant.DefaultHighMix, "TextVariantMix.DefaultHighMix"));
+        Append(builder, "--fb-fg-highlight-mix", FbThemeCssNames.Fraction(theme.TextVariant.HighlightHighMix, "TextVariantMix.HighlightHighMix"));
 
         Append(builder, "--fb-txt-font-family", theme.Typography.TextFontFamily);
         Append(builder, "--fb-code-font-family", theme.Typography.CodeFontFamily);
@@ -49,11 +43,14 @@ public static class FbThemeCssWriter
         Append(builder, "--fb-txt-b-weight", theme.Typography.BoldWeight);
         Append(builder, "--fb-txt-xb-weight", theme.Typography.ExtraBoldWeight);
 
-        FbThemeCssNames.AppendColorScheme(builder, theme.GetVariant(FbThemeVariants.Default).LayoutColors.LowAnchor);
+        FbThemeCssNames.AppendColorScheme(builder, theme.GetVariant(FbThemeVariants.Default).LayoutColors, theme.SurfaceMix.NeutralMix);
 
         FbThemeCssNames.AppendTint(builder, theme.MasterTint);
         foreach (var variantName in theme.VariantOrder)
-            AppendVariant(builder, theme.GetVariant(variantName), theme.MasterTint);
+        {
+            var variant = theme.GetVariant(variantName);
+            FbThemeCssNames.AppendAnchors(builder, variant.Name, variant.LayoutColors, theme.MasterTint);
+        }
 
         AppendReference(builder, "space-s", "default-space-s");
         AppendReference(builder, "space-m", "default-space-m");
@@ -63,10 +60,6 @@ public static class FbThemeCssWriter
         AppendReference(builder, "radius-m", "default-radius-m");
         AppendReference(builder, "radius-l", "default-radius-l");
         AppendReference(builder, "radius-x", "default-radius-x");
-        AppendReference(builder, "fg-default-high-mix", "default-fg-default-high-mix");
-        AppendReference(builder, "fg-subtle-high-mix", "default-fg-subtle-high-mix");
-        AppendReference(builder, "fg-muted-high-mix", "default-fg-muted-high-mix");
-        AppendReference(builder, "fg-highlight-high-mix", "default-fg-highlight-high-mix");
         builder.Append(BuildVariantReferences(FbThemeVariants.Default));
 
         return builder.ToString();
@@ -74,32 +67,12 @@ public static class FbThemeCssWriter
 
     /// <summary>
     /// Inline redirections that activate <paramref name="variant"/> on a DOM branch.
-    /// <paramref name="invert"/> exchanges the background and foreground anchors: a dark
-    /// variant renders light, and the other way round.
+    /// <paramref name="invert"/> reverses its gradient: a dark variant renders light, and the
+    /// other way round.
     /// </summary>
     public static string BuildVariantReferences(string? variant, bool invert = false)
         => FbThemeCssNames.VariantReferences(
-            FbThemeCssNames.Normalize(FbThemeVariants.Normalize(variant)),
-            foreground: true, invert);
-
-    private static void AppendVariant(StringBuilder builder, FbResolvedThemeVariant variant, FbThemeMasterTint tint)
-    {
-        var name = variant.Name;
-        AppendVariant(builder, name, "bg-low-anchor", variant.LayoutColors.LowAnchor, tint);
-        AppendVariant(builder, name, "bg-high-anchor", variant.LayoutColors.HighAnchor, tint);
-        AppendVariant(builder, name, "fg-low-anchor", variant.FormColors.LowAnchor, tint);
-        AppendVariant(builder, name, "fg-high-anchor", variant.FormColors.HighAnchor, tint);
-
-        // Written only when declared: an undefined frame anchor lets the CSS fall back to the
-        // background anchors.
-        if (variant.FrameColors.LowAnchor is not null)
-            AppendVariant(builder, name, "frame-low-anchor", variant.FrameColors.LowAnchor, tint);
-        if (variant.FrameColors.HighAnchor is not null)
-            AppendVariant(builder, name, "frame-high-anchor", variant.FrameColors.HighAnchor, tint);
-    }
-
-    private static void AppendVariant(StringBuilder builder, string variant, string token, string? value, FbThemeMasterTint tint)
-        => Append(builder, FbThemeCssNames.ValueName(variant, token), value is null ? null : FbThemeCssNames.Tinted(value, tint));
+            FbThemeCssNames.Normalize(FbThemeVariants.Normalize(variant)), invert);
 
     private static void Append(StringBuilder builder, string name, string? value)
     {

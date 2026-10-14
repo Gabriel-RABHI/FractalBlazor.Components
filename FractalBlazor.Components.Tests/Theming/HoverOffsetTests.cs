@@ -20,7 +20,7 @@ public sealed class HoverOffsetTests
         var theme = _registry.Resolve(_registry.Default.Name, branch);
 
         Assert.False(string.IsNullOrWhiteSpace(theme.SurfaceMix.HoverOffset));
-        Assert.Contains($"--fb-bg-hover-offset:{theme.SurfaceMix.HoverOffset};", FbThemeCssWriter.ToCssVariables(theme));
+        Assert.Contains($"--fb-hover-offset:{theme.SurfaceMix.HoverOffset};", FbThemeCssWriter.ToCssVariables(theme));
     }
 
     [Fact]
@@ -43,7 +43,7 @@ public sealed class HoverOffsetTests
         var light = _registry.Resolve(edited, FbThemeBranches.Light);
 
         Assert.Equal("27%", dark.SurfaceMix.HoverOffset);
-        Assert.Equal(defaultDark.SurfaceMix.SurfaceMix, dark.SurfaceMix.SurfaceMix);
+        Assert.Equal(defaultDark.SurfaceMix.SurfaceOffset, dark.SurfaceMix.SurfaceOffset);
         Assert.Equal(defaultLight.SurfaceMix.HoverOffset, light.SurfaceMix.HoverOffset);
     }
 
@@ -52,7 +52,7 @@ public sealed class HoverOffsetTests
     {
         var theme = new FbLayoutThemeRegistry().Resolve("Default");
 
-        Assert.Equal("4%", theme.SurfaceMix.HoverOffset);
-        Assert.Contains("--fb-bg-hover-offset:4%;", FbLayoutThemeCssWriter.ToCssVariables(theme));
+        Assert.Equal("10%", theme.SurfaceMix.HoverOffset);
+        Assert.Contains("--fb-hover-offset:10%;", FbLayoutThemeCssWriter.ToCssVariables(theme));
     }
 }

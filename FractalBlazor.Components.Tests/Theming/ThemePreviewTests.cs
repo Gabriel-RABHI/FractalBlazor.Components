@@ -17,13 +17,13 @@ public sealed class ThemePreviewTests : BunitContext
         _registry = Services.GetRequiredService<IFbFormThemeRegistry>();
     }
 
-    private FbThemeSetup Edited(string surfaceMix) => new("Edited", _registry.Default)
+    private FbThemeSetup Edited(string surfaceOffset) => new("Edited", _registry.Default)
     {
         Branches =
         [
             new FbThemeBranch(FbThemeBranches.Dark)
             {
-                SurfaceMix = new FbThemeLayoutSurfaceMix { SurfaceMix = surfaceMix }
+                SurfaceMix = new FbThemeLayoutSurfaceMix { SurfaceOffset = surfaceOffset }
             }
         ]
     };
@@ -33,7 +33,7 @@ public sealed class ThemePreviewTests : BunitContext
     {
         var resolved = _registry.Resolve(Edited("23%"), FbThemeBranches.Dark);
 
-        Assert.Equal("23%", resolved.SurfaceMix.SurfaceMix);
+        Assert.Equal("23%", resolved.SurfaceMix.SurfaceOffset);
         Assert.Equal(_registry.Resolve(_registry.Default.Name, FbThemeBranches.Dark).SurfaceMix.AccentOffset, resolved.SurfaceMix.AccentOffset);
         Assert.Equal(FbThemeVariants.Standard.Count, resolved.VariantOrder.Count);
         Assert.False(_registry.TryGet("Edited", out _));
@@ -52,7 +52,7 @@ public sealed class ThemePreviewTests : BunitContext
     {
         var cut = Render<FbTheme>(p => p.Add(x => x.Setup, Edited("23%")).Add(x => x.Scoped, true));
 
-        Assert.Contains("--fb-bg-surface-mix:23%;", cut.Find("div.fb-theme-scope").GetAttribute("style"));
+        Assert.Contains("--fb-surface-offset:23%;", cut.Find("div.fb-theme-scope").GetAttribute("style"));
     }
 
     [Fact]
@@ -62,6 +62,6 @@ public sealed class ThemePreviewTests : BunitContext
 
         cut.Render(p => p.Add(x => x.Setup, Edited("31%")).Add(x => x.Scoped, true));
 
-        Assert.Contains("--fb-bg-surface-mix:31%;", cut.Find("div.fb-theme-scope").GetAttribute("style"));
+        Assert.Contains("--fb-surface-offset:31%;", cut.Find("div.fb-theme-scope").GetAttribute("style"));
     }
 }

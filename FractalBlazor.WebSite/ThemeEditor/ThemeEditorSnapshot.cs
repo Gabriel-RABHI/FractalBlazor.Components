@@ -19,24 +19,26 @@ namespace FractalBlazor.WebSite.ThemeEditor
         Dictionary<string, BranchSnapshot> Branches)
     {
         /// <summary>
-        /// Bumped when the shape changes: an older session is then ignored, never misread.
+        /// Bumped when the shape changes. Format 2 is the three-anchor gradient; a format 1
+        /// session still gives back what kept its meaning (see <c>ThemeEditorModel.Restore</c>).
         /// </summary>
-        public const int CurrentFormat = 1;
+        public const int CurrentFormat = 2;
+
+        public const int PreviousFormat = 1;
     }
 
     /// <summary>
-    /// The values of one branch. The master tint came later: a save without it reads
-    /// <c>null</c> and keeps the tint of the default theme.
+    /// The values of one branch. A save without a master tint reads <c>null</c> and keeps the
+    /// tint of the default theme.
     /// </summary>
     internal sealed record BranchSnapshot(
-        double SurfaceMix, double AccentOffset, double HighlightOffset, double HoverOffset,
+        double NeutralMix, double SurfaceOffset, double AccentOffset, double HighlightOffset, double HoverOffset,
         double FrameLight, double FrameMedium, double FrameStrong,
         double TextSubtle, double TextMuted, double TextDefault, double TextHighlight,
         Dictionary<string, AnchorSnapshot> Anchors,
         string? TintColor = null, double? TintMix = null);
 
-    internal sealed record AnchorSnapshot(
-        string BgLow, string BgHigh, string FgLow, string FgHigh, string? FrameLow, string? FrameHigh);
+    internal sealed record AnchorSnapshot(string? Low, string? Mid, string? High);
 
     /// <summary>
     /// Generated serialization: no reflection, safe once the WebAssembly host is trimmed.

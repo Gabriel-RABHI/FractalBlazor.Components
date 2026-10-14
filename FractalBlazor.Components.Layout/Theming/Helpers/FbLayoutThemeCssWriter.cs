@@ -22,20 +22,15 @@ public static class FbLayoutThemeCssWriter
         Append(builder, "--fb-default-radius-l", theme.Corners.L);
         Append(builder, "--fb-default-radius-x", theme.Corners.X);
 
-        Append(builder, "--fb-bg-surface-mix", theme.SurfaceMix.SurfaceMix);
-        Append(builder, "--fb-bg-accent-offset", theme.SurfaceMix.AccentOffset);
-        Append(builder, "--fb-bg-highlight-offset", theme.SurfaceMix.HighlightOffset);
-        Append(builder, "--fb-bg-hover-offset", theme.SurfaceMix.HoverOffset);
-
-        Append(builder, "--fb-frame-light-mix", theme.BordersMix.LightMix);
-        Append(builder, "--fb-frame-medium-mix", theme.BordersMix.MediumMix);
-        Append(builder, "--fb-frame-strong-mix", theme.BordersMix.StrongMix);
-
-        FbThemeCssNames.AppendColorScheme(builder, theme.GetVariant(FbLayoutThemeVariants.Default).LayoutColors.LowAnchor);
+        FbThemeCssNames.AppendGradient(builder, theme.SurfaceMix, theme.BordersMix);
+        FbThemeCssNames.AppendColorScheme(builder, theme.GetVariant(FbLayoutThemeVariants.Default).LayoutColors, theme.SurfaceMix.NeutralMix);
 
         FbThemeCssNames.AppendTint(builder, theme.MasterTint);
         foreach (var variantName in theme.VariantOrder)
-            AppendVariant(builder, theme.GetVariant(variantName), theme.MasterTint);
+        {
+            var variant = theme.GetVariant(variantName);
+            FbThemeCssNames.AppendAnchors(builder, variant.Name, variant.LayoutColors, theme.MasterTint);
+        }
 
         AppendReference(builder, "space-s", "default-space-s");
         AppendReference(builder, "space-m", "default-space-m");
@@ -53,22 +48,11 @@ public static class FbLayoutThemeCssWriter
 
     /// <summary>
     /// Inline redirections that activate <paramref name="variant"/> on a DOM branch.
-    /// <paramref name="invert"/> exchanges its low and high background anchors.
+    /// <paramref name="invert"/> reverses its gradient.
     /// </summary>
     public static string BuildVariantReferences(string? variant, bool invert = false)
         => FbThemeCssNames.VariantReferences(
-            FbThemeCssNames.Normalize(FbLayoutThemeVariants.Normalize(variant)),
-            foreground: false, invert);
-
-    private static void AppendVariant(StringBuilder builder, FbResolvedLayoutThemeVariant variant, FbThemeMasterTint tint)
-    {
-        var name = variant.Name;
-        AppendVariant(builder, name, "bg-low-anchor", variant.LayoutColors.LowAnchor, tint);
-        AppendVariant(builder, name, "bg-high-anchor", variant.LayoutColors.HighAnchor, tint);
-    }
-
-    private static void AppendVariant(StringBuilder builder, string variant, string token, string? value, FbThemeMasterTint tint)
-        => Append(builder, FbThemeCssNames.ValueName(variant, token), value is null ? null : FbThemeCssNames.Tinted(value, tint));
+            FbThemeCssNames.Normalize(FbLayoutThemeVariants.Normalize(variant)), invert);
 
     private static void Append(StringBuilder builder, string name, string? value)
     {

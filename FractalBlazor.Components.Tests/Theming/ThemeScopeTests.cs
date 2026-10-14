@@ -18,8 +18,8 @@ public sealed class ThemeScopeTests : BunitContext
 
         var style = cut.Find("style").TextContent;
         Assert.StartsWith(":root{", style);
-        Assert.Contains("--fb-default-bg-low-anchor:", style);
-        Assert.Contains("--fb-bg-low-anchor:var(--fb-default-bg-low-anchor);", style);
+        Assert.Contains("--fb-default-low-anchor:", style);
+        Assert.Contains("--fb-low-anchor:var(--fb-default-low-anchor);", style);
     }
 
     [Fact]
@@ -32,7 +32,7 @@ public sealed class ThemeScopeTests : BunitContext
 
         Assert.Empty(cut.FindAll("style"));
         var scope = cut.Find("div.fb-theme-scope.fb-theme");
-        Assert.Contains("--fb-default-bg-low-anchor:", scope.GetAttribute("style"));
+        Assert.Contains("--fb-default-low-anchor:", scope.GetAttribute("style"));
         Assert.NotNull(scope.QuerySelector(".inside"));
     }
 
@@ -63,6 +63,6 @@ public sealed class ThemeScopeTests : BunitContext
         var cut = Render<FbLayoutTheme>(p => p.Add(x => x.Scoped, true));
 
         Assert.Empty(cut.FindAll("style"));
-        Assert.Contains("--fb-default-bg-low-anchor:", cut.Find("div.fb-theme-scope").GetAttribute("style"));
+        Assert.Contains("--fb-default-low-anchor:", cut.Find("div.fb-theme-scope").GetAttribute("style"));
     }
 }

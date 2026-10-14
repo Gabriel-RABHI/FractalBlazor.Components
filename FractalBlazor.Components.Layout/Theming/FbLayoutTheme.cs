@@ -50,7 +50,7 @@ public sealed class FbLayoutTheme : FbComponentBase
         if (Scoped)
         {
             builder.OpenElement(0, "div");
-            builder.AddAttribute(1, "class", "fb-theme-scope");
+            builder.AddAttribute(1, "class", "fb-theme-scope fb-theme");
             builder.AddAttribute(2, "style", _variables);
             BuildContent(builder);
             builder.CloseElement();

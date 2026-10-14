@@ -54,7 +54,7 @@ public sealed class MasterTintTests
         var lightness = FbColorMath.Lightness(zinc950).ToString("0.####", System.Globalization.CultureInfo.InvariantCulture);
 
         Assert.Contains($"--fb-tint-color:{FbThemeBaseColors.GetColor(FbThemeBaseColorsIndex.Sky)};--fb-tint-mix:5%;", css);
-        Assert.Contains($"--fb-default-bg-low-anchor:color-mix(in oklab,{zinc950},oklch(from var(--fb-tint-color) {lightness} c h) var(--fb-tint-mix));", css);
+        Assert.Contains($"--fb-default-low-anchor:color-mix(in oklab,{zinc950},oklch(from var(--fb-tint-color) {lightness} c h) var(--fb-tint-mix));", css);
     }
 
     [Theory]
@@ -67,7 +67,7 @@ public sealed class MasterTintTests
 
         Assert.Equal("0%", theme.MasterTint.TintMix);
         Assert.DoesNotContain("--fb-tint-color", css);
-        Assert.Contains($"--fb-default-bg-low-anchor:{theme.GetVariant(FbThemeVariants.Default).LayoutColors.LowAnchor};", css);
+        Assert.Contains($"--fb-default-low-anchor:{theme.GetVariant(FbThemeVariants.Default).LayoutColors.LowAnchor};", css);
     }
 
     [Fact]
@@ -125,15 +125,17 @@ public sealed class MasterTintTests
         };
         var theme = _forms.Resolve(edited, FbThemeBranches.Dark);
         var selected = theme.GetVariant(FbThemeVariants.Selected);
-        FbColorMath.TryParsePercent(theme.SurfaceMix.SurfaceMix, out var surfaceMix);
+        FbColorMath.TryParsePercent(theme.SurfaceMix.NeutralMix, out var neutral);
+        FbColorMath.TryParsePercent(theme.SurfaceMix.SurfaceOffset, out var surfaceOffset);
 
         var surface = FbThemeContrast.Analyze(theme).Entries
             .First(entry => entry.Variant == FbThemeVariants.Selected && entry.Background == FbContrastBackground.Surface);
 
-        var expected = FbColorMath.Mix(
+        var expected = FbColorMath.Sample(
             FbColorMath.Tint(selected.LayoutColors.LowAnchor!, "#808080", 100),
+            FbColorMath.Tint(selected.LayoutColors.MidAnchor!, "#808080", 100),
             FbColorMath.Tint(selected.LayoutColors.HighAnchor!, "#808080", 100),
-            surfaceMix);
+            neutral + surfaceOffset);
         Assert.Equal(expected, surface.BackgroundColor);
         Assert.True(Spread(surface.BackgroundColor) <= 2);
     }

@@ -69,7 +69,8 @@ namespace FractalBlazor.WebSite.ThemeEditor
         public string FormVariant { get; set; } = FbThemeVariants.Default;
 
         // -------- Mixes of the edited branch, in percent
-        public double SurfaceMix { get => Current.SurfaceMix; set => Set(ref Current.SurfaceMix, value); }
+        public double NeutralMix { get => Current.NeutralMix; set => Set(ref Current.NeutralMix, value); }
+        public double SurfaceOffset { get => Current.SurfaceOffset; set => Set(ref Current.SurfaceOffset, value); }
         public double AccentOffset { get => Current.AccentOffset; set => Set(ref Current.AccentOffset, value); }
         public double HighlightOffset { get => Current.HighlightOffset; set => Set(ref Current.HighlightOffset, value); }
         public double HoverOffset { get => Current.HoverOffset; set => Set(ref Current.HoverOffset, value); }
@@ -231,7 +232,9 @@ namespace FractalBlazor.WebSite.ThemeEditor
 
         /// <summary>
         /// Comes back to a saved state. Unknown branches and variants are skipped, and invalid
-        /// values keep the default ones: an old or damaged save never breaks the editor.
+        /// values keep the default ones: an old or damaged save never breaks the editor. A save
+        /// made before the three-anchor gradient gives back the values of the theme and the
+        /// master tints; its colors meant something else.
         /// </summary>
         internal void Restore(ThemeEditorSnapshot saved)
         {
@@ -252,7 +255,7 @@ namespace FractalBlazor.WebSite.ThemeEditor
                     continue;
 
                 var values = new BranchValues(this, Resolve(known));
-                values.Restore(branch);
+                values.Restore(branch, colors: saved.Format == ThemeEditorSnapshot.CurrentFormat);
                 _branches[known] = values;
             }
 
@@ -345,7 +348,8 @@ namespace FractalBlazor.WebSite.ThemeEditor
                 Value("ColorTint", values.TintColor, original.MasterTint.ColorTint?.ToLowerInvariant()),
                 MixValue("TintMix", values.TintMix, original.MasterTint.TintMix));
             AppendGroup(branch, BranchIndent, "SurfaceMix", "FbThemeLayoutSurfaceMix",
-                MixValue("SurfaceMix", values.SurfaceMix, original.SurfaceMix.SurfaceMix),
+                MixValue("NeutralMix", values.NeutralMix, original.SurfaceMix.NeutralMix),
+                MixValue("SurfaceOffset", values.SurfaceOffset, original.SurfaceMix.SurfaceOffset),
                 MixValue("AccentOffset", values.AccentOffset, original.SurfaceMix.AccentOffset),
                 MixValue("HighlightOffset", values.HighlightOffset, original.SurfaceMix.HighlightOffset),
                 MixValue("HoverOffset", values.HoverOffset, original.SurfaceMix.HoverOffset));
@@ -367,17 +371,9 @@ namespace FractalBlazor.WebSite.ThemeEditor
                 for (var i = 0; i < variants.Count; i++)
                 {
                     var a = values.Anchors[variants[i]];
-                    var colors = new List<string>
-                    {
-                        $"LayoutColors = new FbThemeLayoutColors {{ LowAnchor = \"{a.BgLow}\", HighAnchor = \"{a.BgHigh}\" }}",
-                        $"FormColors = new FbThemeFormColors {{ LowAnchor = \"{a.FgLow}\", HighAnchor = \"{a.FgHigh}\" }}"
-                    };
-                    if (a.HasFrameColors)
-                        colors.Add($"FrameColors = new FbThemeFormColors {{ LowAnchor = \"{a.FrameLow}\", HighAnchor = \"{a.FrameHigh}\" }}");
-
                     branch.AppendLine($"{BranchIndent}    new FbThemeColorVariant(\"{variants[i]}\")");
                     branch.AppendLine($"{BranchIndent}    {{");
-                    branch.AppendLine(string.Join("," + Environment.NewLine, colors.Select(line => $"{BranchIndent}        {line}")));
+                    branch.AppendLine($"{BranchIndent}        LayoutColors = new FbThemeLayoutColors {{ LowAnchor = \"{a.Low}\", MidAnchor = \"{a.Mid}\", HighAnchor = \"{a.High}\" }}");
                     branch.AppendLine(i < variants.Count - 1 ? $"{BranchIndent}    }}," : $"{BranchIndent}    }}");
                 }
                 branch.AppendLine($"{BranchIndent}]");
@@ -431,7 +427,8 @@ namespace FractalBlazor.WebSite.ThemeEditor
             },
             SurfaceMix = new FbThemeLayoutSurfaceMix
             {
-                SurfaceMix = Css(values.SurfaceMix),
+                NeutralMix = Css(values.NeutralMix),
+                SurfaceOffset = Css(values.SurfaceOffset),
                 AccentOffset = Css(values.AccentOffset),
                 HighlightOffset = Css(values.HighlightOffset),
                 HoverOffset = Css(values.HoverOffset)
@@ -454,9 +451,7 @@ namespace FractalBlazor.WebSite.ThemeEditor
                 var a = values.Anchors[variant];
                 return new FbThemeColorVariant(variant)
                 {
-                    LayoutColors = new FbThemeLayoutColors { LowAnchor = a.BgLow, HighAnchor = a.BgHigh },
-                    FormColors = new FbThemeFormColors { LowAnchor = a.FgLow, HighAnchor = a.FgHigh },
-                    FrameColors = a.HasFrameColors ? new FbThemeFormColors { LowAnchor = a.FrameLow, HighAnchor = a.FrameHigh } : null
+                    LayoutColors = new FbThemeLayoutColors { LowAnchor = a.Low, MidAnchor = a.Mid, HighAnchor = a.High }
                 };
             }).ToList()
         };
@@ -469,7 +464,7 @@ namespace FractalBlazor.WebSite.ThemeEditor
         {
             public readonly FbResolvedTheme Original;
             public readonly Dictionary<string, Anchors> Anchors = new(StringComparer.OrdinalIgnoreCase);
-            public double SurfaceMix, AccentOffset, HighlightOffset, HoverOffset, FrameLight, FrameMedium, FrameStrong,
+            public double NeutralMix, SurfaceOffset, AccentOffset, HighlightOffset, HoverOffset, FrameLight, FrameMedium, FrameStrong,
                 TextSubtle, TextMuted, TextDefault, TextHighlight, TintMix;
             public string TintColor;
 
@@ -478,7 +473,8 @@ namespace FractalBlazor.WebSite.ThemeEditor
                 Original = original;
                 TintColor = original.MasterTint.ColorTint!.ToLowerInvariant();
                 TintMix = Percent(original.MasterTint.TintMix);
-                SurfaceMix = Percent(original.SurfaceMix.SurfaceMix);
+                NeutralMix = Percent(original.SurfaceMix.NeutralMix);
+                SurfaceOffset = Percent(original.SurfaceMix.SurfaceOffset);
                 AccentOffset = Percent(original.SurfaceMix.AccentOffset);
                 HighlightOffset = Percent(original.SurfaceMix.HighlightOffset);
                 HoverOffset = Percent(original.SurfaceMix.HoverOffset);
@@ -494,32 +490,34 @@ namespace FractalBlazor.WebSite.ThemeEditor
                 {
                     var variant = original.GetVariant(name);
                     Anchors[name] = new Anchors(model,
-                        variant.LayoutColors.LowAnchor!, variant.LayoutColors.HighAnchor!,
-                        variant.FormColors.LowAnchor!, variant.FormColors.HighAnchor!,
-                        variant.FrameColors.LowAnchor, variant.FrameColors.HighAnchor);
+                        variant.LayoutColors.LowAnchor!, variant.LayoutColors.MidAnchor!, variant.LayoutColors.HighAnchor!);
                 }
             }
 
             public BranchSnapshot Capture() => new(
-                SurfaceMix, AccentOffset, HighlightOffset, HoverOffset,
+                NeutralMix, SurfaceOffset, AccentOffset, HighlightOffset, HoverOffset,
                 FrameLight, FrameMedium, FrameStrong,
                 TextSubtle, TextMuted, TextDefault, TextHighlight,
                 Anchors.ToDictionary(pair => pair.Key, pair => pair.Value.Capture()),
                 TintColor, TintMix);
 
             /// <summary>
-            /// Takes back a saved branch. A save older than the master tint keeps the tint of
-            /// the default theme.
+            /// Takes back a saved branch. A save made before the three-anchor gradient
+            /// (<paramref name="colors"/> false) only gives back its master tint: its mixes and
+            /// anchors meant something else, and the branch keeps those of the default theme.
             /// </summary>
-            public void Restore(BranchSnapshot saved)
+            public void Restore(BranchSnapshot saved, bool colors)
             {
-                SurfaceMix = saved.SurfaceMix; AccentOffset = saved.AccentOffset;
+                TintColor = HexColor(saved.TintColor) ?? TintColor;
+                TintMix = saved.TintMix ?? TintMix;
+                if (!colors)
+                    return;
+
+                NeutralMix = saved.NeutralMix; SurfaceOffset = saved.SurfaceOffset; AccentOffset = saved.AccentOffset;
                 HighlightOffset = saved.HighlightOffset; HoverOffset = saved.HoverOffset;
                 FrameLight = saved.FrameLight; FrameMedium = saved.FrameMedium; FrameStrong = saved.FrameStrong;
                 TextSubtle = saved.TextSubtle; TextMuted = saved.TextMuted;
                 TextDefault = saved.TextDefault; TextHighlight = saved.TextHighlight;
-                TintColor = HexColor(saved.TintColor) ?? TintColor;
-                TintMix = saved.TintMix ?? TintMix;
 
                 foreach (var (name, anchors) in saved.Anchors ?? [])
                 {
@@ -621,87 +619,46 @@ namespace FractalBlazor.WebSite.ThemeEditor
         public static string CssNumber(double value) => value.ToString("0.###", CultureInfo.InvariantCulture);
 
         /// <summary>
-        /// The anchors of one variant: background, text and, when the variant declares them,
-        /// frame lines. Colors are kept in the lowercase form of the color picker.
+        /// The gradient of one variant: its anchors at 0 %, 50 % and 100 %. Colors are kept in
+        /// the lowercase form of the color picker.
         /// </summary>
         public sealed class Anchors
         {
             private readonly ThemeEditorModel _model;
-            private readonly string _bgLow, _bgHigh, _fgLow, _fgHigh;
-            private readonly string? _frameLow, _frameHigh;
-            private string _currentBgLow, _currentBgHigh, _currentFgLow, _currentFgHigh;
-            private string? _currentFrameLow, _currentFrameHigh;
+            private readonly string _low, _mid, _high;
+            private string _currentLow, _currentMid, _currentHigh;
 
-            internal Anchors(ThemeEditorModel model, string bgLow, string bgHigh, string fgLow, string fgHigh, string? frameLow, string? frameHigh)
+            internal Anchors(ThemeEditorModel model, string low, string mid, string high)
             {
                 _model = model;
-                _currentBgLow = _bgLow = bgLow.ToLowerInvariant();
-                _currentBgHigh = _bgHigh = bgHigh.ToLowerInvariant();
-                _currentFgLow = _fgLow = fgLow.ToLowerInvariant();
-                _currentFgHigh = _fgHigh = fgHigh.ToLowerInvariant();
-                _currentFrameLow = _frameLow = frameLow?.ToLowerInvariant();
-                _currentFrameHigh = _frameHigh = frameHigh?.ToLowerInvariant();
+                _currentLow = _low = low.ToLowerInvariant();
+                _currentMid = _mid = mid.ToLowerInvariant();
+                _currentHigh = _high = high.ToLowerInvariant();
             }
 
-            public string BgLow { get => _currentBgLow; set => Set(ref _currentBgLow, value); }
-            public string BgHigh { get => _currentBgHigh; set => Set(ref _currentBgHigh, value); }
-            public string FgLow { get => _currentFgLow; set => Set(ref _currentFgLow, value); }
-            public string FgHigh { get => _currentFgHigh; set => Set(ref _currentFgHigh, value); }
-            public string FrameLow { get => _currentFrameLow ?? _currentBgLow; set => SetFrame(ref _currentFrameLow, value); }
-            public string FrameHigh { get => _currentFrameHigh ?? _currentBgHigh; set => SetFrame(ref _currentFrameHigh, value); }
+            public string Low { get => _currentLow; set => Set(ref _currentLow, value); }
+            public string Mid { get => _currentMid; set => Set(ref _currentMid, value); }
+            public string High { get => _currentHigh; set => Set(ref _currentHigh, value); }
 
-            internal AnchorSnapshot Capture()
-                => new(_currentBgLow, _currentBgHigh, _currentFgLow, _currentFgHigh, _currentFrameLow, _currentFrameHigh);
+            internal AnchorSnapshot Capture() => new(_currentLow, _currentMid, _currentHigh);
 
             /// <summary>
             /// Takes back saved colors; a value that is not a color is left as it is.
             /// </summary>
             internal void Restore(AnchorSnapshot saved)
             {
-                _currentBgLow = HexColor(saved.BgLow) ?? _currentBgLow;
-                _currentBgHigh = HexColor(saved.BgHigh) ?? _currentBgHigh;
-                _currentFgLow = HexColor(saved.FgLow) ?? _currentFgLow;
-                _currentFgHigh = HexColor(saved.FgHigh) ?? _currentFgHigh;
-                _currentFrameLow = HexColor(saved.FrameLow);
-                _currentFrameHigh = HexColor(saved.FrameHigh);
+                _currentLow = HexColor(saved.Low) ?? _currentLow;
+                _currentMid = HexColor(saved.Mid) ?? _currentMid;
+                _currentHigh = HexColor(saved.High) ?? _currentHigh;
             }
 
-            /// <summary>
-            /// Whether the frame lines have their own anchors. Turned on, they start from the
-            /// background anchors; turned off, frames go back to the background ones.
-            /// </summary>
-            public bool HasFrameColors
-            {
-                get => _currentFrameLow is not null || _currentFrameHigh is not null;
-                set
-                {
-                    if (value == HasFrameColors)
-                        return;
-                    _currentFrameLow = value ? _currentBgLow : null;
-                    _currentFrameHigh = value ? _currentBgHigh : null;
-                    _model.Touch();
-                }
-            }
-
-            public bool Changed => _currentBgLow != _bgLow || _currentBgHigh != _bgHigh || _currentFgLow != _fgLow || _currentFgHigh != _fgHigh
-                || _currentFrameLow != _frameLow || _currentFrameHigh != _frameHigh;
+            public bool Changed => _currentLow != _low || _currentMid != _mid || _currentHigh != _high;
 
             private void Set(ref string field, string value)
             {
                 var normalized = value.ToLowerInvariant();
                 if (field == normalized)
                     return;
-                field = normalized;
-                _model.Touch();
-            }
-
-            private void SetFrame(ref string? field, string value)
-            {
-                var normalized = value.ToLowerInvariant();
-                if (field == normalized)
-                    return;
-                _currentFrameLow ??= _currentBgLow;
-                _currentFrameHigh ??= _currentBgHigh;
                 field = normalized;
                 _model.Touch();
             }

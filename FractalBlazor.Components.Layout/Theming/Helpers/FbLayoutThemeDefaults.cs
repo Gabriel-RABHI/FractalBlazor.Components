@@ -7,8 +7,9 @@ namespace FractalBlazor.Components.Layout.Theming.Helpers;
 public static class FbLayoutThemeDefaults
 {
     /// <summary>
-    /// The default Layout theme: the anchors of each variant come from the base palette, and
-    /// the master tint draws them all slightly toward sky blue.
+    /// The default Layout theme: the gradient of each variant comes from the base palette, dark
+    /// at 0 % and light at 100 %, and the master tint draws all the anchors slightly toward sky
+    /// blue.
     /// </summary>
     public static FbLayoutThemeSetup Create()
         => new("Default")
@@ -22,16 +23,17 @@ public static class FbLayoutThemeDefaults
             },
             BordersMix = new FbThemeLayoutBordersMix
             {
-                LightMix = "8%",
-                MediumMix = "14%",
-                StrongMix = "28%"
+                LightMix = "5%",
+                MediumMix = "10%",
+                StrongMix = "15%"
             },
             SurfaceMix = new FbThemeLayoutSurfaceMix
             {
-                SurfaceMix = "8%",
-                AccentOffset = "10%",
-                HighlightOffset = "18%",
-                HoverOffset = "4%"
+                NeutralMix = "0%",
+                SurfaceOffset = "5%",
+                AccentOffset = "15%",
+                HighlightOffset = "45%",
+                HoverOffset = "10%"
             },
             Variants =
             [
@@ -39,19 +41,25 @@ public static class FbLayoutThemeDefaults
                 Variant(FbLayoutThemeVariants.Selected, FbThemeBaseColorsIndex.Blue),
                 Variant(FbLayoutThemeVariants.Error, FbThemeBaseColorsIndex.Rose),
                 Variant(FbLayoutThemeVariants.Warning, FbThemeBaseColorsIndex.Amber),
-                Variant(FbLayoutThemeVariants.Disabled, FbThemeBaseColorsIndex.Gray),
+                Variant(FbLayoutThemeVariants.Disabled, FbThemeBaseColorsIndex.Gray,
+                    FbThemeBaseShadesIndex._950, FbThemeBaseShadesIndex._700, FbThemeBaseShadesIndex._500),
                 Variant(FbLayoutThemeVariants.Success, FbThemeBaseColorsIndex.Emerald),
                 Variant(FbLayoutThemeVariants.Info, FbThemeBaseColorsIndex.Sky)
             ]
         };
 
     private static FbLayoutThemeVariant Variant(string name, FbThemeBaseColorsIndex color)
+        => Variant(name, color, FbThemeBaseShadesIndex._950, FbThemeBaseShadesIndex._500, FbThemeBaseShadesIndex._50);
+
+    private static FbLayoutThemeVariant Variant(string name, FbThemeBaseColorsIndex color,
+        FbThemeBaseShadesIndex low, FbThemeBaseShadesIndex mid, FbThemeBaseShadesIndex high)
         => new(name)
         {
             LayoutColors = new FbThemeLayoutColors
             {
-                LowAnchor = FbThemeBaseColors.GetColor(color, FbThemeBaseShadesIndex._950),
-                HighAnchor = FbThemeBaseColors.GetColor(color, FbThemeBaseShadesIndex._50)
+                LowAnchor = FbThemeBaseColors.GetColor(color, low),
+                MidAnchor = FbThemeBaseColors.GetColor(color, mid),
+                HighAnchor = FbThemeBaseColors.GetColor(color, high)
             }
         };
 }

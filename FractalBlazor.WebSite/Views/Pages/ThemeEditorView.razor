@@ -125,35 +125,30 @@
                                   @bind-Value="Model.SelectedVariant">
                             <StartContent><FbRowItem Style="min-width:6.5rem"><FbText S Subtle>Variante</FbText></FbRowItem></StartContent>
                         </FbSelect>
-                        <ColorField Label="Fond bas" @bind-Value="Model.Selected.BgLow" @bind-Clipboard="Model.CopiedColor" />
-                        <ColorField Label="Fond haut" @bind-Value="Model.Selected.BgHigh" @bind-Clipboard="Model.CopiedColor" />
-                        <ColorField Label="Texte bas" @bind-Value="Model.Selected.FgLow" @bind-Clipboard="Model.CopiedColor" />
-                        <ColorField Label="Texte haut" @bind-Value="Model.Selected.FgHigh" @bind-Clipboard="Model.CopiedColor" />
-                        <FbSwitch TAction="FbSetValue<bool>" @bind-Value="Model.Selected.HasFrameColors">
-                            <FbText S>Couleurs de filet propres</FbText>
-                        </FbSwitch>
-                        @if (Model.Selected.HasFrameColors)
-                        {
-                            <ColorField Label="Filet bas" @bind-Value="Model.Selected.FrameLow" @bind-Clipboard="Model.CopiedColor" />
-                            <ColorField Label="Filet haut" @bind-Value="Model.Selected.FrameHigh" @bind-Clipboard="Model.CopiedColor" />
-                        }
-                        else
-                        {
-                            <FbText XS Muted>Les filets vont du fond courant vers l’ancre haute des fonds.</FbText>
-                        }
+                        <ColorField Label="Ancre 0 %" @bind-Value="Model.Selected.Low" @bind-Clipboard="Model.CopiedColor" />
+                        <ColorField Label="Ancre 50 %" @bind-Value="Model.Selected.Mid" @bind-Clipboard="Model.CopiedColor" />
+                        <ColorField Label="Ancre 100 %" @bind-Value="Model.Selected.High" @bind-Clipboard="Model.CopiedColor" />
+                        <FbText XS Muted>
+                            Un seul dégradé par variante : fonds, textes et filets en sont des positions.
+                        </FbText>
                     </FbStack>
                 </FbGridItem>
 
                 <FbGridItem>
                     <FbStack GM PL WBA WFL WRL>
                         <FbText L B>Surfaces et filets</FbText>
-                        <ValueSlider Label="Surface" Max="50" @bind-Value="Model.SurfaceMix" />
+                        <ValueSlider Label="Neutre" Max="50" @bind-Value="Model.NeutralMix" />
+                        <ValueSlider Label="Surface" Max="50" @bind-Value="Model.SurfaceOffset" />
                         <ValueSlider Label="Accent" Max="50" @bind-Value="Model.AccentOffset" />
                         <ValueSlider Label="Highlight" Max="100" @bind-Value="Model.HighlightOffset" />
                         <ValueSlider Label="Survol" Max="30" @bind-Value="Model.HoverOffset" />
-                        <ValueSlider Label="Frame Light" Max="100" @bind-Value="Model.FrameLight" />
-                        <ValueSlider Label="Frame Medium" Max="100" @bind-Value="Model.FrameMedium" />
-                        <ValueSlider Label="Frame Strong" Max="100" @bind-Value="Model.FrameStrong" />
+                        <FbText XS Muted>
+                            La page est au neutre. Chaque fond ajoute son offset au neutre du bloc qui le contient,
+                            sur six niveaux d’imbrication ; ses textes et ses filets se placent depuis ce nouveau neutre.
+                        </FbText>
+                        <ValueSlider Label="Frame Light" Max="50" @bind-Value="Model.FrameLight" />
+                        <ValueSlider Label="Frame Medium" Max="50" @bind-Value="Model.FrameMedium" />
+                        <ValueSlider Label="Frame Strong" Max="50" @bind-Value="Model.FrameStrong" />
                     </FbStack>
                 </FbGridItem>
 
@@ -166,7 +161,7 @@
                         <ValueSlider Label="Highlight" @bind-Value="Model.TextHighlight" />
 
                         <FbText L B>Contraste WCAG</FbText>
-                        <FbText XS Muted>Plus faible ratio de chaque texte, sur tous les fonds de toutes les variantes.</FbText>
+                        <FbText XS Muted>Plus faible ratio de chaque texte, sur les fonds de premier niveau de toutes les variantes sauf Disabled : WCAG n’exige aucun contraste d’un contrôle inactif.</FbText>
                         @foreach (var (text, entry) in WorstContrasts)
                         {
                             <FbVariant Variant="@(entry.MeetsAA ? FbThemeVariants.Success : entry.MeetsAALarge ? FbThemeVariants.Warning : FbThemeVariants.Error)">
@@ -239,6 +234,7 @@
             {
                 var report = FbThemeContrast.Analyze(Registry.Resolve(Model.Setup, Model.Branch));
                 _worst = report.Entries
+                    .Where(entry => entry.Variant != FbThemeVariants.Disabled)
                     .GroupBy(entry => entry.Text)
                     .Select(group => (group.Key, group.MinBy(entry => entry.Ratio)!))
                     .ToList();
