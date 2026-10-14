@@ -62,9 +62,13 @@ html {
 
 /* Classes named after their flags: WFL, WFM, WFS for frames, WSL, WSM, WSS for separators. */
 
-/* Border of a surface (Row, Stack, items, Grid) */
+/* Frame of a surface (Row, Stack, items, Grid, Button…). An outline drawn on the edge, inside
+   the box: it takes no room, so adding or removing a frame never moves the layout, and it is
+   painted over the content, so neither a child nor scrolled content hides it. A focus ring,
+   an outline too, replaces it while it shows. */
 :is(.fb-wfl, .fb-wfm, .fb-wfs) {
-    border: 1px solid var(--fb-frame-border-color);
+    outline: 1px solid var(--fb-frame-border-color);
+    outline-offset: -1px;
 }
 
 /* Separators between the children of a Row (and of a Grid container) */
@@ -93,10 +97,10 @@ html {
     --fb-frame-border-color: color-mix(in oklab, var(--fb-frame-low-anchor, var(--fb-current-bg)), var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-strong-mix));
 }
 
-/* EO */
+/* EO: a ring around the box, outside its frame. A shadow, since the frame is an outline: a
+   focused field keeps both lines, and the ring takes no room either. */
 .fb-eo {
-    outline: var(--fb-outline-size) solid var(--fb-frame-border-color);
-    outline-offset: 0;
+    box-shadow: 0 0 0 var(--fb-outline-size) var(--fb-frame-border-color);
 }
 
 /**********************************************************************************/

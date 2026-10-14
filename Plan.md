@@ -210,6 +210,10 @@ Un outil du site, ouvert par un bouton icône de l'en-tête dans un tiroir large
 - [x] **22.1 MasterTint appliqué.** `TintPercent` (entier) devient `TintMix`, un pourcentage CSS comme les autres mélanges ; `ColorTint` et `TintMix` se résolvent un à un, et `TintMix` doit valoir de `0%` à `100%`. Le CSS déclare `--fb-tint-color` et `--fb-tint-mix`, et chaque ancre, des thèmes Layout comme des branches Forms, les lit : elle garde sa luminosité, sa teinte et sa saturation penchent vers la teinte. Un gris baisse l'intensité de toutes les couleurs. `FbThemeContrast` mesure les ancres teintées. Le thème Layout par défaut ne cuit plus sa teinte dans ses ancres ; le thème Forms par défaut la garde à `0%`, ses ancres ayant été réglées sans elle.
 - [x] **22.2 L'éditeur.** Teinte et mélange par branche, sauvegardés avec elle ; une sauvegarde plus ancienne garde la teinte par défaut. Le code du thème déclare la teinte quand elle change.
 
+## Phase 23 — Frames sans place
+
+- [x] **23.1 Frames en outline.** Une frame est un outline tracé à l'intérieur du bord (`outline-offset: -1px`) au lieu d'une bordure : l'ajouter ou la retirer ne bouge plus la boîte ni son contenu. Peinte par-dessus le contenu, elle reste visible sur un enfant qui a un fond et sur une zone qui défile. `EO` passe en ombre (`box-shadow`) pour ne pas entrer en conflit avec elle : un champ qui a le focus garde ses deux traits.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :

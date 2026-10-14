@@ -707,11 +707,17 @@ Les chaînes de redirection sont construites une fois par combinaison (variante,
 
 Les filets ont une épaisseur fixe de `1px`. Leur force visuelle dépend uniquement des tokens `frame-*-mix`.
 
-Les composants dérivés de `FbLayoutSurfaceComponentBase` exposent le drapeau `EO` (Enable → Outline) pour ajouter un outline utilisant la couleur calculée de la frame courante :
+Une frame (`WFL`, `WFM`, `WFS`) est un outline tracé sur le bord, à l'intérieur de la boîte : elle ne prend aucune place. L'ajouter ou la retirer ne change ni la taille de la boîte ni la position de son contenu. Peinte par-dessus le contenu, elle n'est cachée ni par un enfant qui a son propre fond, ni par le contenu d'une zone qui défile. Un anneau de focus, outline lui aussi, la remplace tant qu'il s'affiche.
 
 ```css
-outline: var(--fb-outline-size) solid var(--fb-frame-border-color);
-outline-offset: 0;
+outline: 1px solid var(--fb-frame-border-color);
+outline-offset: -1px;
+```
+
+Les composants dérivés de `FbLayoutSurfaceComponentBase` exposent le drapeau `EO` (Enable → Outline) pour ajouter un anneau autour de la boîte, à l'extérieur de sa frame, dans la couleur calculée de la frame courante. C'est une ombre, puisque la frame est un outline : un champ qui a le focus garde ses deux traits, et l'anneau ne prend pas de place non plus.
+
+```css
+box-shadow: 0 0 0 var(--fb-outline-size) var(--fb-frame-border-color);
 ```
 
 `--fb-outline-size` vaut `1px` par défaut et peut être redéfini localement.
