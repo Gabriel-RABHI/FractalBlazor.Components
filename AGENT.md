@@ -85,7 +85,9 @@ for what Layout cannot render (a native `input`, an `svg`, a `button`).
   `mask` and `currentColor`, on an empty element; `FbIcon` renders inline SVG for the icons
   chosen by the user.
 - Components do not read the theme: they set classes and redirect CSS variables. Every color is
-  a `color-mix()` in oklab between two anchors; a variant only redirects anchors.
+  a position on the three-anchor gradient of the active variant (0 %, 50 %, 100 %), sampled with
+  `color-mix()` in oklab; a filled block moves the neutral of its content, and a variant only
+  redirects the three anchors.
 - Short boolean flags are the main API (`WB*`, `WF*`, `WR*`, `P*`, `M*`, `G*`, `J*`), completed
   by an enum for computed values. Flags are reset before each parameter assignment.
 - Layout never references Forms. Every CSS class and `@keyframes` starts with `fb-`.

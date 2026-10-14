@@ -1238,3 +1238,24 @@ Donc oui : le modèle est très cohérent. Je dirais même que tu tiens une bonn
 [2]: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/--%2A?utm_source=chatgpt.com "Custom properties (--*): CSS variables - MDN Web Docs"
 [3]: https://learn.microsoft.com/en-us/aspnet/core/blazor/components/rendering?view=aspnetcore-10.0 "ASP.NET Core Razor component rendering | Microsoft Learn"
 [4]: https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.components.componentbase.setparametersasync?view=aspnetcore-10.0 "ComponentBase.SetParametersAsync(ParameterView) Method (Microsoft.AspNetCore.Components) | Microsoft Learn"
+
+-------
+
+## Évolution — un dégradé à trois pôles, relatif à l'imbrication
+
+Le modèle à deux rampes (fond et premier plan, quatre ancres, plus deux pour les filets) a été simplifié. Chaque variante n'a plus qu'**un dégradé**, défini par trois ancres : à 0 %, 50 % et 100 %. Fonds, textes et filets en sont tous des positions.
+
+```text
+0 %                        50 %                       100 %
+Low ---------------------- Mid ---------------------- High
+N  S    A              H                                     fonds, neutre à 0 %
+                     Sub       Mut        Def    Hi          textes, neutre à 0 %
+```
+
+- **Le neutre.** La page est au neutre de la branche (0 % par défaut). Un bloc rempli prend le neutre de son plus proche ancêtre rempli et y ajoute l'offset de son fond : Surface +5 %, Accent +15 %, Highlight +45 %. Il peint le dégradé à ce nouveau neutre. Trois Accent imbriqués montent donc à 15 %, 30 %, 45 %.
+- **Les textes et les filets** se placent depuis le neutre de leur bloc, par la fin du dégradé : `100 − (100 − mix) × (100 − neutre) / 100`. Textes : Subtle 40 %, Muted 60 %, Default 80 %, Highlight 95 %. Filets : Light 5 %, Medium 10 %, Strong 15 %. Plus le neutre monte, plus ils se rapprochent de l'ancre haute, et ils restent toujours au-dessus du fond.
+- **Le survol** ajoute son offset au neutre de l'élément survolé.
+- **L'inversion** retourne le dégradé : les ancres basse et haute s'échangent, la médiane reste.
+- **Dark et Light** gardent chacune leurs ancres et tous leurs réglages. Le thème par défaut lit la palette de 950 à 50 en sombre, de 50 à 950 en clair.
+
+En CSS, une propriété personnalisée ne peut pas lire sa propre valeur héritée : l'imbrication passe par une variable par profondeur (six niveaux), choisie en comptant les ancêtres remplis. Le détail, les variables et les formules sont dans `Theming.md`.

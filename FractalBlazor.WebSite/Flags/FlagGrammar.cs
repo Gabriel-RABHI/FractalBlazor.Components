@@ -87,7 +87,7 @@ internal sealed class FlagGrammar
             ],
             "FbUpdatable");
         grammar.Add([Word("Scoped", "Themes its content only", "Theme")], "FbTheme", "FbLayoutTheme");
-        grammar.Add([Word("Invert", "Swaps the light and dark anchors", "Theme")], "FbVariant", "FbLayoutVariant");
+        grammar.Add([Word("Invert", "Reverses the gradient of the variant", "Theme")], "FbVariant", "FbLayoutVariant");
         grammar.Add(
             [
                 Word("D", "Disabled", "Behavior"),

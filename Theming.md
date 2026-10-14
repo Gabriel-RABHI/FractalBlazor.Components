@@ -9,7 +9,7 @@ L'implémentation doit conserver le principe déjà employé par les feuilles CS
 1. des variables fixes définissent le socle du thème actif ;
 2. des variables actives peuvent être redéfinies par une variante locale ;
 3. des variables temporaires portent les modifications d'interaction, comme le survol ;
-4. des variables calculées produisent les couleurs finales avec `color-mix()`.
+4. des variables calculées produisent les couleurs finales avec `color-mix()`, en échantillonnant le dégradé de la variante active.
 
 L'héritage entre thèmes est résolu en C#. La cascade CSS ne sert qu'à appliquer un thème ou une variante dans le DOM et à gérer les états temporaires.
 
@@ -23,7 +23,7 @@ Layout ne connaît que les notions nécessaires à la mise en page :
 
 - espacements ;
 - rayons ;
-- couleurs de fond ;
+- le dégradé de chaque variante, le neutre et les fonds ;
 - frames, bordures et séparateurs ;
 - génération de variables CSS ;
 - thème et variantes utilisables lorsque Layout est employé seul.
@@ -32,8 +32,7 @@ Layout ne connaît que les notions nécessaires à la mise en page :
 
 Forms référence Layout et ajoute :
 
-- couleurs de premier plan ;
-- intensités de texte ;
+- intensités de texte, placées sur le même dégradé ;
 - typographie ;
 - branches `Dark` et `Light` ;
 - thème Forms complet ;
@@ -73,15 +72,18 @@ public sealed class FbThemeLayoutBordersMix
 
 public sealed class FbThemeLayoutColors
 {
-    public string? LowAnchor { get; init; }
-    public string? HighAnchor { get; init; }
+    public string? LowAnchor { get; init; }   // 0 %
+    public string? MidAnchor { get; init; }   // 50 %
+    public string? HighAnchor { get; init; }  // 100 %
 }
 
 public sealed class FbThemeLayoutSurfaceMix
 {
-    public string? SurfaceMix { get; init; }
+    public string? NeutralMix { get; init; }
+    public string? SurfaceOffset { get; init; }
     public string? AccentOffset { get; init; }
     public string? HighlightOffset { get; init; }
+    public string? HoverOffset { get; init; }
 }
 
 public sealed class FbThemeMasterTint
@@ -91,9 +93,23 @@ public sealed class FbThemeMasterTint
 }
 ```
 
-La teinte générale (`MasterTint`) fait pencher toutes les ancres d'un thème, ou d'une branche Forms, vers `ColorTint`, de `TintMix` (un pourcentage CSS, de `0%` à `100%`). Chaque ancre garde sa luminosité : seules sa teinte et sa saturation bougent. Une teinte colorée attire toutes les couleurs vers elle ; une teinte grise baisse l'intensité de toutes. Comme chaque couleur des feuilles mélange deux ancres, toutes suivent. `ColorTint` et `TintMix` s'héritent séparément.
+La teinte générale (`MasterTint`) fait pencher toutes les ancres d'un thème, ou d'une branche Forms, vers `ColorTint`, de `TintMix`. Chaque ancre garde sa luminosité : seules sa teinte et sa saturation bougent. Une teinte colorée attire toutes les couleurs vers elle ; une teinte grise baisse l'intensité de toutes. Comme chaque couleur des feuilles échantillonne les ancres, toutes suivent. `ColorTint` et `TintMix` s'héritent séparément.
 
-Les espacements S/M/L/X alimentent les margins, paddings et gutters. Les rayons S/M/L/X alimentent les `border-radius`. Les frames Light/Medium/Strong définissent leur force par leur taux de mélange ; leur épaisseur est fixée à `1px`.
+Les espacements S/M/L/X alimentent les margins, paddings et gutters. Les rayons S/M/L/X alimentent les `border-radius`. Les frames Light/Medium/Strong définissent leur force par leur position sur le dégradé ; leur épaisseur est fixée à `1px`.
+
+Tous les mélanges (`TintMix`, `SurfaceMix`, `BordersMix`, et `TextVariantMix` côté Forms) sont des pourcentages CSS de `0%` à `100%` : ce sont des positions sur le dégradé, que le C# et les feuilles calculent.
+
+### Le dégradé d'une variante
+
+Chaque variante a un seul dégradé, défini par trois ancres : `LowAnchor` à 0 %, `MidAnchor` à 50 %, `HighAnchor` à 100 %. Le dégradé va de l'ancre basse à la médiane sur sa première moitié, de la médiane à l'ancre haute sur la seconde. Fonds, textes et filets en sont tous des positions.
+
+- **Le neutre.** La page est au neutre de la branche (`NeutralMix`, 0 % par défaut).
+- **Les fonds.** Un bloc rempli (`WBS`, `WBA`, `WBH`) prend le neutre de son plus proche ancêtre rempli et y ajoute l'offset de son fond (`SurfaceOffset`, `AccentOffset`, `HighlightOffset`), borné à 100 %. Il peint le dégradé à ce nouveau neutre, qui devient celui de son contenu. Avec les valeurs par défaut (5 %, 15 %, 45 %), une Surface sur la page est à 5 %, un Accent dans cette Surface à 20 %, un Highlight dans cet Accent à 65 %. L'imbrication compte six niveaux.
+- **Les textes et les filets** se placent depuis le neutre de leur bloc, par la fin du dégradé : `100 − (100 − mix) × (100 − neutre) / 100`. À un neutre de 0 %, un texte `Default` à 80 % est à 80 % ; dans un bloc à 75 %, il est à 95 %. Ils restent toujours au-dessus du fond qui les porte.
+- **Le survol** (`HoverOffset`) s'ajoute au neutre de l'élément survolé : son fond, ses textes et ses filets montent ensemble.
+- **L'inversion** (`Invert`) retourne le dégradé : les ancres basse et haute s'échangent, la médiane reste.
+
+Les branches `Dark` et `Light` gardent chacune leurs ancres et tous leurs réglages. Le thème par défaut lit la palette de base de 950 à 50 en sombre (`Low` 950, `Mid` 500, `High` 50), dans l'autre sens en clair.
 
 ### Groupes Forms
 
@@ -104,12 +120,6 @@ public sealed class FbThemeFormTextVariantMix
     public string? SubtleHighMix { get; init; }
     public string? MutedHighMix { get; init; }
     public string? HighlightHighMix { get; init; }
-}
-
-public sealed class FbThemeFormColors
-{
-    public string? LowAnchor { get; init; }
-    public string? HighAnchor { get; init; }
 }
 
 public sealed class FbThemeFormTypography
@@ -133,6 +143,8 @@ public sealed class FbThemeFormTypography
 }
 ```
 
+Les textes n'ont pas d'ancres propres : `FbThemeFormTextVariantMix` place Subtle, Muted, Default et Highlight sur le dégradé de la variante, comme les filets.
+
 Les tailles de texte ne constituent pas un groupe séparé : elles font partie de `FbThemeFormTypography`. Les six tailles sont calculées à partir de `FontSizeBase` et des coefficients XS/S/M/L/XL/XXL.
 
 Toutes les propriétés sont nullable afin qu'un thème dérivé ne déclare que ses différences. `null` signifie « hériter ». Une chaîne vide ou composée d'espaces est invalide et doit être refusée par la validation.
@@ -147,9 +159,9 @@ Un thème Forms possède trois couches strictes.
 | --- | --- | --- |
 | Main | `Spacings`, `Corners`, `Typography` | Commun à toutes les branches et variantes du thème |
 | Branch | `MasterTint`, `TextVariantMix`, `BordersMix`, `SurfaceMix` | Propre à une branche Dark/Light |
-| Variant | `LayoutColors`, `FormColors`, `FrameColors` | Propre à un état visuel local |
+| Variant | `LayoutColors` (trois ancres) | Propre à un état visuel local |
 
-La couche Main ne contient pas les couleurs. Une branche choisit la teinte maître d’échantillonnage ainsi que les mélanges de texte, de surface et de frame adaptés à son contraste. Chaque variante fournit ensuite les ancres de fond et de premier plan, et peut fournir celles de ses filets.
+La couche Main ne contient pas les couleurs. Une branche choisit la teinte générale, le neutre de départ, les offsets des fonds et du survol, et les positions des textes et des filets adaptées à son contraste. Chaque variante fournit ensuite les trois ancres de son dégradé.
 
 Cette séparation permet à `Error` d'avoir des couleurs différentes en `Dark` et en `Light`, tout en partageant les mêmes espacements, rayons et règles typographiques.
 
@@ -200,8 +212,6 @@ public sealed class FbThemeColorVariant
 
     // Variant
     public FbThemeLayoutColors? LayoutColors { get; init; }
-    public FbThemeFormColors? FormColors { get; init; }
-    public FbThemeFormColors? FrameColors { get; init; }
 }
 ```
 
@@ -249,7 +259,8 @@ Il respecte les invariants suivants :
 - les groupes Main sont entièrement renseignés ;
 - il contient les branches `Dark` et `Light` ;
 - chaque branche contient les variantes `Default`, `Selected`, `Error`, `Warning`, `Disabled`, `Success` et `Info` ;
-- ses ancres de fond, de texte et de filet sont choisies une à une, pour chaque variante des deux branches (réglées dans l'éditeur de thème) ;
+- ses dégradés viennent de la palette de base : 950 / 500 / 50 en sombre, 50 / 500 / 950 en clair ; `Disabled` garde un dégradé court (950 / 700 / 500, et son miroir en clair) pour que ses textes restent ternes ;
+- ses mélanges valent, dans les deux branches : neutre 0 %, Surface 5 %, Accent 15 %, Highlight 45 %, survol 10 % ; filets 5 / 10 / 15 % ; textes Subtle 40 %, Muted 60 %, Default 80 %, Highlight 95 % ;
 - chaque valeur terminale est non null après résolution.
 
 Le constructeur sans argument ne doit pas créer implicitement ce thème. La fabrique rend l'intention explicite et évite de fabriquer plusieurs racines indépendantes par erreur.
@@ -282,6 +293,7 @@ L'enregistrement doit échouer immédiatement dans les cas suivants :
 - doublon de variante dans une branche ;
 - cycle dans la chaîne des parents ;
 - valeur CSS vide ou manifestement mal formée ;
+- mélange qui n'est pas un pourcentage de `0%` à `100%` ;
 - thème impossible à résoudre jusqu'à une racine complète.
 
 ## Registre de thèmes
@@ -366,12 +378,7 @@ var brandTheme = new FbThemeSetup("Brand", registry.Default)
                     LayoutColors = new FbThemeLayoutColors
                     {
                         LowAnchor = "#fff4f5",
-                        HighAnchor = "#701824"
-                    },
-                    FormColors = new FbThemeFormColors
-                    {
-                        LowAnchor = "#701824",
-                        HighAnchor = "#ffffff"
+                        MidAnchor = "#d03050"
                     }
                 }
             ]
@@ -380,7 +387,7 @@ var brandTheme = new FbThemeSetup("Brand", registry.Default)
 };
 ```
 
-Les ancres non renseignées sont héritées de `Default/Light/Error`. Les mélanges de surface et de frame sont hérités au niveau de `Default/Light`.
+L'ancre haute, non renseignée, est héritée de `Default/Light/Error`. Les mélanges sont hérités au niveau de `Default/Light`. Une variante nouvelle prend les ancres qu'elle ne déclare pas à la variante `Default` de la même branche.
 
 ## Presets
 
@@ -428,30 +435,35 @@ Après résolution de l'héritage, `FbTheme` écrit dans sa balise `<style>` un 
 La variante fait partie du nom de la variable :
 
 ```css
---fb-default-bg-low-anchor: #111113;
---fb-default-bg-high-anchor: #f7f7f8;
+--fb-default-low-anchor: #09090B;
+--fb-default-mid-anchor: #71717B;
+--fb-default-high-anchor: #FAFAFA;
 
---fb-error-bg-low-anchor: #2a0f14;
---fb-error-bg-high-anchor: #fff5f6;
---fb-bg-surface-mix: 8%;
---fb-bg-accent-offset: 10%;
---fb-bg-highlight-offset: 18%;
+--fb-error-low-anchor: #4D0218;
+--fb-error-mid-anchor: #FF2056;
+--fb-error-high-anchor: #FFF1F2;
 ```
 
-Le même principe s'applique aux couleurs de premier plan et aux frames :
+Les mélanges de la branche ne dépendent pas de la variante. Le neutre et les offsets restent des pourcentages, puisqu'ils s'additionnent ; les positions des filets et des textes sont écrites en fractions, puisque CSS ne multiplie pas deux pourcentages :
 
 ```css
---fb-default-fg-low-anchor
---fb-default-fg-high-anchor
+--fb-neutral-mix: 0%;
+--fb-surface-offset: 5%;
+--fb-accent-offset: 15%;
+--fb-highlight-offset: 45%;
+--fb-hover-offset: 10%;
+--fb-frame-light-mix: 0.05;
+--fb-frame-medium-mix: 0.1;
+--fb-frame-strong-mix: 0.15;
 
---fb-error-fg-low-anchor
---fb-error-fg-high-anchor
---fb-frame-light-mix
---fb-frame-medium-mix
---fb-frame-strong-mix
+/* Forms */
+--fb-fg-subtle-mix: 0.4;
+--fb-fg-muted-mix: 0.6;
+--fb-fg-default-mix: 0.8;
+--fb-fg-highlight-mix: 0.95;
 ```
 
-Ces variables sont des valeurs sources. Elles ne sont jamais consommées directement par les classes CSS des composants.
+Les ancres sont des valeurs sources. Elles ne sont jamais consommées directement par les classes CSS des composants.
 
 Quand la teinte générale est active (`TintMix` au-dessus de `0%`), le bloc la déclare une fois, et chaque ancre la lit. L'ancre est mélangée, dans l'espace Oklab, avec la teinte ramenée à sa propre luminosité, que le C# calcule :
 
@@ -459,12 +471,12 @@ Quand la teinte générale est active (`TintMix` au-dessus de `0%`), le bloc la 
 /* Thème Layout par défaut : Zinc 950 teinté à 5 % vers Sky 500 */
 --fb-tint-color:#00A6F4;
 --fb-tint-mix:5%;
---fb-default-bg-low-anchor:color-mix(in oklab,#09090B,oklch(from var(--fb-tint-color) 0.1408 c h) var(--fb-tint-mix));
+--fb-default-low-anchor:color-mix(in oklab,#09090B,oklch(from var(--fb-tint-color) 0.1408 c h) var(--fb-tint-mix));
 ```
 
 Une ancre qui n'est pas hexadécimale est mélangée avec la teinte telle quelle, sans garder sa luminosité. À `0%`, les ancres sont écrites telles que déclarées. `FbThemeContrast` applique la même teinte avant de mesurer les contrastes.
 
-Les paramètres Main et Branch, qui ne changent pas avec la variante, sont également émis dans le bloc du thème. Ils conservent leur préfixe `default` lorsqu'un alias actif est nécessaire :
+Les espacements et les rayons, qui ne changent pas avec la variante, sont également émis dans le bloc du thème. Ils conservent leur préfixe `default` pour leur alias actif :
 
 ```css
 --fb-default-space-s
@@ -476,11 +488,6 @@ Les paramètres Main et Branch, qui ne changent pas avec la variante, sont égal
 --fb-default-radius-m
 --fb-default-radius-l
 --fb-default-radius-x
-
---fb-default-fg-default-high-mix
---fb-default-fg-subtle-high-mix
---fb-default-fg-muted-high-mix
---fb-default-fg-highlight-high-mix
 ```
 
 La typographie, qui appartient à Main et n'est pas affectée par `FbVariant`, est émise une seule fois :
@@ -513,116 +520,66 @@ Les classes CSS statiques ne consomment que les variables actives. Dans le bloc 
 --fb-space-m: var(--fb-default-space-m);
 --fb-radius-s: var(--fb-default-radius-s);
 
---fb-bg-low-anchor: var(--fb-default-bg-low-anchor);
---fb-bg-high-anchor: var(--fb-default-bg-high-anchor);
-
---fb-fg-low-anchor: var(--fb-default-fg-low-anchor);
---fb-fg-high-anchor: var(--fb-default-fg-high-anchor);
---fb-fg-default-high-mix: var(--fb-default-fg-default-high-mix);
---fb-fg-subtle-high-mix: var(--fb-default-fg-subtle-high-mix);
---fb-fg-muted-high-mix: var(--fb-default-fg-muted-high-mix);
---fb-fg-highlight-high-mix: var(--fb-default-fg-highlight-high-mix);
-
---fb-bg-surface-mix: 8%;
---fb-bg-accent-offset: 10%;
---fb-bg-highlight-offset: 18%;
---fb-frame-light-mix: 8%;
---fb-frame-medium-mix: 14%;
---fb-frame-strong-mix: 28%;
+--fb-low-anchor: var(--fb-default-low-anchor);
+--fb-mid-anchor: var(--fb-default-mid-anchor);
+--fb-high-anchor: var(--fb-default-high-anchor);
 ```
 
-Une variante ne change jamais les classes CSS. Elle redéfinit localement les mêmes variables actives pour les faire pointer vers un autre préfixe :
+Une variante ne change jamais les classes CSS. Elle redéfinit localement les trois ancres actives pour les faire pointer vers un autre préfixe :
 
 ```css
---fb-bg-low-anchor: var(--fb-error-bg-low-anchor);
---fb-bg-high-anchor: var(--fb-error-bg-high-anchor);
-
---fb-fg-low-anchor: var(--fb-error-fg-low-anchor);
---fb-fg-high-anchor: var(--fb-error-fg-high-anchor);
-
+--fb-low-anchor: var(--fb-error-low-anchor);
+--fb-mid-anchor: var(--fb-error-mid-anchor);
+--fb-high-anchor: var(--fb-error-high-anchor);
 ```
 
 Les valeurs sources de chaque variante sont complètes après résolution C#. Les redirections ne nécessitent donc ni valeur en dur, ni fallback, ni calcul de thème dans `FbVariant`.
 
-### 3. Variables locales temporaires
+### 3. Le neutre de chaque bloc
 
-La classe statique `.fb-theme-scope` réinitialise les variables temporaires à partir des variables actives :
+Le neutre d'un bloc rempli est celui de son plus proche ancêtre rempli, plus l'offset de son fond. Une propriété personnalisée ne peut pas lire sa propre valeur héritée (`--fb-neutral: calc(var(--fb-neutral) + …)` est invalide), et la fonction `inherit()` n'est pas disponible : chaque profondeur a donc sa variable, `--fb-neutral-1` à `--fb-neutral-6`, choisie en comptant les ancêtres remplis. Chaque fond donne son offset dans `--fb-fill-offset` :
 
 ```css
-.fb-theme-scope {
-    --fb-current-bg-surface-mix: var(--fb-bg-surface-mix);
-    --fb-current-bg-accent-offset: var(--fb-bg-accent-offset);
-    --fb-current-bg-highlight-offset: var(--fb-bg-highlight-offset);
+.fb-wba { --fb-fill-offset: var(--fb-accent-offset); }
 
-    --fb-current-frame-light-mix: var(--fb-frame-light-mix);
-    --fb-current-frame-medium-mix: var(--fb-frame-medium-mix);
-    --fb-current-frame-strong-mix: var(--fb-frame-strong-mix);
-
-    --fb-current-fg-default-high-mix: var(--fb-fg-default-high-mix);
-    --fb-current-fg-subtle-high-mix: var(--fb-fg-subtle-high-mix);
-    --fb-current-fg-muted-high-mix: var(--fb-fg-muted-high-mix);
-    --fb-current-fg-highlight-high-mix: var(--fb-fg-highlight-high-mix);
+/* F = :is(.fb-wbs, .fb-wba, .fb-wbh) ; un bloc qui a deux ancêtres remplis, pas trois */
+F F F:not(F F F *) {
+    --fb-neutral-3: min(100%, calc(var(--fb-neutral-2) + var(--fb-fill-offset)));
+    --fb-neutral: var(--fb-neutral-3);
 }
 ```
 
-Le hover vient par-dessus la variante : il modifie seulement les variables `--fb-current-*`, à partir des variables actives déjà redirigées. Un offset peut ainsi être ajouté avec `calc()` puis borné par `clamp(0%, ..., 100%)` sans connaître la variante courante.
+La sixième règle n'a pas de `:not()` : un bloc plus profond repart du neutre du cinquième niveau. Un thème, de page ou `Scoped` (classe `fb-theme`), met toutes les profondeurs à son neutre : le premier fond à l'intérieur, à quelque profondeur qu'il soit dans la page, part de là. L'aperçu de l'éditeur de thème repart ainsi de son propre neutre.
 
-La même règle s'applique à `:focus-visible`, à l'état pressé et aux autres interactions temporaires.
+Le survol vient par-dessus : `--fb-current-neutral`, le neutre dont les couleurs sont calculées, vaut le neutre du bloc, plus `--fb-hover-mix-offset` tant qu'un élément `fb-hover` est survolé. Sa valeur vient de la branche (`SurfaceMix.HoverOffset`, écrit dans `--fb-hover-offset`) ; l'appui d'un bouton en ajoute le double, et le paramètre `HoverMixOffset` la remplace sur un composant. Le survol monte le fond, les textes et les filets de l'élément ensemble ; les blocs remplis qu'il contient gardent leur neutre.
 
 ### 4. Variables calculées
 
-Les formules existantes en `oklab` restent statiques et relatives aux variables actives ou temporaires :
+Toutes les couleurs échantillonnent le dégradé actif à une position `P` : de l'ancre basse à la médiane sur la première moitié, de la médiane à l'ancre haute sur la seconde.
 
 ```css
---fb-bg-surface: color-mix(
-    in oklab,
-    var(--fb-bg-low-anchor),
-    var(--fb-bg-high-anchor) var(--fb-current-bg-surface-mix)
-);
-
---fb-bg-accent: color-mix(
-    in oklab,
-    var(--fb-bg-surface),
-    var(--fb-bg-high-anchor) var(--fb-current-bg-accent-offset)
-);
-
---fb-bg-highlight: color-mix(
-    in oklab,
-    var(--fb-bg-surface),
-    var(--fb-bg-high-anchor) var(--fb-current-bg-highlight-offset)
-);
-
---fb-fg-default: color-mix(
-    in oklab,
-    var(--fb-fg-low-anchor),
-    var(--fb-fg-high-anchor) var(--fb-current-fg-default-high-mix)
-);
+color-mix(in oklab,
+    color-mix(in oklab, var(--fb-low-anchor), var(--fb-mid-anchor) clamp(0%, calc(P * 2), 100%)),
+    var(--fb-high-anchor) clamp(0%, calc(P * 2 - 100%), 100%))
 ```
 
-`Subtle`, `Muted` et `Highlight` utilisent la même formule avec leur mix respectif.
+| Variable | Position |
+| --- | --- |
+| `--fb-current-bg` | le neutre courant : le fond du bloc |
+| `--fb-bg-surface`, `--fb-bg-accent`, `--fb-bg-highlight` | le neutre courant plus l'offset du fond : ce que prendrait un fond de ce type ici |
+| `--fb-frame-light`, `--fb-frame-medium`, `--fb-frame-strong` | `100% - (1 - mix) * (100% - neutre)` |
+| `--fb-fg-subtle`, `--fb-fg-muted`, `--fb-fg-default`, `--fb-fg-highlight` (Forms) | `100% - (1 - mix) * (100% - neutre)` |
 
-Ces formules doivent être déclarées à la fois sur `:root`, sur `.fb-theme-scope` et sur `:where(.fb-variant)` (voir « Variante d'un contrôle »). Un scope de variante redéfinit les variables actives sur son propre élément ; les variables calculées doivent donc être redéclarées sur ce même élément pour être réévaluées à partir de ces nouvelles valeurs, et non simplement héritées du parent.
+Ces couleurs sont calculées là où le neutre ou les ancres changent : sur `:root`, `.fb-theme-scope`, `:where(.fb-variant)` (voir « Variante d'un contrôle »), sur chaque fond `fb-wbs`, `fb-wba`, `fb-wbh`, et sur `.fb-hover:hover`. Partout ailleurs, elles sont héritées. Une variable personnalisée est résolue sur l'élément qui la déclare : sans cette redéclaration, un enfant hériterait des couleurs calculées avec les ancres et le neutre de son parent. Ces mêmes éléments rétablissent `color: var(--fb-fg-default)`, sans spécificité, si bien qu'un texte brut suit les couleurs de son bloc.
 
-Les couleurs de frame vont de l’ncre basse des filets vers leur ancre haute, au mix temporaire Light/Medium/Strong :
-
-```css
---fb-frame-border-color: color-mix(
-    in oklab,
-    var(--fb-frame-low-anchor, var(--fb-current-bg)),
-    var(--fb-frame-high-anchor, var(--fb-bg-high-anchor)) var(--fb-current-frame-light-mix)
-);
-```
-
-Une variante sans `FrameColors` n’écrit pas ses ancres de filet : la redirection pointe alors vers une variable indéfinie, l’ncre active reste vide et le repli CSS reprend le fond courant et l’ncre haute des fonds. Un thème sans couleurs de filet rend donc les filets comme avant ; l’Ne des deux ancres peut être déclarée seule. Frames, séparateurs, contours, piste des interrupteurs, anneau de progression et barres de défilement partagent ce calcul.
-
-Le survol ajoute `--fb-hover-mix-offset` aux mixes de fond, de frame et de texte. Sa valeur vient de la branche (`SurfaceMix.HoverOffset`, écrit dans `--fb-bg-hover-offset`, 4 % par défaut) ; l’ppui d’N bouton en ajoute le double, et le paramètre `HoverMixOffset` la remplace sur un composant.
+Une frame (`WFL`, `WFM`, `WFS`) et un séparateur prennent `--fb-frame-light`, `--fb-frame-medium` ou `--fb-frame-strong` du bloc qui les porte. La piste des interrupteurs, la case à cocher et les barres de défilement prennent `--fb-frame-strong`, l'anneau de progression `--fb-frame-medium`. Les contrôles (anneau de focus, interrupteur coché, curseur) prennent l'ancre médiane, la plus colorée du dégradé ; le voile d'un tiroir modal, l'ancre basse.
 
 Cette indirection garantit quatre propriétés :
 
 - le CSS et les classes des composants restent statiques ;
 - l'activation d'une variante est uniquement une redirection de variables CSS ;
 - le hover et les autres interactions se superposent à la variante active ;
-- les valeurs calculées restent relatives aux ancres et aux mixes de la variante courante.
+- les valeurs calculées restent relatives aux ancres de la variante courante et au neutre du bloc.
 
 ## Génération du bloc `<style>` du thème
 
@@ -645,24 +602,24 @@ Avec le sélecteur par défaut, le DOM produit est de la forme :
         --fb-default-space-s: 0.3rem;
         --fb-default-space-m: 0.5rem;
 
-        --fb-default-bg-low-anchor: #f7f7f8;
-        --fb-default-bg-high-anchor: #111113;
+        --fb-neutral-mix: 0%;
+        --fb-surface-offset: 5%;
+        --fb-frame-light-mix: 0.05;
+        --fb-fg-default-mix: 0.8;
+        color-scheme: light;
 
-        --fb-error-bg-low-anchor: #fff4f5;
-        --fb-error-bg-high-anchor: #701824;
+        --fb-default-low-anchor: #FAFAFA;
+        --fb-default-mid-anchor: #71717B;
+        --fb-default-high-anchor: #09090B;
 
-        --fb-error-fg-low-anchor: #701824;
-        --fb-error-fg-high-anchor: #ffffff;
+        --fb-error-low-anchor: #FFF1F2;
+        --fb-error-mid-anchor: #FF2056;
+        --fb-error-high-anchor: #4D0218;
 
-        --fb-bg-low-anchor: var(--fb-default-bg-low-anchor);
-        --fb-bg-high-anchor: var(--fb-default-bg-high-anchor);
-        --fb-bg-surface-mix: 8%;
-        --fb-bg-accent-offset: 10%;
-        --fb-bg-highlight-offset: 18%;
-
-        --fb-fg-low-anchor: var(--fb-default-fg-low-anchor);
-        --fb-fg-high-anchor: var(--fb-default-fg-high-anchor);
-        --fb-frame-light-mix: 8%;
+        --fb-space-s: var(--fb-default-space-s);
+        --fb-low-anchor: var(--fb-default-low-anchor);
+        --fb-mid-anchor: var(--fb-default-mid-anchor);
+        --fb-high-anchor: var(--fb-default-high-anchor);
     }
 </style>
 ```
@@ -686,22 +643,20 @@ static string ActiveReference(string variant, string token)
 Exemples :
 
 ```csharp
-ValueName("Error", "bg-low-anchor");
-// --fb-error-bg-low-anchor
+ValueName("Error", "low-anchor");
+// --fb-error-low-anchor
 
-ActiveReference("Error", "bg-low-anchor");
-// --fb-bg-low-anchor:var(--fb-error-bg-low-anchor);
+ActiveReference("Error", "low-anchor");
+// --fb-low-anchor:var(--fb-error-low-anchor);
 ```
 
-Les tokens Variant sont centralisés dans `FbThemeCssNames.VariantReferences`, partagé par le générateur du thème, `FbVariant` et `FbLayoutVariant`. Ils forment trois paires d'ancres : `bg` (`FbThemeLayoutColors`), `fg` (`FbThemeFormColors`) et `frame` (`FrameColors`, facultatives). Les mélanges de surface et de frame restent au niveau de la branche.
+Les tokens Variant sont centralisés dans `FbThemeCssNames.VariantReferences`, partagé par le générateur du thème, `FbVariant` et `FbLayoutVariant`, pour Layout comme pour Forms : les trois ancres de `FbThemeLayoutColors`. Les mélanges restent au niveau de la branche.
 
 ```text
-bg-low-anchor   bg-high-anchor    // Layout et Forms
-fg-low-anchor   fg-high-anchor    // Forms uniquement
-frame-low-anchor frame-high-anchor // si la variante les déclare
+low-anchor   mid-anchor   high-anchor
 ```
 
-Une variante peut être inversée (`Invert`) : les ancres de fond pointent vers les ancres de premier plan de la variante, et l'inverse. L'ancre absolue du premier plan devient celle du fond, ce qui transforme une variante sombre en variante claire, comme le prévoit `Conception.md`. Les ancres de filet sont échangées entre elles. L'inversion reste une redirection, sans aucune valeur calculée en C#.
+Une variante peut être inversée (`Invert`) : l'ancre basse active pointe vers l'ancre haute de la variante, et l'inverse ; la médiane reste. Le dégradé est retourné, ce qui transforme une variante sombre en variante claire. L'inversion reste une redirection, sans aucune valeur calculée en C#.
 
 Les chaînes de redirection sont construites une fois par combinaison (variante, inversion) puis mises en cache, dans une limite de 256 entrées.
 
@@ -798,15 +753,14 @@ Pour `Error`, le rendu est de la forme :
 
 ```html
 <div class="fb-theme-scope"
-     style="--fb-bg-low-anchor:var(--fb-error-bg-low-anchor);
-            --fb-bg-high-anchor:var(--fb-error-bg-high-anchor);
-            --fb-fg-low-anchor:var(--fb-error-fg-low-anchor);
-            --fb-fg-high-anchor:var(--fb-error-fg-high-anchor);">
+     style="--fb-low-anchor:var(--fb-error-low-anchor);
+            --fb-mid-anchor:var(--fb-error-mid-anchor);
+            --fb-high-anchor:var(--fb-error-high-anchor);">
     ...
 </div>
 ```
 
-Le rendu réel contient la redirection de tous les tokens de `LayoutColors` et `FormColors`. Il ne contient aucune valeur calculée en C# et aucune classe propre à `Error`.
+Le rendu ne contient aucune valeur calculée en C# et aucune classe propre à `Error`. Le neutre n'est pas touché : une variante placée dans un bloc à 20 % peint ses fonds à partir de 20 %, avec ses propres ancres.
 
 Le scope rétablit aussi `color: var(--fb-fg-default)`, si bien qu'un texte brut placé dans `Error` prend la couleur de la variante.
 
@@ -816,7 +770,7 @@ Les contrôles (champs, listes, cases, interrupteurs, onglets, boutons) ne s'env
 
 ```html
 <div class="fb-row … fb-control fb-field fb-variant"
-     style="--fb-bg-low-anchor:var(--fb-error-bg-low-anchor);…">
+     style="--fb-low-anchor:var(--fb-error-low-anchor);…">
 ```
 
 Les formules sont redéclarées sur `:where(.fb-variant)`, de spécificité nulle : les règles propres au composant (`fb-wba`, `fb-control`…) gardent la main, comme lorsqu'elles s'appliquaient à l'enfant d'un scope. Sans variante, l'élément n'a ni la classe ni le style, et le contrôle hérite de la variante de son parent. Passer à `Error` pendant la saisie ne change que deux attributs du même élément : le DOM, et le focus, restent en place.
@@ -825,7 +779,7 @@ Un thème ou une branche inconnus lèvent une exception explicite dans `FbTheme`
 
 #### Inversion locale
 
-`Invert` échange les ancres de fond et celles du premier plan :
+`Invert` retourne le dégradé :
 
 ```razor
 <FbVariant Invert>
@@ -835,15 +789,12 @@ Un thème ou une branche inconnus lèvent une exception explicite dans `FbTheme`
 
 ```html
 <div class="fb-theme-scope"
-     style="--fb-bg-low-anchor:var(--fb-default-fg-high-anchor);
-            --fb-bg-high-anchor:var(--fb-default-fg-low-anchor);
-            --fb-fg-low-anchor:var(--fb-default-bg-high-anchor);
-            --fb-fg-high-anchor:var(--fb-default-bg-low-anchor);">
+     style="--fb-low-anchor:var(--fb-default-high-anchor);
+            --fb-mid-anchor:var(--fb-default-mid-anchor);
+            --fb-high-anchor:var(--fb-default-low-anchor);">
 ```
 
-Échanger seulement les deux ancres d'une même paire ne suffit pas : avec le thème par défaut, l'ancre haute du fond est une nuance 500, si bien que le fond obtenu est un gris moyen sur lequel le texte devient illisible. `FbThemeContrast.Analyze(theme, inverted: true)` vérifie les variantes inversées.
-
-`FbLayoutVariant` accepte aussi `Invert`. Sans premier plan, il échange les ancres basse et haute du fond, qui sont déjà les deux extrêmes de la rampe Layout.
+Les ancres basse et haute sont les deux extrémités du dégradé : la carte est claire, ses textes sombres. Avec le thème par défaut, le sombre inversé donne le clair, puisque la branche claire lit la même palette dans l'autre sens. `FbThemeContrast.Analyze(theme, inverted: true)` vérifie les variantes inversées. `FbLayoutVariant` accepte aussi `Invert`, avec les mêmes redirections.
 
 ### Imbrication et retour au défaut
 
@@ -910,7 +861,7 @@ public sealed class FbLayoutThemeVariant
 }
 ```
 
-La résolution suit les mêmes règles que le thème Forms, sans niveau Branch. `FbLayoutTheme` génère une balise `<style>` contenant la variante `Default`, toutes les variantes Layout résolues et les alias actifs. `FbLayoutVariant` rend une div neutre dont l'attribut `style` redirige les ancres de fond vers le préfixe choisi ; les mélanges de surface et de frame restent communs au thème Layout.
+La résolution suit les mêmes règles que le thème Forms, sans niveau Branch. `FbLayoutTheme` génère une balise `<style>` contenant la variante `Default`, toutes les variantes Layout résolues et les alias actifs. `FbLayoutVariant` rend une div neutre dont l'attribut `style` redirige les trois ancres vers le préfixe choisi ; les mélanges restent communs au thème Layout. Les feuilles sont les mêmes : neutre, imbrication, survol et filets fonctionnent sans Forms, qui n’ajoute que les textes.
 
 Aucune classe propre à un thème ou à une variante Layout n'est générée.
 
@@ -919,35 +870,35 @@ Aucune classe propre à un thème ou à une variante Layout n'est générée.
 Les pourcentages de mélange garantissent une palette cohérente, mais aucun contraste. `FbThemeContrast.Analyze` calcule donc en C# les couleurs que le navigateur peindra, avec les mêmes formules que les feuilles CSS :
 
 - `FbColorMath.Mix` reproduit `color-mix(in oklab, A, B p%)` ;
+- `FbColorMath.Sample` échantillonne le dégradé à trois ancres comme les feuilles ;
+- `FbColorMath.Relative` place un texte ou un filet depuis le neutre de son bloc ;
 - `FbColorMath.ContrastRatio` donne le ratio WCAG 2.2, de 1 à 21.
 
 ```csharp
-var theme = registry.Resolve("MyTheme", FbThemeBranches.Light);
+var theme = registry.Resolve("Default", FbThemeBranches.Dark);
 var report = FbThemeContrast.Analyze(theme);
 
 foreach (var entry in report.Below(4.5))
-    Console.WriteLine(entry); // Error Muted on Highlight: #… on #… = 4.12:1
+    Console.WriteLine(entry); // Warning Default on Highlight: #FFE7C4 on #EA8C01 = 2.12:1
 ```
 
-Le rapport couvre chaque texte (`Subtle`, `Muted`, `Default`, `Highlight`) sur chaque fond (`Surface`, `Accent`, `Highlight`) de chaque variante. `MeetsAA` vaut 4,5:1 (texte courant) et `MeetsAALarge` 3:1 (grand texte, contours de contrôles). Une variante dont une ancre n'est pas au format `#RGB` ou `#RRGGBB` apparaît dans `Skipped`.
+Le rapport couvre chaque texte (`Subtle`, `Muted`, `Default`, `Highlight`) sur chaque fond (`Surface`, `Accent`, `Highlight`) de chaque variante. Chaque fond est un bloc de premier niveau, posé sur la page : le neutre de la branche plus son offset ; les textes sont placés depuis ce neutre. `MeetsAA` vaut 4,5:1 (texte courant) et `MeetsAALarge` 3:1 (grand texte, contours de contrôles). Une variante dont une ancre n'est pas au format `#RGB` ou `#RRGGBB` apparaît dans `Skipped`.
 
-Les tests de la solution imposent l'AA aux textes `Default` et `Highlight` de la variante `Default`, celle du corps des pages, sur ses trois fonds, pour les deux branches du thème par défaut ; une carte inversée est contrôlée sur ses fonds Surface et Accent. `Subtle` et `Muted` sont des textes secondaires, et les variantes colorées un choix de design réglé dans l'éditeur de thème : leur contraste figure dans le rapport, sans être imposé.
+Les tests de la solution imposent l’AA aux textes `Default` et `Highlight` de la variante `Default`, celle du corps des pages, sur les fonds Surface et Accent, et au texte `Highlight` sur le fond Highlight, pour les deux branches du thème par défaut et pour une carte inversée. Le fond Highlight (45 %) est près du milieu du dégradé : le texte `Default` y atteint 4,1:1 en sombre et 4,2:1 en clair, sous l’AA ; le texte `Highlight` y donne 5,2:1 et 4,8:1. L’éditeur de thème affiche le plus faible ratio de chaque texte, sans la variante `Disabled`, que WCAG n’oblige à aucun contraste. `Subtle` et `Muted` sont des textes secondaires, et les variantes colorées un choix de design réglé dans l'éditeur de thème : leur contraste figure dans le rapport, sans être imposé.
 
 ## Adaptation des feuilles CSS
-
-L'implémentation doit réorganiser les déclarations existantes sans réécrire les formules de rendu.
 
 Les règles à suivre sont :
 
 - conserver `color-mix(in oklab, ...)` pour les fonds, textes et frames ;
 - faire consommer aux classes statiques uniquement les variables actives et calculées ;
-- employer systématiquement `--fb-bg-low-anchor` et `--fb-fg-low-anchor` pour les ancres basses actives ;
-- conserver les variables `--fb-current-*` pour tous les états temporaires ;
-- compléter les scopes afin qu'ils réinitialisent à la fois fond, texte et frame ;
+- ne lire que les trois ancres actives `--fb-low-anchor`, `--fb-mid-anchor` et `--fb-high-anchor` ;
+- porter les états temporaires (survol, appui) par `--fb-current-neutral` ;
+- recalculer fonds, textes et frames sur chaque scope, variante, fond et élément survolé ;
 - faire consommer à chaque taille son coefficient XS/S/M/L/XL/XXL ;
 - ajouter les variables de familles de fontes au lieu de coder `text-font` et `code-font` directement dans les règles ;
 - retirer toute logique de thème ou de variante des classes CSS statiques ;
-- garantir que le bloc `<style>` définit les ancres de chaque variante et les mixes de surface et de frame de la branche ;
+- garantir que le bloc `<style>` définit les ancres de chaque variante et les mélanges de la branche ;
 - garantir que `FbVariant` redirige exactement la même liste de tokens que celle émise par `FbTheme` ;
 - centraliser la création des noms de variables pour que Layout, Forms, `FbTheme` et `FbVariant` produisent exactement la même nomenclature.
 
@@ -956,7 +907,7 @@ La classe statique actuellement nommée `FbTheme` est supprimée ; ce nom est en
 Les composants de configuration séparés du socle sont remplacés par la nouvelle architecture :
 
 - `FbLayoutThemeStyle` est supprimé au profit du bloc `<style>` produit directement par `FbLayoutTheme` ;
-- les réglages de couleurs Forms alimentent `FbThemeFormColors` et `FbThemeFormTextVariantMix` ;
+- les réglages de couleurs alimentent `FbThemeLayoutColors` et `FbThemeFormTextVariantMix` ;
 - les réglages de fontes alimentent `FbThemeFormTypography`.
 
 La bibliothèque étant nouvelle, aucun membre `[Obsolete]`, aucune façade de compatibilité et aucun ancien nom public ne doivent subsister dans l'implémentation finale.
@@ -1028,7 +979,7 @@ L'implémentation est terminée lorsque :
 - le bloc `<style>` contient un jeu complet `--fb-{variant}-*` pour chaque variante disponible ;
 - `FbVariant` ne contient que des redirections `--fb-* : var(--fb-{variant}-*)` ;
 - une variante imbriquée `Default` annule complètement une variante extérieure ;
-- hover et focus modifient uniquement les variables temporaires ;
+- hover et focus ne modifient que le neutre courant ;
 - les calculs `color-mix()` existants produisent toujours les fonds, textes et frames ;
 - tous les composants consomment les variables actives, sans dépendre du nom du thème ;
 - Layout fonctionne sans référence à Forms ;

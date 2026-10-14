@@ -1,6 +1,6 @@
 # FractalBlazor.Components
 
-Composants Blazor ultra-légers pour la mise en page et les formulaires, avec un thème entièrement porté par des variables CSS. Les composants ne connaissent que des intentions visuelles (`Surface`, `Accent`, `Highlight`, frames `Light` / `Medium` / `Strong`, textes `Subtle` / `Muted` / `Default` / `Highlight`). Toutes les couleurs naissent d'un `color-mix()` en oklab entre deux ancres.
+Composants Blazor ultra-légers pour la mise en page et les formulaires, avec un thème entièrement porté par des variables CSS. Les composants ne connaissent que des intentions visuelles (`Surface`, `Accent`, `Highlight`, frames `Light` / `Medium` / `Strong`, textes `Subtle` / `Muted` / `Default` / `Highlight`). Toutes les couleurs sont des positions sur un dégradé à trois ancres (0 %, 50 %, 100 %), mélangé en oklab : chaque bloc rempli décale le neutre de son contenu, et ses textes et ses filets se placent depuis ce neutre.
 
 ```razor
 <FbStack GL PL WBS WFM WRL>
@@ -94,8 +94,8 @@ builder.Services.AddFractalBlazor(registry =>
     }));
 ```
 
-- `<FbVariant Variant="Error">` redirige quatre variables sur une branche du DOM, sans changer aucune classe.
-- `<FbVariant Invert>` échange les ancres de fond et de premier plan : une carte claire dans une page sombre.
+- `<FbVariant Variant="Error">` redirige les trois ancres du dégradé sur une branche du DOM, sans changer aucune classe.
+- `<FbVariant Invert>` retourne le dégradé : une carte claire dans une page sombre.
 - `<FbTheme Branch="Light" Scoped>` pose une autre branche sur un seul sous-arbre.
 - `FbThemeContrast.Analyze(theme)` calcule les couleurs réellement peintes et leur contraste WCAG.
 - `<FbTheme Setup="@monTheme" Scoped>` applique un thème non enregistré, pour un aperçu ou un éditeur.
