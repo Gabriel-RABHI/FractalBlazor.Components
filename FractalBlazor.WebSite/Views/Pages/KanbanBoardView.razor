@@ -3,7 +3,7 @@
 @attribute [ViewFor<ViewSelector>(typeof(KanbanBoardState), ViewSelector.Viewer)]
 
 <FbDragAndDropMaster Handler="Item">
-    <FbRow NoFlex Scrollable GM PBM JVS>
+    <FbRow NoFlex Scrollable GM PL JVS>
         @foreach (var column in Item.Columns)
         {
             <FbDynamicView @key="column" TSelector="ViewSelector" Item="column" Selector="ViewSelector.Viewer" />

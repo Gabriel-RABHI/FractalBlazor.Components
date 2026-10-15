@@ -342,6 +342,7 @@ public sealed class DragAndDropTests : BunitContext
     [InlineData("'.fb-drop-zone'")]
     [InlineData("'fb-drop-refused'")]
     [InlineData("'fb-dragging'")]
+    [InlineData("'.fb-swo-auto'")]
     public void The_script_knows_the_classes_of_the_components(string name)
     {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);

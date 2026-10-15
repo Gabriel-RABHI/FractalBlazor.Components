@@ -178,7 +178,7 @@ namespace FractalBlazor.Components.Layout
         }
 
         /// <summary>
-        /// Fixed visibility
+        /// Fixed visibility: always shown, whatever the mouse.
         /// </summary>
         [Parameter]
         public bool Fixed
@@ -186,7 +186,8 @@ namespace FractalBlazor.Components.Layout
             get => !Automatic && Visible;
             set
             {
-                Automatic = Visible = value;
+                if (value)
+                    Visible = true;
             }
         }
 
@@ -210,7 +211,8 @@ namespace FractalBlazor.Components.Layout
 
             builder.OpenElement(6, "div");
             builder.AddAttribute(7, "style", $"visibility: {(Show ? "inherit" : "collapse")}; opacity: {(Show ? "1" : "0")};");
-            builder.AddAttribute(8, "class", "fb-utils-fit-parent fb-swo-frame");
+            // fb-swo-auto: shown by the mouse, so hidden by the script when a drag starts on it.
+            builder.AddAttribute(8, "class", Automatic ? "fb-utils-fit-parent fb-swo-frame fb-swo-auto" : "fb-utils-fit-parent fb-swo-frame");
             builder.AddAttribute(9, "id", _id.ToString());
 
             // -------- Top

@@ -1,40 +1,59 @@
 @* A column of the board: a draggable that is also a receiver, split into left, center and
-   right. Its title is its handle; its tasks are views of their own states. *@
+   right. Its actions show over its header when it is hovered (FbShowWhenOver), so the
+   title takes the whole width; the header is its handle. Its tasks are views of their own
+   states. *@
 @attribute [ViewFor<ViewSelector>(typeof(KanbanColumnState), ViewSelector.Viewer)]
 
 <FbDraggable DragId="@Item" Style="flex:none;width:18rem">
     <FbDraggableReceiver DropId="@Item" ZLCR PM WBA WRL>
-        <FbStack NoFlex GS JVS>
+        <FbStack NoFlex GM JVS>
             @if (Item.Editing)
             {
-                <FbRow NoFlex GS JVC>
-                    <FbDraggableHandle>
-                        <FbIcon Icon="@FbMaterialIcons.DragIndicator" S Muted />
-                    </FbDraggableHandle>
-                    <FbRow MinWidth="0"><FbInputText TAction="KanbanNode.SetTitle" Handler="Item" Value="@Item.Title" Immediate /></FbRow>
-                    <FbButton WFN PS Handler="Item" Action="@ToggleEdit" Title="Valider">
-                        <FbIcon Icon="@FbMaterialIcons.Check" S />
-                    </FbButton>
-                </FbRow>
+                <FbShowWhenOver Fixed Offsets="-12px">
+                    <TopLeftContent>
+                        <FbDraggableHandle>
+                            <FbRow NoFlex PS WBS WFM WRM><FbIcon Icon="@FbMaterialIcons.DragIndicator" S /></FbRow>
+                        </FbDraggableHandle>
+                    </TopLeftContent>
+                    <TopRightContent>
+                        <FbButton KP PS Variant="@FbThemeVariants.Success" Handler="Item" Action="@ToggleEdit" Title="Valider">
+                            <FbIcon Icon="@FbMaterialIcons.Check" S />
+                        </FbButton>
+                    </TopRightContent>
+                    <ChildContent>
+                        <FbStack NoFlex GS PTL JVS>
+                            <FbInputText TAction="KanbanNode.SetTitle" Handler="Item" Value="@Item.Title" Immediate Placeholder="Titre" />
+                            <KanbanProgress Done="@Item.DoneCount" Total="@Item.LeafCount" />
+                        </FbStack>
+                    </ChildContent>
+                </FbShowWhenOver>
             }
             else
             {
-                <FbRow NoFlex GS JVC>
-                    <FbDraggableHandle>
-                        <FbRow GS JVBl MinWidth="0">
-                            <FbText M B>@Item.Title</FbText>
-                            <FbText S Muted>@Item.DoneCount / @Item.LeafCount</FbText>
+                <FbShowWhenOver Offsets="-12px">
+                    <TopRightContent>
+                        <FbRow NoFlex GS>
+                            <FbButton KP PS Variant="@FbThemeVariants.Error" Handler="Item" Action="@Delete" Title="Supprimer la liste">
+                                <FbIcon Icon="@FbMaterialIcons.Delete" S />
+                            </FbButton>
+                            <FbButton KP PS Variant="@FbThemeVariants.Selected" Handler="Item" Action="@ToggleEdit" Title="Renommer">
+                                <FbIcon Icon="@FbMaterialIcons.Edit" S />
+                            </FbButton>
                         </FbRow>
-                    </FbDraggableHandle>
-                    <FbButton WFN PS Handler="Item" Action="@ToggleEdit" Title="Renommer">
-                        <FbIcon Icon="@FbMaterialIcons.Edit" S Muted />
-                    </FbButton>
-                    <FbButton WFN PS Handler="Item" Action="@Delete" Title="Supprimer la liste">
-                        <FbIcon Icon="@FbMaterialIcons.Delete" S Muted />
-                    </FbButton>
-                </FbRow>
+                    </TopRightContent>
+                    <ChildContent>
+                        <FbDraggableHandle>
+                            <FbStack NoFlex GS JVS>
+                                <FbRow NoFlex GS JVBl>
+                                    <FbText M B>@Item.Title</FbText>
+                                    <FbText S Muted>@Item.DoneCount / @Item.LeafCount</FbText>
+                                </FbRow>
+                                <KanbanProgress Done="@Item.DoneCount" Total="@Item.LeafCount" />
+                            </FbStack>
+                        </FbDraggableHandle>
+                    </ChildContent>
+                </FbShowWhenOver>
             }
-            <KanbanProgress Done="@Item.DoneCount" Total="@Item.LeafCount" />
             @foreach (var task in Item.Tasks)
             {
                 <FbDynamicView @key="task" TSelector="ViewSelector" Item="task" Selector="ViewSelector.Viewer" />

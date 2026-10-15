@@ -352,6 +352,10 @@ window.FractalBlazor = window.FractalBlazor || {};
         event.dataTransfer.effectAllowed = 'move';
         event.dataTransfer.setData(dragData, '');
         const dragged = armed;
+
+        // A drag fires no mouseout: what the mouse showed on the item (FbShowWhenOver) would
+        // stay shown once it lands elsewhere.
+        dragged.querySelectorAll('.fb-swo-auto').forEach(hide);
         requestAnimationFrame(() => {
             if (dragged === armed) dragged.classList.add('fb-dragging');
         });

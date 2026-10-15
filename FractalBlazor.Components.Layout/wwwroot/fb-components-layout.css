@@ -483,6 +483,17 @@ html {
     transition: opacity 0.3s ease-in-out, visibility 0.3s;
 }
 
+/* The frame and the boxes that place the contents let the pointer through: only the
+   contents shown catch it, and the content below stays reachable (a handle, a link). */
+.fb-swo-frame,
+.fb-swo-frame > .fb-utils-fit-parent {
+    pointer-events: none;
+}
+
+.fb-swo-frame > .fb-utils-fit-parent > * {
+    pointer-events: auto;
+}
+
 /**********************************************************************************/
 /* ROW BREAKS */
 @media (width < 512px) {

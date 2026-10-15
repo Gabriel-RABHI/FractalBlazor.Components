@@ -26,8 +26,10 @@
             liste, au-dessus, au-dessous ou à l’intérieur d’une autre tâche
             (<FbText Code>ZTCB</FbText>), mais jamais dans ses propres sous-tâches. Une tâche avec
             des sous-tâches est faite quand elles le sont toutes ; chaque liste suit sa progression.
-            Chaque liste et chaque tâche est un état : cocher une tâche ne redessine qu’elle et ses
-            ancêtres.
+            Les actions d’une liste ou d’une tâche (cocher, modifier, supprimer) apparaissent sur
+            ses coins à son survol (<FbText Code>FbShowWhenOver</FbText>) : le titre garde toute la
+            largeur. Chaque liste et chaque tâche est un état : cocher une tâche ne redessine
+            qu’elle et ses ancêtres.
         </FbText>
         <FbStack NoFlex PL WFL WRL JVS>
             <FbDynamicView TSelector="ViewSelector" Item="Item.Board" Selector="ViewSelector.Viewer" />
