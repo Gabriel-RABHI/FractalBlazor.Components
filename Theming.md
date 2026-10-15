@@ -525,7 +525,7 @@ Les classes CSS statiques ne consomment que les variables actives. Dans le bloc 
 --fb-high-anchor: var(--fb-default-high-anchor);
 ```
 
-Une variante ne change jamais les classes CSS. Elle redéfinit localement les trois ancres actives pour les faire pointer vers un autre préfixe :
+Une variante redéfinit localement les trois ancres actives pour les faire pointer vers un autre préfixe. Elle le fait par une classe (`fb-v-error`, voir « Variante en classe »), dont la règle contient :
 
 ```css
 --fb-low-anchor: var(--fb-error-low-anchor);
@@ -533,7 +533,7 @@ Une variante ne change jamais les classes CSS. Elle redéfinit localement les tr
 --fb-high-anchor: var(--fb-error-high-anchor);
 ```
 
-Les valeurs sources de chaque variante sont complètes après résolution C#. Les redirections ne nécessitent donc ni valeur en dur, ni fallback, ni calcul de thème dans `FbVariant`.
+Les valeurs sources de chaque variante sont complètes après résolution C#. Les redirections ne nécessitent donc ni valeur en dur, ni fallback, ni calcul de thème dans un composant.
 
 ### 3. Le neutre de chaque bloc
 
@@ -696,16 +696,16 @@ Le composant :
 1. résout `(MyTheme, Light)` dans le registre ;
 2. génère la balise `<style>` contenant le thème résolu et toutes ses variantes ;
 3. initialise les variables actives vers la variante `Default` ;
-4. rend ensuite son `ChildContent` ;
-5. fournit en cascade un `FbThemeContext` qui donne accès au thème résolu, pour la validation des variantes descendantes.
+4. ajoute à ce `<style>` les règles des variantes que le thème ajoute aux variantes standard (voir « Variante en classe ») ;
+5. rend ensuite son `ChildContent`, sans rien lui passer en cascade.
 
-Il ne génère aucune classe CSS et n'ajoute pas le nom du thème au DOM. Son `Selector` vaut `:root` par défaut. Les variables ne sont sérialisées qu'au changement de thème ou de branche.
+Il n'ajoute pas le nom du thème au DOM. Son `Selector` vaut `:root` par défaut. Les variables ne sont sérialisées qu'au changement de thème ou de branche.
 
-Le contexte est cascadé avec `IsFixed="true"` et l'instance reste la même pendant toute la vie du composant ; seul son thème change. Les descendants ne s'abonnent donc jamais, ce qui préserve la légèreté des composants répétés.
+Rien n'est cascadé aux descendants : une variante est une classe CSS, que la feuille ou le `<style>` du thème résout. Mesuré avant ce choix (BenchmarkDotNet MediumRun, i9-9900K, .NET 10.0.12, 1 000 boutons minimaux identiques dans un `FbTheme`), un `[CascadingParameter]` coûtait 27 à 56 µs au premier rendu (+2,3 % à +4,6 %, sous 1 à 10 niveaux de composants) et environ 100 Ko, 18 à 36 µs au re-rendu.
 
 #### Thème local
 
-Avec `Scoped="true"`, `FbTheme` n'écrit aucun `<style>` global. Il rend une `div class="fb-theme-scope fb-theme"` qui porte toutes les variables en style inline, puis son contenu. `Selector` est alors ignoré.
+Avec `Scoped="true"`, `FbTheme` n'écrit aucun `<style>` global pour ses variables. Il rend une `div class="fb-theme-scope fb-theme"` qui porte toutes les variables en style inline, puis son contenu. `Selector` est alors ignoré. Si le thème ajoute des variantes aux variantes standard, leurs règles sont écrites dans un `<style>` juste avant cette div.
 
 ```razor
 <FbTheme Theme="Default" Branch="Dark">
@@ -743,39 +743,54 @@ Installation à la racine de l'application :
 Le composant :
 
 1. normalise la variante vide en `Default` ;
-2. vérifie, via le contexte fourni par `FbTheme`, que la variante existe ;
-3. génère par simple concaténation les redirections des tokens Variant, inversées si `Invert` est posé ;
-4. rend un `<div class="fb-theme-scope">` visuellement neutre (`display: contents`) : ses enfants participent directement à la mise en page du parent ;
-5. place les redirections dans l'attribut `style` de cette div ;
-6. rend son `ChildContent` dans ce scope.
+2. rend un `<div class="fb-theme-scope">` visuellement neutre (`display: contents`) : ses enfants participent directement à la mise en page du parent ;
+3. pose sur cette div les classes de la variante, `fb-invert` en plus si `Invert` est posé ;
+4. rend son `ChildContent` dans ce scope.
 
 Pour `Error`, le rendu est de la forme :
 
 ```html
-<div class="fb-theme-scope"
-     style="--fb-low-anchor:var(--fb-error-low-anchor);
-            --fb-mid-anchor:var(--fb-error-mid-anchor);
-            --fb-high-anchor:var(--fb-error-high-anchor);">
+<div class="fb-theme-scope fb-variant fb-v-error">
     ...
 </div>
 ```
 
-Le rendu ne contient aucune valeur calculée en C# et aucune classe propre à `Error`. Le neutre n'est pas touché : une variante placée dans un bloc à 20 % peint ses fonds à partir de 20 %, avec ses propres ancres.
+Le rendu ne contient aucune valeur calculée en C#, ni aucun style inline. Le neutre n'est pas touché : une variante placée dans un bloc à 20 % peint ses fonds à partir de 20 %, avec ses propres ancres.
 
 Le scope rétablit aussi `color: var(--fb-fg-default)`, si bien qu'un texte brut placé dans `Error` prend la couleur de la variante.
 
-#### Variante d'un contrôle
+#### Variante en classe
 
-Les contrôles (champs, listes, cases, interrupteurs, onglets, boutons) ne s'enveloppent pas dans un scope. Quand leur `Variant` ou le drapeau `D` (désactivé) le demande, leur élément racine porte lui-même la classe `fb-variant` et les mêmes redirections dans son `style` :
+Une variante est une classe CSS. `fb-variant` recalcule les couleurs sur l'élément ; `fb-v-error` redirige ses trois ancres vers celles de `Error` ; `fb-invert` échange les ancres basse et haute :
 
-```html
-<div class="fb-row … fb-control fb-field fb-variant"
-     style="--fb-low-anchor:var(--fb-error-low-anchor);…">
+```css
+.fb-v-error {
+    --fb-low-anchor: var(--fb-error-low-anchor);
+    --fb-mid-anchor: var(--fb-error-mid-anchor);
+    --fb-high-anchor: var(--fb-error-high-anchor);
+}
+
+.fb-v-error.fb-invert {
+    --fb-low-anchor: var(--fb-error-high-anchor);
+    --fb-high-anchor: var(--fb-error-low-anchor);
+}
 ```
 
-Les formules sont redéclarées sur `:where(.fb-variant)`, de spécificité nulle : les règles propres au composant (`fb-wba`, `fb-control`…) gardent la main, comme lorsqu'elles s'appliquaient à l'enfant d'un scope. Sans variante, l'élément n'a ni la classe ni le style, et le contrôle hérite de la variante de son parent. Passer à `Error` pendant la saisie ne change que deux attributs du même élément : le DOM, et le focus, restent en place.
+Les règles des sept variantes standard sont dans la feuille Layout, mise en cache par le navigateur ; un test vérifie qu'elles sont celles qu'écrit `FbThemeCssNames.VariantRules`. Celles des variantes qu'un thème ajoute sont écrites par `FbTheme` (ou `FbLayoutTheme`) dans son `<style>`. Le nom de la classe est le nom de la variante normalisé : `Brand Accent` donne `fb-v-brand-accent`.
 
-Un thème ou une branche inconnus lèvent une exception explicite dans `FbTheme`. Une variante inconnue lève une `KeyNotFoundException` quand un `FbThemeContext` est présent. Le contexte est absent quand un `FbTheme` statique entoure une page interactive : les valeurs en cascade ne franchissent pas la frontière de mode de rendu. La variante est alors acceptée telle quelle.
+Une variante que le thème ne connaît pas n'a pas de règle : l'élément garde les ancres de son parent, au lieu de perdre ses couleurs. Aucune vérification n'est faite à l'exécution, et rien n'a besoin d'être cascadé.
+
+#### Variante d'un contrôle
+
+Les contrôles (champs, listes, cases, interrupteurs, onglets, boutons) ne s'enveloppent pas dans un scope. Quand leur `Variant` ou le drapeau `D` (désactivé) le demande, leur élément racine porte lui-même les classes de la variante :
+
+```html
+<div class="fb-row … fb-control fb-field fb-variant fb-v-error">
+```
+
+Les formules sont redéclarées sur `:where(.fb-variant)`, de spécificité nulle : les règles propres au composant (`fb-wba`, `fb-control`…) gardent la main, comme lorsqu'elles s'appliquaient à l'enfant d'un scope. Sans variante, l'élément n'a pas ces classes, et le contrôle hérite de la variante de son parent. Passer à `Error` pendant la saisie ne change que l'attribut `class` du même élément : le DOM, et le focus, restent en place.
+
+Un thème ou une branche inconnus lèvent une exception explicite dans `FbTheme`.
 
 #### Inversion locale
 
@@ -788,13 +803,10 @@ Un thème ou une branche inconnus lèvent une exception explicite dans `FbTheme`
 ```
 
 ```html
-<div class="fb-theme-scope"
-     style="--fb-low-anchor:var(--fb-default-high-anchor);
-            --fb-mid-anchor:var(--fb-default-mid-anchor);
-            --fb-high-anchor:var(--fb-default-low-anchor);">
+<div class="fb-theme-scope fb-variant fb-v-default fb-invert">
 ```
 
-Les ancres basse et haute sont les deux extrémités du dégradé : la carte est claire, ses textes sombres. Avec le thème par défaut, le sombre inversé donne le clair, puisque la branche claire lit la même palette dans l'autre sens. `FbThemeContrast.Analyze(theme, inverted: true)` vérifie les variantes inversées. `FbLayoutVariant` accepte aussi `Invert`, avec les mêmes redirections.
+Les ancres basse et haute sont les deux extrémités du dégradé : la carte est claire, ses textes sombres. Avec le thème par défaut, le sombre inversé donne le clair, puisque la branche claire lit la même palette dans l'autre sens. `FbThemeContrast.Analyze(theme, inverted: true)` vérifie les variantes inversées. `FbLayoutVariant` accepte aussi `Invert`, avec les mêmes classes.
 
 ### Imbrication et retour au défaut
 
@@ -861,9 +873,9 @@ public sealed class FbLayoutThemeVariant
 }
 ```
 
-La résolution suit les mêmes règles que le thème Forms, sans niveau Branch. `FbLayoutTheme` génère une balise `<style>` contenant la variante `Default`, toutes les variantes Layout résolues et les alias actifs. `FbLayoutVariant` rend une div neutre dont l'attribut `style` redirige les trois ancres vers le préfixe choisi ; les mélanges restent communs au thème Layout. Les feuilles sont les mêmes : neutre, imbrication, survol et filets fonctionnent sans Forms, qui n’ajoute que les textes.
+La résolution suit les mêmes règles que le thème Forms, sans niveau Branch. `FbLayoutTheme` génère une balise `<style>` contenant la variante `Default`, toutes les variantes Layout résolues et les alias actifs. `FbLayoutVariant` rend une div neutre dont l'attribut `style` porte les classes de la variante choisie ; les mélanges restent communs au thème Layout. Les feuilles sont les mêmes : neutre, imbrication, survol et filets fonctionnent sans Forms, qui n’ajoute que les textes.
 
-Aucune classe propre à un thème ou à une variante Layout n'est générée.
+Aucune classe propre à un thème n’est générée ; seules les règles des variantes qu’un thème ajoute aux variantes standard sont écrites dans son `<style>`.
 
 ## Contrôle de contraste
 
@@ -899,7 +911,7 @@ Les règles à suivre sont :
 - ajouter les variables de familles de fontes au lieu de coder `text-font` et `code-font` directement dans les règles ;
 - retirer toute logique de thème ou de variante des classes CSS statiques ;
 - garantir que le bloc `<style>` définit les ancres de chaque variante et les mélanges de la branche ;
-- garantir que `FbVariant` redirige exactement la même liste de tokens que celle émise par `FbTheme` ;
+- garantir que la règle d’une variante redirige exactement les ancres que `FbTheme` émet pour elle ;
 - centraliser la création des noms de variables pour que Layout, Forms, `FbTheme` et `FbVariant` produisent exactement la même nomenclature.
 
 La classe statique actuellement nommée `FbTheme` est supprimée ; ce nom est ensuite attribué au composant `<FbTheme>`. `FbThemeBaseColors` devient l’unique source de couleurs du thème par défaut ; les alias de propriétés et variantes orthographiées incorrectement ne sont pas conservés.
@@ -936,15 +948,15 @@ La bibliothèque étant nouvelle, aucun membre `[Obsolete]`, aucune façade de c
 - créer un mappeur unique entre propriétés C# et variables CSS ;
 - sérialiser dans `<style>` toutes les valeurs résolues de `Default` et des autres variantes ;
 - générer les alias actifs pointant initialement vers `Default` ;
-- centraliser la liste des tokens qu'un `FbVariant` doit rediriger ;
-- produire les redirections par concaténation de chaînes, sans recalculer le thème ;
+- centraliser les tokens qu’une règle de variante redirige ;
+- produire les classes de variante par concaténation de chaînes, mises en cache, sans recalculer le thème ;
 - conserver les niveaux résolu, actif, temporaire et calculé ;
 - garantir un ordre de sortie déterministe pour les tests et le diagnostic.
 
 ### Étape 4 — Composants Blazor
 
 - implémenter `FbTheme` et la génération de sa balise `<style>` ;
-- implémenter `FbVariant` avec une div `.fb-theme-scope` et des redirections inline ;
+- implémenter `FbVariant` avec une div `.fb-theme-scope` et les classes de sa variante ;
 - gérer l'imbrication et le retour à `Default` ;
 - implémenter les équivalents Layout autonomes.
 
@@ -962,7 +974,7 @@ La bibliothèque étant nouvelle, aucun membre `[Obsolete]`, aucune façade de c
 - tests des branches Dark/Light et de toutes les variantes standards ;
 - tests de rejet des cycles et doublons ;
 - snapshots du contenu de la balise `<style>` générée par `FbTheme` ;
-- tests bUnit des redirections inline produites par `FbVariant` ;
+- tests bUnit des classes posées par `FbVariant`, et des règles écrites par la feuille et par `FbTheme` ;
 - tests navigateur des valeurs calculées pour les scopes imbriqués ;
 - tests de hover, focus et retour à la variante `Default` ;
 - tests Layout seul, sans chargement de Forms.
@@ -975,9 +987,9 @@ L'implémentation est terminée lorsque :
 - cette propriété est héritée correctement sur les autres branches et variantes ;
 - `Dark/Error` et `Light/Error` peuvent produire des palettes différentes ;
 - changer de thème ou de branche régénère les mêmes noms de variables avec de nouvelles valeurs résolues ;
-- aucune classe CSS ne contient le nom d'un thème, d'une branche ou d'une variante ;
+- aucune classe CSS ne contient le nom d’un thème ou d’une branche ; une variante n’apparaît que dans sa classe `fb-v-*` ;
 - le bloc `<style>` contient un jeu complet `--fb-{variant}-*` pour chaque variante disponible ;
-- `FbVariant` ne contient que des redirections `--fb-* : var(--fb-{variant}-*)` ;
+- une règle de variante ne contient que des redirections `--fb-* : var(--fb-{variant}-*)` ;
 - une variante imbriquée `Default` annule complètement une variante extérieure ;
 - hover et focus ne modifient que le neutre courant ;
 - les calculs `color-mix()` existants produisent toujours les fonds, textes et frames ;

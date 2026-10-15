@@ -94,7 +94,7 @@ builder.Services.AddFractalBlazor(registry =>
     }));
 ```
 
-- `<FbVariant Variant="Error">` redirige les trois ancres du dégradé sur une branche du DOM, sans changer aucune classe.
+- `<FbVariant Variant="Error">` pose la classe `fb-v-error`, qui redirige les trois ancres du dégradé sur une branche du DOM ; un champ ou un bouton la porte lui-même avec `Variant`. Rien n’est cascadé, et une variante inconnue garde celle du parent.
 - `<FbVariant Invert>` retourne le dégradé : une carte claire dans une page sombre.
 - `<FbTheme Branch="Light" Scoped>` pose une autre branche sur un seul sous-arbre.
 - `FbThemeContrast.Analyze(theme)` calcule les couleurs réellement peintes et leur contraste WCAG.
@@ -137,6 +137,17 @@ Le binding classique reste possible : `<FbInputText TAction="FbSetValue<string>"
 ```
 
 Sans vue déclarée, les types simples (`string`, énumérations, nombres, dates, `Guid`) sont rendus par `FbValueView` : le texte formaté dans la culture courante, ou le `[Display(Name = …)]` d'une valeur d'énumération.
+
+## Bouton
+
+`FbButton` porte la fonction et ne traite pas du contenu : il affiche ce que contient son `ChildContent`. Son apparence vient d'une taille, `S`, `M` (par défaut) ou `L`, qui règle le padding, et d'un genre, qui règle le fond et la frame : `KW` (frame sans fond, par défaut), `KS` (Surface), `KP` (plein, la couleur de la variante) ou `KT` (fond sans frame). Les flags de Layout restent pour ajuster : écrit après un genre, un flag le corrige.
+
+```razor
+<FbButton Handler="State" Action="@Save" Variant="@FbThemeVariants.Selected" KP>
+    <FbIcon Icon="@FbMaterialIcons.Save" />
+    <FbText S>Enregistrer</FbText>
+</FbButton>
+```
 
 ## Select
 

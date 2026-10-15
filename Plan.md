@@ -228,7 +228,7 @@ Chaque variante n'a plus qu'un dégradé : trois ancres, à 0 %, 50 % et 100 %. 
 
 - [x] **25.1 Les variantes en classes.** `Variant="Error"` pose les classes `fb-variant fb-v-error` (et `fb-vi` inversée) ; la règle `.fb-v-error` redirige les trois ancres. Les règles des variantes standard sont dans la feuille Layout ; celles qu'un thème ajoute, dans le `<style>` de son `FbTheme`. Une variante inconnue ne correspond à aucune règle et garde celle de son parent. `FbButton`, les champs, `FbVariant` et `FbLayoutVariant` n'ont plus de style inline de variante ; `FbThemeContext`, `FbLayoutThemeContext` et leur `CascadingValue` disparaissent.
 - [x] **25.2 FbButton.** Paramètres d'apparence : `S`, `M`, `L` (padding `PHM PVS`, `PHL PVM`, `PHX PVL`) et le genre `KW` (`WBN WFM`, par défaut), `KS` (`WBS WFM`), `KP` (`WBH WFM`), `KT` (`WBS WFN`), plus `Variant`. Les flags Layout restent, pour ajuster : écrit après un genre, un flag le corrige. Paramètres de fonction : `Handler`, `Action`, `OnClick`, `D`, `Submit`, `Title`, `ChildContent`. `Icon` et `EndIcon` disparaissent ; les usages mettent leur `FbIcon` dans le contenu. `FcButton` viendra plus tard.
-- [ ] **25.3 Documentation.**
+- [x] **25.3 Documentation.** `Theming.md` décrit la variante en classe, les règles de la feuille et celles du thème, et l’absence de cascade, avec la mesure ; `README.md` présente le bouton ; `AGENT.md` dit qu’une variante est une classe.
 
 ## Critères de fin
 
