@@ -139,10 +139,10 @@ public static class FbThemeCssNames
     public const string InvertClass = "fb-invert";
 
     /// <summary>
-    /// Variants whose rules are in the Layout stylesheet; a theme writes the rules of the
-    /// variants it adds.
+    /// Variants whose rules are in the Layout stylesheet, the functional ones and the colors;
+    /// a theme writes the rules of the variants it adds.
     /// </summary>
-    public static IReadOnlyList<string> StandardVariants => FbLayoutThemeVariants.Standard;
+    public static IReadOnlyList<string> StylesheetVariants => FbLayoutThemeVariants.All;
 
     private const int ClassCacheCapacity = 256;
     private static readonly ConcurrentDictionary<(string Variant, bool Invert), string> _classes = new();
@@ -215,14 +215,14 @@ public static class FbThemeCssNames
     }
 
     /// <summary>
-    /// Appends the rules of the variants that are not standard: the Layout stylesheet holds
-    /// the others.
+    /// Appends the rules of the variants a theme adds: the Layout stylesheet holds those of the
+    /// functional and color variants.
     /// </summary>
     public static void AppendVariantRules(StringBuilder builder, IEnumerable<string> variants)
     {
         foreach (var variant in variants)
         {
-            if (!StandardVariants.Contains(variant, StringComparer.OrdinalIgnoreCase))
+            if (!StylesheetVariants.Contains(variant, StringComparer.OrdinalIgnoreCase))
                 builder.Append(VariantRules(Normalize(variant)));
         }
     }

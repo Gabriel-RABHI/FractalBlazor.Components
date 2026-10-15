@@ -714,7 +714,7 @@ Le composant :
 1. résout `(MyTheme, Light)` dans le registre ;
 2. génère la balise `<style>` contenant le thème résolu et toutes ses variantes ;
 3. initialise les variables actives vers la variante `Default` ;
-4. ajoute à ce `<style>` les règles des variantes que le thème ajoute aux variantes standard (voir « Variante en classe ») ;
+4. ajoute à ce `<style>` les règles des variantes que le thème ajoute aux variantes fonctionnelles et de couleur (voir « Variante en classe ») ;
 5. rend ensuite son `ChildContent`, sans rien lui passer en cascade.
 
 Il n'ajoute pas le nom du thème au DOM. Son `Selector` vaut `:root` par défaut. Les variables ne sont sérialisées qu'au changement de thème ou de branche.
@@ -723,7 +723,7 @@ Rien n'est cascadé aux descendants : une variante est une classe CSS, que la fe
 
 #### Thème local
 
-Avec `Scoped="true"`, `FbTheme` n'écrit aucun `<style>` global pour ses variables. Il rend une `div class="fb-theme-scope fb-theme"` qui porte toutes les variables en style inline, puis son contenu. `Selector` est alors ignoré. Si le thème ajoute des variantes aux variantes standard, leurs règles sont écrites dans un `<style>` juste avant cette div.
+Avec `Scoped="true"`, `FbTheme` n'écrit aucun `<style>` global pour ses variables. Il rend une `div class="fb-theme-scope fb-theme"` qui porte toutes les variables en style inline, puis son contenu. `Selector` est alors ignoré. Si le thème ajoute des variantes aux variantes fonctionnelles et de couleur, leurs règles sont écrites dans un `<style>` juste avant cette div.
 
 ```razor
 <FbTheme Theme="Default" Branch="Dark">
@@ -794,7 +794,7 @@ Une variante est une classe CSS. `fb-variant` recalcule les couleurs sur l'élé
 }
 ```
 
-Les règles des sept variantes standard sont dans la feuille Layout, mise en cache par le navigateur ; un test vérifie qu'elles sont celles qu'écrit `FbThemeCssNames.VariantRules`. Celles des variantes qu'un thème ajoute sont écrites par `FbTheme` (ou `FbLayoutTheme`) dans son `<style>`. Le nom de la classe est le nom de la variante normalisé : `Brand Accent` donne `fb-v-brand-accent`.
+Les règles des variantes que tout thème définit sont dans la feuille Layout, mise en cache par le navigateur : les sept variantes fonctionnelles (`FbThemeVariants.Standard` : Default, Selected, Error, Warning, Disabled, Success, Info), qui disent ce qu'est un élément, et une variante par couleur de la palette de base (`FbThemeVariants.Colors` : Red, Orange, Amber… Rose, puis les neutres Slate… Olive), qui ne lui donnent qu'une couleur. `FbThemeVariants.All` réunit les deux listes, dans cet ordre, qui est celui de `VariantOrder`. Dans le thème par défaut, une couleur vive a le dégradé des variantes fonctionnelles (990, 500, 50) et une couleur neutre celui de Default (950, 500, 50) : Error a les ancres de Red, Selected celles de Blue, Default celles de Zinc. Un test vérifie que la feuille porte les règles qu'écrit `FbThemeCssNames.VariantRules` pour chacune. Celles des variantes qu'un thème ajoute sont écrites par `FbTheme` (ou `FbLayoutTheme`) dans son `<style>`. Le nom de la classe est le nom de la variante normalisé : `Brand Accent` donne `fb-v-brand-accent`.
 
 Une variante que le thème ne connaît pas n'a pas de règle : l'élément garde les ancres de son parent, au lieu de perdre ses couleurs. Aucune vérification n'est faite à l'exécution, et rien n'a besoin d'être cascadé.
 
@@ -893,7 +893,7 @@ public sealed class FbLayoutThemeVariant
 
 La résolution suit les mêmes règles que le thème Forms, sans niveau Branch. `FbLayoutTheme` génère une balise `<style>` contenant la variante `Default`, toutes les variantes Layout résolues et les alias actifs. `FbLayoutVariant` rend une div neutre dont l'attribut `style` porte les classes de la variante choisie ; les mélanges restent communs au thème Layout. Les feuilles sont les mêmes : neutre, imbrication, survol et filets fonctionnent sans Forms, qui n’ajoute que les textes.
 
-Aucune classe propre à un thème n’est générée ; seules les règles des variantes qu’un thème ajoute aux variantes standard sont écrites dans son `<style>`.
+Aucune classe propre à un thème n’est générée ; seules les règles des variantes qu’un thème ajoute aux variantes fonctionnelles et de couleur sont écrites dans son `<style>`.
 
 ## Contrôle de contraste
 
@@ -989,7 +989,7 @@ La bibliothèque étant nouvelle, aucun membre `[Obsolete]`, aucune façade de c
 ### Étape 6 — Tests
 
 - tests unitaires de résolution sur trois niveaux d'héritage ;
-- tests des branches Dark/Light et de toutes les variantes standards ;
+- tests des branches Dark/Light et de toutes les variantes, fonctionnelles et de couleur ;
 - tests de rejet des cycles et doublons ;
 - snapshots du contenu de la balise `<style>` générée par `FbTheme` ;
 - tests bUnit des classes posées par `FbVariant`, et des règles écrites par la feuille et par `FbTheme` ;

@@ -1,8 +1,10 @@
-using System.Diagnostics.Metrics;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
 namespace FractalBlazor.Components.Forms.Theming.Constants;
 
+/// <summary>
+/// The variants every theme defines: the functional ones (<see cref="Standard"/>), which say
+/// what an element is (selected, an error…), and one per color of the base palette
+/// (<see cref="Colors"/>), which only give it a color.
+/// </summary>
 public static class FbThemeVariants
 {
     public const string Default = "Default";
@@ -41,8 +43,26 @@ public static class FbThemeVariants
     public const string Mist = "Mist";
     public const string Olive = "Olive";
 
+    /// <summary>
+    /// The functional variants.
+    /// </summary>
     public static readonly IReadOnlyList<string> Standard =
         [Default, Selected, Error, Warning, Disabled, Success, Info];
+
+    /// <summary>
+    /// One variant per color of the base palette, in its order: the chromatic colors, then
+    /// the neutral ones.
+    /// </summary>
+    public static readonly IReadOnlyList<string> Colors =
+    [
+        Red, Orange, Amber, Yellow, Lime, Green, Emerald, Teal, Cyan, Sky, Blue, Indigo, Violet, Purple, Fuchsia, Pink, Rose,
+        Slate, Gray, Zinc, Neutral, Stone, Taupe, Mauve, Mist, Olive
+    ];
+
+    /// <summary>
+    /// The functional variants, then the colors.
+    /// </summary>
+    public static readonly IReadOnlyList<string> All = [.. Standard, .. Colors];
 
     public static string Normalize(string? variant)
         => string.IsNullOrWhiteSpace(variant) ? Default : variant.Trim();

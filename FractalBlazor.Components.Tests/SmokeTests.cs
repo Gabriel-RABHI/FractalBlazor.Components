@@ -24,7 +24,7 @@ public sealed class SmokeTests : BunitContext
         var dark = registry.Resolve(registry.Default.Name, FbThemeBranches.Dark);
         var light = registry.Resolve(registry.Default.Name, FbThemeBranches.Light);
 
-        Assert.Equal(FbThemeVariants.Standard.Count, dark.VariantOrder.Count);
-        Assert.Equal(FbThemeVariants.Standard.Count, light.VariantOrder.Count);
+        Assert.Equal(FbThemeVariants.All.Count, dark.VariantOrder.Count);
+        Assert.Equal(FbThemeVariants.All.Count, light.VariantOrder.Count);
     }
 }

@@ -32,6 +32,28 @@
         }
     </FbRow>
 
+    <FbText L B>Couleurs</FbText>
+    <FbText M Muted>
+        Chaque couleur de la palette est aussi une variante : <FbText Code>Variant="Red"</FbText>
+        donne une couleur à un élément, comme <FbText Code>Variant="Error"</FbText> lui donne un
+        sens. Une couleur vive a le dégradé des variantes fonctionnelles (Error est rouge), une
+        couleur neutre celui de Default.
+    </FbText>
+    <FbGridContainer Columns="2" ColumnsS="3" ColumnsM="4" ColumnsL="6" GM>
+        @foreach (var color in FbThemeVariants.Colors)
+        {
+            <FbGridItem>
+                <FbVariant Variant="@color">
+                    <FbStack NoFlex Joined WGM WRM JVS>
+                        <FbRow NoFlex PHM PVS WBS><FbText XS Muted>@color</FbText></FbRow>
+                        <FbRow NoFlex PHM PVS WBA><FbText XS>Accent</FbText></FbRow>
+                        <FbRow NoFlex PHM PVS WBH><FbText XS Highlight>Highlight</FbText></FbRow>
+                    </FbStack>
+                </FbVariant>
+            </FbGridItem>
+        }
+    </FbGridContainer>
+
     <FbText L B>Inversion locale et thème local</FbText>
     <FbRow GL>
         <FbVariant Invert>

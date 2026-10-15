@@ -49,12 +49,12 @@ public sealed partial class VariantRuleTests : BunitContext
             FbThemeCssNames.VariantRules("error"));
 
     [Fact]
-    public void The_layout_stylesheet_holds_the_rules_of_every_standard_variant()
+    public void The_layout_stylesheet_holds_the_rules_of_every_functional_and_color_variant()
     {
         var css = Whitespace().Replace(Comment().Replace(File.ReadAllText(Path.Combine(RepositoryRoot(),
             "FractalBlazor.Components.Layout", "wwwroot", "fb-components-layout.css")), ""), "");
 
-        foreach (var variant in FbThemeCssNames.StandardVariants)
+        foreach (var variant in FbThemeCssNames.StylesheetVariants)
             Assert.Contains(FbThemeCssNames.VariantRules(FbThemeCssNames.Normalize(variant)), css);
     }
 

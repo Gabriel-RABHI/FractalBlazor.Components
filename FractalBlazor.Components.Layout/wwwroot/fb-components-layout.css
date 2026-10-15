@@ -125,9 +125,9 @@ html {
 /**********************************************************************************/
 /* VARIANTS */
 /* A variant is a class: fb-v-error redirects the three anchors to those of Error, and
-   fb-invert reverses them. The rules of the standard variants are here; FbTheme writes those
-   of the variants a theme adds. A variant without a rule leaves the element with the anchors
-   of its parent. */
+   fb-invert reverses them. The rules of the functional variants and of the palette colors are
+   here; FbTheme writes those of the variants a theme adds. A variant without a rule leaves
+   the element with the anchors of its parent. */
 .fb-v-default {
     --fb-low-anchor: var(--fb-default-low-anchor);
     --fb-mid-anchor: var(--fb-default-mid-anchor);
@@ -203,6 +203,294 @@ html {
 .fb-v-info.fb-invert {
     --fb-low-anchor: var(--fb-info-high-anchor);
     --fb-high-anchor: var(--fb-info-low-anchor);
+}
+
+/* The colors of the base palette, one variant each: they only give an element a color. */
+
+.fb-v-red {
+    --fb-low-anchor: var(--fb-red-low-anchor);
+    --fb-mid-anchor: var(--fb-red-mid-anchor);
+    --fb-high-anchor: var(--fb-red-high-anchor);
+}
+
+.fb-v-red.fb-invert {
+    --fb-low-anchor: var(--fb-red-high-anchor);
+    --fb-high-anchor: var(--fb-red-low-anchor);
+}
+
+.fb-v-orange {
+    --fb-low-anchor: var(--fb-orange-low-anchor);
+    --fb-mid-anchor: var(--fb-orange-mid-anchor);
+    --fb-high-anchor: var(--fb-orange-high-anchor);
+}
+
+.fb-v-orange.fb-invert {
+    --fb-low-anchor: var(--fb-orange-high-anchor);
+    --fb-high-anchor: var(--fb-orange-low-anchor);
+}
+
+.fb-v-amber {
+    --fb-low-anchor: var(--fb-amber-low-anchor);
+    --fb-mid-anchor: var(--fb-amber-mid-anchor);
+    --fb-high-anchor: var(--fb-amber-high-anchor);
+}
+
+.fb-v-amber.fb-invert {
+    --fb-low-anchor: var(--fb-amber-high-anchor);
+    --fb-high-anchor: var(--fb-amber-low-anchor);
+}
+
+.fb-v-yellow {
+    --fb-low-anchor: var(--fb-yellow-low-anchor);
+    --fb-mid-anchor: var(--fb-yellow-mid-anchor);
+    --fb-high-anchor: var(--fb-yellow-high-anchor);
+}
+
+.fb-v-yellow.fb-invert {
+    --fb-low-anchor: var(--fb-yellow-high-anchor);
+    --fb-high-anchor: var(--fb-yellow-low-anchor);
+}
+
+.fb-v-lime {
+    --fb-low-anchor: var(--fb-lime-low-anchor);
+    --fb-mid-anchor: var(--fb-lime-mid-anchor);
+    --fb-high-anchor: var(--fb-lime-high-anchor);
+}
+
+.fb-v-lime.fb-invert {
+    --fb-low-anchor: var(--fb-lime-high-anchor);
+    --fb-high-anchor: var(--fb-lime-low-anchor);
+}
+
+.fb-v-green {
+    --fb-low-anchor: var(--fb-green-low-anchor);
+    --fb-mid-anchor: var(--fb-green-mid-anchor);
+    --fb-high-anchor: var(--fb-green-high-anchor);
+}
+
+.fb-v-green.fb-invert {
+    --fb-low-anchor: var(--fb-green-high-anchor);
+    --fb-high-anchor: var(--fb-green-low-anchor);
+}
+
+.fb-v-emerald {
+    --fb-low-anchor: var(--fb-emerald-low-anchor);
+    --fb-mid-anchor: var(--fb-emerald-mid-anchor);
+    --fb-high-anchor: var(--fb-emerald-high-anchor);
+}
+
+.fb-v-emerald.fb-invert {
+    --fb-low-anchor: var(--fb-emerald-high-anchor);
+    --fb-high-anchor: var(--fb-emerald-low-anchor);
+}
+
+.fb-v-teal {
+    --fb-low-anchor: var(--fb-teal-low-anchor);
+    --fb-mid-anchor: var(--fb-teal-mid-anchor);
+    --fb-high-anchor: var(--fb-teal-high-anchor);
+}
+
+.fb-v-teal.fb-invert {
+    --fb-low-anchor: var(--fb-teal-high-anchor);
+    --fb-high-anchor: var(--fb-teal-low-anchor);
+}
+
+.fb-v-cyan {
+    --fb-low-anchor: var(--fb-cyan-low-anchor);
+    --fb-mid-anchor: var(--fb-cyan-mid-anchor);
+    --fb-high-anchor: var(--fb-cyan-high-anchor);
+}
+
+.fb-v-cyan.fb-invert {
+    --fb-low-anchor: var(--fb-cyan-high-anchor);
+    --fb-high-anchor: var(--fb-cyan-low-anchor);
+}
+
+.fb-v-sky {
+    --fb-low-anchor: var(--fb-sky-low-anchor);
+    --fb-mid-anchor: var(--fb-sky-mid-anchor);
+    --fb-high-anchor: var(--fb-sky-high-anchor);
+}
+
+.fb-v-sky.fb-invert {
+    --fb-low-anchor: var(--fb-sky-high-anchor);
+    --fb-high-anchor: var(--fb-sky-low-anchor);
+}
+
+.fb-v-blue {
+    --fb-low-anchor: var(--fb-blue-low-anchor);
+    --fb-mid-anchor: var(--fb-blue-mid-anchor);
+    --fb-high-anchor: var(--fb-blue-high-anchor);
+}
+
+.fb-v-blue.fb-invert {
+    --fb-low-anchor: var(--fb-blue-high-anchor);
+    --fb-high-anchor: var(--fb-blue-low-anchor);
+}
+
+.fb-v-indigo {
+    --fb-low-anchor: var(--fb-indigo-low-anchor);
+    --fb-mid-anchor: var(--fb-indigo-mid-anchor);
+    --fb-high-anchor: var(--fb-indigo-high-anchor);
+}
+
+.fb-v-indigo.fb-invert {
+    --fb-low-anchor: var(--fb-indigo-high-anchor);
+    --fb-high-anchor: var(--fb-indigo-low-anchor);
+}
+
+.fb-v-violet {
+    --fb-low-anchor: var(--fb-violet-low-anchor);
+    --fb-mid-anchor: var(--fb-violet-mid-anchor);
+    --fb-high-anchor: var(--fb-violet-high-anchor);
+}
+
+.fb-v-violet.fb-invert {
+    --fb-low-anchor: var(--fb-violet-high-anchor);
+    --fb-high-anchor: var(--fb-violet-low-anchor);
+}
+
+.fb-v-purple {
+    --fb-low-anchor: var(--fb-purple-low-anchor);
+    --fb-mid-anchor: var(--fb-purple-mid-anchor);
+    --fb-high-anchor: var(--fb-purple-high-anchor);
+}
+
+.fb-v-purple.fb-invert {
+    --fb-low-anchor: var(--fb-purple-high-anchor);
+    --fb-high-anchor: var(--fb-purple-low-anchor);
+}
+
+.fb-v-fuchsia {
+    --fb-low-anchor: var(--fb-fuchsia-low-anchor);
+    --fb-mid-anchor: var(--fb-fuchsia-mid-anchor);
+    --fb-high-anchor: var(--fb-fuchsia-high-anchor);
+}
+
+.fb-v-fuchsia.fb-invert {
+    --fb-low-anchor: var(--fb-fuchsia-high-anchor);
+    --fb-high-anchor: var(--fb-fuchsia-low-anchor);
+}
+
+.fb-v-pink {
+    --fb-low-anchor: var(--fb-pink-low-anchor);
+    --fb-mid-anchor: var(--fb-pink-mid-anchor);
+    --fb-high-anchor: var(--fb-pink-high-anchor);
+}
+
+.fb-v-pink.fb-invert {
+    --fb-low-anchor: var(--fb-pink-high-anchor);
+    --fb-high-anchor: var(--fb-pink-low-anchor);
+}
+
+.fb-v-rose {
+    --fb-low-anchor: var(--fb-rose-low-anchor);
+    --fb-mid-anchor: var(--fb-rose-mid-anchor);
+    --fb-high-anchor: var(--fb-rose-high-anchor);
+}
+
+.fb-v-rose.fb-invert {
+    --fb-low-anchor: var(--fb-rose-high-anchor);
+    --fb-high-anchor: var(--fb-rose-low-anchor);
+}
+
+.fb-v-slate {
+    --fb-low-anchor: var(--fb-slate-low-anchor);
+    --fb-mid-anchor: var(--fb-slate-mid-anchor);
+    --fb-high-anchor: var(--fb-slate-high-anchor);
+}
+
+.fb-v-slate.fb-invert {
+    --fb-low-anchor: var(--fb-slate-high-anchor);
+    --fb-high-anchor: var(--fb-slate-low-anchor);
+}
+
+.fb-v-gray {
+    --fb-low-anchor: var(--fb-gray-low-anchor);
+    --fb-mid-anchor: var(--fb-gray-mid-anchor);
+    --fb-high-anchor: var(--fb-gray-high-anchor);
+}
+
+.fb-v-gray.fb-invert {
+    --fb-low-anchor: var(--fb-gray-high-anchor);
+    --fb-high-anchor: var(--fb-gray-low-anchor);
+}
+
+.fb-v-zinc {
+    --fb-low-anchor: var(--fb-zinc-low-anchor);
+    --fb-mid-anchor: var(--fb-zinc-mid-anchor);
+    --fb-high-anchor: var(--fb-zinc-high-anchor);
+}
+
+.fb-v-zinc.fb-invert {
+    --fb-low-anchor: var(--fb-zinc-high-anchor);
+    --fb-high-anchor: var(--fb-zinc-low-anchor);
+}
+
+.fb-v-neutral {
+    --fb-low-anchor: var(--fb-neutral-low-anchor);
+    --fb-mid-anchor: var(--fb-neutral-mid-anchor);
+    --fb-high-anchor: var(--fb-neutral-high-anchor);
+}
+
+.fb-v-neutral.fb-invert {
+    --fb-low-anchor: var(--fb-neutral-high-anchor);
+    --fb-high-anchor: var(--fb-neutral-low-anchor);
+}
+
+.fb-v-stone {
+    --fb-low-anchor: var(--fb-stone-low-anchor);
+    --fb-mid-anchor: var(--fb-stone-mid-anchor);
+    --fb-high-anchor: var(--fb-stone-high-anchor);
+}
+
+.fb-v-stone.fb-invert {
+    --fb-low-anchor: var(--fb-stone-high-anchor);
+    --fb-high-anchor: var(--fb-stone-low-anchor);
+}
+
+.fb-v-taupe {
+    --fb-low-anchor: var(--fb-taupe-low-anchor);
+    --fb-mid-anchor: var(--fb-taupe-mid-anchor);
+    --fb-high-anchor: var(--fb-taupe-high-anchor);
+}
+
+.fb-v-taupe.fb-invert {
+    --fb-low-anchor: var(--fb-taupe-high-anchor);
+    --fb-high-anchor: var(--fb-taupe-low-anchor);
+}
+
+.fb-v-mauve {
+    --fb-low-anchor: var(--fb-mauve-low-anchor);
+    --fb-mid-anchor: var(--fb-mauve-mid-anchor);
+    --fb-high-anchor: var(--fb-mauve-high-anchor);
+}
+
+.fb-v-mauve.fb-invert {
+    --fb-low-anchor: var(--fb-mauve-high-anchor);
+    --fb-high-anchor: var(--fb-mauve-low-anchor);
+}
+
+.fb-v-mist {
+    --fb-low-anchor: var(--fb-mist-low-anchor);
+    --fb-mid-anchor: var(--fb-mist-mid-anchor);
+    --fb-high-anchor: var(--fb-mist-high-anchor);
+}
+
+.fb-v-mist.fb-invert {
+    --fb-low-anchor: var(--fb-mist-high-anchor);
+    --fb-high-anchor: var(--fb-mist-low-anchor);
+}
+
+.fb-v-olive {
+    --fb-low-anchor: var(--fb-olive-low-anchor);
+    --fb-mid-anchor: var(--fb-olive-mid-anchor);
+    --fb-high-anchor: var(--fb-olive-high-anchor);
+}
+
+.fb-v-olive.fb-invert {
+    --fb-low-anchor: var(--fb-olive-high-anchor);
+    --fb-high-anchor: var(--fb-olive-low-anchor);
 }
 
 /**********************************************************************************/

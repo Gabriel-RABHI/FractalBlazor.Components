@@ -51,9 +51,19 @@ public static class FbThemeDefaults
                 Variant(FbThemeVariants.Disabled, FbThemeBaseColorsIndex.Gray, light,
                     FbThemeBaseShadesIndex._950, FbThemeBaseShadesIndex._700, FbThemeBaseShadesIndex._500),
                 DarkVariant(FbThemeVariants.Success, FbThemeBaseColorsIndex.Green, light),
-                DarkVariant(FbThemeVariants.Info, FbThemeBaseColorsIndex.Sky, light)
+                DarkVariant(FbThemeVariants.Info, FbThemeBaseColorsIndex.Sky, light),
+                .. ColorVariants(light)
             ]
         };
+
+    /// <summary>
+    /// One variant per color of the palette, named after it. A chromatic color takes the
+    /// gradient of the functional variants (Error is red), a neutral one that of Default.
+    /// </summary>
+    private static IEnumerable<FbThemeColorVariant> ColorVariants(bool light)
+        => Enum.GetValues<FbThemeBaseColorsIndex>().Select(color => color < FbThemeBaseColorsIndex.Slate
+            ? DarkVariant(color.ToString(), color, light)
+            : Variant(color.ToString(), color, light));
 
     private static FbThemeColorVariant Variant(string name, FbThemeBaseColorsIndex color, bool light)
         => Variant(name, color, light, FbThemeBaseShadesIndex._950, FbThemeBaseShadesIndex._500, FbThemeBaseShadesIndex._50);

@@ -167,10 +167,11 @@ public sealed class FbLayoutThemeRegistry : IFbLayoutThemeRegistry
 
         Add(FbLayoutThemeVariants.Default);
 
-        foreach (var standard in FbLayoutThemeVariants.Standard.Skip(1))
+        // The known variants in their order, functional ones then colors; those a theme adds after.
+        foreach (var known in FbLayoutThemeVariants.All.Skip(1))
         {
-            if (FindVariant(theme, standard) is not null)
-                Add(standard);
+            if (FindVariant(theme, known) is not null)
+                Add(known);
         }
 
         for (var current = theme; current is not null; current = current.Parent)

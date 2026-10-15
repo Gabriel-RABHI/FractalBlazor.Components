@@ -35,7 +35,7 @@ public sealed class ThemePreviewTests : BunitContext
 
         Assert.Equal("23%", resolved.SurfaceMix.SurfaceOffset);
         Assert.Equal(_registry.Resolve(_registry.Default.Name, FbThemeBranches.Dark).SurfaceMix.AccentOffset, resolved.SurfaceMix.AccentOffset);
-        Assert.Equal(FbThemeVariants.Standard.Count, resolved.VariantOrder.Count);
+        Assert.Equal(FbThemeVariants.All.Count, resolved.VariantOrder.Count);
         Assert.False(_registry.TryGet("Edited", out _));
     }
 

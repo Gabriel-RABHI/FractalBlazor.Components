@@ -263,6 +263,10 @@ Portage des fonctions de `TinyBlazor.DragAndDrop` (TinyBlazorComponents), adapt�
 - [x] **29.3 Dans Components.** La section « Drag & Drop » quitte le menu du haut : ses trois pages forment un groupe « Drag & Drop » de la section Components, après le groupe Layout.
 - [x] **29.4 Actions au survol.** Dans le kanban, cocher, modifier et supprimer apparaissent aux coins d'une tâche ou d'une liste à son survol (`FbShowWhenOver`, comme dans l'original) : le titre garde toute la largeur. `FbShowWhenOver` y gagne trois corrections : son calque laisse passer le pointeur hors de ses contenus (la poignée dessous reste saisissable), `Fixed` affiche vraiment ses contenus en permanence (le setter rétablissait le mode automatique), et un glissement qui part d'un élément masque ce que la souris y montrait (`fb-swo-auto`), puisqu'aucun `mouseout` ne suit.
 
+## Phase 30 — Variantes de couleur
+
+- [x] **30.1 Une variante par couleur de la palette.** En plus des sept variantes fonctionnelles (`Standard`), chaque couleur de la palette de base est une variante (`Colors` : Red… Rose, puis les neutres Slate… Olive) ; `All` réunit les deux, dans l'ordre de `VariantOrder`. Les thèmes par défaut, Forms et Layout, les définissent : une couleur vive a le dégradé des variantes fonctionnelles (990, 500, 50), une neutre celui de Default (950, 500, 50). Leurs règles rejoignent celles des variantes fonctionnelles dans la feuille Layout (`FbThemeCssNames.StylesheetVariants`) : un thème n'écrit toujours que celles des variantes qu'il ajoute. La page des variantes montre les couleurs.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :

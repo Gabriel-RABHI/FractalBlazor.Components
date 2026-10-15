@@ -255,10 +255,11 @@ public sealed class FbFormThemeRegistry : IFbFormThemeRegistry
         }
 
         Add(FbThemeVariants.Default);
-        foreach (var standard in FbThemeVariants.Standard.Skip(1))
+        // The known variants in their order, functional ones then colors; those a theme adds after.
+        foreach (var known in FbThemeVariants.All.Skip(1))
         {
-            if (FindVariant(theme, branchName, standard) is not null)
-                Add(standard);
+            if (FindVariant(theme, branchName, known) is not null)
+                Add(known);
         }
 
         for (var current = theme; current is not null; current = current.Parent)
