@@ -64,11 +64,11 @@
     <FbRow NoFlex MultiLine GM JVSt>
         <FbStack MinWidth="16rem" GS JVS>
             <FbText S B Muted>Razor</FbText>
-            <CodeBlock Code="@Item.Code" />
+            <FbCodeBlock Code="@Item.Code" CopyTitle="Copier le code" CopiedTitle="Copié" />
         </FbStack>
         <FbStack MinWidth="16rem" GS JVS>
             <FbText S B Muted>CSS écrit par les flags</FbText>
-            <CodeBlock Code="@Item.Css" />
+            <FbCodeBlock Code="@Item.Css" Css CopyTitle="Copier le code" CopiedTitle="Copié" />
         </FbStack>
     </FbRow>
 </FbStack>

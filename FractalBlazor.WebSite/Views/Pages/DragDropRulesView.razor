@@ -14,7 +14,7 @@
             L’état qui reçoit les dépôts implémente <FbText Code>IFbDragAndDropRules</FbText>, défini
             dans FractalBlazor.Components.Common : les états n’ont besoin d’aucun composant.
         </FbText>
-        <CodeBlock Code="@ContractCode" />
+        <FbCodeBlock Code="@ContractCode" CSharp CopyTitle="Copier le code" CopiedTitle="Copié" />
         <FbText M Muted>
             L’aperçu est un <FbText Code>FbDropFeedback</FbText>. Les deux premières valeurs refusent le
             dépôt, les autres donnent la place que prendrait l’élément ; le curseur du navigateur suit.
@@ -62,7 +62,7 @@
             ferait un dépôt. Ici, chaque élément demande sa propre place, quelle que soit la zone. Un
             dépôt refusé n’envoie rien à l’état.
         </FbText>
-        <DocExample Code="@PreviewCode">
+        <DocExample Code="@PreviewCode" Language="FbCodeLanguage.CSharp">
             <FbDragAndDropMaster Handler="Item.Preview">
                 <FbStack NoFlex GM JVS>
                     <FbRow NoFlex MultiLine GM JVSt>

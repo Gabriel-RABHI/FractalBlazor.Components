@@ -1,15 +1,21 @@
-@* A live example over its source, in one frame: the group is Joined, so the code takes the
-   lower corners of the frame. *@
+@* A live example over its source, in one frame: the group is Joined, so the code block, squared
+   (WRN), takes the lower corners of the frame. *@
 <FbStack NoFlex Joined WFL WRL WSL JVS>
     <FbStack NoFlex PL GM JVS>
         @ChildContent
     </FbStack>
-    <CodeBlock Code="@Code" Attached />
+    <FbCodeBlock Code="@Code" Language="@Language" WRN CopyTitle="Copier le code" CopiedTitle="Copié" />
 </FbStack>
 
 @code {
     [Parameter, EditorRequired]
     public string Code { get; set; } = "";
+
+    /// <summary>
+    /// The language of the source: Razor by default, whose lines without markup are C#.
+    /// </summary>
+    [Parameter]
+    public FbCodeLanguage Language { get; set; }
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }

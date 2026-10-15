@@ -9,17 +9,17 @@
     </FbStack>
 
     <FbText L B>Program.cs</FbText>
-    <CodeBlock Code="@ProgramCode" />
+    <FbCodeBlock Code="@ProgramCode" CSharp CopyTitle="Copier le code" CopiedTitle="Copié" />
 
     <FbText L B>App.razor</FbText>
-    <CodeBlock Code="@AppCode" />
+    <FbCodeBlock Code="@AppCode" CopyTitle="Copier le code" CopiedTitle="Copié" />
 
     <FbText L B>Racine de l’application</FbText>
     <FbText M Muted>
         FbPageAnchor occupe toute la fenêtre, qui ne défile jamais. Les rows d’en-tête et de pied de
         page gardent leur hauteur (NoFlex), le corps prend le reste, et la stack Scrollable défile seule.
     </FbText>
-    <CodeBlock Code="@AnchorCode" />
+    <FbCodeBlock Code="@AnchorCode" CopyTitle="Copier le code" CopiedTitle="Copié" />
 </FbStack>
 
 @code {

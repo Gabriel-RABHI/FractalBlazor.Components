@@ -7,21 +7,21 @@
         groupes qui titrent des pages. Chaque page donne son modèle. Une section sans entrées est
         elle-même une page.
     </FbText>
-    <CodeBlock Code="@ModelCode" />
+    <FbCodeBlock Code="@ModelCode" CSharp CopyTitle="Copier le code" CopiedTitle="Copié" />
 
     <FbText L B>Une vue par type</FbText>
     <FbText M Muted>
         Chaque type d’état déclare sa vue. Le bouton d’une entrée envoie l’action Select à l’entrée,
         qui passe par la navigation.
     </FbText>
-    <CodeBlock Code="@ViewCode" />
+    <FbCodeBlock Code="@ViewCode" CopyTitle="Copier le code" CopiedTitle="Copié" />
 
     <FbText L B>Un rendu délégué</FbText>
     <FbText M Muted>
         La zone de contenu ne connaît pas les pages : elle rend le modèle de la page ouverte avec la
         vue déclarée pour son type.
     </FbText>
-    <CodeBlock Code="@ContentCode" />
+    <FbCodeBlock Code="@ContentCode" CopyTitle="Copier le code" CopiedTitle="Copié" />
 
     <FbText L B>Des notifications ciblées</FbText>
     <FbText M Muted>

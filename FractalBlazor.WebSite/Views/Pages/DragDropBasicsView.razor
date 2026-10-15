@@ -30,14 +30,14 @@
             script de Layout, que l’application charge déjà, suffisent. Il reste l’espace de noms,
             dans <FbText Code>_Imports.razor</FbText> :
         </FbText>
-        <CodeBlock Code="@ImportCode" />
+        <FbCodeBlock Code="@ImportCode" CopyTitle="Copier le code" CopiedTitle="Copié" />
         <FbText M Muted>
             L’état qui gère la zone reçoit les dépôts par sa méthode <FbText Code>Handle(FbDrop)</FbText>.
             S’il implémente aussi <FbText Code>IFbDragAndDropRules</FbText>, il décide quels receveurs
             acceptent l’élément et ce que ferait un dépôt sur chaque zone ; sinon, tout receveur
             accepte, et chaque zone propose sa place naturelle.
         </FbText>
-        <CodeBlock Code="@StateCode" />
+        <FbCodeBlock Code="@StateCode" CSharp CopyTitle="Copier le code" CopiedTitle="Copié" />
     </DocSection>
 
     <DocSection Title="Imbrications">

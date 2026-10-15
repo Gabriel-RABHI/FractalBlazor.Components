@@ -11,18 +11,3 @@
     .fb-site-link:hover {
         color: var(--fb-fg-highlight);
     }
-
-.fb-site-code {
-    margin: 0;
-    padding: var(--fb-space-m);
-    border-radius: var(--fb-radius-m);
-    background: var(--fb-bg-accent);
-    color: var(--fb-fg-default);
-    font-family: var(--fb-code-font-family);
-    font-size: 0.85em;
-    overflow-x: auto;
-}
-
-.fb-site-code-attached {
-    border-radius: 0;
-}
