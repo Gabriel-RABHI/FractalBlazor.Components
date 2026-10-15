@@ -15,9 +15,9 @@ public sealed class ButtonTests : BunitContext
         var button = cut.Find("button");
         Assert.Equal("button", button.GetAttribute("type"));
         Assert.DoesNotContain(button.ClassList, name => name.StartsWith("fb-wb", StringComparison.Ordinal));
-        Assert.Equal(ClassesOf(p => p.Add(x => x.WBN, true).Add(x => x.WFM, true).Add(x => x.PHL, true).Add(x => x.PVM, true)),
+        Assert.Equal(ClassesOf(p => p.Add(x => x.WBN, true).Add(x => x.WFS, true).Add(x => x.PHL, true).Add(x => x.PVM, true)),
             button.GetAttribute("class"));
-        Assert.Contains("fb-wfm", button.ClassList);
+        Assert.Contains("fb-wfs", button.ClassList);
         Assert.Contains("fb-hover", button.ClassList);
         Assert.Contains(FbAtoms.NameOf("border-radius:var(--fb-radius-m)"), button.ClassList);
         Assert.False(button.HasAttribute("style"));
@@ -108,9 +108,9 @@ public sealed class ButtonTests : BunitContext
         { nameof(FbButton.S), nameof(FbButton.PHM), nameof(FbButton.PVS) },
         { nameof(FbButton.M), nameof(FbButton.PHL), nameof(FbButton.PVM) },
         { nameof(FbButton.L), nameof(FbButton.PHX), nameof(FbButton.PVL) },
-        { nameof(FbButton.KW), nameof(FbButton.WBN), nameof(FbButton.WFM) },
-        { nameof(FbButton.KS), nameof(FbButton.WBS), nameof(FbButton.WFM) },
-        { nameof(FbButton.KP), nameof(FbButton.WBH), nameof(FbButton.WFM) },
+        { nameof(FbButton.KW), nameof(FbButton.WBN), nameof(FbButton.WFS) },
+        { nameof(FbButton.KS), nameof(FbButton.WBS), nameof(FbButton.WFS) },
+        { nameof(FbButton.KP), nameof(FbButton.WBH), nameof(FbButton.WFS) },
         { nameof(FbButton.KT), nameof(FbButton.WBS), nameof(FbButton.WFN) }
     };
 

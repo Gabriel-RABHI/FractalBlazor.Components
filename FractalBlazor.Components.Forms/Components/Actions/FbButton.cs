@@ -57,19 +57,19 @@ namespace FractalBlazor.Components.Forms.Components.Actions
 
         // -------- Kind: the fill and the frame
         /// <summary>
-        /// Kind -> Wireframe, the default: a frame without a fill, <c>WBN WFM</c>.
+        /// Kind -> Wireframe, the default: a frame without a fill, <c>WBN WFS</c>.
         /// </summary>
         [Parameter]
         public bool KW { get => WBN && WFS; set { if (value) { WBN = true; WFS = true; } } }
 
         /// <summary>
-        /// Kind -> Surface: <c>WBS WFM</c>.
+        /// Kind -> Surface: <c>WBS WFS</c>.
         /// </summary>
         [Parameter]
         public bool KS { get => WBS && WFS; set { if (value) { WBS = true; WFS = true; } } }
 
         /// <summary>
-        /// Kind -> Plain: the full color of the variant, <c>WBH WFM</c>.
+        /// Kind -> Plain: the full color of the variant, <c>WBH WFS</c>.
         /// </summary>
         [Parameter]
         public bool KP { get => WBH && WFS; set { if (value) { WBH = true; WFS = true; } } }
