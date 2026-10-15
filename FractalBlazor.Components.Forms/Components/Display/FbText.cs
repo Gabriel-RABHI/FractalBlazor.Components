@@ -70,7 +70,11 @@ namespace FractalBlazor.Components.Forms.Components.Display
         /// <summary>
         /// Keep the text on one line and end it with an ellipsis when it overflows.
         /// </summary>
-        Trim = 2
+        Trim = 2,
+        /// <summary>
+        /// A fragment of code: the code font, on a tint of the text color.
+        /// </summary>
+        Code = 4
     }
 
     /// <summary>
@@ -80,12 +84,12 @@ namespace FractalBlazor.Components.Forms.Components.Display
     /// </summary>
     public class FbText : FbComponentBase
     {
-        private const int SizeCount = 7, WeightCount = 4, ColorCount = 4, ModifierCount = 4;
+        private const int SizeCount = 7, WeightCount = 4, ColorCount = 4, ModifierCount = 8;
 
         private static readonly string[] SizeClasses = { "", " fb-t-xs", " fb-t-s", " fb-t-m", " fb-t-l", " fb-t-xl", " fb-t-xxl" };
         private static readonly string[] WeightClasses = { "", " fb-t-t", " fb-t-b", " fb-t-xb" };
         private static readonly string[] ColorClasses = { "", " fb-subtle", " fb-muted", " fb-highlight" };
-        private static readonly string[] ModifierClasses = { "", " fb-t-nw", " fb-t-tr", " fb-t-nw fb-t-tr" };
+        private static readonly string[] ModifierClasses = { "", " fb-t-nw", " fb-t-tr", " fb-t-nw fb-t-tr", " fb-t-code", " fb-t-nw fb-t-code", " fb-t-tr fb-t-code", " fb-t-nw fb-t-tr fb-t-code" };
 
         // Every combination is built once and shared by all instances.
         private static readonly string?[] _classes = new string?[SizeCount * WeightCount * ColorCount * ModifierCount];
@@ -159,6 +163,13 @@ namespace FractalBlazor.Components.Forms.Components.Display
         /// </summary>
         [Parameter]
         public bool TR { get => _modifiers.HasFlag(FbTextModifiers.Trim); set { if (value) _modifiers |= FbTextModifiers.Trim; } }
+
+        /// <summary>
+        /// Code: a fragment of code in the text, in the code font on a tint of the text color, so
+        /// that it reads on any surface.
+        /// </summary>
+        [Parameter]
+        public bool Code { get => _modifiers.HasFlag(FbTextModifiers.Code); set { if (value) _modifiers |= FbTextModifiers.Code; } }
 
         // -------- Content
         [Parameter]

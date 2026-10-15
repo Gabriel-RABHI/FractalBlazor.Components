@@ -240,6 +240,13 @@ Chaque variante n'a plus qu'un dégradé : trois ancres, à 0 %, 50 % et 100 %. 
 - [x] **27.1 Séparateurs pour tout enfant.** `WSL`, `WSM`, `WSS` tracent leur trait entre tous les enfants d’une row, d’une grille ou d’une stack, et plus seulement entre les `div` : un `FbButton`, un `FbText` ou une `FbIcon` se séparent sans `FbRowItem` autour.
 - [x] **27.2 Joined.** Sur `FbRow` et `FbStack`, `Joined` fait des enfants un groupe : le premier et le dernier prennent les coins extérieurs du conteneur (classe `fb-joined`, avec `fb-reverse` quand la direction est inversée), sans rien rogner. Frames et coins des enfants (`WFN WRN`), séparateurs (`WS*`) et espacement se règlent à la main.
 
+## Phase 28 — Documentation Row / Stack
+
+La page Row / Stack documente les deux conteneurs flex autour de leur apport principal : les flags d’alignement nomment les axes de l’écran (`JH*` horizontal, `JV*` vertical), dans une ligne comme dans une pile. Le conteneur ne décide que de la propriété CSS écrite.
+
+- [x] **28.1 Code en ligne.** `FbText Code` écrit un fragment de code dans le texte : la police de code, sur une pastille tirée de la couleur du texte, lisible sur toute surface.
+- [ ] **28.2 La page.** Un pavé de positions pilote une ligne et une pile avec les mêmes flags et montre le CSS de chacune ; un bac à sable couvre conteneur, axes et espacement, avec le code produit. Suivent les axes de flux et transversal, les raccourcis, les valeurs par défaut, l’occupation de l’espace, le retour à la ligne et l’inversion, l’alignement d’un enfant, séparateurs et groupes, puis une référence des flags. Les états des démos sont testés dans `FractalBlazor.WebSite.StateModel.Tests`.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :

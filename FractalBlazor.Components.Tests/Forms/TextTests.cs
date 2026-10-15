@@ -34,6 +34,15 @@ public sealed class TextTests : BunitContext
     }
 
     [Fact]
+    public void Code_adds_to_the_other_modifiers()
+    {
+        Assert.Equal("fb-txt fb-t-s fb-t-code", ClassOf(p => p.Add(x => x.S, true).Add(x => x.Code, true)));
+        Assert.Equal("fb-txt fb-t-nw fb-t-tr fb-t-code", ClassOf(p => p.Add(x => x.NW, true).Add(x => x.TR, true).Add(x => x.Code, true)));
+        Assert.Equal(ClassOf(p => p.Add(x => x.Code, true).Add(x => x.NW, true)),
+            ClassOf(p => p.Add(x => x.Modifiers, FbTextModifiers.Code | FbTextModifiers.NoWrap)));
+    }
+
+    [Fact]
     public void Plain_text_has_only_the_base_class()
     {
         var cut = Render<FbText>(p => p.Add(x => x.Value, "Hello"));

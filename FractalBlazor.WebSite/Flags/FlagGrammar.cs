@@ -299,7 +299,8 @@ internal sealed class FlagGrammar
         Word("XB", "Extra bold", "Weight"),
         .. Colors(),
         Word("NW", "No wrap", "Overflow"),
-        Word("TR", "Trimmed with an ellipsis", "Overflow")
+        Word("TR", "Trimmed with an ellipsis", "Overflow"),
+        Word("Code", "Code, in the code font", "Style")
     ];
 
     private static Part[] Icon() =>
