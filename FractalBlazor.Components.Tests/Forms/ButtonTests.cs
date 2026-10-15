@@ -76,6 +76,20 @@ public sealed class ButtonTests : BunitContext
     }
 
     [Fact]
+    public void A_disabled_button_takes_the_disabled_variant_whatever_its_variant()
+    {
+        var cut = Render<FbButton>(p => p.Add(x => x.D, true).Add(x => x.Variant, FbThemeVariants.Error));
+
+        Assert.Contains("fb-v-disabled", cut.Find("button").ClassList);
+        Assert.DoesNotContain("fb-v-error", cut.Find("button").ClassList);
+
+        cut.Render(p => p.Add(x => x.D, false).Add(x => x.Variant, FbThemeVariants.Error));
+
+        Assert.Contains("fb-v-error", cut.Find("button").ClassList);
+        Assert.DoesNotContain("fb-v-disabled", cut.Find("button").ClassList);
+    }
+
+    [Fact]
     public void Variant_gives_the_functional_state()
     {
         var cut = Render<FbButton>(p => p.Add(x => x.Variant, FbThemeVariants.Error));

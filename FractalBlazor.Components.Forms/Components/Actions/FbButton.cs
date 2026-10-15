@@ -1,5 +1,6 @@
 using FractalBlazor.Components.Common.Contracts;
 using FractalBlazor.Components.Forms.Core;
+using FractalBlazor.Components.Forms.Theming.Constants;
 using FractalBlazor.Components.Forms.Theming.Helpers;
 using FractalBlazor.Components.Layout.Abstracts;
 using Microsoft.AspNetCore.Components;
@@ -98,7 +99,7 @@ namespace FractalBlazor.Components.Forms.Components.Actions
 
         /// <summary>
         /// Disabled: the button sends nothing and renders with the <c>Disabled</c> variant,
-        /// unless <see cref="Variant"/> says otherwise.
+        /// whatever <see cref="Variant"/> says.
         /// </summary>
         [Parameter]
         public bool D { get => IsDisabled; set => IsDisabled = value; }
@@ -106,7 +107,9 @@ namespace FractalBlazor.Components.Forms.Components.Actions
         private bool IsDisabled { get; set; }
 
         /// <summary>
-        /// Functional state of the button: <c>Selected</c>, <c>Error</c>, <c>Success</c>…
+        /// Functional state of the button: <c>Selected</c>, <c>Error</c>, <c>Success</c>… A
+        /// disabled button (<see cref="D"/>) takes <c>Disabled</c> instead, and comes back to
+        /// this variant once enabled.
         /// </summary>
         [Parameter]
         public string? Variant { get; set; }
@@ -135,7 +138,7 @@ namespace FractalBlazor.Components.Forms.Components.Actions
             get
             {
                 var surfaceClasses = AggregatedClasses;
-                var variantClasses = FbVariantScope.Classes(FbVariantScope.Effective(Variant, IsDisabled));
+                var variantClasses = FbVariantScope.Classes(IsDisabled ? FbThemeVariants.Disabled : FbVariantScope.Effective(Variant, disabled: false));
                 if (!ReferenceEquals(surfaceClasses, _surfaceClasses) || !ReferenceEquals(variantClasses, _variantClasses) || _buttonClasses.Length == 0)
                 {
                     (_surfaceClasses, _variantClasses) = (surfaceClasses, variantClasses);
