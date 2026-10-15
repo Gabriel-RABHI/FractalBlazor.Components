@@ -111,15 +111,19 @@
             <FbRow NoFlex MultiLine GM JVSt>
                 <FbStack MinWidth="14rem" GS JVS>
                     <FbText S B Muted>FbRow</FbText>
-                    <FbRow NoFlex GS PM WFM WFD WRM MinHeight="12rem">
-                        @DemoBoxes
-                    </FbRow>
+                    <FbVariant Variant="@FbThemeVariants.Selected">
+                        <FbRow NoFlex GS PM WFM WFD WRM MinHeight="12rem" WBS>
+                            @DemoBoxes
+                        </FbRow>
+                    </FbVariant>
                 </FbStack>
                 <FbStack MinWidth="14rem" GS JVS>
                     <FbText S B Muted>FbStack</FbText>
-                    <FbStack NoFlex GS PM WFM WFD WRM MinHeight="12rem">
-                        @DemoBoxes
-                    </FbStack>
+                    <FbVariant Variant="@FbThemeVariants.Selected">
+                        <FbStack NoFlex GS PM WFM WFD WRM MinHeight="12rem" WBS>
+                            @DemoBoxes
+                        </FbStack>
+                    </FbVariant>
                 </FbStack>
             </FbRow>
         </DocExample>
@@ -135,18 +139,20 @@
             bout.
         </FbText>
         <DocExample Code="@SpaceCode">
-            <FbRow NoFlex GS PM WFL WRM>
-                <FbIcon Icon="@FbMaterialIcons.Folder" M Muted />
-                <FbText M B>Documents</FbText>
-                <FbRowSpacer />
-                <FbButton S KT><FbText S>Partager</FbText></FbButton>
-                <FbButton S KP><FbText S>Nouveau</FbText></FbButton>
-            </FbRow>
-            <FbRow NoFlex GS>
-                <FbRow Flex="1" PM WBA WRM><FbText S>Flex="1"</FbText></FbRow>
-                <FbRow Flex="2" PM WBA WRM><FbText S>Flex="2"</FbText></FbRow>
-                <FbRow NoFlex PM WBA WRM><FbText S>NoFlex</FbText></FbRow>
-            </FbRow>
+            <FbVariant Variant="@FbThemeVariants.Selected">
+                <FbRow NoFlex GS PM WFL WRM WBS>
+                    <FbIcon Icon="@FbMaterialIcons.Folder" M Muted />
+                    <FbText M B>Documents</FbText>
+                    <FbRowSpacer />
+                    <FbButton S KT><FbText S>Partager</FbText></FbButton>
+                    <FbButton S KP><FbText S>Nouveau</FbText></FbButton>
+                </FbRow>
+                <FbRow NoFlex GS WBS>
+                    <FbRow Flex="1" PM WBA WRM><FbText S>Flex="1"</FbText></FbRow>
+                    <FbRow Flex="2" PM WBA WRM><FbText S>Flex="2"</FbText></FbRow>
+                    <FbRow NoFlex PM WBA WRM><FbText S>NoFlex</FbText></FbRow>
+                </FbRow>
+            </FbVariant>
         </DocExample>
     </DocSection>
 
@@ -160,17 +166,19 @@
             FbStack inversée en bas. L’axe transversal ne change pas.
         </FbText>
         <DocExample Code="@WrapCode">
-            <FbRow NoFlex MultiLine GS JHC>
-                @foreach (var tag in Tags)
-                {
-                    <FbRow NoFlex PHM PVS WBA WRL><FbText S>@tag</FbText></FbRow>
-                }
-            </FbRow>
-            <FbRow NoFlex Reverse GS JHS PS WFM WFD WRM>
-                <DocBox Label="1" />
-                <DocBox Label="2" />
-                <DocBox Label="3" />
-            </FbRow>
+            <FbVariant Variant="@FbThemeVariants.Selected">
+                <FbRow NoFlex MultiLine GS JHC WBS>
+                    @foreach (var tag in Tags)
+                    {
+                        <FbRow NoFlex PHM PVS WBA WRL><FbText S>@tag</FbText></FbRow>
+                    }
+                </FbRow>
+                <FbRow NoFlex Reverse GS JHS PS WFM WFD WRM WBS>
+                    <DocBox Label="1" />
+                    <DocBox Label="2" />
+                    <DocBox Label="3" />
+                </FbRow>
+            </FbVariant>
         </DocExample>
     </DocSection>
 
@@ -184,11 +192,13 @@
             <FbText Code>SJVBl</FbText>.
         </FbText>
         <DocExample Code="@SelfCode">
-            <FbStack NoFlex GS JHS>
-                <FbStackItem PHM PVS WBA WRL><FbText S>La réunion tient toujours ?</FbText></FbStackItem>
-                <FbStackItem SJHE PHM PVS WBH WRL><FbText S>Oui, à 14 h.</FbText></FbStackItem>
-                <FbStackItem PHM PVS WBA WRL><FbText S>Parfait, merci.</FbText></FbStackItem>
-            </FbStack>
+            <FbVariant Variant="@FbThemeVariants.Selected">
+                <FbStack NoFlex GS JHS WBS>
+                    <FbStackItem PHM PVS WBA WRL><FbText S>La réunion tient toujours ?</FbText></FbStackItem>
+                    <FbStackItem SJHE PHM PVS WBH WRL><FbText S>Oui, à 14 h.</FbText></FbStackItem>
+                    <FbStackItem PHM PVS WBA WRL><FbText S>Parfait, merci.</FbText></FbStackItem>
+                </FbStack>
+            </FbVariant>
         </DocExample>
         <DocNote>
             Une FbRow ou une FbStack imbriquée accepte les deux familles. Elles posent la même
@@ -209,7 +219,7 @@
         </FbText>
         <DocExample Code="@GroupCode">
             <FbRow NoFlex MultiLine GL JVS>
-                <FbRow NoFlex Joined WFM WRM WSM>
+                <FbRow NoFlex Joined WFM WRM WSM WRL>
                     <FbButton KP WFN WRN Title="Gras"><FbIcon Icon="@FbMaterialIcons.FormatBold" S /></FbButton>
                     <FbButton WFN WRN Title="Italique"><FbIcon Icon="@FbMaterialIcons.FormatItalic" S /></FbButton>
                     <FbButton WFN WRN Title="Souligné"><FbIcon Icon="@FbMaterialIcons.FormatUnderlined" S /></FbButton>

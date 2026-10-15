@@ -58,19 +58,23 @@
             </FbRow>
             @if (container == FlexContainer.Row)
             {
-                <FbRow NoFlex GS PM WFM WFD WRM MinHeight="11rem"
-                       JHS="@H(FlexAlignment.Start)" JHC="@H(FlexAlignment.Center)" JHE="@H(FlexAlignment.End)"
-                       JVS="@V(FlexAlignment.Start)" JVC="@V(FlexAlignment.Center)" JVE="@V(FlexAlignment.End)">
-                    @Boxes
-                </FbRow>
+                <FbVariant Variant="@FbThemeVariants.Selected">
+                    <FbRow NoFlex GS PM WFM WFD WRM MinHeight="11rem" WBS
+                           JHS="@H(FlexAlignment.Start)" JHC="@H(FlexAlignment.Center)" JHE="@H(FlexAlignment.End)"
+                           JVS="@V(FlexAlignment.Start)" JVC="@V(FlexAlignment.Center)" JVE="@V(FlexAlignment.End)">
+                        @Boxes
+                    </FbRow>
+                </FbVariant>
             }
             else
             {
-                <FbStack NoFlex GS PM WFM WFD WRM MinHeight="11rem"
-                         JHS="@H(FlexAlignment.Start)" JHC="@H(FlexAlignment.Center)" JHE="@H(FlexAlignment.End)"
-                         JVS="@V(FlexAlignment.Start)" JVC="@V(FlexAlignment.Center)" JVE="@V(FlexAlignment.End)">
-                    @Boxes
-                </FbStack>
+                <FbVariant Variant="@FbThemeVariants.Selected">
+                    <FbStack NoFlex GS PM WFM WFD WRM MinHeight="11rem" WBS
+                             JHS="@H(FlexAlignment.Start)" JHC="@H(FlexAlignment.Center)" JHE="@H(FlexAlignment.End)"
+                             JVS="@V(FlexAlignment.Start)" JVC="@V(FlexAlignment.Center)" JVE="@V(FlexAlignment.End)">
+                        @Boxes
+                    </FbStack>
+                </FbVariant>
             }
             <FbRow NoFlex><FbText S Code NW>@Item.Code(container)</FbText></FbRow>
             @Mapping(container, FlexAxis.Horizontal)

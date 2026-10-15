@@ -36,7 +36,8 @@
 
     @if (Item.Container == FlexContainer.Row)
     {
-        <FbRow NoFlex PM WFM WFD WRM MinHeight="14rem"
+                <FbVariant Variant="@FbThemeVariants.Selected">
+        <FbRow NoFlex PM WFM WFD WRM MinHeight="14rem" WBS
                JHS="@H(FlexAlignment.Start)" JHC="@H(FlexAlignment.Center)" JHE="@H(FlexAlignment.End)"
                JHSB="@H(FlexAlignment.SpaceBetween)" JHSA="@H(FlexAlignment.SpaceAround)" JHEv="@H(FlexAlignment.SpaceEvenly)"
                JVS="@V(FlexAlignment.Start)" JVC="@V(FlexAlignment.Center)" JVE="@V(FlexAlignment.End)"
@@ -44,17 +45,20 @@
                GS="@G(FlexGutter.S)" GM="@G(FlexGutter.M)" GL="@G(FlexGutter.L)" GX="@G(FlexGutter.X)">
             @Boxes
         </FbRow>
+        </FbVariant>
     }
     else
     {
-        <FbStack NoFlex PM WFM WFD WRM MinHeight="14rem"
+                <FbVariant Variant="@FbThemeVariants.Selected">
+            <FbStack NoFlex PM WFM WFD WRM MinHeight="14rem" WBS
                  JHS="@H(FlexAlignment.Start)" JHC="@H(FlexAlignment.Center)" JHE="@H(FlexAlignment.End)"
                  JHSt="@H(FlexAlignment.Stretch)"
                  JVS="@V(FlexAlignment.Start)" JVC="@V(FlexAlignment.Center)" JVE="@V(FlexAlignment.End)"
                  JVSB="@V(FlexAlignment.SpaceBetween)" JVSA="@V(FlexAlignment.SpaceAround)" JVEv="@V(FlexAlignment.SpaceEvenly)"
                  GS="@G(FlexGutter.S)" GM="@G(FlexGutter.M)" GL="@G(FlexGutter.L)" GX="@G(FlexGutter.X)">
             @Boxes
-        </FbStack>
+            </FbStack>
+        </FbVariant>
     }
 
     <FbRow NoFlex MultiLine GM JVSt>
