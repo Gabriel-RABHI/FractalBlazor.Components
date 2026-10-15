@@ -788,7 +788,7 @@ Une variante que le thème ne connaît pas n'a pas de règle : l'élément garde
 
 #### Variante d'un contrôle
 
-Les contrôles (champs, listes, cases, interrupteurs, onglets, boutons) ne s'enveloppent pas dans un scope. Quand leur `Variant` ou le drapeau `D` (désactivé) le demande, leur élément racine porte lui-même les classes de la variante :
+Les contrôles (champs, listes, cases, interrupteurs, onglets, boutons) et les icônes ne s’enveloppent pas dans un scope. Quand leur `Variant` ou le drapeau `D` (désactivé) le demande, leur élément racine porte lui-même les classes de la variante :
 
 ```html
 <div class="fb-row … fb-control fb-field fb-variant fb-v-error">

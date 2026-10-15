@@ -1,4 +1,5 @@
 using FractalBlazor.Components.Forms.Components.Display;
+using FractalBlazor.Components.Forms.Theming.Helpers;
 using FractalBlazor.Components.Layout;
 using FractalBlazor.Components.Layout.Abstracts;
 using Microsoft.AspNetCore.Components;
@@ -8,9 +9,11 @@ namespace FractalBlazor.Components.Forms.Components.Icons
 {
     /// <summary>
     /// Renders an icon from <see cref="FbMaterialIcons"/> as an inline SVG painted with the
-    /// current text color, so it follows the theme, the variant and the surrounding text.
+    /// current text color, so it follows the theme, the variant and the surrounding text. A
+    /// <see cref="Variant"/> of its own gives it the colors of that variant.
     /// </summary>
-    /// <example><c>&lt;FbIcon Icon="@FbMaterialIcons.Search" L Muted /&gt;</c></example>
+    /// <example><c>&lt;FbIcon Icon="@FbMaterialIcons.Search" L Muted /&gt;</c>,
+    /// <c>&lt;FbIcon Icon="@FbMaterialIcons.Error" Variant="Error" /&gt;</c></example>
     public sealed class FbIcon : FbComponentBase
     {
         private const int SizeCount = 5, ColorCount = 4;
@@ -33,6 +36,14 @@ namespace FractalBlazor.Components.Forms.Components.Icons
         /// </summary>
         [Parameter]
         public string? Title { get; set; }
+
+        /// <summary>
+        /// Variant of the icon: <c>Error</c>, <c>Success</c>… Its color, and the one given by
+        /// <see cref="Subtle"/>, <see cref="Muted"/> or <see cref="Highlight"/>, come from that
+        /// variant. Without it, the icon takes the variant of its parent.
+        /// </summary>
+        [Parameter]
+        public string? Variant { get; set; }
 
         [Parameter]
         public FbSpacing Size { get => _size; set => _size = value; }
@@ -89,6 +100,13 @@ namespace FractalBlazor.Components.Forms.Components.Icons
             builder.CloseElement();
         }
 
+        private string? _baseClasses, _variantClasses;
+        private string _class = "";
+
+        /// <summary>
+        /// The size and color classes come from a shared table; the variant classes from a shared
+        /// cache. They are only joined again when one of them changes.
+        /// </summary>
         private string CssClass
         {
             get
@@ -96,7 +114,14 @@ namespace FractalBlazor.Components.Forms.Components.Icons
                 var size = Math.Min((int)_size, SizeCount - 1);
                 var color = Math.Min((int)_color, ColorCount - 1);
                 var index = size + SizeCount * color;
-                return _classes[index] ??= "fb-icon" + SizeClasses[size] + ColorClasses[color];
+                var baseClasses = _classes[index] ??= "fb-icon" + SizeClasses[size] + ColorClasses[color];
+                var variantClasses = FbVariantScope.Classes(FbVariantScope.Effective(Variant, disabled: false));
+                if (!ReferenceEquals(baseClasses, _baseClasses) || !ReferenceEquals(variantClasses, _variantClasses) || _class.Length == 0)
+                {
+                    (_baseClasses, _variantClasses) = (baseClasses, variantClasses);
+                    _class = FbVariantScope.WithClasses(baseClasses, variantClasses);
+                }
+                return _class;
             }
         }
     }
