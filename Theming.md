@@ -669,6 +669,12 @@ outline: 1px solid var(--fb-frame-border-color);
 outline-offset: -1px;
 ```
 
+Une frame peut ne border qu'un côté : `WFTx`, `WFRx`, `WFBx`, `WFLx` (With → Frame → Top, Right, Bottom, Left, avec `x` = `L`, `M` ou `S`) tracent une ligne sur ce côté, chacun avec sa force ; ils se combinent entre eux et avec une frame complète. `WFL` reste la frame Light ; `WFLL`, `WFLM` et `WFLS` sont la ligne de gauche. Comme la frame, une ligne de côté ne prend aucune place. Elle est tracée par un `::after` posé sur la boîte (`position: absolute; inset: 0`, avec le rayon de la boîte), peint par-dessus le contenu : un enfant qui a un fond ne la cache pas. La boîte devient le bloc contenant de ce `::after` par un `position: relative` sans spécificité, si bien qu'une boîte positionnée autrement garde sa position. Une boîte qui défile elle-même (`Scrollable`) emporterait ce `::after` avec son contenu : elle trace ses lignes de côté en couches de fond, qui restent en place, sous le contenu.
+
+`WFD` (With → Frame → Dot) met en pointillés la frame et les lignes de côté. Il n'agit que sur une boîte qui a une frame ou une ligne : seul, un style pointillé ferait apparaître l'outline par défaut du navigateur.
+
+`WRR` (With → Radius → Round) met le rayon à 50 % : un cercle sur une boîte carrée, une ellipse sinon. Écrit après lui, un rayon de l'échelle (`WRS`…`WRX`, `WRN`) le remplace, et inversement.
+
 Les composants dérivés de `FbLayoutSurfaceComponentBase` exposent le drapeau `EO` (Enable → Outline) pour ajouter un anneau autour de la boîte, à l'extérieur de sa frame, dans la couleur calculée de la frame courante. C'est une ombre, puisque la frame est un outline : un champ qui a le focus garde ses deux traits, et l'anneau ne prend pas de place non plus.
 
 ```css

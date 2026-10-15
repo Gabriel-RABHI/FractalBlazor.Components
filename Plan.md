@@ -233,7 +233,7 @@ Chaque variante n'a plus qu'un dégradé : trois ancres, à 0 %, 50 % et 100 %. 
 ## Phase 26 — Frames d'un côté, en pointillés, coins ronds
 
 - [x] **26.1 Les flags.** Dans `FbLayoutSurfaceComponentBase` : `WFTx`, `WFRx`, `WFBx`, `WFLx` (With → Frame → Top, Right, Bottom, Left, x = `L`, `M`, `S`) tracent une ligne sur un côté, chacun avec sa force ; `WFD` (With → Frame → Dot) met en pointillés la frame et les lignes de côté ; `WRR` (With → Radius → Round) met le rayon à 50 %. Comme la frame, une ligne de côté ne prend aucune place. Elle est tracée par un `::after` posé sur la boîte, par-dessus le contenu ; sur une boîte qui défile elle-même (`Scrollable`), par des couches de fond, qui restent en place pendant le défilement. L'assistant des flags les explique.
-- [ ] **26.2 Documentation.**
+- [x] **26.2 Documentation.** `Theming.md` décrit les lignes de côté, leur tracé et le cas des boîtes qui défilent, `WFD` et `WRR` ; le README les cite parmi les drapeaux.
 
 ## Critères de fin
 
