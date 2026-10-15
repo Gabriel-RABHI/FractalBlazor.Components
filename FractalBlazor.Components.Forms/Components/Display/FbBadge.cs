@@ -8,7 +8,7 @@ namespace FractalBlazor.Components.Forms.Components.Display
     /// <summary>
     /// A small rounded label: a status, a count, a tag. It is a row, inline and round, padded
     /// <c>PHM PVS</c> and filled with the full color of its variant (<c>WBH</c>); it shows
-    /// <see cref="Label"/>, or <see cref="ChildContent"/> in its place (an icon and a text…).
+    /// <see cref="Label"/>, or <c>ChildContent</c> in its place (an icon and a text…).
     /// With <see cref="Dot"/>, it is only a small dot of that color.
     /// </summary>
     /// <remarks>
@@ -38,7 +38,7 @@ namespace FractalBlazor.Components.Forms.Components.Display
         }
 
         /// <summary>
-        /// The text of the badge. <see cref="ChildContent"/>, when given, takes its place.
+        /// The text of the badge. <c>ChildContent</c>, when given, takes its place.
         /// </summary>
         [Parameter]
         public string? Label { get; set; }
