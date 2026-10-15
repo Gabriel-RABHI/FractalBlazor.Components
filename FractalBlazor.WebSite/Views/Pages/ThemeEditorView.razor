@@ -26,12 +26,12 @@
         @if (_confirmReset)
         {
             <FbText S>Effacer tous les réglages et repartir du thème par défaut ?</FbText>
-            <FbButton Variant="@FbThemeVariants.Error" Icon="@FbMaterialIcons.DeleteForever" OnClick="ResetAll"><FbText S>Effacer</FbText></FbButton>
+            <FbButton Variant="@FbThemeVariants.Error" OnClick="ResetAll"><FbIcon Icon="@FbMaterialIcons.DeleteForever" /><FbText S>Effacer</FbText></FbButton>
             <FbButton WBN OnClick="() => _confirmReset = false"><FbText S>Annuler</FbText></FbButton>
         }
         else
         {
-            <FbButton WBN Icon="@FbMaterialIcons.RestartAlt" OnClick="() => _confirmReset = true"><FbText S>Repartir du thème par défaut</FbText></FbButton>
+            <FbButton WBN OnClick="() => _confirmReset = true"><FbIcon Icon="@FbMaterialIcons.RestartAlt" /><FbText S>Repartir du thème par défaut</FbText></FbButton>
         }
     </FbRow>
 
@@ -61,7 +61,7 @@
                 </FbGridItem>
             </FbGridContainer>
             <FbRow JHE>
-                <FbButton WBN Icon="@FbMaterialIcons.RestartAlt" OnClick="Model.ResetShape"><FbText S>Réinitialiser les espacements et les rayons</FbText></FbButton>
+                <FbButton WBN OnClick="Model.ResetShape"><FbIcon Icon="@FbMaterialIcons.RestartAlt" /><FbText S>Réinitialiser les espacements et les rayons</FbText></FbButton>
             </FbRow>
             break;
 
@@ -102,7 +102,7 @@
                 </FbGridItem>
             </FbGridContainer>
             <FbRow JHE>
-                <FbButton WBN Icon="@FbMaterialIcons.RestartAlt" OnClick="Model.ResetTypography"><FbText S>Réinitialiser la typographie</FbText></FbButton>
+                <FbButton WBN OnClick="Model.ResetTypography"><FbIcon Icon="@FbMaterialIcons.RestartAlt" /><FbText S>Réinitialiser la typographie</FbText></FbButton>
             </FbRow>
             break;
 
@@ -177,7 +177,7 @@
                 </FbGridItem>
             </FbGridContainer>
             <FbRow JHE>
-                <FbButton WBN Icon="@FbMaterialIcons.RestartAlt" OnClick="Model.ResetBranch"><FbText S>Réinitialiser la branche @Model.Branch</FbText></FbButton>
+                <FbButton WBN OnClick="Model.ResetBranch"><FbIcon Icon="@FbMaterialIcons.RestartAlt" /><FbText S>Réinitialiser la branche @Model.Branch</FbText></FbButton>
             </FbRow>
             break;
     }

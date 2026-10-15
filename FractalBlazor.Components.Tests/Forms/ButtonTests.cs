@@ -1,5 +1,5 @@
+using System.Linq.Expressions;
 using FractalBlazor.Components.Forms.Components.Actions;
-using FractalBlazor.Components.Forms.Components.Icons;
 using FractalBlazor.Components.Forms.Theming.Constants;
 using FractalBlazor.Components.Layout.Utilities;
 
@@ -8,13 +8,15 @@ namespace FractalBlazor.Components.Tests.Forms;
 public sealed class ButtonTests : BunitContext
 {
     [Fact]
-    public void Default_button_uses_the_layout_grammar()
+    public void Default_button_is_a_medium_wireframe()
     {
         var cut = Render<FbButton>(p => p.AddChildContent("Save"));
 
         var button = cut.Find("button");
         Assert.Equal("button", button.GetAttribute("type"));
-        Assert.Contains("fb-wba", button.ClassList);
+        Assert.DoesNotContain(button.ClassList, name => name.StartsWith("fb-wb", StringComparison.Ordinal));
+        Assert.Equal(ClassesOf(p => p.Add(x => x.WBN, true).Add(x => x.WFM, true).Add(x => x.PHL, true).Add(x => x.PVM, true)),
+            button.GetAttribute("class"));
         Assert.Contains("fb-wfm", button.ClassList);
         Assert.Contains("fb-hover", button.ClassList);
         Assert.Contains(FbAtoms.NameOf("border-radius:var(--fb-radius-m)"), button.ClassList);
@@ -84,13 +86,51 @@ public sealed class ButtonTests : BunitContext
         Assert.Empty(cut.FindAll(".fb-theme-scope"));
     }
 
-    [Fact]
-    public void Icon_comes_before_the_content()
-    {
-        var cut = Render<FbButton>(p => p.Add(x => x.Icon, FbMaterialIcons.Search).AddChildContent("<span>Find</span>"));
+    private string? ClassesOf(Action<ComponentParameterCollectionBuilder<FbButton>> parameters)
+        => Render(parameters).Find("button").GetAttribute("class");
 
-        var children = cut.Find("button").Children;
-        Assert.Equal("svg", children[0].LocalName);
-        Assert.Equal("span", children[1].LocalName);
+    public static TheoryData<string, string, string> Shortcuts => new()
+    {
+        { nameof(FbButton.S), nameof(FbButton.PHM), nameof(FbButton.PVS) },
+        { nameof(FbButton.M), nameof(FbButton.PHL), nameof(FbButton.PVM) },
+        { nameof(FbButton.L), nameof(FbButton.PHX), nameof(FbButton.PVL) },
+        { nameof(FbButton.KW), nameof(FbButton.WBN), nameof(FbButton.WFM) },
+        { nameof(FbButton.KS), nameof(FbButton.WBS), nameof(FbButton.WFM) },
+        { nameof(FbButton.KP), nameof(FbButton.WBH), nameof(FbButton.WFM) },
+        { nameof(FbButton.KT), nameof(FbButton.WBS), nameof(FbButton.WFN) }
+    };
+
+    /// <summary>
+    /// A size sets the padding, a kind the fill and the frame: each one gives exactly the
+    /// classes of the two Layout flags it stands for.
+    /// </summary>
+    [Theory]
+    [MemberData(nameof(Shortcuts))]
+    public void A_size_or_a_kind_stands_for_two_layout_flags(string shortcut, string first, string second)
+        => Assert.Equal(
+            ClassesOf(p => p.Add(Flag(shortcut), true)),
+            ClassesOf(p => p.Add(Flag(first), true).Add(Flag(second), true)));
+
+    private static Expression<Func<FbButton, bool>> Flag(string name)
+    {
+        var button = Expression.Parameter(typeof(FbButton));
+        return Expression.Lambda<Func<FbButton, bool>>(Expression.Property(button, name), button);
+    }
+
+    [Fact]
+    public void A_layout_flag_written_after_a_kind_corrects_it()
+    {
+        var button = Render<FbButton>(p => p.Add(x => x.KP, true).Add(x => x.WFN, true)).Find("button");
+
+        Assert.Contains("fb-wbh", button.ClassList);
+        Assert.DoesNotContain("fb-wfm", button.ClassList);
+    }
+
+    [Fact]
+    public void The_content_is_the_child_content_alone()
+    {
+        var cut = Render<FbButton>(p => p.AddChildContent("<span>Find</span>"));
+
+        Assert.Equal("<span>Find</span>", cut.Find("button").InnerHtml);
     }
 }

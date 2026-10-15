@@ -1,5 +1,4 @@
 using FractalBlazor.Components.Common.Contracts;
-using FractalBlazor.Components.Forms.Components.Icons;
 using FractalBlazor.Components.Forms.Core;
 using FractalBlazor.Components.Forms.Theming.Helpers;
 using FractalBlazor.Components.Layout.Abstracts;
@@ -10,9 +9,12 @@ using Microsoft.AspNetCore.Components.Web;
 namespace FractalBlazor.Components.Forms.Components.Actions
 {
     /// <summary>
-    /// A native <c>button</c> that speaks the Layout grammar: fill, frame, radius, padding and
-    /// hover come from the same flags as <c>FbRow</c>. Its defaults (<c>WBA WFM WRM PVS PHM
-    /// Hover</c>) can be replaced flag by flag, or removed with <c>WBN</c>, <c>WFN</c>, <c>WRN</c>.
+    /// The base button: it carries the function and does not deal with its content, which is
+    /// whatever <see cref="ChildContent"/> holds. Its look comes from a size, <see cref="S"/>,
+    /// <see cref="M"/> (default) or <see cref="L"/>, a kind, <see cref="KW"/> (default),
+    /// <see cref="KS"/>, <see cref="KP"/> or <see cref="KT"/>, and a <see cref="Variant"/>. The
+    /// Layout flags (fill, frame, radius, padding, gaps…) remain to adjust it: a flag written
+    /// after a size or a kind corrects it.
     /// </summary>
     /// <remarks>
     /// A click first sends <see cref="Action"/> to <see cref="Handler"/> (state-first), then
@@ -21,35 +23,63 @@ namespace FractalBlazor.Components.Forms.Components.Actions
     /// </remarks>
     public class FbButton : FbLayoutSurfaceComponentBase
     {
-        private readonly RenderFragment _content;
-
         public FbButton()
         {
             IsInlineFlex = true;
-            WBA = true;
-            WFM = true;
+            KW = true;
+            M = true;
             WRM = true;
-            PVM = true;
-            PHL = true;
             Hover = true;
-            _content = BuildContent;
         }
 
         [Parameter]
         public RenderFragment? ChildContent { get; set; }
 
+        // -------- Size: the padding
         /// <summary>
-        /// Icon shown before the content, usually a <see cref="FbMaterialIcons"/> constant.
+        /// Small: <c>PHM PVS</c>.
         /// </summary>
         [Parameter]
-        public string? Icon { get; set; }
+        public bool S { get => PHM && PVS; set { if (value) { PHM = true; PVS = true; } } }
 
         /// <summary>
-        /// Icon shown after the content.
+        /// Medium, the default: <c>PHL PVM</c>.
         /// </summary>
         [Parameter]
-        public string? EndIcon { get; set; }
+        public bool M { get => PHL && PVM; set { if (value) { PHL = true; PVM = true; } } }
 
+        /// <summary>
+        /// Large: <c>PHX PVL</c>.
+        /// </summary>
+        [Parameter]
+        public bool L { get => PHX && PVL; set { if (value) { PHX = true; PVL = true; } } }
+
+        // -------- Kind: the fill and the frame
+        /// <summary>
+        /// Kind -> Wireframe, the default: a frame without a fill, <c>WBN WFM</c>.
+        /// </summary>
+        [Parameter]
+        public bool KW { get => WBN && WFM; set { if (value) { WBN = true; WFM = true; } } }
+
+        /// <summary>
+        /// Kind -> Surface: <c>WBS WFM</c>.
+        /// </summary>
+        [Parameter]
+        public bool KS { get => WBS && WFM; set { if (value) { WBS = true; WFM = true; } } }
+
+        /// <summary>
+        /// Kind -> Plain: the full color of the variant, <c>WBH WFM</c>.
+        /// </summary>
+        [Parameter]
+        public bool KP { get => WBH && WFM; set { if (value) { WBH = true; WFM = true; } } }
+
+        /// <summary>
+        /// Kind -> Text: a fill without a frame, <c>WBS WFN</c>.
+        /// </summary>
+        [Parameter]
+        public bool KT { get => WBS && WFN; set { if (value) { WBS = true; WFN = true; } } }
+
+        // -------- Function
         /// <summary>
         /// State object that receives <see cref="Action"/>.
         /// </summary>
@@ -129,27 +159,8 @@ namespace FractalBlazor.Components.Forms.Components.Actions
             builder.AddAttribute(6, "aria-label", Title);
             if (!IsDisabled && (OnClick.HasDelegate || (Handler is not null && Action is not null)))
                 builder.AddAttribute(7, "onclick", EventCallback.Factory.Create<MouseEventArgs>(this, HandleClickAsync));
-            builder.AddContent(8, _content);
+            builder.AddContent(8, ChildContent);
             builder.CloseElement();
-        }
-
-        private void BuildContent(RenderTreeBuilder builder)
-        {
-            if (!string.IsNullOrEmpty(Icon))
-            {
-                builder.OpenComponent<FbIcon>(0);
-                builder.AddAttribute(1, nameof(FbIcon.Icon), Icon);
-                builder.CloseComponent();
-            }
-
-            builder.AddContent(2, ChildContent);
-
-            if (!string.IsNullOrEmpty(EndIcon))
-            {
-                builder.OpenComponent<FbIcon>(3);
-                builder.AddAttribute(4, nameof(FbIcon.Icon), EndIcon);
-                builder.CloseComponent();
-            }
         }
 
         private Task HandleClickAsync(MouseEventArgs args)

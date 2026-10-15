@@ -39,10 +39,12 @@
     </FbSwitch>
 
     <FbRow GS JHE>
-        <FbButton Handler="Item" Action="@(new ContactState.Reset())" Icon="@FbMaterialIcons.RestartAlt" WBN>
+        <FbButton Handler="Item" Action="@(new ContactState.Reset())" WBN>
+            <FbIcon Icon="@FbMaterialIcons.RestartAlt" />
             <FbText S>Réinitialiser</FbText>
         </FbButton>
-        <FbButton Variant="@FbThemeVariants.Selected" Icon="@FbMaterialIcons.Save" D="@(!Item.IsComplete)">
+        <FbButton Variant="@FbThemeVariants.Selected" D="@(!Item.IsComplete)">
+            <FbIcon Icon="@FbMaterialIcons.Save" />
             <FbText S>Enregistrer</FbText>
         </FbButton>
     </FbRow>

@@ -14,7 +14,7 @@
             <FbText L B>Assistant des flags</FbText>
             <FbRowSpacer />
             <FbText S Muted NW>@Count</FbText>
-            <FbButton Handler="Item" Action="@Toggle" Icon="@FbMaterialIcons.Close" Title="Fermer" WBN WFN PVS PHS />
+            <FbButton Handler="Item" Action="@Toggle" Title="Fermer" WBN WFN PVS PHS><FbIcon Icon="@FbMaterialIcons.Close" /></FbButton>
         </FbRow>
 
         @* The first flags that start with the field, one per cell. The grid always has the
@@ -47,8 +47,8 @@
                                  Placeholder="PVS">
                         <EndContent>
                             @* Always there, hidden while empty: the field keeps its height. *@
-                            <FbButton Handler="Item" Action="@ClearQuery" Icon="@FbMaterialIcons.Close" Title="Effacer"
-                                      WBN WFN PVS PHS Style="@HiddenWhenEmpty(Item.Query)" />
+                            <FbButton Handler="Item" Action="@ClearQuery" Title="Effacer"
+                                      WBN WFN PVS PHS Style="@HiddenWhenEmpty(Item.Query)"><FbIcon Icon="@FbMaterialIcons.Close" /></FbButton>
                         </EndContent>
                     </FbInputText>
                     @if (Item.Columns.Count > 0)
@@ -72,8 +72,8 @@
                         <FbIcon Icon="@FbMaterialIcons.Search" Subtle />
                     </StartContent>
                     <EndContent>
-                        <FbButton Handler="Item" Action="@ClearComponentQuery" Icon="@FbMaterialIcons.Close" Title="Effacer"
-                                  WBN WFN PVS PHS Style="@HiddenWhenEmpty(Item.ComponentQuery)" />
+                        <FbButton Handler="Item" Action="@ClearComponentQuery" Title="Effacer"
+                                  WBN WFN PVS PHS Style="@HiddenWhenEmpty(Item.ComponentQuery)"><FbIcon Icon="@FbMaterialIcons.Close" /></FbButton>
                     </EndContent>
                 </FbInputText>
                 <FbRow NoFlex MultiLine GS>

@@ -8,9 +8,9 @@
     </StartContent>
     <EndContent>
         <FbRowItem Style="min-width:4.5rem;justify-content:flex-end"><code>@Value</code></FbRowItem>
-        <FbButton WBN WFN PVS PHS Title="Copier la couleur" Icon="@FbMaterialIcons.ContentCopy" OnClick="CopyAsync" />
+        <FbButton WBN WFN PVS PHS Title="Copier la couleur" OnClick="CopyAsync"><FbIcon Icon="@FbMaterialIcons.ContentCopy" /></FbButton>
         <FbButton WBN WFN PVS PHS Title="@(Clipboard is null ? "Aucune couleur copiée" : $"Coller {Clipboard}")"
-                  Icon="@FbMaterialIcons.ContentPaste" D="@(Clipboard is null || Clipboard == Value)" OnClick="PasteAsync" />
+                  D="@(Clipboard is null || Clipboard == Value)" OnClick="PasteAsync"><FbIcon Icon="@FbMaterialIcons.ContentPaste" /></FbButton>
     </EndContent>
 </FbInputColor>
 

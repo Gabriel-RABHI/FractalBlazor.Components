@@ -17,7 +17,8 @@
                 <StartContent><FbText Subtle>Côté</FbText></StartContent>
             </FbSelect>
         </FbRowItem>
-        <FbButton Handler="Item" Action="@Toggle" Icon="@(Item.IsOpen ? FbMaterialIcons.MenuOpen : FbMaterialIcons.Menu)" PVS PHM>
+        <FbButton Handler="Item" Action="@Toggle" PVS PHM>
+            <FbIcon Icon="@(Item.IsOpen ? FbMaterialIcons.MenuOpen : FbMaterialIcons.Menu)" />
             <FbText>@(Item.IsOpen ? "Fermer" : "Ouvrir")</FbText>
         </FbButton>
     </FbRow>
@@ -73,7 +74,7 @@
             <FbRow NoFlex GS JVC>
                 <FbText M B>Tiroir</FbText>
                 <FbRowSpacer />
-                <FbButton Handler="Item" Action="@Toggle" Icon="@FbMaterialIcons.Close" Title="Fermer" WBN WFN PVS PHS />
+                <FbButton Handler="Item" Action="@Toggle" Title="Fermer" WBN WFN PVS PHS><FbIcon Icon="@FbMaterialIcons.Close" /></FbButton>
             </FbRow>
             <FbText S Muted>@ModeText</FbText>
         </FbStack>

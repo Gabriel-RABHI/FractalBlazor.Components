@@ -52,8 +52,8 @@
     private const string ViewCode = """
         @attribute [ViewFor<ViewSelector>(typeof(PageLinkState), ViewSelector.Viewer)]
 
-        <FbButton Handler="Item" Action="@(new SelectableEntryState.Select())"
-                  Icon="@MenuIntents.Icon(Item.Intent)" WBH="@Item.IsSelected">
+        <FbButton Handler="Item" Action="@(new SelectableEntryState.Select())" WBH="@Item.IsSelected">
+            <FbIcon Icon="@MenuIntents.Icon(Item.Intent)" />
             <FbText S>@MenuIntents.Label(Item.Intent)</FbText>
         </FbButton>
         """;

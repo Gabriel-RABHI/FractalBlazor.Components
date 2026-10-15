@@ -6,8 +6,8 @@
 
 @if (Item.HasMenu)
 {
-    <FbButton Handler="Item" Action="@Toggle" Icon="@FbMaterialIcons.Menu" Title="Menu"
-              WBH="@Item.IsOpen" WBN="@(!Item.IsOpen)" WFN PVS PHS />
+    <FbButton Handler="Item" Action="@Toggle" Title="Menu"
+              WBH="@Item.IsOpen" WBN="@(!Item.IsOpen)" WFN PVS PHS><FbIcon Icon="@FbMaterialIcons.Menu" /></FbButton>
 }
 <FbDrawer Modal Left IsOpen="@Item.IsOpen" IsOpenChanged="@SetOpen" Title="Menu" Size="16rem" WFL>
     <FbDynamicView TSelector="ViewSelector" Item="Item.Menu" Selector="ViewSelector.Summary" />

@@ -4,8 +4,8 @@
 
 <FbDropDown IsOpen="@Item.IsOpen" IsOpenChanged="@SetOpen" AutoToggle="false">
     <ChildContent>
-        <FbButton Handler="Item" Action="@Toggle" Icon="@FbMaterialIcons.MoreVert" Title="Sections"
-                  WBH="@Item.IsOpen" WBN="@(!Item.IsOpen)" WFN PVS PHS />
+        <FbButton Handler="Item" Action="@Toggle" Title="Sections"
+                  WBH="@Item.IsOpen" WBN="@(!Item.IsOpen)" WFN PVS PHS><FbIcon Icon="@FbMaterialIcons.MoreVert" /></FbButton>
     </ChildContent>
     <DropDownContent>
         <FbStack NoFlex GS PL JVS WBS WFL WRM>

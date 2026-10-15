@@ -91,6 +91,16 @@ internal sealed class FlagGrammar
         grammar.Add([Word("Invert", "Reverses the gradient of the variant", "Theme")], "FbVariant", "FbLayoutVariant");
         grammar.Add(
             [
+                Word("S", "Small", "Size"),
+                Word("M", "Medium", "Size"),
+                Word("L", "Large", "Size"),
+                Prefix("K", "Kind", "Kind",
+                [
+                    Word("W", "Wireframe: a frame without a fill", "Kind"),
+                    Word("S", "Surface", "Kind"),
+                    Word("P", "Plain: the full color of the variant", "Kind"),
+                    Word("T", "Text: a fill without a frame", "Kind")
+                ]),
                 Word("D", "Disabled", "Behavior"),
                 Word("Submit", "Submits the enclosing form", "Behavior")
             ],

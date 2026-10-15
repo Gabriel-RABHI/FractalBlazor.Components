@@ -30,11 +30,12 @@
                 @foreach (var background in PreviewOptions.ButtonBackgrounds)
                 {
                     <FbRowItem Style="flex:1">
-                        <FbButton Variant="@variant" Icon="@FbMaterialIcons.Bolt"
+                        <FbButton Variant="@variant"
                                   WBS="@(background == PreviewBackground.Surface)" WBA="@(background == PreviewBackground.Accent)"
                                   WBH="@(background == PreviewBackground.Highlight)" WBN="@(background == PreviewBackground.None)"
                                   WFN="@(Model.ButtonFrame == PreviewFrame.None)" WFL="@(Model.ButtonFrame == PreviewFrame.Light)"
                                   WFM="@(Model.ButtonFrame == PreviewFrame.Medium)" WFS="@(Model.ButtonFrame == PreviewFrame.Strong)">
+                            <FbIcon Icon="@FbMaterialIcons.Bolt" />
                             <PreviewLabel Text="Model.ButtonText" S>@variant</PreviewLabel>
                         </FbButton>
                     </FbRowItem>
@@ -45,9 +46,9 @@
 
     <FbText M B>Autres boutons</FbText>
     <FbRow GS MultiLine JHS JVC>
-        <FbButton WBN Icon="@FbMaterialIcons.Refresh"><FbText S>Discret</FbText></FbButton>
+        <FbButton WBN><FbIcon Icon="@FbMaterialIcons.Refresh" /><FbText S>Discret</FbText></FbButton>
         <FbButton D><FbText S>Désactivé</FbText></FbButton>
-        <FbButton Title="Rechercher" Icon="@FbMaterialIcons.Search" PHS />
+        <FbButton Title="Rechercher" PHS><FbIcon Icon="@FbMaterialIcons.Search" /></FbButton>
         <FbCircularProgress />
     </FbRow>
 </FbStack>
