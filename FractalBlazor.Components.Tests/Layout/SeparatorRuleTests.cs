@@ -1,3 +1,5 @@
+using FractalBlazor.Components.Layout;
+
 namespace FractalBlazor.Components.Tests.Layout;
 
 /// <summary>
@@ -16,12 +18,21 @@ public sealed class SeparatorRuleTests
     }
 
     [Theory]
-    [InlineData(":is(.fb-row, .fb-grid-container):is(.fb-wsl, .fb-wsm, .fb-wss) > *:nth-last-child(n+2)")]
-    [InlineData(".fb-stack:is(.fb-wsl, .fb-wsm, .fb-wss) > *:nth-last-child(n+2)")]
-    public void Separators_reach_every_child_but_the_last(string selector)
+    [InlineData(":is(.fb-row, .fb-grid-container):is(.fb-wsl, .fb-wsm, .fb-wss) > :not(.fb-spacer):nth-last-child(n+2)")]
+    [InlineData(".fb-stack:is(.fb-wsl, .fb-wsm, .fb-wss) > :not(.fb-spacer):nth-last-child(n+2)")]
+    public void Separators_reach_every_child_but_the_last_and_the_spacers(string selector)
         => Assert.Contains(selector + " {", LayoutStylesheet());
 
     [Fact]
     public void No_separator_is_limited_to_div_children()
         => Assert.DoesNotContain("> div:nth-last-child(n+2)", LayoutStylesheet());
+
+    [Fact]
+    public void Spacers_say_what_they_are()
+    {
+        using var context = new BunitContext();
+
+        Assert.Equal("fb-spacer", context.Render<FbRowSpacer>().Find("span").GetAttribute("class"));
+        Assert.Equal("fb-spacer", context.Render<FbStackSpacer>().Find("span").GetAttribute("class"));
+    }
 }
