@@ -52,7 +52,11 @@ namespace FractalBlazor.WebSite.StateModel
                             new PageLinkState(group, MenuItemIntent.DragDropSamples, new DragDropSamplesPage(new ReorderListState(), new KanbanBoardState()))
                         ]),
                         new MenuGroupState(section, MenuItemIntent.Panels),
-                        new MenuGroupState(section, MenuItemIntent.View),
+                        new MenuGroupState(section, MenuItemIntent.View, group =>
+                        [
+                            new PageLinkState(group, MenuItemIntent.Progress,
+                                new ProgressPage(new LinearProgressDemoState(), new CircularProgressDemoState(), new IndeterminateProgressDemoState()))
+                        ]),
                         new MenuGroupState(section, MenuItemIntent.Inputs, group =>
                         [
                             new PageLinkState(group, MenuItemIntent.Slider,
@@ -155,6 +159,9 @@ namespace FractalBlazor.WebSite.StateModel
 
         [Display(Name = "View")]
         View,
+
+        [Display(Name = "Progress")]
+        Progress,
 
         [Display(Name = "Inputs")]
         Inputs,

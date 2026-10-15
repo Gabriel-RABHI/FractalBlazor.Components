@@ -1,0 +1,116 @@
+@* The progress page: what FbProgress shows, three demos, and the reference of its flags and
+   parameters. Each demo is the view of its own state. *@
+@attribute [ViewFor<ViewSelector>(typeof(ProgressPage), ViewSelector.Viewer)]
+
+<FbStack NoFlex GX JVS>
+    <FbText L Muted>
+        <FbText Code>FbProgress</FbText> montre où en est une tâche : une barre, horizontale ou
+        verticale, ou un anneau. La piste prend la couleur de cadre de son fond, la partie faite
+        l’accent de sa variante. Sans valeur, la progression est indéterminée et bouge jusqu’à ce
+        qu’une valeur arrive.
+    </FbText>
+
+    <DocSection Title="Barres">
+        <FbText M Muted>
+            <FbText Code>Value</FbText> remplit la barre jusqu’à sa part de
+            <FbText Code>Max</FbText> (100 par défaut) ; <FbText Code>VL</FbText> l’écrit au bout.
+            <FbText Code>Thickness</FbText> règle l’épaisseur, arrondie au pixel,
+            <FbText Code>Variant</FbText> la couleur. <FbText Code>Vertical</FbText> remplit de bas
+            en haut : la barre prend la hauteur de son parent, 8rem au moins, et son libellé va en
+            haut. Le slider, lui-même un état, fait bouger toutes les barres.
+        </FbText>
+        <DocExample Code="@LinearCode">
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Linear" Selector="ViewSelector.Viewer" />
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Anneaux">
+        <FbText M Muted>
+            <FbText Code>Circular</FbText> dessine un anneau rempli depuis le haut, dans le sens des
+            aiguilles d’une montre ; l’arc est plus épais que la piste. <FbText Code>Size</FbText>
+            donne le diamètre (3rem par défaut) ; le libellé, au centre, suit sa taille. Un contenu
+            passé entre les balises remplace le libellé.
+        </FbText>
+        <DocExample Code="@CircularCode">
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Circular" Selector="ViewSelector.Viewer" />
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Indéterminée">
+        <FbText M Muted>
+            Tant que <FbText Code>Value</FbText> est <FbText Code>null</FbText>, un segment court le
+            long de la barre et l’anneau tourne ; les lecteurs d’écran n’annoncent pas de valeur.
+            Avec la réduction des animations demandée par le système, le mouvement ralentit.
+        </FbText>
+        <DocExample Code="@IndeterminateCode">
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Indeterminate" Selector="ViewSelector.Viewer" />
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Référence">
+        <FbStack NoFlex Joined WGL WRL JVS>
+            <FbRow NoFlex GM PHM PVS WBA JVC>
+                <FbRow Flex="1"><FbText S B>Paramètre</FbText></FbRow>
+                <FbRow Flex="3"><FbText S B>Rôle</FbText></FbRow>
+            </FbRow>
+            @foreach (var (name, role) in Reference)
+            {
+                <FbRow NoFlex GM PHM PVS JVC>
+                    <FbRow Flex="1"><FbText S Code>@name</FbText></FbRow>
+                    <FbRow Flex="3"><FbText S>@role</FbText></FbRow>
+                </FbRow>
+            }
+        </FbStack>
+    </DocSection>
+</FbStack>
+
+@code {
+    [Parameter]
+    public ProgressPage Item { get; set; } = default!;
+
+    private static readonly (string Name, string Role)[] Reference =
+    [
+        ("Value", "La part faite, de 0 à Max ; null rend la progression indéterminée."),
+        ("Max", "La valeur d’une tâche finie (100 par défaut)."),
+        ("Circular", "Un anneau plutôt qu’une barre."),
+        ("Vertical", "Une barre remplie de bas en haut, qui prend la hauteur de son parent."),
+        ("VL", "Value → Label : la part faite, au bout de la barre ou au centre de l’anneau."),
+        ("Format", "Le format .NET de la part, entre 0 et 1 : P0 par défaut, P1…"),
+        ("ChildContent", "Un contenu à la place du libellé."),
+        ("Size", "Le diamètre d’un anneau, la longueur d’une barre."),
+        ("Thickness", "L’épaisseur d’une barre (0.5rem par défaut), arrondie au pixel."),
+        ("Variant", "La variante qui colore la partie faite : Success, Error…"),
+        ("Title", "Le nom accessible de la progression (rôle ARIA progressbar).")
+    ];
+
+    private const string LinearCode = """
+        <FbProgress Value="@Item.Done" VL />
+        <FbProgress Value="@Item.Done" Variant="@FbThemeVariants.Success" VL />
+        <FbProgress Value="@Item.Done" Thickness="2px" />
+        <FbProgress Value="@Item.Done" Thickness="1rem" Variant="@FbThemeVariants.Info" VL />
+        <FbRow GX JHC JVSt MinHeight="10rem">
+            <FbProgress Value="@Item.Done" Vertical VL Variant="@variant" />
+            …
+        </FbRow>
+        """;
+
+    private const string CircularCode = """
+        <FbProgress Value="@Item.Done" Circular />
+        <FbProgress Value="@Item.Done" Circular VL Size="4.5rem" />
+        <FbProgress Value="@Item.Done" Circular VL Size="6rem" Variant="@FbThemeVariants.Success" />
+        <FbProgress Value="@Item.Done" Circular Size="10rem" Variant="@FbThemeVariants.Info">
+            <FbStack NoFlex JHC>
+                <FbText B>@Item.Done %</FbText>
+                <FbText XS Muted>terminé</FbText>
+            </FbStack>
+        </FbProgress>
+        """;
+
+    private const string IndeterminateCode = """
+        <FbProgress Value="@Done" VL />
+        <FbProgress Value="@Done" Circular VL Size="4.5rem" />
+        <FbProgress Value="@Done" Vertical VL />
+
+        private double? Done => Item.Loading ? null : 100;
+        """;
+}

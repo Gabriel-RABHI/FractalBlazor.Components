@@ -82,8 +82,9 @@ public sealed class NavigationTests
         Assert.Equal(
             [MenuItemIntent.DragDropBasics, MenuItemIntent.DragDropRules, MenuItemIntent.DragDropSamples],
             groups[1].Pages.Select(p => p.Intent));
+        Assert.Equal([MenuItemIntent.Progress], groups[3].Pages.Select(p => p.Intent));
         Assert.Equal([MenuItemIntent.Slider], groups[4].Pages.Select(p => p.Intent));
-        Assert.All([groups[2], groups[3], groups[5]], group => Assert.Empty(group.Pages));
+        Assert.All([groups[2], groups[5]], group => Assert.Empty(group.Pages));
 
         var drawer = Link(MenuItemIntent.Drawer);
         Assert.Same(groups[0], drawer.Group);

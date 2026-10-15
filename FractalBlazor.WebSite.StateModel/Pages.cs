@@ -52,6 +52,8 @@ namespace FractalBlazor.WebSite.StateModel
     /// <summary>
     /// The slider: a labeled scale, verticals, dots and values.
     /// </summary>
+    public sealed record ProgressPage(LinearProgressDemoState Linear, CircularProgressDemoState Circular, IndeterminateProgressDemoState Indeterminate);
+
     public sealed record SliderPage(ScaleSliderDemoState Scales, VerticalSliderDemoState Verticals, DotsSliderDemoState Dots, TickMarkSliderDemoState Marks);
 
     /// <summary>

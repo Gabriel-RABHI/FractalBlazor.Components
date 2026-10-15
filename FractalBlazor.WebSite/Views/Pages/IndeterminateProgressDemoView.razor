@@ -1,0 +1,27 @@
+@* A loading whose progress cannot be told: without a value, the bars and the ring move;
+   once it is done, they show it full. The button stops and starts it again. *@
+@attribute [ViewFor<ViewSelector>(typeof(IndeterminateProgressDemoState), ViewSelector.Viewer)]
+
+<FbStack NoFlex GX JVS>
+    <FbRow NoFlex GM JVC>
+        <FbButton Handler="Item" Action="@Toggle" PVS PHM>
+            <FbIcon Icon="@(Item.Loading ? FbMaterialIcons.Stop : FbMaterialIcons.Replay)" />
+            <FbText S>@(Item.Loading ? "Terminer" : "Relancer")</FbText>
+        </FbButton>
+        <FbText S Muted>@(Item.Loading ? "Chargement en cours…" : "Chargement terminé.")</FbText>
+    </FbRow>
+    <FbProgress Value="@Done" VL Title="Chargement" />
+    <FbRow NoFlex GX JVC MinHeight="8rem">
+        <FbProgress Value="@Done" Circular VL Size="4.5rem" Title="Chargement" />
+        <FbProgress Value="@Done" Vertical VL Title="Chargement" />
+    </FbRow>
+</FbStack>
+
+@code {
+    private static readonly IndeterminateProgressDemoState.ToggleLoading Toggle = new();
+
+    [Parameter]
+    public IndeterminateProgressDemoState Item { get; set; } = default!;
+
+    private double? Done => Item.Loading ? null : 100;
+}

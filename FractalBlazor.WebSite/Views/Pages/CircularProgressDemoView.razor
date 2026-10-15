@@ -1,0 +1,29 @@
+@* Rings filled up to the share the slider sets: a bare one, two with their label, and a
+   large one whose middle shows a content of its own. *@
+@attribute [ViewFor<ViewSelector>(typeof(CircularProgressDemoState), ViewSelector.Viewer)]
+
+<FbStack NoFlex GX JVS>
+    <FbRow NoFlex GM JVC>
+        <FbRowItem Style="min-width:7rem"><FbText S Muted>Avancement</FbText></FbRowItem>
+        <FbRow MinWidth="0">
+            <FbSlider TValue="int" TAction="CircularProgressDemoState.SetDone" Handler="Item" Value="@Item.Done"
+                      Immediate Title="Avancement" />
+        </FbRow>
+    </FbRow>
+    <FbRow NoFlex MultiLine GX JHC JVC>
+        <FbProgress Value="@Item.Done" Circular Title="Petit" />
+        <FbProgress Value="@Item.Done" Circular VL Size="4.5rem" Title="Moyen" />
+        <FbProgress Value="@Item.Done" Circular VL Size="6rem" Variant="@FbThemeVariants.Success" Title="Success" />
+        <FbProgress Value="@Item.Done" Circular Size="10rem" Variant="@FbThemeVariants.Info" Title="Grand">
+            <FbStack NoFlex JHC>
+                <FbText B>@Item.Done %</FbText>
+                <FbText XS Muted>terminé</FbText>
+            </FbStack>
+        </FbProgress>
+    </FbRow>
+</FbStack>
+
+@code {
+    [Parameter]
+    public CircularProgressDemoState Item { get; set; } = default!;
+}

@@ -1,0 +1,34 @@
+@* Bars filled up to the share the slider sets: the default one with its label, a Success
+   one, a thin one and a thick one; then a vertical bar in each functional variant. *@
+@attribute [ViewFor<ViewSelector>(typeof(LinearProgressDemoState), ViewSelector.Viewer)]
+
+<FbStack NoFlex GX JVS>
+    <FbRow NoFlex GM JVC>
+        <FbRowItem Style="min-width:7rem"><FbText S Muted>Avancement</FbText></FbRowItem>
+        <FbRow MinWidth="0">
+            <FbSlider TValue="int" TAction="LinearProgressDemoState.SetDone" Handler="Item" Value="@Item.Done"
+                      Immediate Title="Avancement" />
+        </FbRow>
+    </FbRow>
+    <FbProgress Value="@Item.Done" VL Title="Par défaut" />
+    <FbProgress Value="@Item.Done" Variant="@FbThemeVariants.Success" VL Title="Success" />
+    <FbProgress Value="@Item.Done" Thickness="2px" Title="Fine" />
+    <FbProgress Value="@Item.Done" Thickness="1rem" Variant="@FbThemeVariants.Info" VL Title="Épaisse" />
+    <FbRow NoFlex MultiLine GX JHC JVSt MinHeight="10rem">
+        @foreach (var variant in Variants)
+        {
+            <FbProgress Value="@Item.Done" Vertical VL Variant="@variant" Title="@variant" />
+        }
+    </FbRow>
+</FbStack>
+
+@code {
+    private static readonly string[] Variants =
+    [
+        FbThemeVariants.Default, FbThemeVariants.Selected, FbThemeVariants.Info,
+        FbThemeVariants.Success, FbThemeVariants.Warning, FbThemeVariants.Error
+    ];
+
+    [Parameter]
+    public LinearProgressDemoState Item { get; set; } = default!;
+}
