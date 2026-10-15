@@ -88,4 +88,16 @@ public sealed class FlagCatalogTests
     {
         Assert.DoesNotContain(Catalog.Flags, flag => flag.Name == "IsOpen");
     }
+
+    [Theory]
+    [InlineData("FbGridContainer", "JHCC", "Justify → Horizontal → Content → Center")]
+    [InlineData("FbSlider", "VT", "Value → Tooltip while it moves")]
+    [InlineData("FbText", "M", "Medium")]
+    [InlineData("FbRow", "M", null)]
+    [InlineData("FbGridContainer", "Columns", null)]
+    [InlineData("DocBox", "JHC", null)]
+    public void The_code_bubbles_say_what_a_flag_means_on_its_component(string component, string attribute, string? meaning)
+    {
+        Assert.Equal(meaning, new FlagCodeGlossary(Catalog).Explain(component, attribute));
+    }
 }

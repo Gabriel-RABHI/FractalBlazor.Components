@@ -1,4 +1,5 @@
 using FractalBlazor.Components.Forms;
+using FractalBlazor.Components.Forms.Components.Display;
 using FractalBlazor.WebSite.Flags;
 using FractalBlazor.WebSite.StateModel;
 using FractalBlazor.WebSite.ThemeEditor;
@@ -18,6 +19,7 @@ public static class WebSiteServiceCollectionExtensions
         services.AddFractalBlazor();
         services.AddScoped<IThemeModeStore, CookieThemeModeStore>();
         services.AddSingleton<IFlagCatalog, ComponentFlagCatalog>();
+        services.AddSingleton<IFbCodeGlossary, FlagCodeGlossary>();
         services.AddScoped<RootState>();
         services.AddScoped<ThemeEditorModel>();
         services.AddScoped<ThemeEditorAutoSave>();
