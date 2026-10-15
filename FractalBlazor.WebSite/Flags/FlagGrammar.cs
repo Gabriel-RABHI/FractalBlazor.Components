@@ -154,6 +154,7 @@ internal sealed class FlagGrammar
                 Prefix("V", "Value", "Value", [Word("L", "Label: the share done", "Value")])
             ],
             "FbProgress");
+        grammar.Add([Word("Dot", "A small dot without content", "Shape")], "FbBadge");
         grammar.Add([Word("Immediate", "Sends each keystroke", "Behavior")], "FbFieldBase");
         return grammar;
     }

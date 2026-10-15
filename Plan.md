@@ -288,6 +288,11 @@ Portage des fonctions de `TinyBlazor.DragAndDrop` (TinyBlazorComponents), adapt�
 - [x] **34.1 FbProgress.** Dans `Forms/Components/Display` : une barre, horizontale ou `Vertical` (remplie de bas en haut, à la hauteur de son parent, 8rem au moins), ou un anneau `Circular` (SVG dont les cercles comptent 100 sur leur longueur, rempli depuis le haut dans le sens horaire, arc plus épais que la piste comme le spinner de Layout). `Value` et `Max` (100) ; sans valeur, la progression est indéterminée (un segment court le long de la barre, l'anneau tourne ; ralenti avec `prefers-reduced-motion`). `VL` écrit la part au bout de la barre ou au centre de l'anneau, dans le `Format` donné (`P0`) ; un `ChildContent` le remplace. `Size` (diamètre, ou longueur), `Thickness` (0.5rem, arrondie au pixel), `Variant`, `Title` ; rôle ARIA `progressbar`. La piste prend `--fb-frame-medium`, la partie faite `--fb-control-accent`.
 - [x] **34.2 Page Progress.** Sous Components > View : barres et verticales pilotées par un slider, anneaux de plusieurs tailles avec un contenu au centre, progression indéterminée qu'un bouton arrête et relance.
 
+## Phase 35 — FbBadge
+
+- [x] **35.1 FbBadge.** Dans `Forms/Components/Display`, un `FbRow` en ligne (`<span>`, inline-flex) et rond, avec pour défauts `NoFlex JVC GS PHM PVS WRR WBH WNTW` : il montre un `Label` (texte S gras) ou, à sa place, un `ChildContent`. `Dot` le réduit à un petit point de sa couleur, sans contenu, nommé par `Title` (rôle `img`). `Variant` le colore ; tous les flags de la rangée restent valables (`WBA`, `WBN WFM`…). Sur un badge, `WRR` est une pilule (9999px) plutôt que l'ellipse que donne 50 % sur un rectangle. `FbRow.RowClasses` devient `protected internal` pour qu'un composant bâti sur une rangée y ajoute ses classes.
+- [ ] **35.2 Page Badge.** Sous Components > View : les allures de l'image de référence, les variantes et les couleurs, un contenu libre et un badge dans une phrase, les points de présence, une démo sur un état (messages non lus, présence).
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :

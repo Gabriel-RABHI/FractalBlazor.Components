@@ -967,6 +967,36 @@
 }
 
 /**********************************************************************************/
+/* BADGE */
+/* A row, inline and round (FbBadge): its flags give its padding, fill and frame. It sits on
+   the middle of the surrounding text, on one line. */
+.fb-badge {
+    vertical-align: middle;
+    line-height: 1.2;
+}
+
+/* Its texts keep its tight line, so that a badge fits in a line of text. */
+.fb-badge > .fb-txt {
+    line-height: inherit;
+}
+
+/* Round, on a badge, is a pill: half its height at both ends, where 50 % (WRR on a square)
+   would round it into an ellipse. */
+.fb-badge.fb-wrr {
+    border-radius: 9999px;
+}
+
+/* A dot: a small disk of the fill, whatever the padding of the row. */
+.fb-badge.fb-badge-dot {
+    --fb-badge-dot: round(0.5rem, 1px);
+    flex: none;
+    box-sizing: border-box;
+    width: var(--fb-badge-dot);
+    height: var(--fb-badge-dot);
+    padding: 0;
+}
+
+/**********************************************************************************/
 /* ICON IMAGES */
 /* Sized like the icons, by their height: the width follows the ratio of the image. */
 .fb-icon-image {

@@ -55,7 +55,11 @@ namespace FractalBlazor.Components.Layout
             public FbFrame Separator;
         }
 
-        internal string RowClasses
+        /// <summary>
+        /// Classes of the row: <c>fb-row</c>, its surface, its separators and its atoms. A
+        /// component built on a row (a badge…) adds its own classes to them.
+        /// </summary>
+        protected internal string RowClasses
             => ResolveClasses(new RowKey { Flex = FlexKeyValue, Separator = _separator },
                 static component => ((FbRow)component).BuildRowClasses());
 
