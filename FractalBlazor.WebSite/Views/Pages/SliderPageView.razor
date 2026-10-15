@@ -1,0 +1,125 @@
+@* The slider page: what FbSlider and FbRangeSlider do, three demos, and the reference of
+   their flags and parameters. Each demo is the view of its own state. *@
+@attribute [ViewFor<ViewSelector>(typeof(SliderPage), ViewSelector.Viewer)]
+
+<FbStack NoFlex GX JVS>
+    <FbText L Muted>
+        <FbText Code>FbSlider</FbText> prend une valeur, <FbText Code>FbRangeSlider</FbText> deux,
+        les bornes d’une <FbText Code>FbRange&lt;T&gt;</FbText>. Horizontaux ou verticaux, pour
+        tout type numérique, ils sont dessinés par la bibliothèque : graduations, libellés,
+        valeurs et bulle viennent du thème et de sa variante : ici Selected, puis Info.
+    </FbText>
+
+    <DocSection Title="Graduations et libellés">
+        <FbText M Muted>
+            <FbText Code>Ticks</FbText> place une graduation à chaque intervalle, depuis
+            <FbText Code>Min</FbText> ; <FbText Code>TL</FbText> les libelle, un sur deux ou sur trois
+            quand la place manque. Un libellé montre la
+            valeur, dans le <FbText Code>Format</FbText> donné, ou l’élément que
+            <FbText Code>LabelOf</FbText> en tire, rendu par FbDynamicView : ici une date pour un
+            numéro de jour, une heure pour une plage horaire. <FbText Code>VT</FbText> montre la
+            valeur dans une bulle pendant le glissement, au survol et au focus.
+        </FbText>
+        <DocExample Code="@ScaleCode">
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Scales" Selector="ViewSelector.Viewer" />
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Verticaux">
+        <FbText M Muted>
+            <FbText Code>Vertical</FbText> fait monter la piste du bas vers le haut ; le slider
+            prend la hauteur de son parent, 12rem au moins. Les libellés vont à droite,
+            <FbText Code>Mirror</FbText> les passe à gauche.
+        </FbText>
+        <DocExample Code="@VerticalCode">
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Verticals" Selector="ViewSelector.Viewer" />
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Points et valeurs">
+        <FbText M Muted>
+            <FbText Code>TD</FbText> marque chaque graduation d’un point, coloré dans la partie
+            remplie ; <FbText Code>EL</FbText> libelle les deux bornes ; <FbText Code>VL</FbText>
+            montre en permanence la valeur de chaque curseur. Les deux rangées partagent leurs
+            états : un curseur déplacé à l’horizontale bouge aussi à la verticale.
+        </FbText>
+        <DocExample Code="@DotsCode">
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Dots" Selector="ViewSelector.Viewer" />
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Clavier et glissement">
+        <FbText M Muted>
+            Chaque curseur est un <FbText Code>slider</FbText> ARIA. Les flèches le déplacent d’un
+            pas, Page précédente et Page suivante d’un dixième de la piste, Début et Fin jusqu’aux
+            bornes ; un curseur ne dépasse jamais l’autre. Le glissement est suivi par le
+            navigateur, qui déplace le curseur sans attendre .NET ; la valeur, arrondie au pas,
+            part vers l’état au relâchement, ou pendant le glissement avec
+            <FbText Code>Immediate</FbText>. Un clic sur la piste y amène le curseur le plus proche.
+        </FbText>
+    </DocSection>
+
+    <DocSection Title="Référence">
+        <FbStack NoFlex Joined WGL WRL JVS>
+            <FbRow NoFlex GM PHM PVS WBA JVC>
+                <FbRow Flex="1"><FbText S B>Paramètre</FbText></FbRow>
+                <FbRow Flex="3"><FbText S B>Rôle</FbText></FbRow>
+            </FbRow>
+            @foreach (var (name, role) in Reference)
+            {
+                <FbRow NoFlex GM PHM PVS JVC>
+                    <FbRow Flex="1"><FbText S Code>@name</FbText></FbRow>
+                    <FbRow Flex="3"><FbText S>@role</FbText></FbRow>
+                </FbRow>
+            }
+        </FbStack>
+    </DocSection>
+</FbStack>
+
+@code {
+    [Parameter]
+    public SliderPage Item { get; set; } = default!;
+
+    private static readonly (string Name, string Role)[] Reference =
+    [
+        ("Value", "La valeur : un nombre, ou une FbRange<T> pour FbRangeSlider."),
+        ("Handler, TAction", "L’état qui reçoit la valeur, par son Handle(TAction) ; @bind-Value marche aussi."),
+        ("Min, Max, Step", "Les bornes (0 et 100 par défaut) et le pas (1) ; un pas nul laisse la piste continue."),
+        ("Ticks", "L’intervalle des graduations, depuis Min."),
+        ("Format, LabelOf", "Le format .NET des libellés, ou l’élément qu’un libellé montre pour une valeur."),
+        ("Title", "Le nom accessible des curseurs."),
+        ("Vertical", "La piste monte du bas vers le haut."),
+        ("Mirror", "Les libellés passent de l’autre côté de la piste, les valeurs aussi."),
+        ("TD, TL", "Ticks → Dots : un point par graduation. Ticks → Labels : leur libellé."),
+        ("EL", "Ends → Labels : le libellé des deux bornes."),
+        ("VL, VT", "Value → Label : la valeur près du curseur. Value → Tooltip : en bulle, pendant le glissement."),
+        ("Immediate", "Envoie la valeur pendant le glissement, plutôt qu’au relâchement."),
+        ("D, Variant", "Désactivé (variante Disabled) ; la variante colore piste, remplissage et curseurs.")
+    ];
+
+    private const string ScaleCode = """
+        <FbSlider TValue="int" TAction="ScaleSliderDemoState.SetPrice" Handler="Item" Value="@Item.Price"
+                  Max="100" Ticks="25" TL Format="0 €" Title="Prix" />
+        <FbSlider TValue="int" TAction="ScaleSliderDemoState.SetDay" Handler="Item" Value="@Item.Day"
+                  Max="8" Ticks="2" TL LabelOf="DayLabel" Title="Jour" />
+        <FbRangeSlider TValue="int" TAction="ScaleSliderDemoState.SetHours" Handler="Item" Value="@Item.Hours"
+                       Min="11" Max="23" Ticks="3" TL VT LabelOf="HourLabel" Title="Horaires" />
+
+        private static readonly Func<int, object> DayLabel = day => ScaleSliderDemoState.FirstDay.AddDays(day);
+        private static readonly Func<int, object> HourLabel = hour => new TimeOnly(hour, 0);
+        """;
+
+    private const string VerticalCode = """
+        <FbRow GX JHC JVSt MinHeight="16rem">
+            <FbSlider TValue="int" … Vertical Mirror Ticks="25" TL VT Format="0 €" />
+            <FbRangeSlider TValue="int" … Vertical Ticks="25" TL VT Format="0 €" />
+        </FbRow>
+        """;
+
+    private const string DotsCode = """
+        <FbSlider TValue="int" … Max="10" EL VL />
+        <FbRangeSlider TValue="int" … EL VL />
+        <FbSlider TValue="int" … Max="10" Ticks="1" TD EL VL />
+        <FbRangeSlider TValue="int" … Max="10" Ticks="1" TD TL Mirror VL />
+        """;
+}

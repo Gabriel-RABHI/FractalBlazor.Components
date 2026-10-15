@@ -53,7 +53,11 @@ namespace FractalBlazor.WebSite.StateModel
                         ]),
                         new MenuGroupState(section, MenuItemIntent.Panels),
                         new MenuGroupState(section, MenuItemIntent.View),
-                        new MenuGroupState(section, MenuItemIntent.Inputs),
+                        new MenuGroupState(section, MenuItemIntent.Inputs, group =>
+                        [
+                            new PageLinkState(group, MenuItemIntent.Slider,
+                                new SliderPage(new ScaleSliderDemoState(), new VerticalSliderDemoState(), new DotsSliderDemoState()))
+                        ]),
                         new MenuGroupState(section, MenuItemIntent.Selectors)
                     ]),
                     new SectionState(Navigation, MenuItemIntent.Compositions, new FormsPage(new ContactState())),
@@ -154,6 +158,9 @@ namespace FractalBlazor.WebSite.StateModel
 
         [Display(Name = "Inputs")]
         Inputs,
+
+        [Display(Name = "Slider")]
+        Slider,
 
         [Display(Name = "Selectors")]
         Selectors,

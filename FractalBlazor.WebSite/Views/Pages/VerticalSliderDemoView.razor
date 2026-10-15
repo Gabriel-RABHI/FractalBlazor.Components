@@ -1,0 +1,17 @@
+@* Vertical sliders: a level with its scale on the left (Mirror), and a band with its scale
+   on the right. Both take the height of the row. *@
+@attribute [ViewFor<ViewSelector>(typeof(VerticalSliderDemoState), ViewSelector.Viewer)]
+
+<FbVariant Variant="@FbThemeVariants.Selected">
+<FbRow NoFlex GX JHC JVSt MinHeight="16rem">
+    <FbSlider TValue="int" TAction="VerticalSliderDemoState.SetLevel" Handler="Item" Value="@Item.Level"
+              Vertical Mirror Ticks="25" TL VT Format="0 €" Title="Niveau" />
+    <FbRangeSlider TValue="int" TAction="VerticalSliderDemoState.SetBand" Handler="Item" Value="@Item.Band"
+                   Vertical Ticks="25" TL VT Format="0 €" Title="Fourchette" />
+</FbRow>
+</FbVariant>
+
+@code {
+    [Parameter]
+    public VerticalSliderDemoState Item { get; set; } = default!;
+}

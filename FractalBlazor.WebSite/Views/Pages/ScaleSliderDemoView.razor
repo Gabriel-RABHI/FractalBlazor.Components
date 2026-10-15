@@ -1,0 +1,29 @@
+@* Sliders with a labeled scale: a price in euros, a day number shown
+   as a date, and a range of hours shown as times, with a bubble while a thumb moves. *@
+@attribute [ViewFor<ViewSelector>(typeof(ScaleSliderDemoState), ViewSelector.Viewer)]
+
+<FbVariant Variant="@FbThemeVariants.Selected">
+<FbStack NoFlex GX JVS>
+    <FbSlider TValue="int" TAction="ScaleSliderDemoState.SetPrice" Handler="Item" Value="@Item.Price"
+              Max="100" Ticks="25" TL Format="0 €" Title="Prix" />
+    <FbSlider TValue="int" TAction="ScaleSliderDemoState.SetDay" Handler="Item" Value="@Item.Day"
+              Max="8" Ticks="2" TL LabelOf="DayLabel" Title="Jour" />
+    <FbRangeSlider TValue="int" TAction="ScaleSliderDemoState.SetHours" Handler="Item" Value="@Item.Hours"
+                   Min="11" Max="23" Ticks="3" TL VT LabelOf="HourLabel" Title="Horaires" />
+    <FbRow NoFlex MultiLine GM JVC>
+        <FbText S Muted>État :</FbText>
+        <FbText S Code>@Item.Price.ToString("0 €")</FbText>
+        <FbText S Code>@Item.Date.ToString("d")</FbText>
+        <FbText S Code>@($"{HourLabel(Item.Hours.Start)} – {HourLabel(Item.Hours.End)}")</FbText>
+    </FbRow>
+</FbStack>
+</FbVariant>
+
+@code {
+    private static readonly Func<int, object> DayLabel = day => ScaleSliderDemoState.FirstDay.AddDays(day);
+
+    private static readonly Func<int, object> HourLabel = hour => new TimeOnly(hour, 0);
+
+    [Parameter]
+    public ScaleSliderDemoState Item { get; set; } = default!;
+}

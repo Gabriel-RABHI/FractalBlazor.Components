@@ -50,6 +50,11 @@ namespace FractalBlazor.WebSite.StateModel
     public sealed record DragDropSamplesPage(ReorderListState List, KanbanBoardState Board);
 
     /// <summary>
+    /// The slider: a labeled scale, verticals, dots and values.
+    /// </summary>
+    public sealed record SliderPage(ScaleSliderDemoState Scales, VerticalSliderDemoState Verticals, DotsSliderDemoState Dots);
+
+    /// <summary>
     /// The contact form, under Compositions. The page owns its state, which survives
     /// navigation.
     /// </summary>
