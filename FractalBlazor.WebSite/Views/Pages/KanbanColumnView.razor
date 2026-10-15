@@ -23,7 +23,7 @@
                     <ChildContent>
                         <FbStack NoFlex GS PTL JVS>
                             <FbInputText TAction="KanbanNode.SetTitle" Handler="Item" Value="@Item.Title" Immediate Placeholder="Titre" />
-                            <KanbanProgress Done="@Item.DoneCount" Total="@Item.LeafCount" />
+                            <FbProgress Value="@Item.DoneCount" Max="@Item.LeafCount" Thickness="4px" Variant="@FbThemeVariants.Success" Title="Tâches faites" />
                         </FbStack>
                     </ChildContent>
                 </FbShowWhenOver>
@@ -48,7 +48,7 @@
                                     <FbText M B>@Item.Title</FbText>
                                     <FbText S Muted>@Item.DoneCount / @Item.LeafCount</FbText>
                                 </FbRow>
-                                <KanbanProgress Done="@Item.DoneCount" Total="@Item.LeafCount" />
+                                <FbProgress Value="@Item.DoneCount" Max="@Item.LeafCount" Thickness="4px" Variant="@FbThemeVariants.Success" Title="Tâches faites" />
                             </FbStack>
                         </FbDraggableHandle>
                     </ChildContent>

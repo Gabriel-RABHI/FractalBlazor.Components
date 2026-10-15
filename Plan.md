@@ -287,6 +287,7 @@ Portage des fonctions de `TinyBlazor.DragAndDrop` (TinyBlazorComponents), adapt�
 
 - [x] **34.1 FbProgress.** Dans `Forms/Components/Display` : une barre, horizontale ou `Vertical` (remplie de bas en haut, à la hauteur de son parent, 8rem au moins), ou un anneau `Circular` (SVG dont les cercles comptent 100 sur leur longueur, rempli depuis le haut dans le sens horaire, arc plus épais que la piste comme le spinner de Layout). `Value` et `Max` (100) ; sans valeur, la progression est indéterminée (un segment court le long de la barre, l'anneau tourne ; ralenti avec `prefers-reduced-motion`). `VL` écrit la part au bout de la barre ou au centre de l'anneau, dans le `Format` donné (`P0`) ; un `ChildContent` le remplace. `Size` (diamètre, ou longueur), `Thickness` (0.5rem, arrondie au pixel), `Variant`, `Title` ; rôle ARIA `progressbar`. La piste prend `--fb-frame-medium`, la partie faite `--fb-control-accent`.
 - [x] **34.2 Page Progress.** Sous Components > View : barres et verticales pilotées par un slider, anneaux de plusieurs tailles avec un contenu au centre, progression indéterminée qu'un bouton arrête et relance.
+- [x] **34.3 Kanban.** Les barres d'avancement du kanban (colonnes et tâches à sous-tâches) sont des `FbProgress` de 4px en variante Success ; la vue `KanbanProgress`, une barre faite de deux rangées, disparaît.
 
 ## Phase 35 — FbBadge
 

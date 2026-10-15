@@ -55,7 +55,7 @@
                             <FbStack NoFlex GS PM PTL JVS>
                                 @if (Item.HasSubTasks)
                                 {
-                                    <KanbanProgress Done="@Item.DoneCount" Total="@Item.LeafCount" />
+                                    <FbProgress Value="@Item.DoneCount" Max="@Item.LeafCount" Thickness="4px" Variant="@FbThemeVariants.Success" Title="Sous-tâches faites" />
                                 }
                                 <FbRow NoFlex GS JVS>
                                     @if (Item.Done)
