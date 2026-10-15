@@ -1,0 +1,210 @@
+{
+  "main": {
+    "id": "0e794b1ff421b0ea",
+    "type": "split",
+    "children": [
+      {
+        "id": "1c32fee4d02e2bda",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9cab1e1f4e8a2586",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "FractalBlazor.Components.Forms/Components/Inputs/SPECS-Inputs-FR.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "SPECS-Inputs-FR"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "5dc4472f787a243b",
+    "type": "split",
+    "children": [
+      {
+        "id": "4c45faff16cd61e5",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "72b9ab65ef52c0f3",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorateur de fichiers"
+            }
+          },
+          {
+            "id": "c80a996d6cb16ed8",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Rechercher"
+            }
+          },
+          {
+            "id": "5db6f2a475c70c13",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "Signets"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "97d1f74b68be4d67",
+    "type": "split",
+    "children": [
+      {
+        "id": "6e26fd0cd1257bb9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "dd37218fb5696210",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "FractalBlazor.Components.Forms/Components/Inputs/SPECS-Inputs-FR.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Rétroliens"
+            }
+          },
+          {
+            "id": "214bbd6f3864c6df",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "FractalBlazor.Components.Forms/Components/Inputs/SPECS-Inputs-FR.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Liens sortants"
+            }
+          },
+          {
+            "id": "ab8b7acf0e2ccf42",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Mots-clés"
+            }
+          },
+          {
+            "id": "0c304fc168b97f83",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Toutes les propriétés"
+            }
+          },
+          {
+            "id": "a82ab38b6da70939",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "FractalBlazor.Components.Forms/Components/Inputs/SPECS-Inputs-FR.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Plan"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Ouvrir le sélecteur rapide": false,
+      "graph:Ouvrir la vue graphique": false,
+      "canvas:Créer un nouveau canvas": false,
+      "daily-notes:Ouvrir la note quotidienne": false,
+      "templates:Insérer le modèle": false,
+      "command-palette:Ouvrir la palette de commandes": false,
+      "bases:Créer une nouvelle base": false
+    }
+  },
+  "active": "9cab1e1f4e8a2586",
+  "lastOpenFiles": [
+    "AGENT.md",
+    "FractalBlazor.WebSite.ClientSide/obj/Debug/net10.0/staticwebassets.upToDateCheck.txt",
+    "FractalBlazor.WebSite.ClientSide/bin/Debug/net10.0/wwwroot/_framework/FractalBlazor.WebSite.m47kdeo07y.pdb",
+    "FractalBlazor.WebSite.ClientSide/bin/Debug/net10.0/wwwroot/_framework/FractalBlazor.Components.Layout.fzahwb8kze.wasm",
+    "FractalBlazor.WebSite.ClientSide/bin/Debug/net10.0/wwwroot/_framework/FractalBlazor.Components.Forms.ih5ofa2t3l.pdb",
+    "FractalBlazor.WebSite.ClientSide/bin/Debug/net10.0/wwwroot/_framework/FractalBlazor.Components.Forms.vep8g45i3p.wasm",
+    "FractalBlazor.WebSite.ClientSide/bin/Debug/net10.0/wwwroot/_framework/FractalBlazor.WebSite.emmd7q7pxj.wasm",
+    "FractalBlazor.WebSite.ClientSide/bin/Debug/net10.0/wwwroot/_framework/FractalBlazor.WebSite.StateModel.l3vhwr2ipv.wasm",
+    "FractalBlazor.WebSite.ClientSide/obj/Debug/net10.0/compressed/ici7i2veod-{0}-cet63skfpm-cet63skfpm.gz",
+    "FractalBlazor.WebSite.ClientSide/obj/Debug/net10.0/compressed/ftsiqso2rg-{0}-b09jalgr8v-b09jalgr8v.gz",
+    "FractalBlazor.WebSite.ClientSide/obj/Debug/net10.0/compressed/6x82230exy-{0}-z8iu3qigma-z8iu3qigma.gz",
+    "FractalBlazor.Components.Forms/README.md",
+    "FractalBlazor.Components.Forms/Compositions/README.md",
+    "FractalBlazor.Components.Forms/Components/README.md",
+    "FractalBlazor.Components.Forms/Components/Sans titre.md",
+    "FractalBlazor.Components.Forms/Components/Inputs/SPECS-Inputs-FR.md"
+  ]
+}

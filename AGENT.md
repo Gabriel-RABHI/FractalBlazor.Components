@@ -2,23 +2,18 @@
 
 Rules for any agent (or person) changing this repository. They come before convenience: a change
 that breaks one of them is wrong, even if it works.
-
 ## Where things live
 
-| Project | Role |
-| --- | --- |
-| `FractalBlazor.Components.Common` | Contracts shared by the library and the states: actions (`IStateAction`), notification (`ObservableState`, `INotifyStateChanged`), view registration (`ViewFor`), and the services the library defines. |
-| `FractalBlazor.Components.Layout` | Layout components: `FbRow`, `FbStack`, items, separators, grid, `FbPageAnchor`, `FbDropDown`… |
-| `FractalBlazor.Components.Forms` | Theming, `FbDynamicView`, and the components under `Components/` (actions, display, icons, inputs, panels, selectors, switchers). |
-| `FractalBlazor.WebSite.StateModel` | The states of the web site. References `Common` only. |
-| `FractalBlazor.WebSite` | The web site: documentation, demos and the theme editor, as views of the states. |
-| `FractalBlazor.WebSite.ServerSide`, `.ClientSide` | Hosts: the HTML shell and the services, nothing else. |
-
-In these rules, **Components** means `FractalBlazor.Components.Forms/Components` and **Layout**
-means `FractalBlazor.Components.Layout`.
-
+| Project                                           | Role                                                                                                                                                                                                                                                     |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `FractalBlazor.Components.Common`                 | Contracts shared by the library and the states: actions (`IStateAction`), notification (`ObservableState`, `INotifyStateChanged`), view registration (`ViewFor`), and the services the library defines.                                                  |
+| `FractalBlazor.Components.Layout`                 | Layout components: `FbRow`, `FbStack`, items, separators, grid, `FbPageAnchor`, `FbDropDown`…                                                                                                                                                            |
+| `FractalBlazor.Components.Forms`                  | Theming, `FbDynamicView`, the basic components under `Components/` (actions, display, icons, inputs, panels, selectors, switchers) and the enriched components and compositions under `Compositions/` (button with icon, state, label, label host, etc). |
+| `FractalBlazor.WebSite.StateModel`                | The states of the web site. References `Common` only.                                                                                                                                                                                                    |
+| `FractalBlazor.WebSite`                           | The web site: documentation, demos and the theme editor, as views of the states.                                                                                                                                                                         |
+| `FractalBlazor.WebSite.ServerSide`, `.ClientSide` | Hosts: the HTML shell and the services, nothing else.                                                                                                                                                                                                    |
+In these rules, **Components** means `FractalBlazor.Components.Forms/Components`, **Compositions** means `FractalBlazor.Components.Forms/Compositions` and **Layout** means `FractalBlazor.Components.Layout`.
 ## Rules
-
 ### 1. No `div` outside Components and Layout
 
 Raw HTML elements (`div`, `span`, `a`, `pre`, `b`…) are written only inside the components of

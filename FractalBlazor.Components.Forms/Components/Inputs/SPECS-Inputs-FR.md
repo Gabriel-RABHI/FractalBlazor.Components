@@ -1,0 +1,1 @@
+Conception générale des composants

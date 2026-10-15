@@ -10,9 +10,7 @@
         @if (Item.Link is { } link)
         {
             <FbText XXL B>@MenuIntents.Label(link.Intent)</FbText>
-            <div>
-                <FbDynamicView TSelector="ViewSelector" Item="link.Page" Selector="ViewSelector.Viewer" />
-            </div>
+            <FbDynamicView TSelector="ViewSelector" Item="link.Page" Selector="ViewSelector.Viewer" />
         }
     </FbStack>
 </FbStack>
@@ -21,7 +19,7 @@
     /// <summary>
     /// The width of the page column: wide enough for the demos, short enough for reading.
     /// </summary>
-    private const string PageWidth = "72rem";
+    private const string PageWidth = "82rem";
 
     [Parameter]
     public ContentState Item { get; set; } = default!;

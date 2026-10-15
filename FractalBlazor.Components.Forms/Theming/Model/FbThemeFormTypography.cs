@@ -13,6 +13,10 @@ public sealed class FbThemeFormTypography
     /// </summary>
     public const string TextFont = "var(--fb-txt-font-family)";
 
+    public const string DefaultSystemFontFamilly = "'text-font',system-ui,-apple-system,sans-serif";
+
+    public const string DefaultCodeFontFamilly = "'code-font',monospace";
+
     // -------- Typo
     public string? TextFontFamily { get; init; }
 
@@ -59,8 +63,8 @@ public sealed class FbThemeFormTypography
 
     public static FbThemeFormTypography Compact => new()
     {
-        TextFontFamily = "'text-font',system-ui,-apple-system,sans-serif",
-        CodeFontFamily = "'code-font',monospace",
+        TextFontFamily = DefaultSystemFontFamilly,
+        CodeFontFamily = DefaultCodeFontFamilly,
         ExtraSmallFontFamily = TextFont,
         SmallFontFamily = TextFont,
         MediumFontFamily = TextFont,
@@ -83,8 +87,8 @@ public sealed class FbThemeFormTypography
 
     public static FbThemeFormTypography Default => new()
     {
-        TextFontFamily = "'text-font',system-ui,-apple-system,sans-serif",
-        CodeFontFamily = "'code-font',monospace",
+        TextFontFamily = DefaultSystemFontFamilly,
+        CodeFontFamily = DefaultCodeFontFamilly,
         ExtraSmallFontFamily = TextFont,
         SmallFontFamily = TextFont,
         MediumFontFamily = TextFont,
@@ -107,8 +111,8 @@ public sealed class FbThemeFormTypography
 
     public static FbThemeFormTypography Large => new()
     {
-        TextFontFamily = "'text-font',system-ui,-apple-system,sans-serif",
-        CodeFontFamily = "'code-font',monospace",
+        TextFontFamily = DefaultSystemFontFamilly,
+        CodeFontFamily = DefaultCodeFontFamilly,
         ExtraSmallFontFamily = TextFont,
         SmallFontFamily = TextFont,
         MediumFontFamily = TextFont,
