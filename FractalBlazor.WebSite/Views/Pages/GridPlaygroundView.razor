@@ -1,0 +1,107 @@
+@* The grid playground: a number of columns, and the item A placed by hand among numbered items
+   that place themselves; a gap and the flow. The sliders and the buttons only send actions;
+   the grid, the code and the CSS are images of the state. *@
+@attribute [ViewFor<ViewSelector>(typeof(GridPlaygroundState), ViewSelector.Viewer)]
+
+<FbStack NoFlex GL JVS>
+    <FbGridContainer Columns="1" ColumnsS="2" ColumnsL="3" GM>
+        <FbGridItem>
+            <FbStack NoFlex GS JVS>
+                @Header("Columns", Item.Columns.ToString(), "grid-template-columns")
+                <FbSlider TValue="int" TAction="GridPlaygroundState.SetColumns" Handler="Item" Value="@Item.Columns"
+                          Min="1" Max="@GridPlaygroundState.MaxColumns" Immediate Title="Columns" />
+            </FbStack>
+        </FbGridItem>
+        <FbGridItem>
+            <FbStack NoFlex GS JVS>
+                @Header("ColumnSpan", Item.Span.ToString(), "A : grid-column")
+                <FbSlider TValue="int" TAction="GridPlaygroundState.SetSpan" Handler="Item" Value="@Item.Span"
+                          Min="1" Max="@Item.Columns" Immediate Title="ColumnSpan" />
+            </FbStack>
+        </FbGridItem>
+        <FbGridItem>
+            <FbStack NoFlex GS JVS>
+                @Header("ColumnStart", Item.Start > 0 ? Item.Start.ToString() : "auto", "A : grid-column")
+                <FbSlider TValue="int" TAction="GridPlaygroundState.SetStart" Handler="Item" Value="@Item.Start"
+                          Min="0" Max="@Item.MaxStart" Immediate Title="ColumnStart" />
+            </FbStack>
+        </FbGridItem>
+        <FbGridItem>
+            <FbStack NoFlex GS JVS>
+                @Header("RowSpan", Item.RowSpan.ToString(), "A : grid-row")
+                <FbSlider TValue="int" TAction="GridPlaygroundState.SetRowSpan" Handler="Item" Value="@Item.RowSpan"
+                          Min="1" Max="@GridPlaygroundState.MaxRowSpan" Immediate Title="RowSpan" />
+            </FbStack>
+        </FbGridItem>
+        <FbGridItem>
+            <FbStack NoFlex GS JHS JVS>
+                @Header("Espacement", null, "gap")
+                <FbRow NoFlex Joined WFM WRM WSM>
+                    @foreach (var gap in GridPlaygroundState.Gaps)
+                    {
+                        <FbButton KP="@(Item.Gap == gap)" S WFN WRN Handler="Item" Action="@(new GridPlaygroundState.SetGap(gap))"
+                                  Title="@(FlexAlignments.GutterDeclaration(gap) ?? FbValueView.TextOf(gap))">
+                            <FbText S>@(FlexAlignments.GutterFlag(gap) ?? FbValueView.TextOf(gap))</FbText>
+                        </FbButton>
+                    }
+                </FbRow>
+            </FbStack>
+        </FbGridItem>
+        <FbGridItem>
+            <FbStack NoFlex GS JHS JVS>
+                @Header("Flux", null, "grid-auto-flow")
+                <FbRow NoFlex Joined WFM WRM WSM>
+                    <FbButton KP="@(!Item.Dense)" S WFN WRN Handler="Item" Action="@Sparse" Title="grid-auto-flow: row">
+                        <FbText S>FR</FbText>
+                    </FbButton>
+                    <FbButton KP="@Item.Dense" S WFN WRN Handler="Item" Action="@DenseFlow" Title="grid-auto-flow: row dense">
+                        <FbText S>FRD</FbText>
+                    </FbButton>
+                </FbRow>
+            </FbStack>
+        </FbGridItem>
+    </FbGridContainer>
+
+    <FbVariant Variant="@FbThemeVariants.Selected">
+        <FbGridContainer Columns="@Item.Columns" PM WFM WFD WRM WBS FRD="@Item.Dense"
+                         GS="@(Item.Gap == FlexGutter.S)" GM="@(Item.Gap == FlexGutter.M)"
+                         GL="@(Item.Gap == FlexGutter.L)" GX="@(Item.Gap == FlexGutter.X)">
+            <DocCell Label="1" />
+            <DocCell Label="2" />
+            <DocCell Label="A" Highlight ColumnSpan="@Item.Span" ColumnStart="@(Item.Start > 0 ? Item.Start : null)" RowSpan="@Item.RowSpan" />
+            @for (var number = 3; number <= 10; number++)
+            {
+                <DocCell Label="@number.ToString()" />
+            }
+        </FbGridContainer>
+    </FbVariant>
+
+    <FbRow NoFlex MultiLine GM JVSt>
+        <FbStack MinWidth="16rem" GS JVS>
+            <FbText S B Muted>Razor</FbText>
+            <CodeBlock Code="@Item.Code" />
+        </FbStack>
+        <FbStack MinWidth="16rem" GS JVS>
+            <FbText S B Muted>CSS écrit par les paramètres</FbText>
+            <CodeBlock Code="@Item.Css" />
+        </FbStack>
+    </FbRow>
+</FbStack>
+
+@code {
+    private static readonly GridPlaygroundState.SetDense Sparse = new(false);
+    private static readonly GridPlaygroundState.SetDense DenseFlow = new(true);
+
+    [Parameter]
+    public GridPlaygroundState Item { get; set; } = default!;
+
+    private static RenderFragment Header(string name, string? value, string css) =>
+        @<FbRow NoFlex GS JVBl>
+            <FbText S B>@name</FbText>
+            @if (value is not null)
+            {
+                <FbText S Code>@value</FbText>
+            }
+            <FbText XS Muted NW>@css</FbText>
+        </FbRow>;
+}

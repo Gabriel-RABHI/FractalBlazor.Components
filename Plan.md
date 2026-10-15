@@ -294,6 +294,10 @@ Portage des fonctions de `TinyBlazor.DragAndDrop` (TinyBlazorComponents), adapt�
 - [x] **35.1 FbBadge.** Dans `Forms/Components/Display`, un `FbRow` en ligne (`<span>`, inline-flex) et rond, avec pour défauts `NoFlex JVC GS PHM PVS WRR WBH WNTW` : il montre un `Label` (texte S gras) ou, à sa place, un `ChildContent`. `Dot` le réduit à un petit point de sa couleur, sans contenu, nommé par `Title` (rôle `img`). `Variant` le colore ; tous les flags de la rangée restent valables (`WBA`, `WBN WFM`…). Sur un badge, `WRR` est une pilule (9999px) plutôt que l'ellipse que donne 50 % sur un rectangle. `FbRow.RowClasses` devient `protected internal` pour qu'un composant bâti sur une rangée y ajoute ses classes.
 - [x] **35.2 Page Badge.** Sous Components > View : les allures de l'image de référence, les variantes et les couleurs, un contenu libre et un badge dans une phrase, les points de présence, une démo sur un état (messages non lus, présence).
 
+## Phase 36 — Documentation de la grille
+
+- [x] **36.1 Page Grid.** La page Grid (Components > Layout) documente FbGridContainer et FbGridItem, dans le style de la page Row / Stack, zones de démonstration en variante Selected : un bac à sable (colonnes, étendue, départ et hauteur d'un élément parmi des éléments placés seuls, espacement, flux dense qui comble les trous), une grille dont on règle la largeur pour voir ses paliers de conteneur, l'alignement dans les cellules (`JH*` / `JV*` gardent le sens d'axe d'écran de FbRow et FbStack ; cellules en pointillés sous la grille), l'alignement des pistes (`JHC*`), un seul élément (`SJH*` / `SJV*`), les gabarits CSS (`auto-fill`), l'ordre d'affichage, un tableau de bord et la référence des deux composants.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :

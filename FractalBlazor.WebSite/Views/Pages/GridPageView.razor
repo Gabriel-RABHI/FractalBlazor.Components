@@ -1,24 +1,390 @@
+@* The Grid page. Its messages: a grid reads its own width, not the window's; its alignment flags
+   keep the meaning they have in a row or a stack, one axis of the screen each. The three
+   interactive demos are states of the page, rendered by their own views. *@
 @attribute [ViewFor<ViewSelector>(typeof(GridPage), ViewSelector.Viewer)]
 
-<FbStack GL>
-    <FbText L B>Grille responsive</FbText>
-    <FbGridContainer Columns="4" ColumnsS="6" ColumnsM="8" GM>
-        <FbGridItem ColumnSpan="4" ColumnSpanS="4" ColumnSpanM="4" WBA WFM WRM PM>
-            <FbText S Muted>4 colonnes, puis 4 sur 6, puis 4 sur 8</FbText>
-        </FbGridItem>
-        <FbGridItem ColumnSpan="2" ColumnSpanS="2" ColumnSpanM="2" WBA WFM WRM PM>
-            <FbText M Muted>2 colonnes</FbText>
-        </FbGridItem>
-        <FbGridItem ColumnSpan="2" ColumnSpanS="3" ColumnSpanM="1" WBH WFM WRM PM>
-            <FbText M Muted>Item</FbText>
-        </FbGridItem>
-        <FbGridItem ColumnSpan="2" ColumnSpanS="3" ColumnSpanM="1" WBH WFM WRM PM>
-            <FbText M Muted>Item</FbText>
-        </FbGridItem>
-    </FbGridContainer>
+<FbStack NoFlex GX JVS>
+    <FbText L Muted>
+        FbGridContainer découpe sa largeur en colonnes égales ; chaque FbGridItem y occupe une ou
+        plusieurs colonnes, sur une ou plusieurs lignes. La grille réagit à sa propre largeur, par des
+        requêtes de conteneur : ni JavaScript, ni écouteur de redimensionnement, et une grille posée
+        dans une colonne étroite reste étroite sur un grand écran.
+    </FbText>
+
+    <DocSection Title="Colonnes, étendues, placement">
+        <FbText M Muted>
+            <FbText Code>Columns</FbText> donne le nombre de colonnes, 12 par défaut, de 1 à 64. Un
+            FbGridItem en occupe <FbText Code>ColumnSpan</FbText>, sur <FbText Code>RowSpan</FbText>
+            lignes. <FbText Code>ColumnStart</FbText> et <FbText Code>RowStart</FbText> le posent à la
+            main ; sans eux, la grille le place elle-même, à la suite des précédents.
+        </FbText>
+        <FbText M Muted>
+            Ici, A commence à la colonne 1, que l’élément 1 occupe déjà : A passe à la ligne suivante
+            et laisse un trou après l’élément 2. <FbText Code>FRD</FbText>, le flux dense, fait
+            combler les trous par les éléments suivants.
+        </FbText>
+        <FbStack NoFlex PL WFL WRL JVS>
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Playground" Selector="ViewSelector.Viewer" />
+        </FbStack>
+        <DocNote>
+            <FbText Code>ColumnStart</FbText> compte les lignes de la grille, pas ses colonnes : une
+            grille de 6 colonnes a 7 lignes, de 1 à 7. <FbText Code>ColumnStart="2"</FbText> commence
+            donc à la deuxième colonne. Un élément trop large pour sa ligne de départ crée des colonnes
+            implicites : gardez <FbText Code>ColumnStart + ColumnSpan</FbText> au plus égal à
+            <FbText Code>Columns + 1</FbText>, ce que le bac à sable fait pour vous.
+        </DocNote>
+    </DocSection>
+
+    <DocSection Title="Une grille qui suit sa propre largeur">
+        <FbText M Muted>
+            Chaque nombre prend un suffixe de palier : <FbText Code>ColumnsM</FbText>,
+            <FbText Code>ColumnSpanS</FbText>, <FbText Code>RowStartXL</FbText>,
+            <FbText Code>GapL</FbText>… Un palier s’applique dès que la grille atteint sa largeur, et
+            jusqu’au suivant. Une valeur omise reprend celle du palier plus étroit, puis la valeur sans
+            suffixe : on écrit d’abord la grille étroite, puis ce qui change en s’élargissant.
+        </FbText>
+        <FbText M Muted>
+            Les paliers mesurent la grille, pas la fenêtre. Donnez-lui une largeur : ses colonnes
+            suivent, quelle que soit la taille de l’écran.
+        </FbText>
+        <DocExample Code="@ResponsiveCode">
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Responsive" Selector="ViewSelector.Viewer" />
+        </DocExample>
+        <FbStack NoFlex Joined WGL WRL JVS>
+            <FbRow NoFlex GM PHM PVS WBA JVC>
+                @HeaderCell("Palier")
+                @HeaderCell("Largeur de la grille")
+                @HeaderCell("Exemple", 2)
+            </FbRow>
+            @foreach (var (step, width, example) in Steps)
+            {
+                <FbRow NoFlex GM PHM PVS JVC>
+                    @CodeCell(step)
+                    <FbRow Flex="1"><FbText S>@width</FbText></FbRow>
+                    @CodeCell(example, 2)
+                </FbRow>
+            }
+        </FbStack>
+        <DocNote>
+            Chaque FbGridContainer est son propre conteneur de requêtes, et ses variables ne fuient pas
+            dans les grilles qu’il contient : une grille imbriquée prend ses paliers sur sa propre
+            largeur. Le remplissage (<FbText Code>P*</FbText>) d’un conteneur réduit la largeur que ses
+            paliers mesurent.
+        </DocNote>
+    </DocSection>
+
+    <DocSection Title="Aligner dans les cellules">
+        <FbText M Muted>
+            Une grille n’a pas d’axe de flux : chaque élément a sa cellule. Les flags y gardent le sens
+            qu’ils ont dans FbRow et FbStack : <FbText Code>JH*</FbText> aligne à l’horizontale,
+            <FbText Code>JV*</FbText> à la verticale. Sur le conteneur, ils placent chaque élément dans
+            sa cellule (<FbText Code>justify-items</FbText>, <FbText Code>align-items</FbText>) ; par
+            défaut, ils l’étirent (<FbText Code>JHSt JVSt</FbText>). Les cellules sont dessinées en
+            pointillés sous la grille.
+        </FbText>
+        <FbStack NoFlex PL WFL WRL JVS>
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Alignment" Selector="ViewSelector.Viewer" />
+        </FbStack>
+        <FbText M Muted>
+            Quand les colonnes ont une taille fixe, la grille peut être plus étroite que son conteneur.
+            <FbText Code>JHC*</FbText> et <FbText Code>JVC*</FbText> (C pour Content) placent alors
+            l’ensemble des pistes, comme une FbRow place son groupe : <FbText Code>JHCC</FbText> les
+            centre, <FbText Code>JHCSB</FbText> répartit l’espace entre elles.
+        </FbText>
+        <DocExample Code="@ContentCode">
+            <FbVariant Variant="@FbThemeVariants.Selected">
+                <FbStack NoFlex GS JVS>
+                    <FbGridContainer TemplateColumns="repeat(3, 6rem)" GS JHCC PM WFM WFD WRM WBS>
+                        <DocCell Label="JHCC" /><DocCell Label="2" /><DocCell Label="3" />
+                    </FbGridContainer>
+                    <FbGridContainer TemplateColumns="repeat(3, 6rem)" GS JHCSB PM WFM WFD WRM WBS>
+                        <DocCell Label="JHCSB" /><DocCell Label="2" /><DocCell Label="3" />
+                    </FbGridContainer>
+                </FbStack>
+            </FbVariant>
+        </DocExample>
+        <DocNote>
+            Le C de <FbText Code>JHC</FbText> veut dire Center ; dans <FbText Code>JHCC</FbText>, le
+            premier C veut dire Content. <FbText Code>JHC</FbText> centre chaque élément dans sa
+            cellule, <FbText Code>JHCC</FbText> centre la grille entière.
+        </DocNote>
+    </DocSection>
+
+    <DocSection Title="Aligner un seul élément">
+        <FbText M Muted>
+            Un FbGridItem peut sortir de l’alignement de son conteneur. Contrairement à FbRowItem et
+            FbStackItem, il dispose des deux axes : <FbText Code>SJH*</FbText> le place à l’horizontale
+            (<FbText Code>justify-self</FbText>), <FbText Code>SJV*</FbText> à la verticale
+            (<FbText Code>align-self</FbText>). Ici, les champs s’étirent sur leur colonne et les
+            libellés se rangent à droite de la leur.
+        </FbText>
+        <DocExample Code="@SelfCode">
+            <FbVariant Variant="@FbThemeVariants.Selected">
+                <FbGridContainer TemplateColumns="auto 1fr" GM JVC PM WFM WFD WRM WBS>
+                    <FbGridItem SJHE><FbText S B>Nom</FbText></FbGridItem>
+                    <FbGridItem><FbInputText TAction="FbSetValue<string>" Value="@("Ada Lovelace")" /></FbGridItem>
+                    <FbGridItem SJHE><FbText S B>Adresse électronique</FbText></FbGridItem>
+                    <FbGridItem><FbInputText TAction="FbSetValue<string>" Value="@("ada@example.com")" /></FbGridItem>
+                    <FbGridItem SJHE><FbText S B>Ville</FbText></FbGridItem>
+                    <FbGridItem><FbInputText TAction="FbSetValue<string>" Value="@("Londres")" /></FbGridItem>
+                </FbGridContainer>
+            </FbVariant>
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Gabarits CSS">
+        <FbText M Muted>
+            Pour des colonnes qui ne sont pas égales, <FbText Code>TemplateColumns</FbText>,
+            <FbText Code>TemplateRows</FbText> et <FbText Code>AutoRows</FbText> prennent des valeurs
+            CSS brutes ; <FbText Code>TemplateColumns</FbText> remplace <FbText Code>Columns</FbText> et
+            ses paliers. Avec <FbText Code>repeat(auto-fill, minmax(…))</FbText>, la grille met autant
+            de colonnes que la place en permet, sans aucun palier.
+        </FbText>
+        <DocExample Code="@TemplateCode">
+            <FbVariant Variant="@FbThemeVariants.Selected">
+                <FbStack NoFlex GM JVS>
+                    <FbGridContainer TemplateColumns="repeat(auto-fill, minmax(8rem, 1fr))" GS PM WFM WFD WRM WBS>
+                        @for (var number = 1; number <= 7; number++)
+                        {
+                            <DocCell Label="@($"Photo {number}")" MinHeight="4rem" />
+                        }
+                    </FbGridContainer>
+                    <FbGridContainer TemplateColumns="10rem 1fr" GS PM WFM WFD WRM WBS>
+                        <DocCell Label="En-tête" ColumnSpan="2" />
+                        <DocCell Label="Menu" MinHeight="7rem" />
+                        <DocCell Label="Contenu" Highlight MinHeight="7rem" />
+                        <DocCell Label="Pied de page" ColumnSpan="2" />
+                    </FbGridContainer>
+                </FbStack>
+            </FbVariant>
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Ordre d’affichage">
+        <FbText M Muted>
+            <FbText Code>Order</FbText> déplace un élément sans changer le code : les plus petits passent
+            devant. Avec ses paliers (<FbText Code>OrderM</FbText>…), une barre latérale peut passer
+            sous le contenu sur mobile et à sa gauche sur grand écran.
+        </FbText>
+        <DocExample Code="@OrderCode">
+            <FbVariant Variant="@FbThemeVariants.Selected">
+                <FbGridContainer Columns="3" GS PM WFM WFD WRM WBS>
+                    <DocCell Label="1 · Livraison" />
+                    <DocCell Label="2 · Paiement" />
+                    <DocCell Label="3 · Alerte (Order=-1)" Highlight Order="-1" />
+                </FbGridContainer>
+            </FbVariant>
+        </DocExample>
+        <DocNote>
+            L’ordre change à l’écran seulement : la lecture et la navigation au clavier suivent l’ordre
+            du code. Réservez <FbText Code>Order</FbText> aux cas où l’ordre visuel peut s’écarter de
+            l’ordre de lecture.
+        </DocNote>
+    </DocSection>
+
+    <DocSection Title="Exemple : un tableau de bord">
+        <FbText M Muted>
+            Une colonne sur mobile, deux dès 640 px, quatre dès 768 px ; le panneau des ventes prend
+            trois colonnes sur quatre. La grille mesure la colonne de la page : réduisez la fenêtre pour
+            la voir se réorganiser.
+        </FbText>
+        <DocExample Code="@DashboardCode">
+            <FbVariant Variant="@FbThemeVariants.Selected">
+                <FbGridContainer Columns="1" ColumnsS="2" ColumnsM="4" GM PM WFM WFD WRM WBS>
+                    @foreach (var (label, value, trend, variant) in Figures)
+                    {
+                        <FbGridItem PM WBA WFM WRM>
+                            <FbStack NoFlex GS JVS>
+                                <FbText XS Muted>@label</FbText>
+                                <FbRow NoFlex GS JVBl>
+                                    <FbText XL B>@value</FbText>
+                                    <FbBadge Label="@trend" Variant="@variant" WBA />
+                                </FbRow>
+                            </FbStack>
+                        </FbGridItem>
+                    }
+                    <FbGridItem ColumnSpanS="2" ColumnSpanM="3" PM WBA WFM WRM>
+                        <FbStack NoFlex GM JVS>
+                            <FbText S B>Ventes par région</FbText>
+                            @foreach (var (region, share) in Regions)
+                            {
+                                <FbGridContainer TemplateColumns="6rem 1fr" GS JVC>
+                                    <FbText S>@region</FbText>
+                                    <FbProgress Value="@share" VL Title="@region" />
+                                </FbGridContainer>
+                            }
+                        </FbStack>
+                    </FbGridItem>
+                    <FbGridItem ColumnSpanS="2" ColumnSpanM="1" PM WBA WFM WRM>
+                        <FbStack NoFlex GM JHC JVS>
+                            <FbText S B>Objectif</FbText>
+                            <FbProgress Value="72" Circular VL Size="6rem" Variant="@FbThemeVariants.Success" Title="Objectif" />
+                        </FbStack>
+                    </FbGridItem>
+                </FbGridContainer>
+            </FbVariant>
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Référence">
+        <FbText M Muted>
+            Les paramètres et les flags des deux composants, avec le CSS qu’ils écrivent. Les nombres
+            suivis de * prennent les suffixes de palier XS à XXL. Conteneur et éléments sont des
+            surfaces : ils acceptent aussi le fond, la frame, le rayon et le remplissage
+            (<FbText Code>WBA</FbText>, <FbText Code>WFM</FbText>, <FbText Code>WRM</FbText>,
+            <FbText Code>PM</FbText>…).
+        </FbText>
+        <FbText M B>FbGridContainer</FbText>
+        @Table(ContainerReference)
+        <FbText M B>FbGridItem</FbText>
+        @Table(ItemReference)
+    </DocSection>
 </FbStack>
 
 @code {
     [Parameter]
     public GridPage Item { get; set; } = default!;
+
+    private sealed record Entry(string Flags, string Role, string Css);
+
+    private static readonly (string Step, string Width, string Example)[] Steps =
+    [
+        ("—", "dès 0 px", "Columns=\"1\""),
+        ("XS", "dès 512 px", "ColumnsXS=\"2\""),
+        ("S", "dès 640 px", "ColumnsS=\"3\" ColumnSpanS=\"2\""),
+        ("M", "dès 768 px", "ColumnsM=\"4\""),
+        ("L", "dès 1024 px", "ColumnsL=\"6\""),
+        ("XL", "dès 1280 px", "ColumnsXL=\"…\""),
+        ("XXL", "dès 1536 px", "ColumnsXXL=\"…\"")
+    ];
+
+    private static readonly (string Label, string Value, string Trend, string Variant)[] Figures =
+    [
+        ("Commandes", "1 284", "+12 %", FbThemeVariants.Success),
+        ("Panier moyen", "48 €", "+3 %", FbThemeVariants.Success),
+        ("Retours", "37", "+8 %", FbThemeVariants.Error),
+        ("Clients", "912", "stable", FbThemeVariants.Info)
+    ];
+
+    private static readonly (string Region, double Share)[] Regions =
+    [
+        ("Nord", 82), ("Ouest", 64), ("Est", 47), ("Sud", 29)
+    ];
+
+    private static readonly Entry[] ContainerReference =
+    [
+        new("Columns*", "Nombre de colonnes égales, de 1 à 64 (12 par défaut)", "grid-template-columns: repeat(n, minmax(0, 1fr))"),
+        new("GS GM GL GX", "Espacement entre les lignes et les colonnes", "gap"),
+        new("Gap*", "Espacement d’un palier (FbSpacing)", "gap"),
+        new("GRS GRM GRL GRX", "Espacement entre les lignes seulement", "row-gap"),
+        new("GCS GCM GCL GCX", "Espacement entre les colonnes seulement", "column-gap"),
+        new("FR FC FRD FCD", "Placement automatique : par lignes, par colonnes, dense", "grid-auto-flow"),
+        new("JHS JHC JHE JHSt JHBl", "Chaque élément dans sa cellule, à l’horizontale", "justify-items"),
+        new("JVS JVC JVE JVSt JVBl", "Chaque élément dans sa cellule, à la verticale", "align-items"),
+        new("JHD JVD", "Alignement par défaut du navigateur", "justify-items / align-items: normal"),
+        new("JHCS JHCC JHCE JHCSt JHCSB JHCSA JHCSE", "Les colonnes entières, quand la grille est plus étroite", "justify-content"),
+        new("JVCS JVCC JVCE JVCSt JVCSB JVCSA JVCSE", "Les lignes entières, quand la grille est plus basse", "align-content"),
+        new("TemplateColumns", "Colonnes en CSS brut ; remplace Columns", "grid-template-columns"),
+        new("TemplateRows AutoRows", "Lignes en CSS brut, taille des lignes implicites", "grid-template-rows / grid-auto-rows")
+    ];
+
+    private static readonly Entry[] ItemReference =
+    [
+        new("ColumnSpan*", "Colonnes occupées (1 par défaut)", "grid-column: … / span n"),
+        new("ColumnStart*", "Ligne de départ, depuis 1 ; sans valeur, placement automatique", "grid-column: n / …"),
+        new("RowSpan*", "Lignes occupées (1 par défaut)", "grid-row: … / span n"),
+        new("RowStart*", "Ligne de départ, depuis 1", "grid-row: n / …"),
+        new("Order*", "Ordre d’affichage, sans changer le code", "order"),
+        new("SJHS SJHC SJHE SJHSt", "Cet élément, à l’horizontale", "justify-self"),
+        new("SJVS SJVC SJVE SJVSt SJVBl SJVN", "Cet élément, à la verticale", "align-self"),
+        new("SJHD SJVD", "Suivre l’alignement du conteneur (par défaut)", "justify-self / align-self: auto")
+    ];
+
+    private static RenderFragment HeaderCell(string text, int flex = 1) =>
+        @<FbRow Flex="@flex"><FbText S B>@text</FbText></FbRow>;
+
+    private static RenderFragment CodeCell(string text, int flex = 1) =>
+        @<FbRow Flex="@flex"><FbText S Code>@text</FbText></FbRow>;
+
+    private static RenderFragment Table(Entry[] entries) =>
+        @<FbStack NoFlex Joined WGL WRL JVS>
+            <FbRow NoFlex GM PHM PVS WBA JVC>
+                @HeaderCell("Paramètres et flags", 2)
+                @HeaderCell("CSS", 2)
+            </FbRow>
+            @foreach (var entry in entries)
+            {
+                <FbRow NoFlex GM PHM PVS JVC>
+                    <FbStack Flex="2" GS JHS JVS>
+                        <FbText S Code>@entry.Flags</FbText>
+                        <FbText XS Muted>@entry.Role</FbText>
+                    </FbStack>
+                    @CodeCell(entry.Css, 2)
+                </FbRow>
+            }
+        </FbStack>;
+
+    private const string ResponsiveCode = """
+        <FbGridContainer Columns="1" ColumnsXS="2" ColumnsS="3" ColumnsM="4" ColumnsL="6" GS>
+            <FbGridItem ColumnSpanS="2">À la une</FbGridItem>
+            <FbGridItem>Carte 1</FbGridItem>
+            …
+        </FbGridContainer>
+        """;
+
+    private const string ContentCode = """
+        <FbGridContainer TemplateColumns="repeat(3, 6rem)" GS JHCC>…</FbGridContainer>
+        <FbGridContainer TemplateColumns="repeat(3, 6rem)" GS JHCSB>…</FbGridContainer>
+        """;
+
+    private const string SelfCode = """
+        <FbGridContainer TemplateColumns="auto 1fr" GM JVC>
+            <FbGridItem SJHE><FbText S B>Nom</FbText></FbGridItem>
+            <FbGridItem><FbInputText … /></FbGridItem>
+            <FbGridItem SJHE><FbText S B>Adresse électronique</FbText></FbGridItem>
+            <FbGridItem><FbInputText … /></FbGridItem>
+            …
+        </FbGridContainer>
+        """;
+
+    private const string TemplateCode = """
+        <FbGridContainer TemplateColumns="repeat(auto-fill, minmax(8rem, 1fr))" GS>
+            <FbGridItem>Photo 1</FbGridItem>
+            …
+        </FbGridContainer>
+
+        <FbGridContainer TemplateColumns="10rem 1fr" GS>
+            <FbGridItem ColumnSpan="2">En-tête</FbGridItem>
+            <FbGridItem>Menu</FbGridItem>
+            <FbGridItem>Contenu</FbGridItem>
+            <FbGridItem ColumnSpan="2">Pied de page</FbGridItem>
+        </FbGridContainer>
+        """;
+
+    private const string OrderCode = """
+        <FbGridContainer Columns="3" GS>
+            <FbGridItem>1 · Livraison</FbGridItem>
+            <FbGridItem>2 · Paiement</FbGridItem>
+            <FbGridItem Order="-1">3 · Alerte</FbGridItem>
+        </FbGridContainer>
+        """;
+
+    private const string DashboardCode = """
+        <FbGridContainer Columns="1" ColumnsS="2" ColumnsM="4" GM>
+            <FbGridItem PM WBA WFM WRM>…Commandes…</FbGridItem>
+            <FbGridItem PM WBA WFM WRM>…Panier moyen…</FbGridItem>
+            <FbGridItem PM WBA WFM WRM>…Retours…</FbGridItem>
+            <FbGridItem PM WBA WFM WRM>…Clients…</FbGridItem>
+            <FbGridItem ColumnSpanS="2" ColumnSpanM="3" PM WBA WFM WRM>
+                <FbGridContainer TemplateColumns="6rem 1fr" GS JVC>
+                    <FbText S>Nord</FbText>
+                    <FbProgress Value="82" VL />
+                </FbGridContainer>
+                …
+            </FbGridItem>
+            <FbGridItem ColumnSpanS="2" ColumnSpanM="1" PM WBA WFM WRM>
+                <FbProgress Value="72" Circular VL Size="6rem" Variant="@FbThemeVariants.Success" />
+            </FbGridItem>
+        </FbGridContainer>
+        """;
 }

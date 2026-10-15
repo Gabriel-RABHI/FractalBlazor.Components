@@ -27,7 +27,11 @@ namespace FractalBlazor.WebSite.StateModel
     /// </summary>
     public sealed record RowStackPage(AlignmentPadState Pad, FlexPlaygroundState Playground);
 
-    public sealed record GridPage;
+    /// <summary>
+    /// FbGridContainer and FbGridItem, with the states of their three demos: the playground,
+    /// the responsive width and the alignment in the cells.
+    /// </summary>
+    public sealed record GridPage(GridPlaygroundState Playground, GridResponsiveState Responsive, GridAlignmentState Alignment);
 
     /// <summary>
     /// The drawer, with the state it demonstrates.

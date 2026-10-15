@@ -36,7 +36,7 @@ namespace FractalBlazor.WebSite.StateModel
                         new MenuGroupState(section, MenuItemIntent.Layout, group =>
                         [
                             new PageLinkState(group, MenuItemIntent.RowStack, new RowStackPage(new AlignmentPadState(), new FlexPlaygroundState())),
-                            new PageLinkState(group, MenuItemIntent.Grid, new GridPage()),
+                            new PageLinkState(group, MenuItemIntent.Grid, new GridPage(new GridPlaygroundState(), new GridResponsiveState(), new GridAlignmentState())),
                             new PageLinkState(group, MenuItemIntent.ShowWhenOver, new PendingPage()),
                             new PageLinkState(group, MenuItemIntent.ShowWhenVisible, new PendingPage()),
                             new PageLinkState(group, MenuItemIntent.Drawer, new DrawerPage(new DrawerDemoState())),

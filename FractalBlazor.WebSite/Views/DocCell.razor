@@ -1,0 +1,31 @@
+@* An item of a demo grid: a block of accent with its label in the middle, or the full color
+   of the variant when it is the item the demo is about. *@
+<FbGridItem ColumnSpan="@ColumnSpan" ColumnStart="@ColumnStart" RowSpan="@RowSpan" Order="@Order"
+            WBA="@(!Highlight)" WBH="@Highlight" WFM WRM>
+    <FbRow JC PS MinHeight="@MinHeight">
+        <FbText S B NW>@Label</FbText>
+    </FbRow>
+</FbGridItem>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Label { get; set; } = "";
+
+    [Parameter]
+    public bool Highlight { get; set; }
+
+    [Parameter]
+    public int ColumnSpan { get; set; } = 1;
+
+    [Parameter]
+    public int? ColumnStart { get; set; }
+
+    [Parameter]
+    public int RowSpan { get; set; } = 1;
+
+    [Parameter]
+    public int Order { get; set; }
+
+    [Parameter]
+    public string MinHeight { get; set; } = "2.5rem";
+}

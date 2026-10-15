@@ -1,0 +1,82 @@
+@* Items aligned in their cells: one flag per axis of the screen, as in a row or a stack. The
+   dashed cells come from a second grid of the same tracks, laid under the first on the same
+   area: they show the cell of each item. *@
+@attribute [ViewFor<ViewSelector>(typeof(GridAlignmentState), ViewSelector.Viewer)]
+
+<FbStack NoFlex GL JVS>
+    <FbRow NoFlex MultiLine GL JVE>
+        @Axis(FlexAxis.Horizontal)
+        @Axis(FlexAxis.Vertical)
+    </FbRow>
+
+    <FbVariant Variant="@FbThemeVariants.Selected">
+        <FbStack NoFlex PM WFM WFD WRM WBS JVS>
+            <FbGridContainer Columns="1">
+                <FbGridItem ColumnStart="1" RowStart="1">
+                    <FbGridContainer Columns="3" AutoRows="5rem" GS>
+                        @for (var cell = 1; cell <= 6; cell++)
+                        {
+                            <FbGridItem WFM WFD WRM />
+                        }
+                    </FbGridContainer>
+                </FbGridItem>
+                <FbGridItem ColumnStart="1" RowStart="1">
+                    <FbGridContainer Columns="3" AutoRows="5rem" GS
+                                     JHS="@H(FlexAlignment.Start)" JHC="@H(FlexAlignment.Center)"
+                                     JHE="@H(FlexAlignment.End)" JHSt="@H(FlexAlignment.Stretch)"
+                                     JVS="@V(FlexAlignment.Start)" JVC="@V(FlexAlignment.Center)"
+                                     JVE="@V(FlexAlignment.End)" JVSt="@V(FlexAlignment.Stretch)">
+                        @for (var number = 1; number <= 6; number++)
+                        {
+                            @* The content is rendered after the loop: it takes a copy of the number. *@
+                            var label = number;
+                            <FbGridItem PHM PVS WBA WFM WRM><FbText S B>@label</FbText></FbGridItem>
+                        }
+                    </FbGridContainer>
+                </FbGridItem>
+            </FbGridContainer>
+        </FbStack>
+    </FbVariant>
+
+    <FbStack NoFlex GS JVS>
+        <FbRow NoFlex><FbText S Code NW>@Item.Code</FbText></FbRow>
+        @Mapping(FlexAxis.Horizontal)
+        @Mapping(FlexAxis.Vertical)
+    </FbStack>
+</FbStack>
+
+@code {
+    [Parameter]
+    public GridAlignmentState Item { get; set; } = default!;
+
+    private bool H(FlexAlignment alignment) => Item.Horizontal == alignment;
+
+    private bool V(FlexAlignment alignment) => Item.Vertical == alignment;
+
+    private static IStateAction Set(FlexAxis axis, FlexAlignment alignment)
+        => axis == FlexAxis.Horizontal ? new GridAlignmentState.SetHorizontal(alignment) : new GridAlignmentState.SetVertical(alignment);
+
+    private RenderFragment Axis(FlexAxis axis) =>
+        @<FbStack NoFlex GS JHS JVS>
+            <FbRow NoFlex GS JVBl>
+                <FbText S B>@(axis == FlexAxis.Horizontal ? "Horizontal" : "Vertical")</FbText>
+                <FbText XS Muted>@(axis == FlexAxis.Horizontal ? "justify-items" : "align-items")</FbText>
+            </FbRow>
+            <FbRow NoFlex Joined WFM WRM WSM>
+                @foreach (var alignment in GridAlignmentState.Choices)
+                {
+                    <FbButton KP="@(Item.On(axis) == alignment)" S WFN WRN Handler="Item" Action="@Set(axis, alignment)"
+                              Title="@FbValueView.TextOf(alignment)">
+                        <FbText S>@FlexAlignments.Flag(axis, alignment)</FbText>
+                    </FbButton>
+                }
+            </FbRow>
+        </FbStack>;
+
+    private RenderFragment Mapping(FlexAxis axis) =>
+        @<FbRow NoFlex GS JVC>
+            <FbText S Code>@FlexAlignments.Flag(axis, Item.On(axis))</FbText>
+            <FbIcon Icon="@FbMaterialIcons.ArrowForward" S Subtle />
+            <FbText S Code Muted NW>@Item.Declaration(axis)</FbText>
+        </FbRow>;
+}

@@ -1,0 +1,50 @@
+@* A grid that reads its own width: the slider gives the grid a width, and the grid takes the
+   columns of the widest step it reaches, whatever the size of the window. The box scrolls when
+   the grid is wider than the page, so that the width is always the one asked. *@
+@attribute [ViewFor<ViewSelector>(typeof(GridResponsiveState), ViewSelector.Viewer)]
+
+<FbStack NoFlex GL JVS>
+    <FbStack NoFlex GS JVS>
+        <FbRow NoFlex GS JVBl>
+            <FbText S B>Largeur de la grille</FbText>
+            <FbText S Code>@Item.Width px</FbText>
+        </FbRow>
+        <FbSlider TValue="int" TAction="GridResponsiveState.SetWidth" Handler="Item" Value="@Item.Width"
+                  Min="@GridResponsiveState.MinWidth" Max="@GridResponsiveState.MaxWidth" Step="10" Immediate
+                  Title="Largeur de la grille" />
+        <FbRow NoFlex MultiLine GS JVC>
+            @foreach (var step in GridResponsiveState.Steps)
+            {
+                var reached = step == Item.Step;
+                <FbBadge Variant="@(reached ? FbThemeVariants.Selected : null)" WBA="@(!reached)"
+                         Title="@(reached ? "Palier atteint" : null)">
+                    <FbText S B>@step.Name</FbText>
+                    <FbText XS>@(step.MinWidth == 0 ? "< 512 px" : $"≥ {step.MinWidth} px") · @step.Columns col.</FbText>
+                </FbBadge>
+            }
+        </FbRow>
+    </FbStack>
+
+    <FbVariant Variant="@FbThemeVariants.Selected">
+        @* overflow-x, not Scrollable: Scrollable lets every ancestor shrink, which the page,
+           already scrolling, does not want. *@
+        <FbRow NoFlex PM WFM WFD WRM WBS JHS JVS Style="overflow-x:auto">
+            <FbGridContainer Columns="1" ColumnsXS="2" ColumnsS="3" ColumnsM="4" ColumnsL="6" GS Style="@Width">
+                <FbGridItem ColumnSpanS="2" WBH WFM WRM>
+                    <FbRow JC PS MinHeight="4rem"><FbText S B NW>À la une</FbText></FbRow>
+                </FbGridItem>
+                @for (var number = 1; number <= 9; number++)
+                {
+                    <DocCell Label="@($"Carte {number}")" MinHeight="4rem" />
+                }
+            </FbGridContainer>
+        </FbRow>
+    </FbVariant>
+</FbStack>
+
+@code {
+    [Parameter]
+    public GridResponsiveState Item { get; set; } = default!;
+
+    private string Width => $"width:{Item.Width}px;flex:none";
+}
