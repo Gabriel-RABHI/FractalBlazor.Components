@@ -191,7 +191,8 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
 
         /// <summary>
         /// The nearest value the slider can take: on a step from <see cref="Min"/>, between the
-        /// bounds. A fractional step keeps its own decimals, so that 0.1 × 3 stays 0.3.
+        /// bounds; anywhere between them when the step is not positive. A fractional step keeps
+        /// the decimals of the step and of <see cref="Min"/>, so that 0.1 × 3 stays 0.3.
         /// </summary>
         internal TValue Snap(double raw)
         {
@@ -200,18 +201,29 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
             var step = double.CreateChecked(Step);
             raw = Math.Clamp(raw, Math.Min(min, max), Math.Max(min, max));
 
-            var value = step > 0 ? Min + TValue.CreateSaturating(Math.Round((raw - min) / step)) * Step : TValue.CreateSaturating(raw);
-            value = TValue.CreateSaturating(Math.Round(double.CreateChecked(value), Decimals(Step)));
+            var value = step > 0
+                ? Round(Min + TValue.CreateSaturating(Math.Round((raw - min) / step)) * Step, Math.Max(Decimals(Step), Decimals(Min)))
+                : TValue.CreateSaturating(raw);
             return Clamp(value);
         }
 
         private TValue Clamp(TValue value) => TValue.Clamp(value, TValue.Min(Min, Max), TValue.Max(Min, Max));
 
-        private static int Decimals(TValue step)
+        /// <summary>
+        /// <paramref name="value"/> rounded to <paramref name="decimals"/>, which removes the
+        /// error a binary fraction leaves (0.1 + 0.2 gives 0.30000000000000004).
+        /// </summary>
+        private static TValue Round(TValue value, int decimals)
+            => decimals == 0 ? value : TValue.CreateSaturating(Math.Round(double.CreateChecked(value), decimals));
+
+        /// <summary>
+        /// The decimals <paramref name="number"/> is written with, 15 at most: 2 for 0.25, 5 for 0.00001.
+        /// </summary>
+        private static int Decimals(TValue number)
         {
-            var text = step.ToString(null, CultureInfo.InvariantCulture);
+            var text = number.ToString("0.###############", CultureInfo.InvariantCulture);
             var point = text.IndexOf('.');
-            return point < 0 || text.Contains('E') ? 0 : Math.Min(text.Length - point - 1, 10);
+            return point < 0 ? 0 : text.Length - point - 1;
         }
 
         /// <summary>
@@ -247,15 +259,22 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
 
         /// <summary>
         /// The ticks, from <see cref="Min"/> by <see cref="Ticks"/>, <see cref="MaxTicks"/> at most.
+        /// Each one is computed from its index and rounded, not added to the one before, so that
+        /// a fractional gap does not drift: ten ticks of 0.1 end on 1, not on 0.9999999999999999.
         /// </summary>
         internal IEnumerable<TValue> TickValues()
         {
             if (Ticks is not { } gap || gap <= TValue.Zero || Max <= Min)
                 yield break;
 
-            var count = 0;
-            for (var value = Min; value <= Max && count < MaxTicks; value += gap, count++)
+            var decimals = Math.Max(Decimals(gap), Decimals(Min));
+            for (var index = 0; index < MaxTicks; index++)
+            {
+                var value = Round(Min + TValue.CreateSaturating(index) * gap, decimals);
+                if (value > Max)
+                    yield break;
                 yield return value;
+            }
         }
 
         // ------------------------------------------------------------------ Changes

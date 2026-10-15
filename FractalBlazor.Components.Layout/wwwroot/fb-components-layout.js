@@ -321,10 +321,12 @@ window.FractalBlazor = window.FractalBlazor || {};
         const thumbs = () => element.querySelectorAll('.fb-slider-thumb');
         const rail = () => element.querySelector('.fb-slider-rail');
 
-        function decimals(step) {
-            const text = String(step);
-            const point = text.indexOf('.');
-            return point < 0 ? 0 : Math.min(text.length - point - 1, 10);
+        // The decimals a number is written with, 15 at most: 2 for 0.25, 7 for 1e-7.
+        function decimals(number) {
+            const [mantissa, exponent = '0'] = String(number).toLowerCase().split('e');
+            const point = mantissa.indexOf('.');
+            const digits = (point < 0 ? 0 : mantissa.length - point - 1) - parseInt(exponent, 10);
+            return Math.min(Math.max(digits, 0), 15);
         }
 
         function valueAt(event) {
@@ -338,9 +340,10 @@ window.FractalBlazor = window.FractalBlazor || {};
 
             const min = number('min'), max = number('max'), step = number('step');
             let value = min + ratio * (max - min);
-            if (step > 0)
+            if (step > 0) {
                 value = min + Math.round((value - min) / step) * step;
-            value = +value.toFixed(decimals(step));
+                value = +value.toFixed(Math.max(decimals(step), decimals(min)));
+            }
             return Math.min(Math.max(value, Math.min(min, max)), Math.max(min, max));
         }
 

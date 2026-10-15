@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Numerics;
 using FractalBlazor.Components.Common.Contracts;
 using FractalBlazor.Components.Forms;
 using FractalBlazor.Components.Forms.Components.Inputs;
@@ -130,13 +131,45 @@ public sealed class SliderTests : BunitContext
         Assert.Equal([expected], _sent);
     }
 
-    [Fact]
-    public void A_fractional_step_keeps_its_decimals()
+    [Theory]
+    [InlineData(0, 1, 0.1, 0.31, 0.3)]
+    [InlineData(0, 1, 0.1, 0.68, 0.7)]
+    [InlineData(0, 2, 0.25, 1.6, 1.5)]
+    [InlineData(0.05, 1, 0.1, 0.16, 0.15)]
+    [InlineData(0, 0.001, 0.00001, 0.000123, 0.00012)]
+    [InlineData(0, 1, 0, 0.123, 0.123)]
+    public void A_fractional_step_lands_on_round_values(double min, double max, double step, double at, double expected)
     {
-        var cut = Render<FbSlider<double, FbSetValue<double>>>(p => p.Add(x => x.Max, 1d).Add(x => x.Step, 0.1d));
+        var cut = Render<FbSlider<double, FbSetValue<double>>>(p => p.Add(x => x.Min, min).Add(x => x.Max, max).Add(x => x.Step, step));
 
-        Assert.Equal(0.3d, cut.Instance.Snap(0.31));
-        Assert.Equal(0.7d, cut.Instance.Snap(0.68));
+        Assert.Equal(expected, cut.Instance.Snap(at));
+    }
+
+    [Fact]
+    public void Every_floating_type_takes_a_quarter_step()
+    {
+        Assert.Equal(0.75f, Quarter<float>(0.65));
+        Assert.Equal(0.75d, Quarter<double>(0.65));
+        Assert.Equal(0.75m, Quarter<decimal>(0.65));
+    }
+
+    private TValue Quarter<TValue>(double at) where TValue : struct, INumber<TValue>
+        => Render<FbSlider<TValue, FbSetValue<TValue>>>(p => p.Add(x => x.Max, TValue.One).Add(x => x.Step, TValue.CreateChecked(0.25)))
+            .Instance.Snap(at);
+
+    [Fact]
+    public async Task A_double_slider_moves_by_quarters()
+    {
+        var sent = new List<double>();
+        var cut = Render<FbSlider<double, FbSetValue<double>>>(p => p
+            .Add(x => x.Value, 0.5).Add(x => x.Max, 2d).Add(x => x.Step, 0.25)
+            .Add(x => x.ValueChanged, EventCallback.Factory.Create<double>(this, sent.Add)));
+
+        cut.Find(".fb-slider-thumb").KeyDown(new KeyboardEventArgs { Key = "ArrowRight" });
+        await cut.InvokeAsync(() => cut.Instance.OnSlide(0, 1.6, done: true));
+
+        Assert.Equal([0.75, 1.5], sent);
+        Assert.Equal("0.25", cut.Find(".fb-slider").GetAttribute("data-step"));
     }
 
     [Fact]
@@ -212,6 +245,14 @@ public sealed class SliderTests : BunitContext
         Assert.Contains("fb-slider-scale", cut.Find(".fb-slider").ClassList);
         Assert.Contains("fb-slider-tick-start", ticks[0].ClassList);
         Assert.Contains("fb-slider-tick-end", ticks[4].ClassList);
+    }
+
+    [Fact]
+    public void Ticks_of_a_fractional_gap_land_on_round_values_up_to_the_end()
+    {
+        var cut = Render<FbSlider<double, FbSetValue<double>>>(p => p.Add(x => x.Max, 0.3).Add(x => x.Step, 0.1).Add(x => x.Ticks, 0.1));
+
+        Assert.Equal([0, 0.1, 0.2, 0.3], cut.Instance.TickValues());
     }
 
     [Fact]
