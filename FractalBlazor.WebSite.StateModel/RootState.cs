@@ -56,7 +56,7 @@ namespace FractalBlazor.WebSite.StateModel
                         new MenuGroupState(section, MenuItemIntent.Inputs, group =>
                         [
                             new PageLinkState(group, MenuItemIntent.Slider,
-                                new SliderPage(new ScaleSliderDemoState(), new VerticalSliderDemoState(), new DotsSliderDemoState()))
+                                new SliderPage(new ScaleSliderDemoState(), new VerticalSliderDemoState(), new DotsSliderDemoState(), new TickMarkSliderDemoState()))
                         ]),
                         new MenuGroupState(section, MenuItemIntent.Selectors)
                     ]),

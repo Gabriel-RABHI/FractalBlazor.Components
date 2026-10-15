@@ -38,7 +38,9 @@ public sealed class SliderDemoTests
     {
         var verticals = new VerticalSliderDemoState();
         var dots = new DotsSliderDemoState();
+        var marks = new TickMarkSliderDemoState();
 
+        marks.Handle(new TickMarkSliderDemoState.SetLevel(8));
         verticals.Handle(new VerticalSliderDemoState.SetLevel(30));
         verticals.Handle(new VerticalSliderDemoState.SetBand(new FbRange<int>(10, 20)));
         dots.Handle(new DotsSliderDemoState.SetRating(3));
@@ -46,6 +48,7 @@ public sealed class SliderDemoTests
         dots.Handle(new DotsSliderDemoState.SetStep(7));
         dots.Handle(new DotsSliderDemoState.SetSteps(new FbRange<int>(2, 4)));
 
+        Assert.Equal(8, marks.Level);
         Assert.Equal((30, new FbRange<int>(10, 20)), (verticals.Level, verticals.Band));
         Assert.Equal((3, new FbRange<int>(20, 80), 7, new FbRange<int>(2, 4)), (dots.Rating, dots.Span, dots.Step, dots.Steps));
     }

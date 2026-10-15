@@ -38,13 +38,28 @@
 
     <DocSection Title="Points et valeurs">
         <FbText M Muted>
-            <FbText Code>TD</FbText> marque chaque graduation d’un point, coloré dans la partie
+            <FbText Code>Dot</FbText> marque chaque graduation d’un point, coloré dans la partie
             remplie ; <FbText Code>EL</FbText> libelle les deux bornes ; <FbText Code>VL</FbText>
             montre en permanence la valeur de chaque curseur. Les deux rangées partagent leurs
             états : un curseur déplacé à l’horizontale bouge aussi à la verticale.
         </FbText>
         <DocExample Code="@DotsCode">
             <FbDynamicView TSelector="ViewSelector" Item="Item.Dots" Selector="ViewSelector.Viewer" />
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Marques des graduations">
+        <FbText M Muted>
+            Une graduation se marque d’un point (<FbText Code>Dot</FbText>), d’un trait en travers
+            de la piste (<FbText Code>Line</FbText>) ou d’un trait à côté
+            (<FbText Code>ShiftedLine</FbText>), du côté des valeurs : au-dessus, ou à gauche à la
+            verticale ; <FbText Code>Mirror</FbText> le passe de l’autre côté. Les marques de la
+            partie remplie prennent la couleur d’accent. Le paramètre
+            <FbText Code>TickMark</FbText> fait le même choix par une valeur de
+            <FbText Code>FbTickMark</FbText>.
+        </FbText>
+        <DocExample Code="@MarksCode">
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Marks" Selector="ViewSelector.Viewer" />
         </DocExample>
     </DocSection>
 
@@ -90,7 +105,9 @@
         ("Title", "Le nom accessible des curseurs."),
         ("Vertical", "La piste monte du bas vers le haut."),
         ("Mirror", "Les libellés passent de l’autre côté de la piste, les valeurs aussi."),
-        ("TD, TL", "Ticks → Dots : un point par graduation. Ticks → Labels : leur libellé."),
+        ("Dot, Line, ShiftedLine", "La marque des graduations : un point, un trait en travers de la piste, un trait à côté. Aucune par défaut."),
+        ("TickMark", "Le même choix par une valeur : FbTickMark.None, Dot, Line ou ShiftedLine."),
+        ("TL", "Ticks → Labels : le libellé de chaque graduation."),
         ("EL", "Ends → Labels : le libellé des deux bornes."),
         ("VL, VT", "Value → Label : la valeur près du curseur. Value → Tooltip : en bulle, pendant le glissement."),
         ("Immediate", "Envoie la valeur pendant le glissement, plutôt qu’au relâchement."),
@@ -119,7 +136,15 @@
     private const string DotsCode = """
         <FbSlider TValue="int" … Max="10" EL VL />
         <FbRangeSlider TValue="int" … EL VL />
-        <FbSlider TValue="int" … Max="10" Ticks="1" TD EL VL />
-        <FbRangeSlider TValue="int" … Max="10" Ticks="1" TD TL Mirror VL />
+        <FbSlider TValue="int" … Max="10" Ticks="1" Dot EL VL />
+        <FbRangeSlider TValue="int" … Max="10" Ticks="1" Dot TL Mirror VL />
+        """;
+
+    private const string MarksCode = """
+        <FbSlider TValue="int" … Max="10" Ticks="1" Dot VL />
+        <FbSlider TValue="int" … Max="10" Ticks="1" Line VL />
+        <FbSlider TValue="int" … Max="10" Ticks="1" ShiftedLine VL />
+        <FbSlider TValue="int" … Max="10" Ticks="1" ShiftedLine Mirror VL />
+        <FbSlider TValue="int" … Max="10" Ticks="1" TickMark="FbTickMark.Line" VL />
         """;
 }

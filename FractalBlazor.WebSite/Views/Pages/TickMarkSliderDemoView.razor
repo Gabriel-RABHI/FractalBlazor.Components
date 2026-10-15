@@ -1,0 +1,38 @@
+@* The marks of the ticks on one level: a slider per mark, horizontal then vertical. The last
+   one is mirrored, so that its shifted lines pass to the other side of the track. *@
+@attribute [ViewFor<ViewSelector>(typeof(TickMarkSliderDemoState), ViewSelector.Viewer)]
+
+<FbVariant Variant="@FbThemeVariants.Info">
+<FbStack NoFlex GX JVS>
+    @foreach (var (flags, mark, mirror) in Marks)
+    {
+        <FbRow NoFlex MultiLine GM JVC>
+            <FbRowItem Style="min-width:11rem"><FbText S Code>@flags</FbText></FbRowItem>
+            <FbRow MinWidth="14rem">
+                <FbSlider TValue="int" TAction="TickMarkSliderDemoState.SetLevel" Handler="Item" Value="@Item.Level"
+                          Max="10" Ticks="1" TickMark="@mark" Mirror="@mirror" VL Title="@flags" />
+            </FbRow>
+        </FbRow>
+    }
+    <FbRow NoFlex MultiLine GX JHC JVSt MinHeight="16rem">
+        @foreach (var (flags, mark, mirror) in Marks)
+        {
+            <FbSlider TValue="int" TAction="TickMarkSliderDemoState.SetLevel" Handler="Item" Value="@Item.Level"
+                      Vertical Max="10" Ticks="1" TickMark="@mark" Mirror="@mirror" VL Title="@flags" />
+        }
+    </FbRow>
+</FbStack>
+</FbVariant>
+
+@code {
+    private static readonly (string Flags, FbTickMark Mark, bool Mirror)[] Marks =
+    [
+        ("Dot", FbTickMark.Dot, false),
+        ("Line", FbTickMark.Line, false),
+        ("ShiftedLine", FbTickMark.ShiftedLine, false),
+        ("ShiftedLine Mirror", FbTickMark.ShiftedLine, true)
+    ];
+
+    [Parameter]
+    public TickMarkSliderDemoState Item { get; set; } = default!;
+}

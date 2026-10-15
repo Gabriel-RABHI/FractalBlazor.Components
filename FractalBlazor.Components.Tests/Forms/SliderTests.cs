@@ -234,14 +234,14 @@ public sealed class SliderTests : BunitContext
     [Fact]
     public void Ticks_are_placed_and_labeled_and_those_of_the_filled_part_say_so()
     {
-        var cut = Slider(100, p => p.Add(x => x.Ticks, 50).Add(x => x.TL, true).Add(x => x.TD, true));
+        var cut = Slider(100, p => p.Add(x => x.Ticks, 50).Add(x => x.TL, true).Add(x => x.Dot, true));
 
         var ticks = cut.FindAll(".fb-slider-tick");
         Assert.Equal(["--fb-slider-at:0%;", "--fb-slider-at:25%;", "--fb-slider-at:50%;", "--fb-slider-at:75%;", "--fb-slider-at:100%;"],
             ticks.Select(tick => tick.GetAttribute("style")));
         Assert.Equal([true, true, true, false, false], ticks.Select(tick => tick.ClassList.Contains("fb-slider-tick-in")));
         Assert.Equal(["0", "50", "100", "150", "200"], Labels(cut, "fb-slider-label"));
-        Assert.Contains("fb-slider-dots", cut.Find(".fb-slider").ClassList);
+        Assert.Contains("fb-slider-ticks-dot", cut.Find(".fb-slider").ClassList);
         Assert.Contains("fb-slider-scale", cut.Find(".fb-slider").ClassList);
         Assert.Contains("fb-slider-tick-start", ticks[0].ClassList);
         Assert.Contains("fb-slider-tick-end", ticks[4].ClassList);
@@ -256,12 +256,42 @@ public sealed class SliderTests : BunitContext
     }
 
     [Fact]
-    public void Ticks_without_labels_draw_dots_only()
+    public void Ticks_without_labels_draw_marks_only()
     {
-        var cut = Slider(100, p => p.Add(x => x.Ticks, 50).Add(x => x.TD, true));
+        var cut = Slider(100, p => p.Add(x => x.Ticks, 50).Add(x => x.Dot, true));
 
         Assert.Equal(5, cut.FindAll(".fb-slider-tick").Count);
         Assert.Empty(cut.FindAll(".fb-slider-label"));
+    }
+
+    [Theory]
+    [InlineData(FbTickMark.Dot, "fb-slider-ticks-dot")]
+    [InlineData(FbTickMark.Line, "fb-slider-ticks-line")]
+    [InlineData(FbTickMark.ShiftedLine, "fb-slider-ticks-shifted")]
+    public void A_flag_or_the_tick_mark_chooses_how_ticks_are_marked(FbTickMark mark, string expected)
+    {
+        var byFlag = Slider(100, p => _ = mark switch
+        {
+            FbTickMark.Dot => p.Add(x => x.Dot, true),
+            FbTickMark.Line => p.Add(x => x.Line, true),
+            _ => p.Add(x => x.ShiftedLine, true)
+        });
+        var byMark = Slider(100, p => p.Add(x => x.TickMark, mark));
+
+        Assert.Contains(expected, byFlag.Find(".fb-slider").ClassList);
+        Assert.Contains(expected, byMark.Find(".fb-slider").ClassList);
+        Assert.Equal(mark, byFlag.Instance.TickMark);
+    }
+
+    [Fact]
+    public void Ticks_are_not_marked_by_default_and_a_mark_no_longer_passed_falls_back()
+    {
+        var cut = Slider(100, p => p.Add(x => x.Ticks, 50).Add(x => x.Line, true));
+
+        cut.Render(p => p.Add(x => x.Value, 100).Add(x => x.Ticks, 50));
+
+        Assert.Equal(FbTickMark.None, cut.Instance.TickMark);
+        Assert.DoesNotContain(cut.Find(".fb-slider").ClassList, name => name.StartsWith("fb-slider-ticks-", StringComparison.Ordinal));
     }
 
     [Fact]

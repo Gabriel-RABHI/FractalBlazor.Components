@@ -52,7 +52,7 @@ namespace FractalBlazor.WebSite.StateModel
     /// <summary>
     /// The slider: a labeled scale, verticals, dots and values.
     /// </summary>
-    public sealed record SliderPage(ScaleSliderDemoState Scales, VerticalSliderDemoState Verticals, DotsSliderDemoState Dots);
+    public sealed record SliderPage(ScaleSliderDemoState Scales, VerticalSliderDemoState Verticals, DotsSliderDemoState Dots, TickMarkSliderDemoState Marks);
 
     /// <summary>
     /// The contact form, under Compositions. The page owns its state, which survives

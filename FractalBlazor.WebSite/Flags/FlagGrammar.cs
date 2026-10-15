@@ -134,11 +134,10 @@ internal sealed class FlagGrammar
             [
                 Word("Vertical", "The track runs from bottom to top", "Orientation"),
                 Word("Mirror", "Labels on the other side", "Placement"),
-                Prefix("T", "Ticks", "Ticks",
-                [
-                    Word("D", "Dots on the track", "Ticks"),
-                    Word("L", "Labels", "Ticks")
-                ]),
+                Word("Dot", "A dot on the track at each tick", "Ticks"),
+                Word("Line", "A line across the track at each tick", "Ticks"),
+                Word("ShiftedLine", "A line beside the track at each tick", "Ticks"),
+                Prefix("T", "Ticks", "Ticks", [Word("L", "Labels", "Ticks")]),
                 Prefix("E", "Ends", "Ends", [Word("L", "Labels", "Ends")]),
                 Prefix("V", "Value", "Value",
                 [

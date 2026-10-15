@@ -41,10 +41,11 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
         private bool _started, _disposed, _sliding;
         private TModel _preview = default!;
         private Flags _flags, _defaultFlags;
+        private FbTickMark _mark, _defaultMark;
 
         private struct Flags
         {
-            public bool Vertical, Mirror, TD, TL, EL, VL, VT, Immediate;
+            public bool Vertical, Mirror, TL, EL, VL, VT, Immediate;
         }
 
         protected FbSliderBase()
@@ -78,8 +79,8 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
         public TValue Step { get; set; } = TValue.One;
 
         /// <summary>
-        /// The gap between two ticks, from <see cref="Min"/>; none by default. <see cref="TD"/>
-        /// draws them, <see cref="TL"/> labels them.
+        /// The gap between two ticks, from <see cref="Min"/>; none by default. <see cref="TickMark"/>
+        /// marks them on the track, <see cref="TL"/> labels them.
         /// </summary>
         [Parameter]
         public TValue? Ticks { get; set; }
@@ -118,10 +119,29 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
         public bool Mirror { get => _flags.Mirror; set => _flags.Mirror = value; }
 
         /// <summary>
-        /// Ticks -> Dots: a dot on the track at each tick.
+        /// How the ticks are marked on the track: not at all by default, or by a
+        /// <see cref="Dot"/>, a <see cref="Line"/> across it or a <see cref="ShiftedLine"/> beside it.
         /// </summary>
         [Parameter]
-        public bool TD { get => _flags.TD; set => _flags.TD = value; }
+        public FbTickMark TickMark { get => _mark; set => _mark = value; }
+
+        /// <summary>
+        /// A dot on the track at each tick.
+        /// </summary>
+        [Parameter]
+        public bool Dot { get => _mark == FbTickMark.Dot; set { if (value) _mark = FbTickMark.Dot; } }
+
+        /// <summary>
+        /// A short line across the track at each tick.
+        /// </summary>
+        [Parameter]
+        public bool Line { get => _mark == FbTickMark.Line; set { if (value) _mark = FbTickMark.Line; } }
+
+        /// <summary>
+        /// A short line beside the track at each tick, on the side of the values.
+        /// </summary>
+        [Parameter]
+        public bool ShiftedLine { get => _mark == FbTickMark.ShiftedLine; set { if (value) _mark = FbTickMark.ShiftedLine; } }
 
         /// <summary>
         /// Ticks -> Labels: the value of each tick under the track.
@@ -178,13 +198,13 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
         protected override void CaptureParameterDefaults()
         {
             base.CaptureParameterDefaults();
-            _defaultFlags = _flags;
+            (_defaultFlags, _defaultMark) = (_flags, _mark);
         }
 
         protected override void RestoreParameterDefaults()
         {
             base.RestoreParameterDefaults();
-            _flags = _defaultFlags;
+            (_flags, _mark) = (_defaultFlags, _defaultMark);
         }
 
         // ------------------------------------------------------------------ Values
@@ -344,7 +364,13 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
                 if (_flags.Vertical) classes += " fb-slider-vertical";
                 if (ThumbCount > 1) classes += " fb-slider-range";
                 if (_flags.Mirror) classes += " fb-slider-mirror";
-                if (_flags.TD) classes += " fb-slider-dots";
+                classes += _mark switch
+                {
+                    FbTickMark.Dot => " fb-slider-ticks-dot",
+                    FbTickMark.Line => " fb-slider-ticks-line",
+                    FbTickMark.ShiftedLine => " fb-slider-ticks-shifted",
+                    _ => ""
+                };
                 if (_flags.TL || _flags.EL) classes += " fb-slider-scale";
                 if (_flags.VL) classes += " fb-slider-values";
                 if (IsDisabled) classes += " fb-slider-disabled";

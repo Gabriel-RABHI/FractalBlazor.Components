@@ -83,6 +83,24 @@ namespace FractalBlazor.WebSite.StateModel
     }
 
     /// <summary>
+    /// The marks of the ticks: one level, shown by a slider per mark, horizontal and vertical.
+    /// </summary>
+    public sealed class TickMarkSliderDemoState : ObservableState
+    {
+        public sealed record SetLevel(int Value) : IStateAction<int>;
+
+        public int Level { get; private set; } = 3;
+
+        public void Handle(SetLevel action)
+        {
+            if (Level == action.Value)
+                return;
+            Level = action.Value;
+            NotifyStateChanged();
+        }
+    }
+
+    /// <summary>
     /// Sliders with dots and values, shown twice, horizontal and vertical, on the same values.
     /// </summary>
     public sealed class DotsSliderDemoState : ObservableState
