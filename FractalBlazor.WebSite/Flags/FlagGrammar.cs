@@ -151,8 +151,16 @@ internal sealed class FlagGrammar
                 Word("A", "Accent", "Fill"),
                 Word("H", "Highlight", "Fill")
             ]),
-            Prefix("F", "Frame", "Surface", Strengths(withNone: true)),
-            Prefix("R", "Radius", "Surface", [Word("N", "None", "Radius"), .. Spacings("Radius")]),
+            Prefix("F", "Frame", "Surface",
+            [
+                .. Strengths(withNone: true),
+                Word("D", "Dot", "Style"),
+                Prefix("T", "Top", "Side", Strengths(withNone: false)),
+                Prefix("R", "Right", "Side", Strengths(withNone: false)),
+                Prefix("B", "Bottom", "Side", Strengths(withNone: false)),
+                Prefix("L", "Left", "Side", Strengths(withNone: false))
+            ]),
+            Prefix("R", "Radius", "Surface", [Word("N", "None", "Radius"), .. Spacings("Radius"), Word("R", "Round", "Radius")]),
             Prefix("S", "Separator", "Surface", Strengths(withNone: false)),
             Prefix("G", "Grid", "Surface", Strengths(withNone: false)),
             Word("NTW", "No text wrap", "Text"),

@@ -251,6 +251,167 @@ html {
     box-shadow: 0 0 0 var(--fb-outline-size) var(--fb-frame-border-color);
 }
 
+/* Dotted frame (WFD): the frame and the side frames in dots. Only a box that has a frame
+   gets a dotted outline: a dotted style alone would draw the default outline. */
+.fb-wfd:is(.fb-wfl, .fb-wfm, .fb-wfs) {
+    outline-style: dotted;
+}
+
+/* Side frames (WFTx, WFRx, WFBx, WFLx: top, right, bottom, left; x = L, M, S): a line on one
+   side, inside the box. Like the frame, it takes no room. It is drawn by an ::after laid over
+   the box, painted over the content, so a child with a fill never hides it. The box becomes
+   the containing block of that ::after with no specificity: a box positioned otherwise keeps
+   its position. */
+:where(.fb-wftl, .fb-wftm, .fb-wfts, .fb-wfrl, .fb-wfrm, .fb-wfrs, .fb-wfbl, .fb-wfbm, .fb-wfbs, .fb-wfll, .fb-wflm, .fb-wfls) {
+    position: relative;
+    --fb-side-top: none;
+    --fb-side-right: none;
+    --fb-side-bottom: none;
+    --fb-side-left: none;
+    --fb-side-dash: 100%;
+    --fb-side-period: 100%;
+}
+
+:where(.fb-wftl, .fb-wftm, .fb-wfts, .fb-wfrl, .fb-wfrm, .fb-wfrs, .fb-wfbl, .fb-wfbm, .fb-wfbs, .fb-wfll, .fb-wflm, .fb-wfls):not(.fb-scrollable)::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 0 solid transparent;
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.fb-wftl::after {
+    border-top-width: 1px;
+    border-top-color: var(--fb-frame-light);
+}
+
+.fb-wftm::after {
+    border-top-width: 1px;
+    border-top-color: var(--fb-frame-medium);
+}
+
+.fb-wfts::after {
+    border-top-width: 1px;
+    border-top-color: var(--fb-frame-strong);
+}
+
+.fb-wfrl::after {
+    border-right-width: 1px;
+    border-right-color: var(--fb-frame-light);
+}
+
+.fb-wfrm::after {
+    border-right-width: 1px;
+    border-right-color: var(--fb-frame-medium);
+}
+
+.fb-wfrs::after {
+    border-right-width: 1px;
+    border-right-color: var(--fb-frame-strong);
+}
+
+.fb-wfbl::after {
+    border-bottom-width: 1px;
+    border-bottom-color: var(--fb-frame-light);
+}
+
+.fb-wfbm::after {
+    border-bottom-width: 1px;
+    border-bottom-color: var(--fb-frame-medium);
+}
+
+.fb-wfbs::after {
+    border-bottom-width: 1px;
+    border-bottom-color: var(--fb-frame-strong);
+}
+
+.fb-wfll::after {
+    border-left-width: 1px;
+    border-left-color: var(--fb-frame-light);
+}
+
+.fb-wflm::after {
+    border-left-width: 1px;
+    border-left-color: var(--fb-frame-medium);
+}
+
+.fb-wfls::after {
+    border-left-width: 1px;
+    border-left-color: var(--fb-frame-strong);
+}
+
+.fb-wfd::after {
+    border-style: dotted;
+}
+
+/* A box that scrolls itself would carry its ::after away with the content: it draws its side
+   frames as background layers instead, which stay in place, under the content. */
+.fb-scrollable:is(.fb-wftl, .fb-wftm, .fb-wfts, .fb-wfrl, .fb-wfrm, .fb-wfrs, .fb-wfbl, .fb-wfbm, .fb-wfbs, .fb-wfll, .fb-wflm, .fb-wfls) {
+    background-image: var(--fb-side-top), var(--fb-side-right), var(--fb-side-bottom), var(--fb-side-left);
+    background-position: top, right, bottom, left;
+    background-size: 100% 1px, 1px 100%, 100% 1px, 1px 100%;
+    background-repeat: no-repeat;
+}
+
+.fb-wfd {
+    --fb-side-dash: 1px;
+    --fb-side-period: 2px;
+}
+
+.fb-wftl {
+    --fb-side-top: repeating-linear-gradient(to right, var(--fb-frame-light) 0 var(--fb-side-dash), transparent 0 var(--fb-side-period));
+}
+
+.fb-wftm {
+    --fb-side-top: repeating-linear-gradient(to right, var(--fb-frame-medium) 0 var(--fb-side-dash), transparent 0 var(--fb-side-period));
+}
+
+.fb-wfts {
+    --fb-side-top: repeating-linear-gradient(to right, var(--fb-frame-strong) 0 var(--fb-side-dash), transparent 0 var(--fb-side-period));
+}
+
+.fb-wfrl {
+    --fb-side-right: repeating-linear-gradient(to bottom, var(--fb-frame-light) 0 var(--fb-side-dash), transparent 0 var(--fb-side-period));
+}
+
+.fb-wfrm {
+    --fb-side-right: repeating-linear-gradient(to bottom, var(--fb-frame-medium) 0 var(--fb-side-dash), transparent 0 var(--fb-side-period));
+}
+
+.fb-wfrs {
+    --fb-side-right: repeating-linear-gradient(to bottom, var(--fb-frame-strong) 0 var(--fb-side-dash), transparent 0 var(--fb-side-period));
+}
+
+.fb-wfbl {
+    --fb-side-bottom: repeating-linear-gradient(to right, var(--fb-frame-light) 0 var(--fb-side-dash), transparent 0 var(--fb-side-period));
+}
+
+.fb-wfbm {
+    --fb-side-bottom: repeating-linear-gradient(to right, var(--fb-frame-medium) 0 var(--fb-side-dash), transparent 0 var(--fb-side-period));
+}
+
+.fb-wfbs {
+    --fb-side-bottom: repeating-linear-gradient(to right, var(--fb-frame-strong) 0 var(--fb-side-dash), transparent 0 var(--fb-side-period));
+}
+
+.fb-wfll {
+    --fb-side-left: repeating-linear-gradient(to bottom, var(--fb-frame-light) 0 var(--fb-side-dash), transparent 0 var(--fb-side-period));
+}
+
+.fb-wflm {
+    --fb-side-left: repeating-linear-gradient(to bottom, var(--fb-frame-medium) 0 var(--fb-side-dash), transparent 0 var(--fb-side-period));
+}
+
+.fb-wfls {
+    --fb-side-left: repeating-linear-gradient(to bottom, var(--fb-frame-strong) 0 var(--fb-side-dash), transparent 0 var(--fb-side-period));
+}
+
+/* Round corners (WRR): a radius of 50 %, a circle on a square box. */
+.fb-wrr {
+    border-radius: 50%;
+}
+
 /**********************************************************************************/
 /* SEPARATORS */
 

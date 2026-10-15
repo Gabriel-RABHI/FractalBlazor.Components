@@ -230,6 +230,11 @@ Chaque variante n'a plus qu'un dégradé : trois ancres, à 0 %, 50 % et 100 %. 
 - [x] **25.2 FbButton.** Paramètres d'apparence : `S`, `M`, `L` (padding `PHM PVS`, `PHL PVM`, `PHX PVL`) et le genre `KW` (`WBN WFM`, par défaut), `KS` (`WBS WFM`), `KP` (`WBH WFM`), `KT` (`WBS WFN`), plus `Variant`. Les flags Layout restent, pour ajuster : écrit après un genre, un flag le corrige. Paramètres de fonction : `Handler`, `Action`, `OnClick`, `D`, `Submit`, `Title`, `ChildContent`. `Icon` et `EndIcon` disparaissent ; les usages mettent leur `FbIcon` dans le contenu. `FcButton` viendra plus tard.
 - [x] **25.3 Documentation.** `Theming.md` décrit la variante en classe, les règles de la feuille et celles du thème, et l’absence de cascade, avec la mesure ; `README.md` présente le bouton ; `AGENT.md` dit qu’une variante est une classe.
 
+## Phase 26 — Frames d'un côté, en pointillés, coins ronds
+
+- [x] **26.1 Les flags.** Dans `FbLayoutSurfaceComponentBase` : `WFTx`, `WFRx`, `WFBx`, `WFLx` (With → Frame → Top, Right, Bottom, Left, x = `L`, `M`, `S`) tracent une ligne sur un côté, chacun avec sa force ; `WFD` (With → Frame → Dot) met en pointillés la frame et les lignes de côté ; `WRR` (With → Radius → Round) met le rayon à 50 %. Comme la frame, une ligne de côté ne prend aucune place. Elle est tracée par un `::after` posé sur la boîte, par-dessus le contenu ; sur une boîte qui défile elle-même (`Scrollable`), par des couches de fond, qui restent en place pendant le défilement. L'assistant des flags les explique.
+- [ ] **26.2 Documentation.**
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :
