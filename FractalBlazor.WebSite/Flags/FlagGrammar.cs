@@ -147,6 +147,13 @@ internal sealed class FlagGrammar
                 Word("Immediate", "Sends the value while the thumb moves", "Behavior")
             ],
             "FbSliderBase");
+        grammar.Add(
+            [
+                Word("Circular", "A ring instead of a bar", "Shape"),
+                Word("Vertical", "The bar fills from bottom to top", "Orientation"),
+                Prefix("V", "Value", "Value", [Word("L", "Label: the share done", "Value")])
+            ],
+            "FbProgress");
         grammar.Add([Word("Immediate", "Sends each keystroke", "Behavior")], "FbFieldBase");
         return grammar;
     }

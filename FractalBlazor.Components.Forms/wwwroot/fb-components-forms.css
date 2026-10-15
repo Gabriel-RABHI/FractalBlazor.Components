@@ -433,6 +433,200 @@
 }
 
 /**********************************************************************************/
+/* PROGRESS */
+/* A bar or a ring. The root carries --fb-progress-value, the share done from 0 to 100 (none
+   while indeterminate); the track takes the medium frame of its background, the filled part
+   the accent of the variant. A bar fills from its start (the bottom when vertical), a ring
+   from the top, clockwise. */
+.fb-progress {
+    /* Whole pixels, like the line of a slider, so that every bar of a page looks as thick. */
+    --fb-progress-line: round(var(--fb-progress-thickness, 0.5rem), 1px);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-sizing: border-box;
+    width: var(--fb-progress-size, 100%);
+    min-width: 0;
+}
+
+.fb-progress-track {
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
+    height: var(--fb-progress-line);
+    border-radius: var(--fb-progress-line);
+    background: var(--fb-frame-medium);
+    overflow: hidden;
+}
+
+/* Square at its end, rounded at its start and at the end of the track by the track itself. */
+.fb-progress-fill {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: calc(var(--fb-progress-value, 0) * 1%);
+    background: var(--fb-control-accent);
+    transition: width 0.3s ease-out;
+}
+
+.fb-progress-label {
+    flex: none;
+    font-size: 0.85em;
+    line-height: 1.2;
+    color: var(--fb-fg-default);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* Vertical: the bar takes the height of its parent, 8rem at least, and fills upwards; the
+   label sits at the top, where it fills to. */
+.fb-progress-vertical {
+    flex-direction: column-reverse;
+    width: auto;
+    height: var(--fb-progress-size, 100%);
+    min-height: 8rem;
+}
+
+.fb-progress-vertical .fb-progress-track {
+    width: var(--fb-progress-line);
+    height: auto;
+    min-height: 0;
+}
+
+.fb-progress-vertical .fb-progress-fill {
+    top: auto;
+    right: 0;
+    width: auto;
+    height: calc(var(--fb-progress-value, 0) * 1%);
+    transition-property: height;
+}
+
+/* Indeterminate: a segment of the bar runs along it, again and again. */
+.fb-progress-indeterminate .fb-progress-fill {
+    width: 40%;
+    animation: fb-progress-run 1.4s ease-in-out infinite;
+}
+
+.fb-progress-vertical.fb-progress-indeterminate .fb-progress-fill {
+    width: auto;
+    height: 40%;
+    animation-name: fb-progress-rise;
+}
+
+@keyframes fb-progress-run {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(250%);
+    }
+}
+
+@keyframes fb-progress-rise {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(-250%);
+    }
+}
+
+/* Circular: an SVG ring whose circles count 100 along their length, turned to start at the
+   top. The filled arc is thicker than the track, as on the spinner of Layout. The label sits
+   in the middle, its size following the ring. */
+.fb-progress-circular {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: var(--fb-progress-size, 3rem);
+    height: var(--fb-progress-size, 3rem);
+    min-width: 0;
+    font-size: max(0.75em, calc(var(--fb-progress-size, 3rem) * 0.2));
+}
+
+.fb-progress-ring {
+    grid-area: 1 / 1;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.fb-progress-ring circle {
+    fill: none;
+}
+
+.fb-progress-ring-track {
+    stroke: var(--fb-frame-medium);
+    stroke-width: 4;
+}
+
+.fb-progress-ring-fill {
+    stroke: var(--fb-control-accent);
+    stroke-width: 10;
+    stroke-dasharray: 100;
+    stroke-dashoffset: calc(100 - var(--fb-progress-value, 0));
+    transition: stroke-dashoffset 0.3s ease-out;
+}
+
+.fb-progress-circular .fb-progress-label {
+    grid-area: 1 / 1;
+    font-size: 1em;
+}
+
+/* Indeterminate ring: an arc that grows and shrinks while the ring turns. */
+.fb-progress-circular.fb-progress-indeterminate .fb-progress-ring {
+    animation: fb-progress-turn 1.4s linear infinite;
+}
+
+.fb-progress-circular.fb-progress-indeterminate .fb-progress-ring-fill {
+    animation: fb-progress-arc 1.5s ease-in-out infinite;
+}
+
+@keyframes fb-progress-turn {
+    from {
+        transform: rotate(-90deg);
+    }
+
+    to {
+        transform: rotate(270deg);
+    }
+}
+
+@keyframes fb-progress-arc {
+    0% {
+        stroke-dasharray: 1 200;
+        stroke-dashoffset: 0;
+    }
+
+    50% {
+        stroke-dasharray: 60 200;
+        stroke-dashoffset: -15;
+    }
+
+    100% {
+        stroke-dasharray: 60 200;
+        stroke-dashoffset: -99;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fb-progress-fill,
+    .fb-progress-ring-fill {
+        transition: none;
+    }
+
+    .fb-progress-indeterminate .fb-progress-fill,
+    .fb-progress-indeterminate .fb-progress-ring,
+    .fb-progress-indeterminate .fb-progress-ring-fill {
+        animation-duration: 4s;
+    }
+}
+
+/**********************************************************************************/
 /* WIDTH SENSOR */
 /* The sensor only gives the script a hold on its parent, which it measures. */
 .fb-width-sensor {
