@@ -60,19 +60,22 @@ public static class FbThemeCssWriter
         AppendReference(builder, "radius-m", "default-radius-m");
         AppendReference(builder, "radius-l", "default-radius-l");
         AppendReference(builder, "radius-x", "default-radius-x");
-        builder.Append(BuildVariantReferences(FbThemeVariants.Default));
+        builder.Append(FbThemeCssNames.VariantReferences(FbThemeCssNames.Normalize(FbThemeVariants.Default)));
 
         return builder.ToString();
     }
 
     /// <summary>
-    /// Inline redirections that activate <paramref name="variant"/> on a DOM branch.
-    /// <paramref name="invert"/> reverses its gradient: a dark variant renders light, and the
-    /// other way round.
+    /// The rules of the variant classes this theme adds to the standard ones, for a
+    /// <c>&lt;style&gt;</c> element; empty when the theme only has standard variants.
     /// </summary>
-    public static string BuildVariantReferences(string? variant, bool invert = false)
-        => FbThemeCssNames.VariantReferences(
-            FbThemeCssNames.Normalize(FbThemeVariants.Normalize(variant)), invert);
+    public static string ToVariantRules(FbResolvedTheme theme)
+    {
+        ArgumentNullException.ThrowIfNull(theme);
+        var builder = new StringBuilder();
+        FbThemeCssNames.AppendVariantRules(builder, theme.VariantOrder);
+        return builder.ToString();
+    }
 
     private static void Append(StringBuilder builder, string name, string? value)
     {

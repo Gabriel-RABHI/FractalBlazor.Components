@@ -1,7 +1,6 @@
 using FractalBlazor.Components.Layout.Abstracts;
 using FractalBlazor.Components.Layout.Theming.Contracts;
-using FractalBlazor.Components.Layout.Theming.Helpers;
-using FractalBlazor.Components.Layout.Theming.Registry;
+using FractalBlazor.Components.Layout.Theming.Model;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
@@ -9,9 +8,6 @@ namespace FractalBlazor.Components.Layout.Theming;
 
 public sealed class FbLayoutVariant : FbComponentBase
 {
-    [CascadingParameter]
-    public FbLayoutThemeContext? ThemeContext { get; set; }
-
     [Parameter]
     public string Variant { get; set; } = FbLayoutThemeVariants.Default;
 
@@ -31,17 +27,27 @@ public sealed class FbLayoutVariant : FbComponentBase
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    private string? _variantClasses, _classes, _class;
+
+    /// <summary>
+    /// A neutral div (<c>display: contents</c>) with the variant classes: <c>fb-v-error</c>
+    /// redirects the anchors, <c>fb-invert</c> reverses them. A variant the theme does not know
+    /// has no rule: the content keeps the variant of its parent.
+    /// </summary>
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        var normalized = FbLayoutThemeVariants.Normalize(Variant);
-
-        // The context is absent across a render mode boundary (a static FbLayoutTheme around an
-        // interactive page): the variant is then trusted, as CSS falls back silently anyway.
-        ThemeContext?.Theme.GetVariant(normalized);
+        var variantClasses = FbThemeCssNames.VariantClasses(Variant, Invert);
+        if (_class is null || !ReferenceEquals(variantClasses, _variantClasses) || !ReferenceEquals(Classes, _classes))
+        {
+            (_variantClasses, _classes) = (variantClasses, Classes);
+            _class = string.IsNullOrWhiteSpace(Classes)
+                ? "fb-theme-scope " + variantClasses
+                : "fb-theme-scope " + variantClasses + " " + Classes.Trim();
+        }
 
         builder.OpenElement(0, "div");
-        builder.AddAttribute(1, "class", $"fb-theme-scope {Classes}".TrimEnd());
-        builder.AddAttribute(2, "style", FbLayoutThemeCssWriter.BuildVariantReferences(normalized, Invert) + Style);
+        builder.AddAttribute(1, "class", _class);
+        builder.AddAttribute(2, "style", string.IsNullOrEmpty(Style) ? null : Style);
         builder.AddContent(3, ChildContent);
         builder.CloseElement();
     }

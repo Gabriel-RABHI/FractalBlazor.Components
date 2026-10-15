@@ -76,13 +76,14 @@ public sealed class GradientTests
     }
 
     [Fact]
-    public void A_variant_redirects_its_three_anchors_and_invert_reverses_them()
+    public void A_variant_redirects_its_three_anchors_and_invert_exchanges_the_ends()
     {
         Assert.Equal(
             "--fb-low-anchor:var(--fb-error-low-anchor);--fb-mid-anchor:var(--fb-error-mid-anchor);--fb-high-anchor:var(--fb-error-high-anchor);",
-            FbThemeCssNames.VariantReferences("error", invert: false));
+            FbThemeCssNames.VariantReferences("error"));
+        // The inverted rule comes on top of the plain one, which already sets the middle anchor.
         Assert.Equal(
-            "--fb-low-anchor:var(--fb-error-high-anchor);--fb-mid-anchor:var(--fb-error-mid-anchor);--fb-high-anchor:var(--fb-error-low-anchor);",
+            "--fb-low-anchor:var(--fb-error-high-anchor);--fb-high-anchor:var(--fb-error-low-anchor);",
             FbThemeCssNames.VariantReferences("error", invert: true));
     }
 

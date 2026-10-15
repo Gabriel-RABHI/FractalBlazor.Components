@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Text;
 using FractalBlazor.Components.Layout.Colors;
+using FractalBlazor.Components.Layout.Theming.Contracts;
 
 namespace FractalBlazor.Components.Layout.Theming.Model;
 
@@ -127,8 +128,24 @@ public static class FbThemeCssNames
 
     public const string HighAnchor = "high-anchor";
 
-    private const int ReferenceCacheCapacity = 256;
-    private static readonly ConcurrentDictionary<(string Variant, bool Invert), string> _references = new();
+    /// <summary>
+    /// Class of an element that carries its own variant: the colors are computed again on it.
+    /// </summary>
+    public const string VariantClass = "fb-variant";
+
+    /// <summary>
+    /// Class that reverses the gradient of the variant of an element.
+    /// </summary>
+    public const string InvertClass = "fb-invert";
+
+    /// <summary>
+    /// Variants whose rules are in the Layout stylesheet; a theme writes the rules of the
+    /// variants it adds.
+    /// </summary>
+    public static IReadOnlyList<string> StandardVariants => FbLayoutThemeVariants.Standard;
+
+    private const int ClassCacheCapacity = 256;
+    private static readonly ConcurrentDictionary<(string Variant, bool Invert), string> _classes = new();
 
     public static string Normalize(string name)
     {
@@ -174,28 +191,61 @@ public static class FbThemeCssNames
         => $"{ActiveName(token)}:var({ValueName(variant, sourceToken)});";
 
     /// <summary>
-    /// Builds the inline redirections that activate a variant: its three anchors.
+    /// The redirections that activate a variant: its three anchors, or, inverted, the low and
+    /// high ones exchanged (the middle one stays). A theme points the active anchors at its
+    /// <c>Default</c> variant with them; the variant rules use them too.
     /// </summary>
     /// <param name="normalizedVariant">Variant name, already normalized for CSS.</param>
-    /// <param name="invert">
-    /// Reverses the gradient: the low and high anchors are exchanged, the middle one stays. A
-    /// dark variant renders light and the other way round.
-    /// </param>
-    public static string VariantReferences(string normalizedVariant, bool invert)
+    /// <param name="invert">Exchange the low and high anchors.</param>
+    public static string VariantReferences(string normalizedVariant, bool invert = false)
+        => invert
+            ? ActiveReference(normalizedVariant, LowAnchor, HighAnchor) + ActiveReference(normalizedVariant, HighAnchor, LowAnchor)
+            : ActiveReference(normalizedVariant, LowAnchor) + ActiveReference(normalizedVariant, MidAnchor) + ActiveReference(normalizedVariant, HighAnchor);
+
+    /// <summary>
+    /// The rules of a variant class: <c>.fb-v-error</c> redirects the three anchors to those of
+    /// <c>Error</c>; with <c>fb-invert</c>, the low and high ones are exchanged. An element
+    /// whose variant has no rule keeps the anchors of its parent.
+    /// </summary>
+    /// <param name="normalizedVariant">Variant name, already normalized for CSS.</param>
+    public static string VariantRules(string normalizedVariant)
     {
-        var key = (normalizedVariant, invert);
-        if (_references.TryGetValue(key, out var cached))
+        var selector = "." + VariantClassName(normalizedVariant);
+        return $"{selector}{{{VariantReferences(normalizedVariant)}}}{selector}.{InvertClass}{{{VariantReferences(normalizedVariant, invert: true)}}}";
+    }
+
+    /// <summary>
+    /// Appends the rules of the variants that are not standard: the Layout stylesheet holds
+    /// the others.
+    /// </summary>
+    public static void AppendVariantRules(StringBuilder builder, IEnumerable<string> variants)
+    {
+        foreach (var variant in variants)
+        {
+            if (!StandardVariants.Contains(variant, StringComparer.OrdinalIgnoreCase))
+                builder.Append(VariantRules(Normalize(variant)));
+        }
+    }
+
+    /// <summary>
+    /// The classes that put <paramref name="variant"/> on an element:
+    /// <c>fb-variant fb-v-error</c>, plus <c>fb-invert</c> when <paramref name="invert"/> is set.
+    /// An empty name means <c>Default</c>. Built once per name, then cached.
+    /// </summary>
+    public static string VariantClasses(string? variant, bool invert = false)
+    {
+        var name = string.IsNullOrWhiteSpace(variant) ? FbLayoutThemeVariants.Default : variant;
+        var key = (name, invert);
+        if (_classes.TryGetValue(key, out var cached))
             return cached;
 
-        var references =
-            ActiveReference(normalizedVariant, LowAnchor, invert ? HighAnchor : LowAnchor) +
-            ActiveReference(normalizedVariant, MidAnchor) +
-            ActiveReference(normalizedVariant, HighAnchor, invert ? LowAnchor : HighAnchor);
-
-        if (_references.Count < ReferenceCacheCapacity)
-            _references.TryAdd(key, references);
-        return references;
+        var classes = VariantClass + " " + VariantClassName(Normalize(name)) + (invert ? " " + InvertClass : "");
+        if (_classes.Count < ClassCacheCapacity)
+            _classes.TryAdd(key, classes);
+        return classes;
     }
+
+    private static string VariantClassName(string normalizedVariant) => "fb-v-" + normalizedVariant;
 
     /// <summary>
     /// Declares the positions of the gradient. The neutral and the offsets stay percentages,

@@ -54,7 +54,6 @@ namespace FractalBlazor.Components.Forms.Components.Panels
         {
             builder.OpenElement(0, "div");
             builder.AddAttribute(1, "class", RootClasses(string.IsNullOrWhiteSpace(Classes) ? "fb-tabs" : "fb-tabs " + Classes));
-            builder.AddAttribute(2, "style", VariantStyle);
             builder.AddAttribute(3, "role", "tablist");
             builder.AddAttribute(4, "data-fb-nav-keys", true);
             builder.AddAttribute(5, "onkeydown", EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDownAsync));

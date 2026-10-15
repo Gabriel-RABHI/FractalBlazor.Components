@@ -82,7 +82,6 @@ namespace FractalBlazor.Components.Forms.Components.Switchers
         {
             builder.OpenElement(0, "label");
             builder.AddAttribute(1, "class", RootClasses(CssClass));
-            builder.AddAttribute(2, "style", VariantStyle);
 
             builder.OpenElement(3, "input");
             builder.AddAttribute(4, "type", "checkbox");

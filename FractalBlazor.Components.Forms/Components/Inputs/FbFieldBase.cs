@@ -96,7 +96,6 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
             builder.AddAttribute(10, nameof(FbRow.JVC), true);
             builder.AddAttribute(11, nameof(FbRow.Classes), RootClasses($"fb-control fb-field {Classes}".TrimEnd()));
             builder.AddAttribute(12, nameof(FbRow.ChildContent), _rowContent);
-            builder.AddAttribute(13, nameof(FbRow.Style), VariantStyle);
             builder.CloseComponent();
         }
 

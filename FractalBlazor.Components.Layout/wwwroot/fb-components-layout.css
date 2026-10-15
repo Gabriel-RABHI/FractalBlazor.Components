@@ -123,6 +123,89 @@ html {
 }
 
 /**********************************************************************************/
+/* VARIANTS */
+/* A variant is a class: fb-v-error redirects the three anchors to those of Error, and
+   fb-invert reverses them. The rules of the standard variants are here; FbTheme writes those
+   of the variants a theme adds. A variant without a rule leaves the element with the anchors
+   of its parent. */
+.fb-v-default {
+    --fb-low-anchor: var(--fb-default-low-anchor);
+    --fb-mid-anchor: var(--fb-default-mid-anchor);
+    --fb-high-anchor: var(--fb-default-high-anchor);
+}
+
+.fb-v-default.fb-invert {
+    --fb-low-anchor: var(--fb-default-high-anchor);
+    --fb-high-anchor: var(--fb-default-low-anchor);
+}
+
+.fb-v-selected {
+    --fb-low-anchor: var(--fb-selected-low-anchor);
+    --fb-mid-anchor: var(--fb-selected-mid-anchor);
+    --fb-high-anchor: var(--fb-selected-high-anchor);
+}
+
+.fb-v-selected.fb-invert {
+    --fb-low-anchor: var(--fb-selected-high-anchor);
+    --fb-high-anchor: var(--fb-selected-low-anchor);
+}
+
+.fb-v-error {
+    --fb-low-anchor: var(--fb-error-low-anchor);
+    --fb-mid-anchor: var(--fb-error-mid-anchor);
+    --fb-high-anchor: var(--fb-error-high-anchor);
+}
+
+.fb-v-error.fb-invert {
+    --fb-low-anchor: var(--fb-error-high-anchor);
+    --fb-high-anchor: var(--fb-error-low-anchor);
+}
+
+.fb-v-warning {
+    --fb-low-anchor: var(--fb-warning-low-anchor);
+    --fb-mid-anchor: var(--fb-warning-mid-anchor);
+    --fb-high-anchor: var(--fb-warning-high-anchor);
+}
+
+.fb-v-warning.fb-invert {
+    --fb-low-anchor: var(--fb-warning-high-anchor);
+    --fb-high-anchor: var(--fb-warning-low-anchor);
+}
+
+.fb-v-disabled {
+    --fb-low-anchor: var(--fb-disabled-low-anchor);
+    --fb-mid-anchor: var(--fb-disabled-mid-anchor);
+    --fb-high-anchor: var(--fb-disabled-high-anchor);
+}
+
+.fb-v-disabled.fb-invert {
+    --fb-low-anchor: var(--fb-disabled-high-anchor);
+    --fb-high-anchor: var(--fb-disabled-low-anchor);
+}
+
+.fb-v-success {
+    --fb-low-anchor: var(--fb-success-low-anchor);
+    --fb-mid-anchor: var(--fb-success-mid-anchor);
+    --fb-high-anchor: var(--fb-success-high-anchor);
+}
+
+.fb-v-success.fb-invert {
+    --fb-low-anchor: var(--fb-success-high-anchor);
+    --fb-high-anchor: var(--fb-success-low-anchor);
+}
+
+.fb-v-info {
+    --fb-low-anchor: var(--fb-info-low-anchor);
+    --fb-mid-anchor: var(--fb-info-mid-anchor);
+    --fb-high-anchor: var(--fb-info-high-anchor);
+}
+
+.fb-v-info.fb-invert {
+    --fb-low-anchor: var(--fb-info-high-anchor);
+    --fb-high-anchor: var(--fb-info-low-anchor);
+}
+
+/**********************************************************************************/
 /* FRAMES */
 
 /* Classes named after their flags: WFL, WFM, WFS for frames, WSL, WSM, WSS for separators. */

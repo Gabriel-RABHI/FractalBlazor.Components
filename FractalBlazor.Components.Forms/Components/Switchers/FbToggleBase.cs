@@ -32,7 +32,6 @@ namespace FractalBlazor.Components.Forms.Components.Switchers
         {
             builder.OpenElement(0, "label");
             builder.AddAttribute(1, "class", RootClasses($"fb-control fb-toggle {Classes}".TrimEnd()));
-            builder.AddAttribute(2, "style", VariantStyle);
             builder.OpenElement(3, "input");
             builder.AddAttribute(4, "type", "checkbox");
             builder.AddAttribute(5, "class", InputClass);

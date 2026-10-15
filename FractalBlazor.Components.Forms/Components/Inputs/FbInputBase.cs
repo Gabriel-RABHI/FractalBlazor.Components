@@ -2,7 +2,6 @@ using FractalBlazor.Components.Common.Contracts;
 using FractalBlazor.Components.Forms.Core;
 using FractalBlazor.Components.Forms.Theming.Constants;
 using FractalBlazor.Components.Forms.Theming.Helpers;
-using FractalBlazor.Components.Forms.Theming.Registry;
 using FractalBlazor.Components.Layout.Abstracts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -16,16 +15,13 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
     /// </summary>
     /// <remarks>
     /// When <see cref="Variant"/> or <see cref="D"/> asks for it, the root element of the
-    /// control carries the variant itself (<see cref="RootClasses"/>, <see cref="VariantStyle"/>);
-    /// otherwise the field inherits the variant of its parent. Switching to <c>Error</c> while
-    /// typing only changes attributes of that element, so the DOM, and the focus, stay in place.
+    /// control carries the variant classes itself (<see cref="RootClasses"/>); otherwise the field
+    /// inherits the variant of its parent. Switching to <c>Error</c> while typing only changes the
+    /// class attribute of that element, so the DOM, and the focus, stay in place.
     /// </remarks>
     public abstract class FbInputBase<TValue, TAction> : FbComponentBase
         where TAction : IStateAction<TValue>
     {
-        [CascadingParameter]
-        public FbThemeContext? ThemeContext { get; set; }
-
         /// <summary>
         /// Current value, usually read from the state.
         /// </summary>
@@ -89,27 +85,22 @@ namespace FractalBlazor.Components.Forms.Components.Inputs
                 await ValueChanged.InvokeAsync(value);
         }
 
-        /// <summary>
-        /// Redirections of the effective variant, to put in the <c>style</c> of the root element,
-        /// or <c>null</c> without a variant. Computed before each <see cref="BuildControl"/>.
-        /// </summary>
-        protected string? VariantStyle { get; private set; }
+        private string? _variantClasses;
 
         /// <summary>
-        /// Classes of the root element: <paramref name="classes"/>, plus the variant class when
+        /// Classes of the root element: <paramref name="classes"/>, plus the variant classes when
         /// the control carries a variant.
         /// </summary>
-        protected string RootClasses(string classes) => FbVariantScope.WithClass(classes, VariantStyle);
+        protected string RootClasses(string classes) => FbVariantScope.WithClasses(classes, _variantClasses);
 
         /// <summary>
-        /// Renders the control, whose root element takes <see cref="RootClasses"/> and
-        /// <see cref="VariantStyle"/>.
+        /// Renders the control, whose root element takes <see cref="RootClasses"/>.
         /// </summary>
         protected abstract void BuildControl(RenderTreeBuilder builder);
 
         protected sealed override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            VariantStyle = FbVariantScope.Style(EffectiveVariant, ThemeContext);
+            _variantClasses = FbVariantScope.Classes(EffectiveVariant);
             BuildControl(builder);
         }
     }

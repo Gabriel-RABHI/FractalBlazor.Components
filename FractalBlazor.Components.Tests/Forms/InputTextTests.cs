@@ -73,7 +73,7 @@ public sealed class InputTextTests : BunitContext
         Assert.True(cut.Find("input").HasAttribute("disabled"));
         var root = cut.Find(".fb-field");
         Assert.Contains("fb-variant", root.ClassList);
-        Assert.Contains("var(--fb-disabled-low-anchor)", root.GetAttribute("style"));
+        Assert.Contains("fb-v-disabled", root.ClassList);
 
         cut.Find("input").Change("Grace");
         Assert.Equal("Ada", state.Name);
@@ -101,7 +101,8 @@ public sealed class InputTextTests : BunitContext
         Assert.Equal(structure, cut.FindAll("*").Select(element => element.TagName));
         var root = cut.Find(".fb-field");
         Assert.Contains("fb-variant", root.ClassList);
-        Assert.Contains("var(--fb-error-low-anchor)", root.GetAttribute("style"));
+        Assert.Contains("fb-v-error", root.ClassList);
+        Assert.Null(root.GetAttribute("style"));
     }
 
     [Fact]

@@ -2,7 +2,6 @@ using FractalBlazor.Components.Common.Contracts;
 using FractalBlazor.Components.Forms.Components.Icons;
 using FractalBlazor.Components.Forms.Core;
 using FractalBlazor.Components.Forms.Theming.Helpers;
-using FractalBlazor.Components.Forms.Theming.Registry;
 using FractalBlazor.Components.Layout.Abstracts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -35,9 +34,6 @@ namespace FractalBlazor.Components.Forms.Components.Actions
             Hover = true;
             _content = BuildContent;
         }
-
-        [CascadingParameter]
-        public FbThemeContext? ThemeContext { get; set; }
 
         [Parameter]
         public RenderFragment? ChildContent { get; set; }
@@ -97,40 +93,37 @@ namespace FractalBlazor.Components.Forms.Components.Actions
         [Parameter]
         public string? Title { get; set; }
 
-        private string? _surfaceClasses;
+        private string? _surfaceClasses, _variantClasses;
         private string _buttonClasses = "";
 
         /// <summary>
-        /// The surface classes come from a shared cache: the button prefix is only added again
-        /// when they change.
+        /// The surface and variant classes come from shared caches: the button classes are only
+        /// joined again when one of them changes.
         /// </summary>
         private string ButtonClasses
         {
             get
             {
                 var surfaceClasses = AggregatedClasses;
-                if (!ReferenceEquals(surfaceClasses, _surfaceClasses))
+                var variantClasses = FbVariantScope.Classes(FbVariantScope.Effective(Variant, IsDisabled));
+                if (!ReferenceEquals(surfaceClasses, _surfaceClasses) || !ReferenceEquals(variantClasses, _variantClasses) || _buttonClasses.Length == 0)
                 {
-                    _surfaceClasses = surfaceClasses;
-                    _buttonClasses = "fb-control fb-button " + surfaceClasses;
+                    (_surfaceClasses, _variantClasses) = (surfaceClasses, variantClasses);
+                    _buttonClasses = FbVariantScope.WithClasses("fb-control fb-button " + surfaceClasses, variantClasses);
                 }
                 return _buttonClasses;
             }
         }
 
         /// <summary>
-        /// The button carries its variant itself: the variant class and the redirections of its
-        /// anchors, before its own inline style.
+        /// The button carries its variant itself, by its classes.
         /// </summary>
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            var variantStyle = FbVariantScope.Style(FbVariantScope.Effective(Variant, IsDisabled), ThemeContext);
-            var style = AggregatedStyles;
-
             builder.OpenElement(0, "button");
             builder.AddAttribute(1, "type", Submit ? "submit" : "button");
-            builder.AddAttribute(2, "class", FbVariantScope.WithClass(ButtonClasses, variantStyle));
-            builder.AddAttribute(3, "style", variantStyle is null ? style : variantStyle + style);
+            builder.AddAttribute(2, "class", ButtonClasses);
+            builder.AddAttribute(3, "style", AggregatedStyles);
             builder.AddAttribute(4, "disabled", IsDisabled);
             builder.AddAttribute(5, "title", Title);
             builder.AddAttribute(6, "aria-label", Title);

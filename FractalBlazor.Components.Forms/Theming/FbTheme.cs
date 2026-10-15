@@ -2,7 +2,6 @@ using FractalBlazor.Components.Forms.Contracts;
 using FractalBlazor.Components.Forms.Theming.Constants;
 using FractalBlazor.Components.Forms.Theming.Helpers;
 using FractalBlazor.Components.Forms.Theming.Model;
-using FractalBlazor.Components.Forms.Theming.Registry;
 using FractalBlazor.Components.Forms.Theming.Solver;
 using FractalBlazor.Components.Layout.Abstracts;
 using FractalBlazor.Components.Layout.Theming.Model;
@@ -44,8 +43,8 @@ public sealed class FbTheme : FbComponentBase
     public RenderFragment? ChildContent { get; set; }
 
     private FbResolvedTheme? _resolved;
-    private FbThemeContext? _context;
     private string _variables = "";
+    private string _variantRules = "";
     private FbThemeSetup? _resolvedSetup;
     private string? _resolvedSetupBranch;
 
@@ -68,6 +67,10 @@ public sealed class FbTheme : FbComponentBase
         return _resolved;
     }
 
+    /// <summary>
+    /// Writes the variables of the theme, and the rules of the variants it adds to the standard
+    /// ones. A variant is a CSS class: nothing is cascaded to the content.
+    /// </summary>
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         var resolved = ResolveTheme();
@@ -75,39 +78,31 @@ public sealed class FbTheme : FbComponentBase
         {
             _resolved = resolved;
             _variables = FbThemeCssWriter.ToCssVariables(resolved);
-            if (_context is null)
-                _context = new FbThemeContext(resolved);
-            else
-                _context.Theme = resolved;
+            _variantRules = FbThemeCssWriter.ToVariantRules(resolved);
         }
 
         if (Scoped)
         {
-            builder.OpenElement(0, "div");
-            builder.AddAttribute(1, "class", "fb-theme-scope fb-theme");
-            builder.AddAttribute(2, "style", _variables);
-            BuildContent(builder);
+            if (_variantRules.Length > 0)
+            {
+                builder.OpenElement(0, "style");
+                builder.AddMarkupContent(1, _variantRules);
+                builder.CloseElement();
+            }
+
+            builder.OpenElement(2, "div");
+            builder.AddAttribute(3, "class", "fb-theme-scope fb-theme");
+            builder.AddAttribute(4, "style", _variables);
+            builder.AddContent(5, ChildContent);
             builder.CloseElement();
             return;
         }
 
         FbThemeCssNames.ValidateSelector(Selector);
-        builder.OpenElement(3, "style");
-        builder.AddMarkupContent(4, $"{Selector}{{{_variables}}}");
+        builder.OpenElement(6, "style");
+        builder.AddMarkupContent(7, $"{Selector}{{{_variables}}}{_variantRules}");
         builder.CloseElement();
 
-        BuildContent(builder);
-    }
-
-    private void BuildContent(RenderTreeBuilder builder)
-    {
-        if (ChildContent is null)
-            return;
-
-        builder.OpenComponent<CascadingValue<FbThemeContext>>(10);
-        builder.AddAttribute(11, "Value", _context);
-        builder.AddAttribute(12, "IsFixed", true);
-        builder.AddAttribute(13, "ChildContent", ChildContent);
-        builder.CloseComponent();
+        builder.AddContent(8, ChildContent);
     }
 }
