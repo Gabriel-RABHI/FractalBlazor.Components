@@ -245,7 +245,7 @@ Chaque variante n'a plus qu'un dégradé : trois ancres, à 0 %, 50 % et 100 %. 
 La page Row / Stack documente les deux conteneurs flex autour de leur apport principal : les flags d’alignement nomment les axes de l’écran (`JH*` horizontal, `JV*` vertical), dans une ligne comme dans une pile. Le conteneur ne décide que de la propriété CSS écrite.
 
 - [x] **28.1 Code en ligne.** `FbText Code` écrit un fragment de code dans le texte : la police de code, sur une pastille tirée de la couleur du texte, lisible sur toute surface.
-- [ ] **28.2 La page.** Un pavé de positions pilote une ligne et une pile avec les mêmes flags et montre le CSS de chacune ; un bac à sable couvre conteneur, axes et espacement, avec le code produit. Suivent les axes de flux et transversal, les raccourcis, les valeurs par défaut, l’occupation de l’espace, le retour à la ligne et l’inversion, l’alignement d’un enfant, séparateurs et groupes, puis une référence des flags. Les états des démos sont testés dans `FractalBlazor.WebSite.StateModel.Tests`.
+- [x] **28.2 La page.** Un pavé de positions pilote une ligne et une pile avec les mêmes flags et montre le CSS de chacune ; un bac à sable couvre conteneur, axes et espacement, avec le code produit. Suivent les axes de flux et transversal, les raccourcis, les valeurs par défaut, l’occupation de l’espace, le retour à la ligne et l’inversion, l’alignement d’un enfant, séparateurs et groupes, puis une référence des flags. Les états des démos sont testés dans `FractalBlazor.WebSite.StateModel.Tests`.
 
 ## Critères de fin
 

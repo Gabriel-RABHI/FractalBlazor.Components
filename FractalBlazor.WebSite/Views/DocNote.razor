@@ -1,0 +1,12 @@
+@* A remark set apart from the text, in the Info variant. *@
+<FbVariant Variant="@FbThemeVariants.Info">
+    <FbRow NoFlex GM PM WBA WFL WRM JVS>
+        <FbIcon Icon="@FbMaterialIcons.Info" M Highlight />
+        <FbText S>@ChildContent</FbText>
+    </FbRow>
+</FbVariant>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

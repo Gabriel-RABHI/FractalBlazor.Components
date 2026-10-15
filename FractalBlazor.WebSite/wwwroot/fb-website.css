@@ -22,3 +22,7 @@
     font-size: 0.85em;
     overflow-x: auto;
 }
+
+.fb-site-code-attached {
+    border-radius: 0;
+}

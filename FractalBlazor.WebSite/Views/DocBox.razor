@@ -1,0 +1,13 @@
+@* A child of a demo container: a block of accent sized by its text. It does not grow (NoFlex),
+   so the container has room left to align it. *@
+<FbRow NoFlex JC PHM PVS WBA WFM WRM>
+    <FbText Size="@Size" B NW>@Label</FbText>
+</FbRow>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Label { get; set; } = "";
+
+    [Parameter]
+    public FbTextSize Size { get; set; } = FbTextSize.M;
+}

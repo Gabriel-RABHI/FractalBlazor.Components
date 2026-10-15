@@ -1,34 +1,398 @@
+@* The Row / Stack page. Its message: the alignment flags name the axes of the screen, so a row
+   and a stack align with the same words; the container only picks the CSS property. The two
+   interactive demos are states of the page, rendered by their own views. *@
 @attribute [ViewFor<ViewSelector>(typeof(RowStackPage), ViewSelector.Viewer)]
 
-<FbStack GL>
-    <FbText L B>Surfaces et frames</FbText>
-    <FbRow GL WFM WSS WRL PL WBA>
-        <FbRow GL WFL PL WBH WRM Hover>
-            <FbText XS T>Home</FbText>
-            <FbText S T>Home</FbText>
-            <FbText M T>Home</FbText>
-            <FbText L T>Home</FbText>
-            <FbText XL T>Home</FbText>
-            <FbText XXL T>Home</FbText>
-        </FbRow>
-        <FbRow GL WFS PM WBS SJVS>
-            <FbText S>Home</FbText>
-            <FbText M>Home</FbText>
-            <FbText L>Home</FbText>
-            <FbText XL>Home with <b>bold</b></FbText>
-        </FbRow>
-        <FbRow GL WFM PM Hover SJVE JVBl>
-            <FbText S B>Home</FbText>
-            <FbText M B>Home</FbText>
-            <FbText L B>Home</FbText>
-            <FbRowItem SJVBl>
-                <FbText XL B>Home</FbText>
-            </FbRowItem>
-        </FbRow>
-    </FbRow>
+<FbStack NoFlex GX JVS>
+    <FbText L Muted>
+        FbRow range ses enfants en ligne, FbStack en colonne. Les deux conteneurs partagent un même
+        vocabulaire d’alignement, nommé d’après les axes de l’écran : <FbText Code>JH*</FbText>
+        aligne toujours à l’horizontale, <FbText Code>JV*</FbText> toujours à la verticale.
+    </FbText>
+
+    <DocSection Title="Une seule logique d’alignement">
+        <FbText M Muted>
+            En CSS, <FbText Code>justify-content</FbText> suit l’axe principal du conteneur et
+            <FbText Code>align-items</FbText> l’axe transversal. Dans une ligne, la première propriété
+            est horizontale ; dans une colonne, elle devient verticale. Changer de direction oblige à
+            intervertir les deux.
+        </FbText>
+        <FbText M Muted>
+            FractalBlazor nomme les alignements d’après l’écran. <FbText Code>JHC</FbText> centre à
+            l’horizontale, dans une FbRow comme dans une FbStack ; <FbText Code>JVE</FbText> place le
+            groupe en bas dans les deux. Le conteneur choisit la propriété CSS. Choisissez une
+            position : les deux conteneurs la prennent avec les mêmes flags, seul le CSS écrit change.
+        </FbText>
+        <FbStack NoFlex PL WFL WRL JVS>
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Pad" Selector="ViewSelector.Viewer" />
+        </FbStack>
+    </DocSection>
+
+    <DocSection Title="Axe de flux, axe transversal">
+        <FbText M Muted>
+            Les enfants suivent l’axe de flux : l’horizontale dans une FbRow, la verticale dans une
+            FbStack. Sur cet axe, le conteneur place le groupe ou répartit l’espace libre entre les
+            enfants. Sur l’axe transversal, il place chaque enfant, ou l’étire. Les flags gardent leur
+            nom ; seuls changent les axes qui acceptent une répartition et ceux qui acceptent un
+            étirement.
+        </FbText>
+        <FbStack NoFlex Joined WGL WRL JVS>
+            <FbRow NoFlex GM PHM PVS WBA JVC>
+                @HeaderCell("Rôle", 3)
+                @HeaderCell("FbRow", 2)
+                @HeaderCell("FbStack", 2)
+                @HeaderCell("CSS", 3)
+            </FbRow>
+            @foreach (var role in Roles)
+            {
+                <FbRow NoFlex GM PHM PVS JVC>
+                    <FbRow Flex="3"><FbText S>@role.Name</FbText></FbRow>
+                    @CodeCell(role.Row, 2)
+                    @CodeCell(role.Stack, 2)
+                    @CodeCell(role.Css, 3)
+                </FbRow>
+            }
+        </FbStack>
+        <DocNote>
+            L’étirement n’existe pas sur l’axe de flux : <FbText Code>justify-content: stretch</FbText>
+            y range les enfants au début. <FbText Code>JHSt</FbText> dans une FbRow (sa valeur par
+            défaut) et <FbText Code>JVSt</FbText> dans une FbStack agissent donc comme
+            <FbText Code>JHS</FbText> et <FbText Code>JVS</FbText>. Pour remplir l’axe de flux, faites
+            grandir un enfant : voir « Occuper l’espace ».
+        </DocNote>
+    </DocSection>
+
+    <DocSection Title="Bac à sable">
+        <FbText M Muted>
+            Choisissez un conteneur et un alignement par axe. Chaque axe ne propose que les flags qu’il
+            accepte : passez de FbRow à FbStack, les répartitions (<FbText Code>SB</FbText>,
+            <FbText Code>SA</FbText>, <FbText Code>Ev</FbText>) suivent l’axe de flux et
+            l’étirement l’axe transversal, mais un flag garde toujours le même sens. Quand les deux
+            axes prennent la même valeur, le code utilise le raccourci.
+        </FbText>
+        <FbStack NoFlex PL WFL WRL JVS>
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Playground" Selector="ViewSelector.Viewer" />
+        </FbStack>
+    </DocSection>
+
+    <DocSection Title="Raccourcis">
+        <FbText M Muted>
+            Quand les deux axes prennent la même valeur, un seul flag suffit : <FbText Code>JS</FbText>,
+            <FbText Code>JC</FbText>, <FbText Code>JE</FbText> et <FbText Code>JSt</FbText> valent
+            <FbText Code>JHS JVS</FbText>, <FbText Code>JHC JVC</FbText>, <FbText Code>JHE JVE</FbText>
+            et <FbText Code>JHSt JVSt</FbText>. Centrer un contenu dans sa zone s’écrit donc de la même
+            façon, en ligne comme en colonne.
+        </FbText>
+        <DocExample Code="@ShortcutCode">
+            <FbRow NoFlex MultiLine GM JVSt>
+                <FbStack JC GS PL WBA WRL MinWidth="14rem" MinHeight="9rem">
+                    <FbIcon Icon="@FbMaterialIcons.Inbox" L Muted />
+                    <FbText M Muted>Aucun message</FbText>
+                </FbStack>
+                <FbRow JC GS PL WBA WRL MinWidth="14rem" MinHeight="9rem">
+                    <FbIcon Icon="@FbMaterialIcons.CloudUpload" L Muted />
+                    <FbText M Muted>Déposez vos fichiers</FbText>
+                </FbRow>
+            </FbRow>
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Valeurs par défaut">
+        <FbText M Muted>
+            Sans flag, chaque conteneur est réglé pour son usage le plus courant. Une FbRow range ses
+            enfants à gauche et les centre verticalement (<FbText Code>JHSt JVC</FbText>) : une barre
+            d’outils ou une ligne de formulaire s’aligne sans réglage. Elle reste sur une ligne
+            (<FbText Code>SingleLine</FbText>). Une FbStack étire ses enfants sur toute la largeur et
+            répartit la hauteur entre eux (<FbText Code>JHSt JVSB</FbText>) : le premier en haut, le
+            dernier en bas. Une pile qui doit rester groupée en haut prend <FbText Code>JVS</FbText>.
+            Les deux conteneurs prennent l’espace libre de leur parent (<FbText Code>Flex="1"</FbText>).
+        </FbText>
+        <DocExample Code="@DefaultsCode">
+            <FbRow NoFlex MultiLine GM JVSt>
+                <FbStack MinWidth="14rem" GS JVS>
+                    <FbText S B Muted>FbRow</FbText>
+                    <FbRow NoFlex GS PM WFM WFD WRM MinHeight="12rem">
+                        @DemoBoxes
+                    </FbRow>
+                </FbStack>
+                <FbStack MinWidth="14rem" GS JVS>
+                    <FbText S B Muted>FbStack</FbText>
+                    <FbStack NoFlex GS PM WFM WFD WRM MinHeight="12rem">
+                        @DemoBoxes
+                    </FbStack>
+                </FbStack>
+            </FbRow>
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Occuper l’espace">
+        <FbText M Muted>
+            Un alignement ne déplace que l’espace libre. Or FbRow et FbStack grandissent par défaut
+            (<FbText Code>Flex="1"</FbText>) : imbriqués, ils se partagent toute la place et il ne
+            reste rien à aligner. <FbText Code>NoFlex</FbText> ramène un conteneur à la taille de son
+            contenu ; <FbText Code>Flex="2"</FbText> lui donne deux parts de l’espace libre.
+            FbRowSpacer et FbStackSpacer prennent l’espace libre pour eux : ce qui les suit part au
+            bout.
+        </FbText>
+        <DocExample Code="@SpaceCode">
+            <FbRow NoFlex GS PM WFL WRM>
+                <FbIcon Icon="@FbMaterialIcons.Folder" M Muted />
+                <FbText M B>Documents</FbText>
+                <FbRowSpacer />
+                <FbButton S KT><FbText S>Partager</FbText></FbButton>
+                <FbButton S KP><FbText S>Nouveau</FbText></FbButton>
+            </FbRow>
+            <FbRow NoFlex GS>
+                <FbRow Flex="1" PM WBA WRM><FbText S>Flex="1"</FbText></FbRow>
+                <FbRow Flex="2" PM WBA WRM><FbText S>Flex="2"</FbText></FbRow>
+                <FbRow NoFlex PM WBA WRM><FbText S>NoFlex</FbText></FbRow>
+            </FbRow>
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Plusieurs lignes, sens inversé">
+        <FbText M Muted>
+            <FbText Code>MultiLine</FbText> laisse une FbRow passer à la ligne quand ses enfants ne
+            tiennent plus ; <FbText Code>JH*</FbText> aligne alors chaque ligne.
+            <FbText Code>Reverse</FbText> inverse l’ordre d’affichage des enfants d’une FbRow ou
+            d’une FbStack, et avec lui le sens de l’axe de flux : le début passe à l’autre bout.
+            <FbText Code>JHS</FbText> range une FbRow inversée à droite, <FbText Code>JVS</FbText> une
+            FbStack inversée en bas. L’axe transversal ne change pas.
+        </FbText>
+        <DocExample Code="@WrapCode">
+            <FbRow NoFlex MultiLine GS JHC>
+                @foreach (var tag in Tags)
+                {
+                    <FbRow NoFlex PHM PVS WBA WRL><FbText S>@tag</FbText></FbRow>
+                }
+            </FbRow>
+            <FbRow NoFlex Reverse GS JHS PS WFM WFD WRM>
+                <DocBox Label="1" />
+                <DocBox Label="2" />
+                <DocBox Label="3" />
+            </FbRow>
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Aligner un seul enfant">
+        <FbText M Muted>
+            Un enfant peut sortir de l’alignement transversal de son parent. Dans une FbStack, l’axe
+            transversal est horizontal : FbStackItem accepte <FbText Code>SJHS</FbText>,
+            <FbText Code>SJHC</FbText>, <FbText Code>SJHE</FbText> et <FbText Code>SJHSt</FbText>.
+            Dans une FbRow, il est vertical : FbRowItem accepte <FbText Code>SJVS</FbText>,
+            <FbText Code>SJVC</FbText>, <FbText Code>SJVE</FbText>, <FbText Code>SJVSt</FbText> et
+            <FbText Code>SJVBl</FbText>.
+        </FbText>
+        <DocExample Code="@SelfCode">
+            <FbStack NoFlex GS JHS>
+                <FbStackItem PHM PVS WBA WRL><FbText S>La réunion tient toujours ?</FbText></FbStackItem>
+                <FbStackItem SJHE PHM PVS WBH WRL><FbText S>Oui, à 14 h.</FbText></FbStackItem>
+                <FbStackItem PHM PVS WBA WRL><FbText S>Parfait, merci.</FbText></FbStackItem>
+            </FbStack>
+        </DocExample>
+        <DocNote>
+            Une FbRow ou une FbStack imbriquée accepte les deux familles. Elles posent la même
+            propriété, <FbText Code>align-self</FbText>, qui n’agit que sur l’axe transversal du
+            parent : écrivez la lettre de cet axe, <FbText Code>SJV*</FbText> dans une FbRow,
+            <FbText Code>SJH*</FbText> dans une FbStack, et le code dira ce qu’il fait.
+        </DocNote>
+    </DocSection>
+
+    <DocSection Title="Séparer et grouper">
+        <FbText M Muted>
+            <FbText Code>WSL</FbText>, <FbText Code>WSM</FbText> et <FbText Code>WSS</FbText> tracent
+            un trait entre les enfants : vertical dans une FbRow, horizontal dans une FbStack. Les
+            espaceurs n’en reçoivent pas. <FbText Code>WGL</FbText>, <FbText Code>WGM</FbText> et
+            <FbText Code>WGS</FbText> ajoutent la frame autour. <FbText Code>Joined</FbText> fait des
+            enfants un seul groupe : le premier et le dernier prennent les coins du conteneur. Les
+            boutons segmentés de cette page sont construits ainsi.
+        </FbText>
+        <DocExample Code="@GroupCode">
+            <FbRow NoFlex MultiLine GL JVS>
+                <FbRow NoFlex Joined WFM WRM WSM>
+                    <FbButton KP WFN WRN Title="Gras"><FbIcon Icon="@FbMaterialIcons.FormatBold" S /></FbButton>
+                    <FbButton WFN WRN Title="Italique"><FbIcon Icon="@FbMaterialIcons.FormatItalic" S /></FbButton>
+                    <FbButton WFN WRN Title="Souligné"><FbIcon Icon="@FbMaterialIcons.FormatUnderlined" S /></FbButton>
+                </FbRow>
+                <FbStack NoFlex Joined WGM WRL MinWidth="15rem">
+                    <FbRow GS PM><FbIcon Icon="@FbMaterialIcons.Person" S /><FbText S>Profil</FbText></FbRow>
+                    <FbRow GS PM><FbIcon Icon="@FbMaterialIcons.Notifications" S /><FbText S>Notifications</FbText></FbRow>
+                    <FbRow GS PM><FbIcon Icon="@FbMaterialIcons.Settings" S /><FbText S>Paramètres</FbText></FbRow>
+                </FbStack>
+            </FbRow>
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Référence">
+        <FbText M Muted>
+            Les flags d’alignement, d’espacement et de groupe des deux conteneurs, avec le CSS qu’ils
+            écrivent. Un tiret marque un flag que le conteneur n’a pas.
+        </FbText>
+        <FbStack NoFlex Joined WGL WRL JVS>
+            <FbRow NoFlex GM PHM PVS WBA JVC>
+                @HeaderCell("Flags")
+                @HeaderCell("FbRow")
+                @HeaderCell("FbStack")
+            </FbRow>
+            @foreach (var flag in Flags)
+            {
+                <FbRow NoFlex GM PHM PVS JVC>
+                    <FbStack Flex="1" GS JHS JVS>
+                        <FbText S Code>@flag.Flags</FbText>
+                        <FbText XS Muted>@flag.Role</FbText>
+                    </FbStack>
+                    @CodeCell(flag.Row)
+                    @CodeCell(flag.Stack)
+                </FbRow>
+            }
+        </FbStack>
+    </DocSection>
 </FbStack>
 
 @code {
     [Parameter]
     public RowStackPage Item { get; set; } = default!;
+
+    private sealed record Role(string Name, string Row, string Stack, string Css);
+
+    private sealed record FlagEntry(string Flags, string Role, string Row, string Stack);
+
+    private static readonly Role[] Roles =
+    [
+        new("Placer le groupe sur le flux", "JHS JHC JHE", "JVS JVC JVE", "justify-content"),
+        new("Répartir l’espace libre", "JHSB JHSA JHEv", "JVSB JVSA JVEv", "justify-content"),
+        new("Placer en travers du flux", "JVS JVC JVE", "JHS JHC JHE", "align-items"),
+        new("Étirer en travers du flux", "JVSt", "JHSt", "align-items: stretch"),
+        new("Aligner les lignes de base", "JVBl", "—", "align-items: baseline")
+    ];
+
+    private static readonly FlagEntry[] Flags =
+    [
+        new("JHS JHC JHE", "Horizontal : début, centre, fin", "justify-content", "align-items"),
+        new("JHSt", "Horizontal : étirer", "justify-content: stretch (début)", "align-items: stretch"),
+        new("JHSB JHSA JHEv", "Horizontal : espace entre, autour, égal", "justify-content: space-*", "—"),
+        new("JVS JVC JVE", "Vertical : début, centre, fin", "align-items", "justify-content"),
+        new("JVSt", "Vertical : étirer", "align-items: stretch", "justify-content: stretch (début)"),
+        new("JVBl", "Vertical : ligne de base", "align-items: baseline", "—"),
+        new("JVSB JVSA JVEv", "Vertical : espace entre, autour, égal", "—", "justify-content: space-*"),
+        new("JS JC JE JSt", "Les deux axes à la fois", "justify-content + align-items", "align-items + justify-content"),
+        new("GS GM GL GX", "Espacement entre les enfants", "gap", "gap"),
+        new("SingleLine MultiLine ReverseMultiLine", "Retour à la ligne", "flex-wrap", "—"),
+        new("Reverse", "Ordre inversé", "flex-direction: row-reverse", "flex-direction: column-reverse"),
+        new("Flex=\"n\" NoFlex", "Part de l’espace libre du parent", "flex", "flex"),
+        new("WSL WSM WSS", "Trait entre les enfants", "border-right", "border-bottom"),
+        new("WGL WGM WGS", "Frame et traits", "outline + border-right", "outline + border-bottom"),
+        new("Joined", "Les extrémités prennent les coins du conteneur", "border-radius: inherit", "border-radius: inherit"),
+        new("Scrollable", "Le contenu défile", "overflow: auto", "overflow: auto"),
+        new("SJVS SJVC SJVE SJVSt SJVBl", "Sur FbRowItem : l’enfant, en vertical", "align-self", "—"),
+        new("SJHS SJHC SJHE SJHSt", "Sur FbStackItem : l’enfant, en horizontal", "—", "align-self")
+    ];
+
+    private static readonly string[] Tags =
+    [
+        "Blazor", "Flexbox", "Thème", "Variantes", "Accessibilité", "Performances", "État", "Composants",
+        "Grille", "Frames", "Séparateurs", "Raccourcis", "Espacement", "Alignement", "Icônes", "Champs"
+    ];
+
+    private static RenderFragment HeaderCell(string text, int flex = 1) =>
+        @<FbRow Flex="@flex"><FbText S B>@text</FbText></FbRow>;
+
+    private static RenderFragment CodeCell(string text, int flex = 1) =>
+        @<FbRow Flex="@flex">
+            @if (text == "—")
+            {
+                <FbText S Subtle>—</FbText>
+            }
+            else
+            {
+                <FbText S Code>@text</FbText>
+            }
+        </FbRow>;
+
+    private RenderFragment DemoBoxes =>
+        @<text>
+            <DocBox Label="Un" />
+            <DocBox Label="Deux" Size="FbTextSize.XL" />
+            <DocBox Label="Trois" Size="FbTextSize.S" />
+        </text>;
+
+    private const string ShortcutCode = """
+        <FbStack JC GS MinHeight="9rem">
+            <FbIcon Icon="@FbMaterialIcons.Inbox" L Muted />
+            <FbText M Muted>Aucun message</FbText>
+        </FbStack>
+
+        <FbRow JC GS MinHeight="9rem">
+            <FbIcon Icon="@FbMaterialIcons.CloudUpload" L Muted />
+            <FbText M Muted>Déposez vos fichiers</FbText>
+        </FbRow>
+        """;
+
+    private const string DefaultsCode = """
+        <FbRow>…</FbRow>      @* JHSt JVC : à gauche, centrés verticalement *@
+        <FbStack>…</FbStack>  @* JHSt JVSB : étirés, répartis sur la hauteur *@
+        """;
+
+    private const string SpaceCode = """
+        <FbRow GS PM WFL WRM>
+            <FbIcon Icon="@FbMaterialIcons.Folder" M Muted />
+            <FbText M B>Documents</FbText>
+            <FbRowSpacer />
+            <FbButton S KT><FbText S>Partager</FbText></FbButton>
+            <FbButton S KP><FbText S>Nouveau</FbText></FbButton>
+        </FbRow>
+
+        <FbRow GS>
+            <FbRow Flex="1" PM WBA WRM>…</FbRow>
+            <FbRow Flex="2" PM WBA WRM>…</FbRow>
+            <FbRow NoFlex PM WBA WRM>…</FbRow>
+        </FbRow>
+        """;
+
+    private const string WrapCode = """
+        <FbRow MultiLine GS JHC>
+            <FbRow NoFlex PHM PVS WBA WRL><FbText S>Blazor</FbText></FbRow>
+            …
+        </FbRow>
+
+        <FbRow Reverse GS JHS>
+            …1, 2, 3
+        </FbRow>
+        """;
+
+    private const string SelfCode = """
+        <FbStack GS JHS>
+            <FbStackItem PHM PVS WBA WRL>
+                <FbText S>La réunion tient toujours ?</FbText>
+            </FbStackItem>
+            <FbStackItem SJHE PHM PVS WBH WRL>
+                <FbText S>Oui, à 14 h.</FbText>
+            </FbStackItem>
+            <FbStackItem PHM PVS WBA WRL>
+                <FbText S>Parfait, merci.</FbText>
+            </FbStackItem>
+        </FbStack>
+        """;
+
+    private const string GroupCode = """
+        <FbRow NoFlex Joined WFM WRM WSM>
+            <FbButton KP WFN WRN Title="Gras">
+                <FbIcon Icon="@FbMaterialIcons.FormatBold" S />
+            </FbButton>
+            <FbButton WFN WRN Title="Italique">
+                <FbIcon Icon="@FbMaterialIcons.FormatItalic" S />
+            </FbButton>
+            <FbButton WFN WRN Title="Souligné">
+                <FbIcon Icon="@FbMaterialIcons.FormatUnderlined" S />
+            </FbButton>
+        </FbRow>
+
+        <FbStack NoFlex Joined WGM WRL>
+            <FbRow GS PM>
+                <FbIcon Icon="@FbMaterialIcons.Person" S />
+                <FbText S>Profil</FbText>
+            </FbRow>
+            …
+        </FbStack>
+        """;
 }

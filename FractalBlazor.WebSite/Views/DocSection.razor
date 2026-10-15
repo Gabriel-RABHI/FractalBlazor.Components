@@ -1,0 +1,13 @@
+@* A section of a documentation page: a title, then its content. *@
+<FbStack NoFlex GM JVS>
+    <FbText XL B>@Title</FbText>
+    @ChildContent
+</FbStack>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = "";
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

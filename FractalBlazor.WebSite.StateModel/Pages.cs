@@ -21,7 +21,11 @@ namespace FractalBlazor.WebSite.StateModel
 
     public sealed record ThemeEditorPage;
 
-    public sealed record RowStackPage;
+    /// <summary>
+    /// FbRow and FbStack, with the states of their two demos: the alignment pad and the
+    /// playground.
+    /// </summary>
+    public sealed record RowStackPage(AlignmentPadState Pad, FlexPlaygroundState Playground);
 
     public sealed record GridPage;
 

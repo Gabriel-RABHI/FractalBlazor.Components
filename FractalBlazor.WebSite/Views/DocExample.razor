@@ -1,0 +1,16 @@
+@* A live example over its source, in one frame: the group is Joined, so the code takes the
+   lower corners of the frame. *@
+<FbStack NoFlex Joined WFL WRL WSL JVS>
+    <FbStack NoFlex PL GM JVS>
+        @ChildContent
+    </FbStack>
+    <CodeBlock Code="@Code" Attached />
+</FbStack>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Code { get; set; } = "";
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

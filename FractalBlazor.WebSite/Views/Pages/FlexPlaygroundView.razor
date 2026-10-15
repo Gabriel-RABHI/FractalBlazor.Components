@@ -1,0 +1,108 @@
+@* The playground: a container, an alignment on each axis and a gutter. The buttons only send
+   actions; the preview, the code and the CSS are images of the state. Each axis offers what
+   its role allows: the flow axis distributes, the cross axis stretches. *@
+@attribute [ViewFor<ViewSelector>(typeof(FlexPlaygroundState), ViewSelector.Viewer)]
+
+<FbStack NoFlex GL JVS>
+    <FbRow NoFlex MultiLine GL JVE>
+        <FbStack NoFlex GS JHS JVS>
+            <FbText S B>Conteneur</FbText>
+            <FbRow NoFlex Joined WFM WRM WSM>
+                @foreach (var container in FlexPlaygroundState.Containers)
+                {
+                    <FbButton KP="@(Item.Container == container)" S WFN WRN Handler="Item"
+                              Action="@(new FlexPlaygroundState.SetContainer(container))">
+                        <FbText S>@FlexAlignments.Name(container)</FbText>
+                    </FbButton>
+                }
+            </FbRow>
+        </FbStack>
+        @Axis(FlexAxis.Horizontal)
+        @Axis(FlexAxis.Vertical)
+        <FbStack NoFlex GS JHS JVS>
+            <FbText S B>Espacement</FbText>
+            <FbRow NoFlex Joined WFM WRM WSM>
+                @foreach (var gutter in FlexPlaygroundState.Gutters)
+                {
+                    <FbButton KP="@(Item.Gutter == gutter)" S WFN WRN Handler="Item"
+                              Action="@(new FlexPlaygroundState.SetGutter(gutter))"
+                              Title="@(FlexAlignments.GutterDeclaration(gutter) ?? FbValueView.TextOf(gutter))">
+                        <FbText S>@(FlexAlignments.GutterFlag(gutter) ?? FbValueView.TextOf(gutter))</FbText>
+                    </FbButton>
+                }
+            </FbRow>
+        </FbStack>
+    </FbRow>
+
+    @if (Item.Container == FlexContainer.Row)
+    {
+        <FbRow NoFlex PM WFM WFD WRM MinHeight="14rem"
+               JHS="@H(FlexAlignment.Start)" JHC="@H(FlexAlignment.Center)" JHE="@H(FlexAlignment.End)"
+               JHSB="@H(FlexAlignment.SpaceBetween)" JHSA="@H(FlexAlignment.SpaceAround)" JHEv="@H(FlexAlignment.SpaceEvenly)"
+               JVS="@V(FlexAlignment.Start)" JVC="@V(FlexAlignment.Center)" JVE="@V(FlexAlignment.End)"
+               JVSt="@V(FlexAlignment.Stretch)" JVBl="@V(FlexAlignment.Baseline)"
+               GS="@G(FlexGutter.S)" GM="@G(FlexGutter.M)" GL="@G(FlexGutter.L)" GX="@G(FlexGutter.X)">
+            @Boxes
+        </FbRow>
+    }
+    else
+    {
+        <FbStack NoFlex PM WFM WFD WRM MinHeight="14rem"
+                 JHS="@H(FlexAlignment.Start)" JHC="@H(FlexAlignment.Center)" JHE="@H(FlexAlignment.End)"
+                 JHSt="@H(FlexAlignment.Stretch)"
+                 JVS="@V(FlexAlignment.Start)" JVC="@V(FlexAlignment.Center)" JVE="@V(FlexAlignment.End)"
+                 JVSB="@V(FlexAlignment.SpaceBetween)" JVSA="@V(FlexAlignment.SpaceAround)" JVEv="@V(FlexAlignment.SpaceEvenly)"
+                 GS="@G(FlexGutter.S)" GM="@G(FlexGutter.M)" GL="@G(FlexGutter.L)" GX="@G(FlexGutter.X)">
+            @Boxes
+        </FbStack>
+    }
+
+    <FbRow NoFlex MultiLine GM JVSt>
+        <FbStack MinWidth="16rem" GS JVS>
+            <FbText S B Muted>Razor</FbText>
+            <CodeBlock Code="@Item.Code" />
+        </FbStack>
+        <FbStack MinWidth="16rem" GS JVS>
+            <FbText S B Muted>CSS écrit par les flags</FbText>
+            <CodeBlock Code="@Item.Css" />
+        </FbStack>
+    </FbRow>
+</FbStack>
+
+@code {
+    [Parameter]
+    public FlexPlaygroundState Item { get; set; } = default!;
+
+    private bool H(FlexAlignment alignment) => Item.Horizontal == alignment;
+
+    private bool V(FlexAlignment alignment) => Item.Vertical == alignment;
+
+    private bool G(FlexGutter gutter) => Item.Gutter == gutter;
+
+    private static IStateAction Set(FlexAxis axis, FlexAlignment alignment)
+        => axis == FlexAxis.Horizontal ? new FlexPlaygroundState.SetHorizontal(alignment) : new FlexPlaygroundState.SetVertical(alignment);
+
+    private RenderFragment Axis(FlexAxis axis) =>
+        @<FbStack NoFlex GS JHS JVS>
+            <FbRow NoFlex GS JVBl>
+                <FbText S B>@(axis == FlexAxis.Horizontal ? "Horizontal" : "Vertical")</FbText>
+                <FbText XS Muted>@(Item.IsFlow(axis) ? "axe de flux" : "axe transversal") · @FlexAlignments.Property(Item.Container, axis)</FbText>
+            </FbRow>
+            <FbRow NoFlex Joined WFM WRM WSM>
+                @foreach (var alignment in Item.Choices(axis))
+                {
+                    <FbButton KP="@(Item.On(axis) == alignment)" S WFN WRN Handler="Item" Action="@Set(axis, alignment)"
+                              Title="@FbValueView.TextOf(alignment)">
+                        <FbText S>@FlexAlignments.Flag(axis, alignment)</FbText>
+                    </FbButton>
+                }
+            </FbRow>
+        </FbStack>;
+
+    private RenderFragment Boxes =>
+        @<text>
+            <DocBox Label="Un" />
+            <DocBox Label="Deux" Size="FbTextSize.XL" />
+            <DocBox Label="Trois" Size="FbTextSize.S" />
+        </text>;
+}

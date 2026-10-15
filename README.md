@@ -220,7 +220,7 @@ new SectionState(Navigation, MenuItemIntent.Components, section =>
 [
     new MenuGroupState(section, MenuItemIntent.Layout, group =>
     [
-        new PageLinkState(group, MenuItemIntent.RowStack, new RowStackPage()),
+        new PageLinkState(group, MenuItemIntent.RowStack, new RowStackPage(new AlignmentPadState(), new FlexPlaygroundState())),
         new PageLinkState(group, MenuItemIntent.Drawer, new DrawerPage(new DrawerDemoState()))
     ]),
     new MenuGroupState(section, MenuItemIntent.Inputs)

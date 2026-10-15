@@ -1,0 +1,93 @@
+@* The alignment pad: one position, given with the same flags to a row and to a stack. Each
+   container shows the CSS it writes: the flags stay, the properties swap. *@
+@attribute [ViewFor<ViewSelector>(typeof(AlignmentPadState), ViewSelector.Viewer)]
+
+<FbRow NoFlex MultiLine GL JVS>
+    <FbStack NoFlex GS JHS JVS>
+        <FbText S B>Position du groupe</FbText>
+        <FbGridContainer Columns="3" GS>
+            @foreach (var vertical in AlignmentPadState.Positions)
+            {
+                @foreach (var horizontal in AlignmentPadState.Positions)
+                {
+                    <FbGridItem>
+                        <FbButton KP="@Item.IsAt(horizontal, vertical)" S Handler="Item"
+                                  Action="@(new AlignmentPadState.SetPosition(horizontal, vertical))"
+                                  Title="@(FlexAlignments.Flag(FlexAxis.Horizontal, horizontal) + " " + FlexAlignments.Flag(FlexAxis.Vertical, vertical))">
+                            <FbIcon Icon="@Arrow(horizontal, vertical)" S />
+                        </FbButton>
+                    </FbGridItem>
+                }
+            }
+        </FbGridContainer>
+        <FbText S Code>@Item.Flags</FbText>
+    </FbStack>
+
+    <FbRow MultiLine GL JVS>
+        @Preview(FlexContainer.Row)
+        @Preview(FlexContainer.Stack)
+    </FbRow>
+</FbRow>
+
+@code {
+    [Parameter]
+    public AlignmentPadState Item { get; set; } = default!;
+
+    private bool H(FlexAlignment alignment) => Item.Horizontal == alignment;
+
+    private bool V(FlexAlignment alignment) => Item.Vertical == alignment;
+
+    private static string Arrow(FlexAlignment horizontal, FlexAlignment vertical) => (horizontal, vertical) switch
+    {
+        (FlexAlignment.Start, FlexAlignment.Start) => FbMaterialIcons.NorthWest,
+        (FlexAlignment.Center, FlexAlignment.Start) => FbMaterialIcons.North,
+        (FlexAlignment.End, FlexAlignment.Start) => FbMaterialIcons.NorthEast,
+        (FlexAlignment.Start, FlexAlignment.Center) => FbMaterialIcons.West,
+        (FlexAlignment.End, FlexAlignment.Center) => FbMaterialIcons.East,
+        (FlexAlignment.Start, FlexAlignment.End) => FbMaterialIcons.SouthWest,
+        (FlexAlignment.Center, FlexAlignment.End) => FbMaterialIcons.South,
+        (FlexAlignment.End, FlexAlignment.End) => FbMaterialIcons.SouthEast,
+        _ => FbMaterialIcons.Adjust
+    };
+
+    private RenderFragment Preview(FlexContainer container) =>
+        @<FbStack MinWidth="17rem" GS JVS>
+            <FbRow NoFlex GS JVBl>
+                <FbText M B>@FlexAlignments.Name(container)</FbText>
+                <FbText S Muted>@(container == FlexContainer.Row ? "flux horizontal" : "flux vertical")</FbText>
+            </FbRow>
+            @if (container == FlexContainer.Row)
+            {
+                <FbRow NoFlex GS PM WFM WFD WRM MinHeight="11rem"
+                       JHS="@H(FlexAlignment.Start)" JHC="@H(FlexAlignment.Center)" JHE="@H(FlexAlignment.End)"
+                       JVS="@V(FlexAlignment.Start)" JVC="@V(FlexAlignment.Center)" JVE="@V(FlexAlignment.End)">
+                    @Boxes
+                </FbRow>
+            }
+            else
+            {
+                <FbStack NoFlex GS PM WFM WFD WRM MinHeight="11rem"
+                         JHS="@H(FlexAlignment.Start)" JHC="@H(FlexAlignment.Center)" JHE="@H(FlexAlignment.End)"
+                         JVS="@V(FlexAlignment.Start)" JVC="@V(FlexAlignment.Center)" JVE="@V(FlexAlignment.End)">
+                    @Boxes
+                </FbStack>
+            }
+            <FbRow NoFlex><FbText S Code NW>@Item.Code(container)</FbText></FbRow>
+            @Mapping(container, FlexAxis.Horizontal)
+            @Mapping(container, FlexAxis.Vertical)
+        </FbStack>;
+
+    private RenderFragment Mapping(FlexContainer container, FlexAxis axis) =>
+        @<FbRow NoFlex GS JVC>
+            <FbText S Code>@FlexAlignments.Flag(axis, Item.On(axis))</FbText>
+            <FbIcon Icon="@FbMaterialIcons.ArrowForward" S Subtle />
+            <FbText S Code Muted NW>@Item.Declaration(container, axis)</FbText>
+        </FbRow>;
+
+    private RenderFragment Boxes =>
+        @<text>
+            <DocBox Label="Un" />
+            <DocBox Label="Deux" Size="FbTextSize.XL" />
+            <DocBox Label="Trois" Size="FbTextSize.S" />
+        </text>;
+}
