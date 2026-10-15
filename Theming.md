@@ -675,6 +675,8 @@ Une frame peut ne border qu'un côté : `WFTx`, `WFRx`, `WFBx`, `WFLx` (With →
 
 `WRR` (With → Radius → Round) met le rayon à 50 % : un cercle sur une boîte carrée, une ellipse sinon. Écrit après lui, un rayon de l'échelle (`WRS`…`WRX`, `WRN`) le remplace, et inversement.
 
+Les séparateurs (`WSL`, `WSM`, `WSS`) tracent un trait entre les enfants d’une row ou d’une grille (à droite de chacun) et d’une stack (en dessous), sauf le dernier, quel que soit leur élément : un `FbButton`, un `FbText` ou une `FbIcon` sont séparés comme un `FbRowItem`, puisqu’un enfant de conteneur flex ou grid dessine sa bordure. Un nœud texte et une boîte en `display: contents` (`FbVariant`, `FbTheme Scoped`) n’ont pas de bordure à dessiner ; un dernier enfant masqué laisse le trait de l’avant-dernier.
+
 Les composants dérivés de `FbLayoutSurfaceComponentBase` exposent le drapeau `EO` (Enable → Outline) pour ajouter un anneau autour de la boîte, à l'extérieur de sa frame, dans la couleur calculée de la frame courante. C'est une ombre, puisque la frame est un outline : un champ qui a le focus garde ses deux traits, et l'anneau ne prend pas de place non plus.
 
 ```css

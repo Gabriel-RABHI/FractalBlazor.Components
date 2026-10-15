@@ -235,6 +235,10 @@ Chaque variante n'a plus qu'un dégradé : trois ancres, à 0 %, 50 % et 100 %. 
 - [x] **26.1 Les flags.** Dans `FbLayoutSurfaceComponentBase` : `WFTx`, `WFRx`, `WFBx`, `WFLx` (With → Frame → Top, Right, Bottom, Left, x = `L`, `M`, `S`) tracent une ligne sur un côté, chacun avec sa force ; `WFD` (With → Frame → Dot) met en pointillés la frame et les lignes de côté ; `WRR` (With → Radius → Round) met le rayon à 50 %. Comme la frame, une ligne de côté ne prend aucune place. Elle est tracée par un `::after` posé sur la boîte, par-dessus le contenu ; sur une boîte qui défile elle-même (`Scrollable`), par des couches de fond, qui restent en place pendant le défilement. L'assistant des flags les explique.
 - [x] **26.2 Documentation.** `Theming.md` décrit les lignes de côté, leur tracé et le cas des boîtes qui défilent, `WFD` et `WRR` ; le README les cite parmi les drapeaux.
 
+## Phase 27 — Composants groupés
+
+- [x] **27.1 Séparateurs pour tout enfant.** `WSL`, `WSM`, `WSS` tracent leur trait entre tous les enfants d’une row, d’une grille ou d’une stack, et plus seulement entre les `div` : un `FbButton`, un `FbText` ou une `FbIcon` se séparent sans `FbRowItem` autour.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :

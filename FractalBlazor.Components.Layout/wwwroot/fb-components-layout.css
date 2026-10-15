@@ -219,13 +219,15 @@ html {
     outline-offset: -1px;
 }
 
-/* Separators between the children of a Row (and of a Grid container) */
-:is(.fb-row, .fb-grid-container):is(.fb-wsl, .fb-wsm, .fb-wss) > div:nth-last-child(n+2) {
+/* Separators between the children of a Row (and of a Grid container), whatever their element:
+   a child of a flex or grid container is a flex or grid item, which draws its border. Text
+   nodes and boxes in display: contents have no border to draw. */
+:is(.fb-row, .fb-grid-container):is(.fb-wsl, .fb-wsm, .fb-wss) > *:nth-last-child(n+2) {
     border-right: 1px solid var(--fb-frame-border-color);
 }
 
-/* Separators between the children of a Stack */
-.fb-stack:is(.fb-wsl, .fb-wsm, .fb-wss) > div:nth-last-child(n+2) {
+/* Separators between the children of a Stack, whatever their element */
+.fb-stack:is(.fb-wsl, .fb-wsm, .fb-wss) > *:nth-last-child(n+2) {
     border-bottom: 1px solid var(--fb-frame-border-color);
 }
 
