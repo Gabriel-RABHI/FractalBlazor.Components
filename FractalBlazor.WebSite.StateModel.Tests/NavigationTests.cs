@@ -25,7 +25,7 @@ public sealed class NavigationTests
     public void The_top_menu_follows_the_tree()
     {
         Assert.Equal(
-            [MenuItemIntent.QuickStart, MenuItemIntent.Components, MenuItemIntent.DragAndDrop, MenuItemIntent.Compositions,
+            [MenuItemIntent.QuickStart, MenuItemIntent.Components, MenuItemIntent.Compositions,
              MenuItemIntent.Advanced, MenuItemIntent.BuildingBlocks, MenuItemIntent.Pricing],
             _root.Header.Sections.Select(s => s.Intent));
         Assert.Equal(
@@ -76,10 +76,13 @@ public sealed class NavigationTests
         var groups = components.Entries.Cast<MenuGroupState>().ToList();
 
         Assert.Equal(
-            [MenuItemIntent.Layout, MenuItemIntent.Panels, MenuItemIntent.View, MenuItemIntent.Inputs, MenuItemIntent.Selectors],
+            [MenuItemIntent.Layout, MenuItemIntent.DragAndDrop, MenuItemIntent.Panels, MenuItemIntent.View, MenuItemIntent.Inputs, MenuItemIntent.Selectors],
             groups.Select(g => g.Intent));
         Assert.Equal(7, groups[0].Pages.Count);
-        Assert.All(groups.Skip(1), group => Assert.Empty(group.Pages));
+        Assert.Equal(
+            [MenuItemIntent.DragDropBasics, MenuItemIntent.DragDropRules, MenuItemIntent.DragDropSamples],
+            groups[1].Pages.Select(p => p.Intent));
+        Assert.All(groups.Skip(2), group => Assert.Empty(group.Pages));
 
         var drawer = Link(MenuItemIntent.Drawer);
         Assert.Same(groups[0], drawer.Group);

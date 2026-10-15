@@ -260,6 +260,7 @@ Portage des fonctions de `TinyBlazor.DragAndDrop` (TinyBlazorComponents), adapt�
 
 - [x] **29.1 Composants.** Contrats dans `Common` (`FbDropZone`, `FbDropFeedback`, `IFbDragAndDropRules`, `FbDrop`) ; `FbDragAndDropMaster`, `FbDraggable`, `FbDraggableHandle`, `FbDraggableReceiver` dans `Forms/Components/DragAndDrop`, avec la couche de zones ; écouteurs du script Layout ; règles de la feuille Forms ; tests.
 - [x] **29.2 Site.** Une section « Drag & Drop » : principes (imbrications, poignées, informations, receveur déplaçable, imbrication), règles (compatibilité, placements, découpages), exemples (liste réordonnable, kanban). Les états des démos sont testés dans `FractalBlazor.WebSite.StateModel.Tests`.
+- [x] **29.3 Dans Components.** La section « Drag & Drop » quitte le menu du haut : ses trois pages forment un groupe « Drag & Drop » de la section Components, après le groupe Layout.
 
 ## Critères de fin
 

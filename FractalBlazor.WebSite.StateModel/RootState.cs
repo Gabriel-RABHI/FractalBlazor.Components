@@ -43,18 +43,18 @@ namespace FractalBlazor.WebSite.StateModel
                             new PageLinkState(group, MenuItemIntent.DropDown, new PendingPage()),
                             new PageLinkState(group, MenuItemIntent.Updatable, new PendingPage())
                         ]),
+                        new MenuGroupState(section, MenuItemIntent.DragAndDrop, group =>
+                        [
+                            new PageLinkState(group, MenuItemIntent.DragDropBasics,
+                                new DragDropBasicsPage(new DragDropDemoState(), new DragDropDemoState(), new DragDropDemoState(), new DragDropDemoState(), new DragDropDemoState())),
+                            new PageLinkState(group, MenuItemIntent.DragDropRules,
+                                new DragDropRulesPage(new CompatibilityDemoState(), new PreviewDemoState(), new SplitDemoState())),
+                            new PageLinkState(group, MenuItemIntent.DragDropSamples, new DragDropSamplesPage(new ReorderListState(), new KanbanBoardState()))
+                        ]),
                         new MenuGroupState(section, MenuItemIntent.Panels),
                         new MenuGroupState(section, MenuItemIntent.View),
                         new MenuGroupState(section, MenuItemIntent.Inputs),
                         new MenuGroupState(section, MenuItemIntent.Selectors)
-                    ]),
-                    new SectionState(Navigation, MenuItemIntent.DragAndDrop, section =>
-                    [
-                        new PageLinkState(section, MenuItemIntent.DragDropBasics,
-                            new DragDropBasicsPage(new DragDropDemoState(), new DragDropDemoState(), new DragDropDemoState(), new DragDropDemoState(), new DragDropDemoState())),
-                        new PageLinkState(section, MenuItemIntent.DragDropRules,
-                            new DragDropRulesPage(new CompatibilityDemoState(), new PreviewDemoState(), new SplitDemoState())),
-                        new PageLinkState(section, MenuItemIntent.DragDropSamples, new DragDropSamplesPage(new ReorderListState(), new KanbanBoardState()))
                     ]),
                     new SectionState(Navigation, MenuItemIntent.Compositions, new FormsPage(new ContactState())),
                     new SectionState(Navigation, MenuItemIntent.Advanced, new PendingPage()),
