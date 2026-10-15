@@ -22,9 +22,9 @@ namespace FractalBlazor.Components.Forms.Components.Display
     }
 
     /// <summary>
-    /// A piece of code and its kind.
+    /// A piece of code and its kind; an attribute also knows the element it is written on.
     /// </summary>
-    internal readonly record struct FbCodeToken(FbCodeTokenKind Kind, string Text);
+    internal readonly record struct FbCodeToken(FbCodeTokenKind Kind, string Text, string? Element = null);
 
     /// <summary>
     /// Splits code into colored pieces for <see cref="FbCodeBlock"/>. A light lexer, not a
@@ -61,6 +61,7 @@ namespace FractalBlazor.Components.Forms.Components.Display
         private readonly List<FbCodeToken> _tokens = [];
         private FbCodeTokenKind _pendingKind;
         private int _pendingStart, _pendingEnd;
+        private string? _pendingElement;
 
         private FbCodeTokenizer(string code) => _code = code;
 
@@ -95,24 +96,28 @@ namespace FractalBlazor.Components.Forms.Components.Display
 
         // ------------------------------------------------------------------ Pieces
 
-        private void Add(FbCodeTokenKind kind, int start, int end)
+        /// <summary>
+        /// Adds a piece, joined to the previous one when it has the same kind; an attribute
+        /// stays alone, with its <paramref name="element"/>.
+        /// </summary>
+        private void Add(FbCodeTokenKind kind, int start, int end, string? element = null)
         {
             if (end <= start)
                 return;
-            if (_pendingEnd > _pendingStart && kind == _pendingKind && start == _pendingEnd)
+            if (_pendingEnd > _pendingStart && kind == _pendingKind && kind != FbCodeTokenKind.Attribute && start == _pendingEnd)
             {
                 _pendingEnd = end;
                 return;
             }
             Flush();
-            (_pendingKind, _pendingStart, _pendingEnd) = (kind, start, end);
+            (_pendingKind, _pendingStart, _pendingEnd, _pendingElement) = (kind, start, end, element);
         }
 
         private void Flush()
         {
             if (_pendingEnd > _pendingStart)
-                _tokens.Add(new FbCodeToken(_pendingKind, _code[_pendingStart.._pendingEnd]));
-            _pendingStart = _pendingEnd = 0;
+                _tokens.Add(new FbCodeToken(_pendingKind, _code[_pendingStart.._pendingEnd], _pendingElement));
+            (_pendingStart, _pendingEnd, _pendingElement) = (0, 0, null);
         }
 
         private char At(int index) => index < _code.Length ? _code[index] : '\0';
@@ -352,6 +357,7 @@ namespace FractalBlazor.Components.Forms.Components.Display
 
             var nameEnd = Skip(i, end, ch => IsIdentifierPart(ch) || ch is '.' or ':' or '-');
             Add(char.IsUpper(_code[i]) ? FbCodeTokenKind.Type : FbCodeTokenKind.Tag, i, nameEnd);
+            var element = _code[i..nameEnd];
             i = nameEnd;
 
             while (i < end)
@@ -398,7 +404,10 @@ namespace FractalBlazor.Components.Forms.Components.Display
                     while (next < end && !char.IsWhiteSpace(_code[next]) && _code[next] is not ('=' or '>' or '"' or '\'')
                            && !(_code[next] == '/' && At(next + 1) == '>'))
                         next++;
-                    Add(c == '@' ? FbCodeTokenKind.Razor : FbCodeTokenKind.Attribute, i, next);
+                    if (c == '@')
+                        Add(FbCodeTokenKind.Razor, i, next);
+                    else
+                        Add(FbCodeTokenKind.Attribute, i, next, element);
                 }
                 i = next;
             }

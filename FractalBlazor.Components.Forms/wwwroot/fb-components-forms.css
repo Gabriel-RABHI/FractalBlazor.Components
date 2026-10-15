@@ -1058,6 +1058,17 @@
 .fb-code-l { color: var(--fb-code-selector); }
 .fb-code-v { color: var(--fb-code-variable); }
 
+/* An attribute the glossary explains: the script of Layout shows its bubble while the
+   pointer is over it. */
+.fb-code-block [data-fb-tip] {
+    cursor: help;
+}
+
+.fb-code-block [data-fb-tip]:hover {
+    text-decoration: underline dotted;
+    text-underline-offset: 3px;
+}
+
 /* The copy button: over the top right corner, shown while the block is hovered or holds the
    focus, and while it says the code is copied; always on a touch screen, which has no hover. */
 .fb-code-copy {

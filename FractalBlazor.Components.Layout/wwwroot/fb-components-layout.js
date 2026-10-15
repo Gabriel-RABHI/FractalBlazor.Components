@@ -526,6 +526,65 @@ window.FractalBlazor = window.FractalBlazor || {};
         return Promise.resolve(fallback());
     };
 
+    //------ Bubbles (data-fb-tip) ------//
+
+    // Delegated listeners: an element that carries data-fb-tip shows its text in a bubble
+    // while the pointer is over it (the attributes of FbCodeBlock). One bubble serves the whole
+    // page; it is fixed, so that no scrolling area clips it, and moves into an open dialog,
+    // which lies above the page.
+    let bubble = null;
+    let bubbleOwner = null;
+
+    function showBubble(owner) {
+        if (!bubble) {
+            bubble = document.createElement('div');
+            bubble.className = 'fb-tip';
+            bubble.setAttribute('role', 'tooltip');
+        }
+        const host = owner.closest('dialog[open]') ?? document.body;
+        if (bubble.parentElement !== host)
+            host.appendChild(bubble);
+        bubble.textContent = owner.dataset.fbTip;
+        bubble.classList.add('fb-tip-shown');
+        bubbleOwner = owner;
+
+        // Above the owner, centered, kept in the window; below it when there is no room above.
+        // A transformed host (a sliding drawer) places fixed boxes from its own corner.
+        const box = owner.getBoundingClientRect();
+        const gap = 6, margin = 8;
+        const width = bubble.offsetWidth, height = bubble.offsetHeight;
+        let left = Math.min(Math.max(margin, box.left + box.width / 2 - width / 2), window.innerWidth - width - margin);
+        let top = box.top - height - gap >= margin ? box.top - height - gap : box.bottom + gap;
+        if (host !== document.body && getComputedStyle(host).transform !== 'none') {
+            const origin = host.getBoundingClientRect();
+            left -= origin.left;
+            top -= origin.top;
+        }
+        bubble.style.left = left + 'px';
+        bubble.style.top = top + 'px';
+    }
+
+    function hideBubble() {
+        bubble?.classList.remove('fb-tip-shown');
+        bubbleOwner = null;
+    }
+
+    document.addEventListener('pointerover', event => {
+        const owner = event.target instanceof Element ? event.target.closest('[data-fb-tip]') : null;
+        if (owner === bubbleOwner)
+            return;
+        if (owner)
+            showBubble(owner);
+        else
+            hideBubble();
+    });
+    document.addEventListener('pointerout', event => {
+        if (!event.relatedTarget)
+            hideBubble();
+    });
+    // Capture: a scroll in any area moves the owner away from its bubble.
+    document.addEventListener('scroll', hideBubble, true);
+
     //------ Drag and drop (FbDraggable, FbDraggableHandle, FbDraggableReceiver) ------//
 
     // Delegated listeners: no component calls the script, and no state lives here but the

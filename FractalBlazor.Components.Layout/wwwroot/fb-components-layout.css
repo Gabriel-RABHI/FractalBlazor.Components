@@ -1546,6 +1546,35 @@ html {
 }
 
 /**********************************************************************************/
+/* BUBBLE */
+/* The bubble the script shows over an element that carries data-fb-tip: one for the page,
+   fixed so that no scrolling area clips it, above the dropdowns, in the reversed colors of
+   the page. It never takes the pointer, so that it never hides what it explains. */
+.fb-tip {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+    box-sizing: border-box;
+    max-width: min(24rem, calc(100vw - 16px));
+    padding: var(--fb-space-s) var(--fb-space-m);
+    border-radius: var(--fb-radius-s);
+    background: var(--fb-fg-highlight);
+    color: var(--fb-current-bg);
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.12s ease-out, visibility 0.12s;
+}
+
+.fb-tip-shown {
+    opacity: 1;
+    visibility: visible;
+}
+
+/**********************************************************************************/
 /* DRAWER */
 /* FbDrawer: a frame per mode and side (.fb-drawer-inline.fb-drawer-left…) and a panel
    that carries the surface. --fb-drawer-size is the width of a side drawer, the height of

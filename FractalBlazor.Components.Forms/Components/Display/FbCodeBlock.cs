@@ -25,6 +25,10 @@ namespace FractalBlazor.Components.Forms.Components.Display
     /// block is hovered or holds the focus; it copies <see cref="Code"/> through the script of
     /// Layout, then says so for a moment.
     /// </para>
+    /// <para>
+    /// When the application registers an <see cref="IFbCodeGlossary"/>, each attribute it
+    /// explains carries a bubble, shown by the script of Layout while the pointer is over it.
+    /// </para>
     /// </remarks>
     /// <example><c>&lt;FbCodeBlock Code="@Sample" CSharp /&gt;</c></example>
     public sealed class FbCodeBlock : FbLayoutSurfaceComponentBase, IDisposable
@@ -43,6 +47,8 @@ namespace FractalBlazor.Components.Forms.Components.Display
         private string? _tokenizedCode;
         private FbCodeLanguage _tokenizedLanguage;
         private IReadOnlyList<FbCodeToken> _tokens = [];
+        private string?[] _tips = [];
+        private IFbCodeGlossary? _glossary;
         private bool _copied, _disposed;
         private int _copies;
 
@@ -55,6 +61,13 @@ namespace FractalBlazor.Components.Forms.Components.Display
 
         [Inject]
         public IJSRuntime JS { get; set; } = default!;
+
+        /// <summary>
+        /// Where the block finds an <see cref="IFbCodeGlossary"/>, when the application
+        /// registers one.
+        /// </summary>
+        [Inject]
+        public IServiceProvider Services { get; set; } = default!;
 
         /// <summary>
         /// The code shown, as it is written: Razor never parses it.
@@ -111,6 +124,8 @@ namespace FractalBlazor.Components.Forms.Components.Display
         [Parameter]
         public string CopiedTitle { get; set; } = "Copied";
 
+        protected override void OnInitialized() => _glossary = Services.GetService(typeof(IFbCodeGlossary)) as IFbCodeGlossary;
+
         protected override void CaptureParameterDefaults()
         {
             base.CaptureParameterDefaults();
@@ -124,7 +139,8 @@ namespace FractalBlazor.Components.Forms.Components.Display
         }
 
         /// <summary>
-        /// The pieces of the code, cut again only when the code or its language changes.
+        /// The pieces of the code, cut again only when the code or its language changes, with
+        /// the bubble of each attribute the glossary explains.
         /// </summary>
         internal IReadOnlyList<FbCodeToken> Tokens
         {
@@ -134,6 +150,15 @@ namespace FractalBlazor.Components.Forms.Components.Display
                 {
                     (_tokenizedCode, _tokenizedLanguage) = (Code, _language);
                     _tokens = FbCodeTokenizer.Tokenize(Code, _language);
+                    _tips = new string?[_tokens.Count];
+                    if (_glossary is not null)
+                    {
+                        for (var index = 0; index < _tokens.Count; index++)
+                        {
+                            if (_tokens[index] is { Kind: FbCodeTokenKind.Attribute, Element: { } element } attribute)
+                                _tips[index] = _glossary.Explain(element, attribute.Text);
+                        }
+                    }
                 }
                 return _tokens;
             }
@@ -152,8 +177,10 @@ namespace FractalBlazor.Components.Forms.Components.Display
             builder.AddAttribute(4, "class", "fb-code-pre");
             builder.AddAttribute(5, "tabindex", "0");
             builder.OpenElement(6, "code");
-            foreach (var token in Tokens)
+            var tokens = Tokens;
+            for (var index = 0; index < tokens.Count; index++)
             {
+                var token = tokens[index];
                 if (token.Kind == FbCodeTokenKind.Plain)
                 {
                     builder.AddContent(7, token.Text);
@@ -161,7 +188,8 @@ namespace FractalBlazor.Components.Forms.Components.Display
                 }
                 builder.OpenElement(8, "span");
                 builder.AddAttribute(9, "class", TokenClasses[(int)token.Kind]);
-                builder.AddContent(10, token.Text);
+                builder.AddAttribute(10, "data-fb-tip", _tips[index]);
+                builder.AddContent(11, token.Text);
                 builder.CloseElement();
             }
             builder.CloseElement();
@@ -169,21 +197,21 @@ namespace FractalBlazor.Components.Forms.Components.Display
 
             if (!_noCopy)
             {
-                builder.OpenElement(11, "div");
-                builder.AddAttribute(12, "class", "fb-code-copy");
-                builder.OpenComponent<FbButton>(13);
-                builder.AddComponentParameter(14, nameof(FbButton.KS), true);
-                builder.AddComponentParameter(15, nameof(FbButton.S), true);
-                builder.AddComponentParameter(16, nameof(FbButton.Title), _copied ? CopiedTitle : CopyTitle);
-                builder.AddComponentParameter(17, nameof(FbButton.OnClick), _copy);
-                builder.AddComponentParameter(18, nameof(FbButton.ChildContent), _copied ? CopiedIcon : CopyIcon);
+                builder.OpenElement(12, "div");
+                builder.AddAttribute(13, "class", "fb-code-copy");
+                builder.OpenComponent<FbButton>(14);
+                builder.AddComponentParameter(15, nameof(FbButton.KS), true);
+                builder.AddComponentParameter(16, nameof(FbButton.S), true);
+                builder.AddComponentParameter(17, nameof(FbButton.Title), _copied ? CopiedTitle : CopyTitle);
+                builder.AddComponentParameter(18, nameof(FbButton.OnClick), _copy);
+                builder.AddComponentParameter(19, nameof(FbButton.ChildContent), _copied ? CopiedIcon : CopyIcon);
                 builder.CloseComponent();
                 builder.CloseElement();
 
-                builder.OpenElement(19, "span");
-                builder.AddAttribute(20, "class", "fb-code-status");
-                builder.AddAttribute(21, "role", "status");
-                builder.AddContent(22, _copied ? CopiedTitle : null);
+                builder.OpenElement(20, "span");
+                builder.AddAttribute(21, "class", "fb-code-status");
+                builder.AddAttribute(22, "role", "status");
+                builder.AddContent(23, _copied ? CopiedTitle : null);
                 builder.CloseElement();
             }
             builder.CloseElement();

@@ -1,6 +1,7 @@
 using FractalBlazor.Components.Forms;
 using FractalBlazor.Components.Forms.Components.Display;
-using K = FractalBlazor.Components.Forms.Components.Display.FbCodeTokenKind;
+using Microsoft.Extensions.DependencyInjection;
+using K =FractalBlazor.Components.Forms.Components.Display.FbCodeTokenKind;
 
 namespace FractalBlazor.Components.Tests.Forms;
 
@@ -62,6 +63,16 @@ public sealed class CodeBlockTests : BunitContext
     }
 
     [Fact]
+    public void An_attribute_knows_the_element_it_is_written_on()
+    {
+        var attributes = FbCodeTokenizer.Tokenize("<FbGridContainer JHCC Columns=\"3\">\n    <div class=\"x\"></div>", FbCodeLanguage.Razor)
+            .Where(token => token.Kind == K.Attribute)
+            .Select(token => (token.Text, token.Element));
+
+        Assert.Equal([("JHCC", "FbGridContainer"), ("Columns", "FbGridContainer"), ("class", "div")], attributes);
+    }
+
+    [Fact]
     public void An_attribute_expression_keeps_its_own_quotes()
     {
         var pieces = Pieces("<FbBadge Title=\"@(on ? \"En ligne\" : \"Hors ligne\")\" Dot />", FbCodeLanguage.Razor);
@@ -117,6 +128,31 @@ public sealed class CodeBlockTests : BunitContext
         Assert.Equal(["fb-code-p", "fb-code-t", "fb-code-a", "fb-code-p"],
             root.QuerySelectorAll("code > span").Select(span => span.ClassName));
         Assert.Equal("0", root.QuerySelector("pre")!.GetAttribute("tabindex"));
+    }
+
+    private sealed class Glossary : IFbCodeGlossary
+    {
+        public string? Explain(string element, string attribute)
+            => (element, attribute) == ("FbGridContainer", "JHCC") ? "Justify → Horizontal → Content → Center" : null;
+    }
+
+    [Fact]
+    public void A_registered_glossary_gives_its_attributes_a_bubble()
+    {
+        Services.AddSingleton<IFbCodeGlossary>(new Glossary());
+
+        var spans = Render<FbCodeBlock>(p => p.Add(x => x.Code, "<FbGridContainer JHCC GS />")).FindAll("code > span.fb-code-a");
+
+        Assert.Equal("Justify → Horizontal → Content → Center", spans[0].GetAttribute("data-fb-tip"));
+        Assert.False(spans[1].HasAttribute("data-fb-tip"));
+    }
+
+    [Fact]
+    public void Without_a_glossary_no_attribute_has_a_bubble()
+    {
+        var cut = Render<FbCodeBlock>(p => p.Add(x => x.Code, "<FbGridContainer JHCC />"));
+
+        Assert.Empty(cut.FindAll("[data-fb-tip]"));
     }
 
     [Fact]
