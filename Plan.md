@@ -238,6 +238,7 @@ Chaque variante n'a plus qu'un dégradé : trois ancres, à 0 %, 50 % et 100 %. 
 ## Phase 27 — Composants groupés
 
 - [x] **27.1 Séparateurs pour tout enfant.** `WSL`, `WSM`, `WSS` tracent leur trait entre tous les enfants d’une row, d’une grille ou d’une stack, et plus seulement entre les `div` : un `FbButton`, un `FbText` ou une `FbIcon` se séparent sans `FbRowItem` autour.
+- [x] **27.2 Joined.** Sur `FbRow` et `FbStack`, `Joined` fait des enfants un groupe : le premier et le dernier prennent les coins extérieurs du conteneur (classe `fb-joined`, avec `fb-reverse` quand la direction est inversée), sans rien rogner. Frames et coins des enfants (`WFN WRN`), séparateurs (`WS*`) et espacement se règlent à la main.
 
 ## Critères de fin
 

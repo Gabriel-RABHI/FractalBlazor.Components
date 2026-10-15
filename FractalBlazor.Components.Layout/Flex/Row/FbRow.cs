@@ -61,7 +61,7 @@ namespace FractalBlazor.Components.Layout
 
         private string BuildRowClasses()
             => BuildAtomizedFlexClasses(
-                FbClasses.Join("fb-row", BuildSurfaceClasses(), SeparatorClass, Scrollable ? "fb-scrollable" : null),
+                FbClasses.Join("fb-row", BuildSurfaceClasses(), SeparatorClass, Scrollable ? "fb-scrollable" : null, JoinedClasses),
                 Baseline);
         #endregion
 

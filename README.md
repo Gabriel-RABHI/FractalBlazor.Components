@@ -149,6 +149,16 @@ Sans vue déclarée, les types simples (`string`, énumérations, nombres, dates
 </FbButton>
 ```
 
+Des boutons se groupent dans une row `Joined` : sans espace, séparés par `WS*`, leurs frames et leurs coins retirés à la main (`WFN WRN`) ; les deux extrémités prennent les coins du groupe.
+
+```razor
+<FbRow NoFlex Joined WFM WRM WSM>
+    <FbButton WFN WRN><FbIcon Icon="@FbMaterialIcons.Alarm" /></FbButton>
+    <FbButton WFN WRN><FbIcon Icon="@FbMaterialIcons.AlarmOff" /></FbButton>
+    <FbButton WFN WRN><FbText>ADD ALARM</FbText></FbButton>
+</FbRow>
+```
+
 ## Select
 
 `FbSelect` choisit un élément dans une liste et délègue le rendu : il ouvre un `FbDropDown` (fermé par un clic à l'extérieur ou par Échap) et affiche chaque élément, ainsi que la valeur choisie, avec la vue `FbViewSelector.Item` de son type. La liste peut donc être polymorphe :

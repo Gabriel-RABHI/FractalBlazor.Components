@@ -60,7 +60,7 @@ namespace FractalBlazor.Components.Layout
 
         private string BuildStackClasses()
             => BuildAtomizedFlexClasses(
-                FbClasses.Join("fb-stack", BuildSurfaceClasses(), SeparatorClass, Scrollable ? "fb-scrollable" : null),
+                FbClasses.Join("fb-stack", BuildSurfaceClasses(), SeparatorClass, Scrollable ? "fb-scrollable" : null, JoinedClasses),
                 Baseline);
         #endregion
 

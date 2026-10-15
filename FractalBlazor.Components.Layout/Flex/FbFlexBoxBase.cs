@@ -43,6 +43,8 @@ namespace FractalBlazor.Components.Layout.Flex
             public int Shrink = int.MinValue;
 
             public bool Scrollable = false;
+
+            public bool Joined = false;
         }
 
         private FbFlexBoxBaseState _state = new FbFlexBoxBaseState();
@@ -266,6 +268,25 @@ namespace FractalBlazor.Components.Layout.Flex
         /// </summary>
         [Parameter]
         public bool Scrollable { get => _state.Scrollable; set => _state.Scrollable = value; }
+
+        /// <summary>
+        /// The children form one group: the first and the last take the outer corners of the
+        /// container (class <c>fb-joined</c>), so that a fill or a frame at an end follows its
+        /// rounding. The children keep their other corners and their frames: <c>WFN WRN</c>
+        /// removes them, <c>WS*</c> separates them. Nothing is clipped. Meant for a single line:
+        /// a row that wraps has no ends.
+        /// </summary>
+        [Parameter]
+        public bool Joined { get => _state.Joined; set => _state.Joined = value; }
+
+        /// <summary>
+        /// <c>fb-joined</c>, with <c>fb-reverse</c> when the direction is reversed: the first
+        /// child of the DOM then sits at the other end.
+        /// </summary>
+        private protected string? JoinedClasses
+            => !_state.Joined ? null
+                : _state._direction is FbFlexDirection.RowReverse or FbFlexDirection.ColumnReverse ? "fb-joined fb-reverse"
+                : "fb-joined";
 
         #region GUTTER
         /// <summary>

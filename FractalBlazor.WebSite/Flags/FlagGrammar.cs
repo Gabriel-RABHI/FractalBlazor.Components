@@ -203,6 +203,7 @@ internal sealed class FlagGrammar
         ]),
         Word("NoFlex", "Keeps its content size", "Layout"),
         Word("Scrollable", "Scrolls its content", "Layout"),
+        Word("Joined", "One group: the ends take its corners", "Layout"),
         Word("Reverse", "Reverse order", "Layout"),
         Word("SingleLine", "On a single line", "Layout"),
         Word("MultiLine", "Wraps onto several lines", "Layout"),

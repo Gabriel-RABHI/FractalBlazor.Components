@@ -677,6 +677,16 @@ Une frame peut ne border qu'un côté : `WFTx`, `WFRx`, `WFBx`, `WFLx` (With →
 
 Les séparateurs (`WSL`, `WSM`, `WSS`) tracent un trait entre les enfants d’une row ou d’une grille (à droite de chacun) et d’une stack (en dessous), sauf le dernier, quel que soit leur élément : un `FbButton`, un `FbText` ou une `FbIcon` sont séparés comme un `FbRowItem`, puisqu’un enfant de conteneur flex ou grid dessine sa bordure. Un nœud texte et une boîte en `display: contents` (`FbVariant`, `FbTheme Scoped`) n’ont pas de bordure à dessiner ; un dernier enfant masqué laisse le trait de l’avant-dernier.
 
+`Joined`, sur une row ou une stack, fait de ses enfants un seul groupe : le premier et le dernier prennent les coins extérieurs du conteneur (`border-radius: inherit` côté extérieur), si bien qu’un fond ou une frame à une extrémité suit l’arrondi du groupe. Rien n’est rogné, ni l’anneau de focus, ni une ombre, ni une liste déroulante. Le reste se règle à la main : `WFN WRN` sur les enfants pour retirer leur frame et leurs coins, `WS*` sur le conteneur pour les séparer, pas de `G*` pour qu’ils se touchent. Avec `Reverse`, la classe `fb-reverse` s’ajoute et les extrémités s’échangent. Une row qui passe à la ligne (`MultiLine`) n’a plus d’extrémités : `Joined` y perd son sens.
+
+```razor
+<FbRow NoFlex Joined WFM WRM WSM>
+    <FbButton WFN WRN><FbIcon Icon="@FbMaterialIcons.Alarm" /></FbButton>
+    <FbButton WFN WRN Variant="Error"><FbIcon Icon="@FbMaterialIcons.AlarmOff" /></FbButton>
+    <FbButton WFN WRN><FbIcon Icon="@FbMaterialIcons.AlarmAdd" Variant="Warning" /><FbText>ADD ALARM</FbText></FbButton>
+</FbRow>
+```
+
 Les composants dérivés de `FbLayoutSurfaceComponentBase` exposent le drapeau `EO` (Enable → Outline) pour ajouter un anneau autour de la boîte, à l'extérieur de sa frame, dans la couleur calculée de la frame courante. C'est une ombre, puisque la frame est un outline : un champ qui a le focus garde ses deux traits, et l'anneau ne prend pas de place non plus.
 
 ```css
