@@ -1,0 +1,35 @@
+@* A mailbox and a presence: the count of unread messages in an Error badge, hidden at zero,
+   and a dot whose variant follows the status. The buttons change the state. *@
+@attribute [ViewFor<ViewSelector>(typeof(BadgeDemoState), ViewSelector.Viewer)]
+
+<FbStack NoFlex GX JVS>
+    <FbRow NoFlex MultiLine GX JVC>
+        <FbRow NoFlex GS JVC>
+            <FbIcon Icon="@FbMaterialIcons.Mail" />
+            <FbText>Messages</FbText>
+            @if (Item.Unread > 0)
+            {
+                <FbBadge Label="@Item.Unread.ToString()" Variant="@FbThemeVariants.Error" Title="Messages non lus" />
+            }
+        </FbRow>
+        <FbRow NoFlex GS JVC>
+            <FbBadge Dot Variant="@(Item.Online ? FbThemeVariants.Success : FbThemeVariants.Disabled)"
+                     Title="@(Item.Online ? "En ligne" : "Hors ligne")" />
+            <FbText>@(Item.Online ? "En ligne" : "Hors ligne")</FbText>
+        </FbRow>
+    </FbRow>
+    <FbRow NoFlex MultiLine GS JVC>
+        <FbButton Handler="Item" Action="@Receive" S><FbIcon Icon="@FbMaterialIcons.Add" /><FbText S>Recevoir un message</FbText></FbButton>
+        <FbButton Handler="Item" Action="@ReadAll" S D="@(Item.Unread == 0)"><FbIcon Icon="@FbMaterialIcons.DoneAll" /><FbText S>Tout lire</FbText></FbButton>
+        <FbButton Handler="Item" Action="@ToggleOnline" S><FbText S>@(Item.Online ? "Se déconnecter" : "Se connecter")</FbText></FbButton>
+    </FbRow>
+</FbStack>
+
+@code {
+    private static readonly BadgeDemoState.Receive Receive = new();
+    private static readonly BadgeDemoState.ReadAll ReadAll = new();
+    private static readonly BadgeDemoState.ToggleOnline ToggleOnline = new();
+
+    [Parameter]
+    public BadgeDemoState Item { get; set; } = default!;
+}

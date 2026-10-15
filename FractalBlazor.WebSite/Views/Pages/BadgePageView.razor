@@ -1,0 +1,189 @@
+@* The badge page: the looks a badge takes from the flags of its row, its variants, a free
+   content, the dot, a demo on a state, and the reference. *@
+@attribute [ViewFor<ViewSelector>(typeof(BadgePage), ViewSelector.Viewer)]
+
+<FbStack NoFlex GX JVS>
+    <FbText L Muted>
+        <FbText Code>FbBadge</FbText> est une rangée : en ligne, ronde, <FbText Code>PHM PVS</FbText>,
+        remplie de la couleur pleine de sa variante. Elle montre un <FbText Code>Label</FbText>, ou
+        un contenu libre à sa place ; <FbText Code>Dot</FbText> la réduit à un point. Tous les flags
+        de <FbText Code>FbRow</FbText> restent disponibles pour changer son allure.
+    </FbText>
+
+    <DocSection Title="Allures">
+        <FbText M Muted>
+            Par défaut, un badge prend le fond plein de sa variante (<FbText Code>WBH</FbText>).
+            <FbText Code>WBA</FbText> l’adoucit, <FbText Code>WBN WFM</FbText> n’en garde que le
+            cadre ; une <FbText Code>Variant</FbText> le colore.
+        </FbText>
+        <DocExample Code="@LooksCode">
+            <FbRow NoFlex MultiLine GS JVC>
+                <FbBadge Label="Badge" />
+                <FbBadge Label="Secondary" WBA />
+                <FbBadge Label="Destructive" Variant="@FbThemeVariants.Error" WBA />
+                <FbBadge Label="Outline" WBN WFM />
+            </FbRow>
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Variantes">
+        <FbText M Muted>
+            Les variantes fonctionnelles disent un état, les couleurs ne font que colorer. En plein
+            ou adouci :
+        </FbText>
+        <DocExample Code="@VariantsCode">
+            <FbStack NoFlex GM JVS>
+                <FbRow NoFlex MultiLine GS JVC>
+                    @foreach (var variant in FbThemeVariants.Standard)
+                    {
+                        <FbBadge Label="@variant" Variant="@variant" />
+                    }
+                </FbRow>
+                <FbRow NoFlex MultiLine GS JVC>
+                    @foreach (var variant in FbThemeVariants.Colors)
+                    {
+                        <FbBadge Label="@variant" Variant="@variant" WBA />
+                    }
+                </FbRow>
+            </FbStack>
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Contenu libre">
+        <FbText M Muted>
+            Un contenu passé entre les balises remplace le libellé : une icône et un texte, un
+            compteur. Le badge reste en ligne : il se pose dans une phrase, centré sur elle.
+        </FbText>
+        <DocExample Code="@ContentCode">
+            <FbStack NoFlex GM JVS>
+                <FbRow NoFlex MultiLine GS JVC>
+                    <FbBadge Variant="@FbThemeVariants.Success">
+                        <FbIcon Icon="@FbMaterialIcons.DoneAll" S /><FbText S B>Validé</FbText>
+                    </FbBadge>
+                    <FbBadge Variant="@FbThemeVariants.Info" WBA>
+                        <FbIcon Icon="@FbMaterialIcons.Notifications" S /><FbText S B>12</FbText>
+                    </FbBadge>
+                    <FbBadge WBN WFM PHS>
+                        <FbText XS Muted>v</FbText><FbText S B>2.4</FbText>
+                    </FbBadge>
+                </FbRow>
+                <FbText M>
+                    La version <FbBadge Label="Bêta" Variant="@FbThemeVariants.Warning" WBA /> ajoute
+                    les badges, et la <FbBadge Label="Stable" Variant="@FbThemeVariants.Success" WBA />
+                    les garde.
+                </FbText>
+            </FbStack>
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Point">
+        <FbText M Muted>
+            <FbText Code>Dot</FbText> fait du badge un petit point de sa couleur, sans contenu : un
+            statut à côté d’un nom. Son <FbText Code>Title</FbText> le nomme pour les lecteurs
+            d’écran (rôle <FbText Code>img</FbText>).
+        </FbText>
+        <DocExample Code="@DotCode">
+            <FbRow NoFlex MultiLine GX JVC>
+                @foreach (var (name, variant, status) in People)
+                {
+                    <FbRow NoFlex GS JVC>
+                        <FbBadge Dot Variant="@variant" Title="@status" />
+                        <FbText>@name</FbText>
+                        <FbText S Muted>@status</FbText>
+                    </FbRow>
+                }
+            </FbRow>
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Sur un état">
+        <FbText M Muted>
+            Les badges suivent l’état comme le reste de la vue : le compteur de messages non lus
+            disparaît à zéro, le point de présence change de variante.
+        </FbText>
+        <DocExample Code="@DemoCode">
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Demo" Selector="ViewSelector.Viewer" />
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Référence">
+        <FbStack NoFlex Joined WGL WRL JVS>
+            <FbRow NoFlex GM PHM PVS WBA JVC>
+                <FbRow Flex="1"><FbText S B>Paramètre</FbText></FbRow>
+                <FbRow Flex="3"><FbText S B>Rôle</FbText></FbRow>
+            </FbRow>
+            @foreach (var (name, role) in Reference)
+            {
+                <FbRow NoFlex GM PHM PVS JVC>
+                    <FbRow Flex="1"><FbText S Code>@name</FbText></FbRow>
+                    <FbRow Flex="3"><FbText S>@role</FbText></FbRow>
+                </FbRow>
+            }
+        </FbStack>
+    </DocSection>
+</FbStack>
+
+@code {
+    [Parameter]
+    public BadgePage Item { get; set; } = default!;
+
+    private static readonly (string Name, string Variant, string Status)[] People =
+    [
+        ("Alice", FbThemeVariants.Success, "En ligne"),
+        ("Bruno", FbThemeVariants.Warning, "Absent"),
+        ("Chloé", FbThemeVariants.Error, "Occupée"),
+        ("David", FbThemeVariants.Disabled, "Hors ligne")
+    ];
+
+    private static readonly (string Name, string Role)[] Reference =
+    [
+        ("Label", "Le texte du badge, en S gras."),
+        ("ChildContent", "Un contenu libre à la place du libellé."),
+        ("Dot", "Un petit point de la couleur du badge, sans contenu."),
+        ("Variant", "La variante qui colore le badge : Error, Success, Red…"),
+        ("Title", "L’infobulle ; le nom accessible d’un point."),
+        ("Défauts", "IsInlineFlex, NoFlex, JVC, GS, PHM, PVS, WRR (une pilule), WBH, WNTW."),
+        ("Flags de FbRow", "Tous restent valables : WBA, WBN, WFM, PHS, GM, OnClick…")
+    ];
+
+    private const string LooksCode = """
+        <FbBadge Label="Badge" />
+        <FbBadge Label="Secondary" WBA />
+        <FbBadge Label="Destructive" Variant="@FbThemeVariants.Error" WBA />
+        <FbBadge Label="Outline" WBN WFM />
+        """;
+
+    private const string VariantsCode = """
+        <FbBadge Label="@variant" Variant="@variant" />        // FbThemeVariants.Standard
+        <FbBadge Label="@variant" Variant="@variant" WBA />    // FbThemeVariants.Colors
+        """;
+
+    private const string ContentCode = """
+        <FbBadge Variant="@FbThemeVariants.Success">
+            <FbIcon Icon="@FbMaterialIcons.DoneAll" S /><FbText S B>Validé</FbText>
+        </FbBadge>
+        <FbBadge Variant="@FbThemeVariants.Info" WBA>
+            <FbIcon Icon="@FbMaterialIcons.Notifications" S /><FbText S B>12</FbText>
+        </FbBadge>
+        <FbBadge WBN WFM PHS><FbText XS Muted>v</FbText><FbText S B>2.4</FbText></FbBadge>
+
+        <FbText M>La version <FbBadge Label="Bêta" Variant="@FbThemeVariants.Warning" WBA /> ajoute…</FbText>
+        """;
+
+    private const string DotCode = """
+        <FbRow NoFlex GS JVC>
+            <FbBadge Dot Variant="@FbThemeVariants.Success" Title="En ligne" />
+            <FbText>Alice</FbText>
+            <FbText S Muted>En ligne</FbText>
+        </FbRow>
+        """;
+
+    private const string DemoCode = """
+        @if (Item.Unread > 0)
+        {
+            <FbBadge Label="@Item.Unread.ToString()" Variant="@FbThemeVariants.Error" Title="Messages non lus" />
+        }
+        <FbBadge Dot Variant="@(Item.Online ? FbThemeVariants.Success : FbThemeVariants.Disabled)"
+                 Title="@(Item.Online ? "En ligne" : "Hors ligne")" />
+        """;
+}

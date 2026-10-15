@@ -291,7 +291,7 @@ Portage des fonctions de `TinyBlazor.DragAndDrop` (TinyBlazorComponents), adapt�
 ## Phase 35 — FbBadge
 
 - [x] **35.1 FbBadge.** Dans `Forms/Components/Display`, un `FbRow` en ligne (`<span>`, inline-flex) et rond, avec pour défauts `NoFlex JVC GS PHM PVS WRR WBH WNTW` : il montre un `Label` (texte S gras) ou, à sa place, un `ChildContent`. `Dot` le réduit à un petit point de sa couleur, sans contenu, nommé par `Title` (rôle `img`). `Variant` le colore ; tous les flags de la rangée restent valables (`WBA`, `WBN WFM`…). Sur un badge, `WRR` est une pilule (9999px) plutôt que l'ellipse que donne 50 % sur un rectangle. `FbRow.RowClasses` devient `protected internal` pour qu'un composant bâti sur une rangée y ajoute ses classes.
-- [ ] **35.2 Page Badge.** Sous Components > View : les allures de l'image de référence, les variantes et les couleurs, un contenu libre et un badge dans une phrase, les points de présence, une démo sur un état (messages non lus, présence).
+- [x] **35.2 Page Badge.** Sous Components > View : les allures de l'image de référence, les variantes et les couleurs, un contenu libre et un badge dans une phrase, les points de présence, une démo sur un état (messages non lus, présence).
 
 ## Critères de fin
 

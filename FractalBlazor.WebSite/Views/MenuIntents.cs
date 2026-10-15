@@ -30,6 +30,7 @@ namespace FractalBlazor.WebSite.Views
             MenuItemIntent.DragDropSamples => FbMaterialIcons.ViewKanban,
             MenuItemIntent.Slider => FbMaterialIcons.Tune,
             MenuItemIntent.Progress => FbMaterialIcons.DonutLarge,
+            MenuItemIntent.Badge => FbMaterialIcons.Label,
             MenuItemIntent.Templates => FbMaterialIcons.Dashboard,
             _ => FbMaterialIcons.Circle
         };

@@ -55,7 +55,8 @@ namespace FractalBlazor.WebSite.StateModel
                         new MenuGroupState(section, MenuItemIntent.View, group =>
                         [
                             new PageLinkState(group, MenuItemIntent.Progress,
-                                new ProgressPage(new LinearProgressDemoState(), new CircularProgressDemoState(), new IndeterminateProgressDemoState()))
+                                new ProgressPage(new LinearProgressDemoState(), new CircularProgressDemoState(), new IndeterminateProgressDemoState())),
+                            new PageLinkState(group, MenuItemIntent.Badge, new BadgePage(new BadgeDemoState()))
                         ]),
                         new MenuGroupState(section, MenuItemIntent.Inputs, group =>
                         [
@@ -162,6 +163,9 @@ namespace FractalBlazor.WebSite.StateModel
 
         [Display(Name = "Progress")]
         Progress,
+
+        [Display(Name = "Badge")]
+        Badge,
 
         [Display(Name = "Inputs")]
         Inputs,
