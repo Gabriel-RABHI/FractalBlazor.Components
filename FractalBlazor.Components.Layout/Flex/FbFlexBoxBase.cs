@@ -120,6 +120,8 @@ namespace FractalBlazor.Components.Layout.Flex
 
         protected bool MinWidthMinContent { get => _state._minWithSize == FbFlexSize.MinContent; set { if (value) _state._minWithSize = FbFlexSize.MinContent; } }
 
+        protected string? MaxWidth { get; set; }
+
         // -------- Value assignation
         protected string? MinHeight { get; set; }
 
@@ -141,7 +143,7 @@ namespace FractalBlazor.Components.Layout.Flex
         protected new string? AggregatedStyles
             => ResolveStyle(
                 FlexKeyValue,
-                new FbStyleInputs(FlexBasis, Style, HoverMixOffset, MinWidth, MinHeight, MaxHeight),
+                new FbStyleInputs(FlexBasis, Style, HoverMixOffset, MinWidth, MaxWidth, MinHeight, MaxHeight),
                 static component => ((FbFlexBoxBase)component).BuildFlexStyle());
 
         private string? BuildFlexStyle()
@@ -151,6 +153,7 @@ namespace FractalBlazor.Components.Layout.Flex
                 Shrink != int.MinValue ? $"flex-shrink:{Shrink}" : null,
                 Order != int.MinValue ? $"order:{Order}" : null,
                 MinWidth is null ? null : $"min-width:{MinWidth}",
+                MaxWidth is null ? null : $"max-width:{MaxWidth}",
                 MinHeight is null ? null : $"min-height:{MinHeight}",
                 MaxHeight is null ? null : $"max-height:{MaxHeight}");
 

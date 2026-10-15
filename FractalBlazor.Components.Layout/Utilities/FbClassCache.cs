@@ -86,16 +86,17 @@ namespace FractalBlazor.Components.Layout.Utilities
     /// </summary>
     internal readonly struct FbStyleInputs
     {
-        private readonly string? _a, _b, _c, _d, _e, _f;
+        private readonly string? _a, _b, _c, _d, _e, _f, _g;
 
-        public FbStyleInputs(string? a, string? b, string? c = null, string? d = null, string? e = null, string? f = null)
+        public FbStyleInputs(string? a, string? b, string? c = null, string? d = null, string? e = null, string? f = null, string? g = null)
         {
-            _a = a; _b = b; _c = c; _d = d; _e = e; _f = f;
+            _a = a; _b = b; _c = c; _d = d; _e = e; _f = f; _g = g;
         }
 
         public bool IsEmpty
             => string.IsNullOrEmpty(_a) && string.IsNullOrEmpty(_b) && string.IsNullOrEmpty(_c)
-            && string.IsNullOrEmpty(_d) && string.IsNullOrEmpty(_e) && string.IsNullOrEmpty(_f);
+            && string.IsNullOrEmpty(_d) && string.IsNullOrEmpty(_e) && string.IsNullOrEmpty(_f)
+            && string.IsNullOrEmpty(_g);
 
         public bool Equals(in FbStyleInputs other)
             => string.Equals(_a, other._a, StringComparison.Ordinal)
@@ -103,7 +104,8 @@ namespace FractalBlazor.Components.Layout.Utilities
             && string.Equals(_c, other._c, StringComparison.Ordinal)
             && string.Equals(_d, other._d, StringComparison.Ordinal)
             && string.Equals(_e, other._e, StringComparison.Ordinal)
-            && string.Equals(_f, other._f, StringComparison.Ordinal);
+            && string.Equals(_f, other._f, StringComparison.Ordinal)
+            && string.Equals(_g, other._g, StringComparison.Ordinal);
     }
 
     /// <summary>

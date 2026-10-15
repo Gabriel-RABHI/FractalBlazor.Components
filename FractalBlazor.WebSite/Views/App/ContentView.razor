@@ -1,20 +1,28 @@
 @* The content area: it grows with the window and scrolls on its own. The open page is
-   rendered by the view declared for the type of its model. Keyed by the open link, the area
-   is rebuilt for each page and starts at the top. The page sits in a plain block: it keeps
-   the height of its content instead of growing with the area. *@
+   rendered by the view declared for the type of its model, in a column of limited width,
+   centered in the area: the scroll bar stays at the edge of the area. Keyed by the open link,
+   the area is rebuilt for each page and starts at the top. The page sits in a plain block: it
+   keeps the height of its content instead of growing with the area. *@
 @attribute [ViewFor<ViewSelector>(typeof(ContentState), ViewSelector.Viewer)]
 
-<FbStack @key="Item.Link" Scrollable GL PX JVS WBS WFL>
-    @if (Item.Link is { } link)
-    {
-        <FbText XXL B>@MenuIntents.Label(link.Intent)</FbText>
-        <div>
-            <FbDynamicView TSelector="ViewSelector" Item="link.Page" Selector="ViewSelector.Viewer" />
-        </div>
-    }
+<FbStack @key="Item.Link" Scrollable PX JVS JHC WBS WFL>
+    <FbStack NoFlex GL JVS MaxWidth="@PageWidth" Style="width:100%">
+        @if (Item.Link is { } link)
+        {
+            <FbText XXL B>@MenuIntents.Label(link.Intent)</FbText>
+            <div>
+                <FbDynamicView TSelector="ViewSelector" Item="link.Page" Selector="ViewSelector.Viewer" />
+            </div>
+        }
+    </FbStack>
 </FbStack>
 
 @code {
+    /// <summary>
+    /// The width of the page column: wide enough for the demos, short enough for reading.
+    /// </summary>
+    private const string PageWidth = "72rem";
+
     [Parameter]
     public ContentState Item { get; set; } = default!;
 }

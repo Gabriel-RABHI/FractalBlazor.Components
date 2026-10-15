@@ -271,6 +271,10 @@ Portage des fonctions de `TinyBlazor.DragAndDrop` (TinyBlazorComponents), adapt�
 
 - [x] **31.1 Familles par taille.** `FbThemeFormTypography` gagne une famille par taille de texte (`ExtraSmallFontFamily` … `ExtraExtraLargeFontFamily`), écrite par le thème (`--fb-txt-xs-font-family` … `--fb-txt-xxl-font-family`) et posée par chaque classe de taille (`fb-t-xs` … `fb-t-xxl`). Par défaut, chaque taille suit la famille du texte par une référence CSS (`FbThemeFormTypography.TextFont`) ; le texte de la page prend la famille de M. L'éditeur de thème règle les six familles, les sauvegarde et les exporte.
 
+## Phase 32 — Pages centrées
+
+- [x] **32.1 Colonne de lecture.** Le contenu de la zone centrale (titre et page) tient dans une colonne de 72rem au plus, centrée dans la zone ; la barre de défilement reste au bord de la zone. `FbRow` et `FbStack` gagnent `MaxWidth`, à côté de `MinWidth`, `MinHeight` et `MaxHeight`.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :

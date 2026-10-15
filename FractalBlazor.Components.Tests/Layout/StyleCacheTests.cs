@@ -91,6 +91,17 @@ public sealed class StyleCacheTests
     }
 
     [Fact]
+    public void Width_bounds_stay_inline_and_a_new_bound_gives_a_new_style()
+    {
+        var row = new ProbeRow { MinWidth = "10rem", MaxWidth = "72rem" };
+        Assert.Equal("min-width:10rem;max-width:72rem;", row.Styles);
+
+        row.MaxWidth = "60rem";
+
+        Assert.Equal("min-width:10rem;max-width:60rem;", row.Styles);
+    }
+
+    [Fact]
     public void Free_form_styles_are_never_shared()
     {
         var first = new ProbeRow { Style = "color:red" };

@@ -82,6 +82,12 @@ namespace FractalBlazor.Components.Layout
         public new string? MinWidth { get => base.MinWidth; set => base.MinWidth = value; }
 
         /// <summary>
+        /// Maximum width
+        /// </summary>
+        [Parameter]
+        public new string? MaxWidth { get => base.MaxWidth; set => base.MaxWidth = value; }
+
+        /// <summary>
         /// Minimum height
         /// </summary>
         [Parameter]
