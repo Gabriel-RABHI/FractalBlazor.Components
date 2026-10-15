@@ -155,6 +155,15 @@ internal sealed class FlagGrammar
             ],
             "FbProgress");
         grammar.Add([Word("Dot", "A small dot without content", "Shape")], "FbBadge");
+        grammar.Add(
+            [
+                Word("Razor", "Razor markup, C# elsewhere", "Language"),
+                Word("CSharp", "C#", "Language"),
+                Word("Css", "CSS", "Language"),
+                Word("Plain", "Plain text, without colors", "Language"),
+                Word("NoCopy", "No copy button", "Behavior")
+            ],
+            "FbCodeBlock");
         grammar.Add([Word("Immediate", "Sends each keystroke", "Behavior")], "FbFieldBase");
         return grammar;
     }

@@ -495,6 +495,37 @@ window.FractalBlazor = window.FractalBlazor || {};
         };
     };
 
+    //------ Clipboard (FbCodeBlock) ------//
+
+    /**
+     * Copies a text to the clipboard: through the Clipboard API where the page may use it (a
+     * secure context), otherwise through a hidden text area and the copy command. Resolves to
+     * whether the text was copied.
+     */
+    fb.copyText = function (text) {
+        const fallback = () => {
+            const area = document.createElement('textarea');
+            area.value = text;
+            area.setAttribute('readonly', '');
+            area.style.position = 'fixed';
+            area.style.opacity = '0';
+            document.body.appendChild(area);
+            area.select();
+            let copied = false;
+            try {
+                copied = document.execCommand('copy');
+            } catch {
+                copied = false;
+            }
+            area.remove();
+            return copied;
+        };
+
+        if (navigator.clipboard && window.isSecureContext)
+            return navigator.clipboard.writeText(text).then(() => true, fallback);
+        return Promise.resolve(fallback());
+    };
+
     //------ Drag and drop (FbDraggable, FbDraggableHandle, FbDraggableReceiver) ------//
 
     // Delegated listeners: no component calls the script, and no state lives here but the

@@ -298,6 +298,11 @@ Portage des fonctions de `TinyBlazor.DragAndDrop` (TinyBlazorComponents), adapt�
 
 - [x] **36.1 Page Grid.** La page Grid (Components > Layout) documente FbGridContainer et FbGridItem, dans le style de la page Row / Stack, zones de démonstration en variante Selected : un bac à sable (colonnes, étendue, départ et hauteur d'un élément parmi des éléments placés seuls, espacement, flux dense qui comble les trous), une grille dont on règle la largeur pour voir ses paliers de conteneur, l'alignement dans les cellules (`JH*` / `JV*` gardent le sens d'axe d'écran de FbRow et FbStack ; cellules en pointillés sous la grille), l'alignement des pistes (`JHC*`), un seul élément (`SJH*` / `SJV*`), les gabarits CSS (`auto-fill`), l'ordre d'affichage, un tableau de bord et la référence des deux composants.
 
+## Phase 37 — FbCodeBlock
+
+- [x] **37.1 FbCodeBlock.** Dans `Forms/Components/Display`, un bloc de code coloré par sa syntaxe : `Razor` par défaut (balises, composants, attributs, transitions `@`, directives ; une ligne sans balise est lue comme du C#), `CSharp`, `Css` ou `Plain`, flags qui règlent `Language` (`FbCodeLanguage`). Un lexer léger en C# (`FbCodeTokenizer`), sans dépendance : les morceaux recomposent toujours le code, et il n'est recoupé que si le code ou la langue change. Les couleurs viennent de la palette du thème (entre l'ancre médiane et l'ancre haute de chaque couleur), lisibles en sombre et en clair, par les variables `--fb-code-*`. Le bloc est une surface (`WBA WRM` par défaut, `WRN` pour fermer un cadre `Joined`) ; le code défile en largeur. Un bouton copie le code par `FractalBlazor.copyText` (API Clipboard, ou repli par zone de texte), puis dit « copié » deux secondes, annoncé par une zone `status` ; `NoCopy` le retire, `CopyTitle` et `CopiedTitle` le nomment.
+- [ ] **37.2 Blocs du site.** Les 16 blocs de code du site passent à FbCodeBlock, avec leur langue ; `DocExample` gagne `Language`. `CodeBlock.razor` et ses styles disparaissent.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :

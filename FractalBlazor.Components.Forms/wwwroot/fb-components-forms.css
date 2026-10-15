@@ -997,6 +997,100 @@
 }
 
 /**********************************************************************************/
+/* CODE BLOCK */
+/* Source code colored by its syntax (FbCodeBlock). Each kind of token takes a color of the
+   palette, sampled between its middle and its high anchor: lighter than the middle on a dark
+   theme, darker on a light one, so that it reads on both. A page or a theme changes them
+   through the --fb-code-* properties. */
+.fb-code-block {
+    --fb-code-keyword: color-mix(in oklab, var(--fb-violet-mid-anchor), var(--fb-violet-high-anchor) 40%);
+    --fb-code-type: color-mix(in oklab, var(--fb-teal-mid-anchor), var(--fb-teal-high-anchor) 40%);
+    --fb-code-function: color-mix(in oklab, var(--fb-amber-mid-anchor), var(--fb-amber-high-anchor) 45%);
+    --fb-code-string: color-mix(in oklab, var(--fb-orange-mid-anchor), var(--fb-orange-high-anchor) 40%);
+    --fb-code-number: color-mix(in oklab, var(--fb-emerald-mid-anchor), var(--fb-emerald-high-anchor) 40%);
+    --fb-code-tag: color-mix(in oklab, var(--fb-sky-mid-anchor), var(--fb-sky-high-anchor) 30%);
+    --fb-code-attribute: color-mix(in oklab, var(--fb-sky-mid-anchor), var(--fb-sky-high-anchor) 60%);
+    --fb-code-razor: color-mix(in oklab, var(--fb-fuchsia-mid-anchor), var(--fb-fuchsia-high-anchor) 40%);
+    --fb-code-property: color-mix(in oklab, var(--fb-sky-mid-anchor), var(--fb-sky-high-anchor) 50%);
+    --fb-code-selector: color-mix(in oklab, var(--fb-amber-mid-anchor), var(--fb-amber-high-anchor) 45%);
+    --fb-code-variable: color-mix(in oklab, var(--fb-teal-mid-anchor), var(--fb-teal-high-anchor) 40%);
+    --fb-code-comment: var(--fb-fg-subtle);
+    --fb-code-punctuation: var(--fb-fg-muted);
+    position: relative;
+    min-width: 0;
+}
+
+/* The code scrolls sideways rather than wrapping; it can take the focus to scroll by keys. */
+.fb-code-pre {
+    margin: 0;
+    padding: var(--fb-space-m);
+    overflow-x: auto;
+    border-radius: inherit;
+    color: var(--fb-fg-default);
+    font-family: var(--fb-code-font-family);
+    font-size: 0.85em;
+    line-height: 1.5;
+    tab-size: 4;
+    scrollbar-width: thin;
+    scrollbar-color: var(--fb-frame-strong) transparent;
+}
+
+.fb-code-pre:focus-visible {
+    outline: 2px solid var(--fb-control-accent);
+    outline-offset: -2px;
+}
+
+.fb-code-pre > code {
+    font: inherit;
+}
+
+.fb-code-k { color: var(--fb-code-keyword); }
+.fb-code-t { color: var(--fb-code-type); }
+.fb-code-f { color: var(--fb-code-function); }
+.fb-code-s { color: var(--fb-code-string); }
+.fb-code-n { color: var(--fb-code-number); }
+.fb-code-c { color: var(--fb-code-comment); font-style: italic; }
+.fb-code-p { color: var(--fb-code-punctuation); }
+.fb-code-g { color: var(--fb-code-tag); }
+.fb-code-a { color: var(--fb-code-attribute); }
+.fb-code-r { color: var(--fb-code-razor); }
+.fb-code-y { color: var(--fb-code-property); }
+.fb-code-l { color: var(--fb-code-selector); }
+.fb-code-v { color: var(--fb-code-variable); }
+
+/* The copy button: over the top right corner, shown while the block is hovered or holds the
+   focus, and while it says the code is copied; always on a touch screen, which has no hover. */
+.fb-code-copy {
+    position: absolute;
+    top: var(--fb-space-s);
+    right: var(--fb-space-s);
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+}
+
+.fb-code-block:hover > .fb-code-copy,
+.fb-code-block:focus-within > .fb-code-copy,
+.fb-code-copied > .fb-code-copy {
+    opacity: 1;
+}
+
+@media (hover: none) {
+    .fb-code-copy {
+        opacity: 1;
+    }
+}
+
+/* The live region that announces a copy: read, not seen. */
+.fb-code-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/**********************************************************************************/
 /* ICON IMAGES */
 /* Sized like the icons, by their height: the width follows the ratio of the image. */
 .fb-icon-image {

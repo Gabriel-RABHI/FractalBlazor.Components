@@ -32,7 +32,7 @@ Le raisonnement complet est dans [Conception.md](Conception.md), le modèle de t
 | Paquet | Contenu |
 | --- | --- |
 | `FractalBlazor.Components.Layout` | `FbPageAnchor`, `FbRow`, `FbStack`, items, séparateurs, `FbGridContainer`, `FbGridItem`, `FbDropDown`, `FbDrawer`, `FbShowWhenVisible`, thème Layout autonome |
-| `FractalBlazor.Components.Forms` | `FbText`, `FbIcon`, `FbIconImage`, `FbButton`, `FbInputText`, `FbInputNumber`, `FbInputDate`, `FbSelect`, `FbTabs`, `FbCheckbox`, `FbSwitch`, `FbSlider`, `FbRangeSlider`, `FbProgress`, `FbBadge`, `FbWidthSensor`, `FbDragAndDropMaster`, `FbDraggable`, `FbDraggableHandle`, `FbDraggableReceiver`, `FbTheme`, `FbVariant`, `FbDynamicView` |
+| `FractalBlazor.Components.Forms` | `FbText`, `FbIcon`, `FbIconImage`, `FbButton`, `FbInputText`, `FbInputNumber`, `FbInputDate`, `FbSelect`, `FbTabs`, `FbCheckbox`, `FbSwitch`, `FbSlider`, `FbRangeSlider`, `FbProgress`, `FbBadge`, `FbCodeBlock`, `FbWidthSensor`, `FbDragAndDropMaster`, `FbDraggable`, `FbDraggableHandle`, `FbDraggableReceiver`, `FbTheme`, `FbVariant`, `FbDynamicView` |
 | `FractalBlazor.Components.Common` | Contrats partagés par les états et les vues : actions, notification, `ViewFor`, catégories de largeur (`FbWidthClass`) |
 
 ## Solution
