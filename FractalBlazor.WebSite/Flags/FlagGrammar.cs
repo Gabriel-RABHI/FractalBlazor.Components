@@ -105,6 +105,30 @@ internal sealed class FlagGrammar
                 Word("Submit", "Submits the enclosing form", "Behavior")
             ],
             "FbButton");
+        grammar.Add([Word("ShowInfo", "Shows the state of the drag", "Behavior")], "FbDragAndDropMaster");
+        grammar.Add(
+            [
+                Prefix("Z", "Zones", "Zones",
+                [
+                    Word("C", "Center", "Zone"),
+                    Prefix("T", "Top", "Zone",
+                    [
+                        Word("B", "Bottom", "Zone"),
+                        Prefix("C", "Center", "Zone", [Word("B", "Bottom", "Zone")])
+                    ]),
+                    Prefix("L", "Left", "Zone",
+                    [
+                        Word("R", "Right", "Zone"),
+                        Prefix("C", "Center", "Zone", [Word("R", "Right", "Zone")]),
+                        Prefix("T", "Top", "Zone",
+                        [
+                            Prefix("B", "Bottom", "Zone", [Word("R", "Right", "Zone")]),
+                            Prefix("C", "Center", "Zone", [Prefix("B", "Bottom", "Zone", [Word("R", "Right", "Zone")])])
+                        ])
+                    ])
+                ])
+            ],
+            "FbDraggableReceiver");
         grammar.Add([Word("D", "Disabled", "Behavior")], "FbInputBase");
         grammar.Add([Word("Immediate", "Sends each keystroke", "Behavior")], "FbFieldBase");
         return grammar;

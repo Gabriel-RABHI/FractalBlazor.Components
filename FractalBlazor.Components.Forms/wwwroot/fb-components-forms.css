@@ -579,3 +579,141 @@ pre, code {
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
 }
+
+/**********************************************************************************/
+/* DRAG AND DROP */
+/* A handle produces no box: its content is laid out as if it were not there, and takes the
+   grab cursor. An image in a handle drags the whole item (WebKit and Blink). */
+.fb-drag-handle {
+    display: contents;
+    cursor: grab;
+}
+
+.fb-drag-handle img {
+    -webkit-user-drag: none;
+}
+
+/* The dragged item fades once the browser has taken its image (script of Layout). */
+.fb-dragging {
+    opacity: 0.4;
+}
+
+/* A receiver holds its zone layer over its content, along its corners. */
+.fb-drop-receiver {
+    position: relative;
+}
+
+.fb-drop-feedback,
+.fb-drop-zones {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+}
+
+/* The feedback box only shows: the zones, above it, catch the drag. It carries the variant
+   of the drop (Selected) or of the refusal (Error), and draws with its full color: waiting
+   while the item is elsewhere, then the place the drop would take. */
+.fb-drop-feedback {
+    z-index: 9;
+    pointer-events: none;
+    outline: 1px dashed var(--fb-bg-highlight);
+    outline-offset: -1px;
+    background: color-mix(in oklab, var(--fb-bg-highlight) 6%, transparent);
+}
+
+.fb-drop-center {
+    outline: 2px solid var(--fb-bg-highlight);
+    outline-offset: -2px;
+    background: color-mix(in oklab, var(--fb-bg-highlight) 14%, transparent);
+}
+
+.fb-drop-forbidden {
+    outline: 2px dotted var(--fb-bg-highlight);
+    outline-offset: -2px;
+    background: color-mix(in oklab, var(--fb-bg-highlight) 10%, transparent);
+}
+
+/* Insertion: a bar on the side where the item would go. */
+.fb-drop-top {
+    box-shadow: inset 0 3px 0 var(--fb-bg-highlight);
+}
+
+.fb-drop-bottom {
+    box-shadow: inset 0 -3px 0 var(--fb-bg-highlight);
+}
+
+.fb-drop-left {
+    box-shadow: inset 3px 0 0 var(--fb-bg-highlight);
+}
+
+.fb-drop-right {
+    box-shadow: inset -3px 0 0 var(--fb-bg-highlight);
+}
+
+/* The zones, laid out by the split as a grid of named areas: c, t, b, l, r. */
+.fb-drop-zones {
+    z-index: 10;
+    display: grid;
+}
+
+.fb-drop-split-c {
+    grid-template: "c" 1fr / 1fr;
+}
+
+.fb-drop-split-tb {
+    grid-template: "t" 1fr "b" 1fr / 1fr;
+}
+
+.fb-drop-split-tcb {
+    grid-template: "t" 1fr "c" 1fr "b" 1fr / 1fr;
+}
+
+.fb-drop-split-ltcbr {
+    grid-template: "l t r" 1fr "l c r" 1fr "l b r" 1fr / 20% 1fr 20%;
+}
+
+.fb-drop-split-ltbr {
+    grid-template: "l t r" 1fr "l b r" 1fr / 20% 1fr 20%;
+}
+
+.fb-drop-split-lcr {
+    grid-template: "l c r" 1fr / 20% 1fr 20%;
+}
+
+.fb-drop-split-lr {
+    grid-template: "l r" 1fr / 1fr 1fr;
+}
+
+.fb-drop-zone {
+    min-width: 0;
+    min-height: 0;
+}
+
+.fb-drop-zone-top {
+    grid-area: t;
+}
+
+.fb-drop-zone-center {
+    grid-area: c;
+}
+
+.fb-drop-zone-bottom {
+    grid-area: b;
+}
+
+.fb-drop-zone-left {
+    grid-area: l;
+}
+
+.fb-drop-zone-right {
+    grid-area: r;
+}
+
+/* The state of a receiver, when its area shows its information. */
+.fb-drop-info {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    z-index: 11;
+    pointer-events: none;
+}

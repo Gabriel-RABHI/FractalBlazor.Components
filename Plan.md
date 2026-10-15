@@ -247,6 +247,20 @@ La page Row / Stack documente les deux conteneurs flex autour de leur apport pri
 - [x] **28.1 Code en ligne.** `FbText Code` écrit un fragment de code dans le texte : la police de code, sur une pastille tirée de la couleur du texte, lisible sur toute surface.
 - [x] **28.2 La page.** Un pavé de positions pilote une ligne et une pile avec les mêmes flags et montre le CSS de chacune ; un bac à sable couvre conteneur, axes et espacement, avec le code produit. Suivent les axes de flux et transversal, les raccourcis, les valeurs par défaut, l’occupation de l’espace, le retour à la ligne et l’inversion, l’alignement d’un enfant, séparateurs et groupes, puis une référence des flags. Les états des démos sont testés dans `FractalBlazor.WebSite.StateModel.Tests`.
 
+## Phase 29 — Drag & Drop
+
+Portage des fonctions de `TinyBlazor.DragAndDrop` (TinyBlazorComponents), adaptées aux règles de la bibliothèque. Le modèle reste le même : un maître délimite une zone de glisser-déposer ; un élément déplaçable (`FbDraggable`) se saisit par ses poignées (`FbDraggableHandle`) ; un receveur (`FbDraggableReceiver`) découpe sa surface en zones (haut, centre, bas, gauche, droite) et montre où l'élément tombera. Ce qui change :
+
+- **État d'abord.** Les trois délégués du maître (`IsCompatible`, `CanDrop`, `ApplyDrop`) deviennent un contrat de `Common` : l'état qui gère la zone implémente `IFbDragAndDropRules` (`Accepts`, `Preview`) et reçoit l'action `FbDrop` par son `Handle`. Sans règles, tout receveur accepte et chaque zone propose son placement naturel.
+- **Un dépôt n'a lieu que s'il est accepté.** `None` et `Forbidden` refusent ; le curseur du navigateur le dit aussi. L'action porte la zone et le placement retenu.
+- **Rendus ciblés.** Le maître ne se redessine plus à chaque entrée dans une zone : seule la couche de zones de chaque receveur concerné se redessine. Au repos, un receveur n'ajoute aucun élément.
+- **Aucun état statique.** Le registre statique des éléments déplaçables, la méthode `[JSInvokable]` statique et la variable globale `window.tinyDraggableId` disparaissent : des écouteurs délégués du script Layout arment l'élément de la poignée pressée, et Blazor reçoit le début du glissement sur cet élément seul.
+- **Thème.** Les sept styles en ligne du maître deviennent deux variantes, `DropVariant` (`Selected`) et `ForbiddenVariant` (`Error`) ; les repères sont dessinés par la feuille avec les couleurs de la variante.
+- **Découpage.** `FbDropSplit` garde les sept découpages, posés par une grille CSS ; des flags `Z*` les écrivent (`ZTB`, `ZTCB`, `ZLR`…).
+
+- [x] **29.1 Composants.** Contrats dans `Common` (`FbDropZone`, `FbDropFeedback`, `IFbDragAndDropRules`, `FbDrop`) ; `FbDragAndDropMaster`, `FbDraggable`, `FbDraggableHandle`, `FbDraggableReceiver` dans `Forms/Components/DragAndDrop`, avec la couche de zones ; écouteurs du script Layout ; règles de la feuille Forms ; tests.
+- [ ] **29.2 Site.** Une section « Drag & Drop » : principes (imbrications, poignées, informations, receveur déplaçable, imbrication), règles (compatibilité, placements, découpages), exemples (liste réordonnable, kanban). Les états des démos sont testés dans `FractalBlazor.WebSite.StateModel.Tests`.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :

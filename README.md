@@ -32,7 +32,7 @@ Le raisonnement complet est dans [Conception.md](Conception.md), le modèle de t
 | Paquet | Contenu |
 | --- | --- |
 | `FractalBlazor.Components.Layout` | `FbPageAnchor`, `FbRow`, `FbStack`, items, séparateurs, `FbGridContainer`, `FbGridItem`, `FbDropDown`, `FbDrawer`, `FbShowWhenVisible`, thème Layout autonome |
-| `FractalBlazor.Components.Forms` | `FbText`, `FbIcon`, `FbIconImage`, `FbButton`, `FbInputText`, `FbInputNumber`, `FbInputDate`, `FbSelect`, `FbTabs`, `FbCheckbox`, `FbSwitch`, `FbWidthSensor`, `FbTheme`, `FbVariant`, `FbDynamicView` |
+| `FractalBlazor.Components.Forms` | `FbText`, `FbIcon`, `FbIconImage`, `FbButton`, `FbInputText`, `FbInputNumber`, `FbInputDate`, `FbSelect`, `FbTabs`, `FbCheckbox`, `FbSwitch`, `FbWidthSensor`, `FbDragAndDropMaster`, `FbDraggable`, `FbDraggableHandle`, `FbDraggableReceiver`, `FbTheme`, `FbVariant`, `FbDynamicView` |
 | `FractalBlazor.Components.Common` | Contrats partagés par les états et les vues : actions, notification, `ViewFor`, catégories de largeur (`FbWidthClass`) |
 
 ## Solution
@@ -192,6 +192,25 @@ La chaîne et les canaux passent par `FbValueView`, la personne par sa propre vu
     case 1: <PasswordView /> break;
     default: <SettingsView /> break;
 }
+```
+
+## Glisser-déposer
+
+Une zone `FbDragAndDropMaster` réunit des éléments `FbDraggable`, saisis par leurs poignées `FbDraggableHandle`, et des receveurs `FbDraggableReceiver`, dont la surface se découpe en zones (`ZTB`, `ZTCB`, `ZLR`…). La zone ne change rien elle-même : l'état de son `Handler` reçoit l'action `FbDrop` et, s'il implémente `IFbDragAndDropRules`, décide quels receveurs acceptent l'élément (`Accepts`) et ce que ferait un dépôt sur chaque zone (`Preview`). Pendant un glissement, seule la couche de zones des receveurs concernés se redessine.
+
+```razor
+<FbDragAndDropMaster Handler="Item">
+    @foreach (var task in Item.Tasks)
+    {
+        <FbDraggable @key="task" DragId="@task">
+            <FbDraggableHandle>
+                <FbDraggableReceiver DropId="@task" ZTB PM WBA WRM>
+                    <FbText>@task.Title</FbText>
+                </FbDraggableReceiver>
+            </FbDraggableHandle>
+        </FbDraggable>
+    }
+</FbDragAndDropMaster>
 ```
 
 ## Application d'une seule page

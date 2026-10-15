@@ -302,4 +302,78 @@ window.FractalBlazor = window.FractalBlazor || {};
         dropdowns.delete(dropdownId);
     };
 
+    //------ Drag and drop (FbDraggable, FbDraggableHandle, FbDraggableReceiver) ------//
+
+    // Delegated listeners: no component calls the script, and no state lives here but the
+    // draggable armed by the current press.
+    const dragData = 'application/x-fractalblazor';
+    let armed = null;
+
+    function elementOf(node) {
+        return node && node.nodeType === Node.ELEMENT_NODE ? node : node && node.parentElement;
+    }
+
+    function disarm() {
+        if (!armed) return;
+        armed.setAttribute('draggable', 'false');
+        armed.classList.remove('fb-dragging');
+        armed = null;
+    }
+
+    // A draggable is draggable only while a press on one of its handles lasts: the rest of
+    // its content keeps its own behavior. A handle moves the nearest draggable around it.
+    document.addEventListener('pointerdown', event => {
+        disarm();
+        const handle = elementOf(event.target)?.closest('.fb-drag-handle');
+        const draggable = handle?.closest('.fb-draggable');
+        if (!draggable) return;
+
+        draggable.setAttribute('draggable', 'true');
+        armed = draggable;
+    }, true);
+
+    // A press that does not become a drag ends here; a drag ends with dragend.
+    document.addEventListener('pointerup', disarm, true);
+    document.addEventListener('dragend', disarm, true);
+
+    // Only the armed draggable starts a drag of the library, from itself or from the content
+    // of one of its handles (an image there drags the item). An image, a link or a text
+    // selection dragged from the rest of a draggable stays a drag of the browser, and never
+    // reaches the components. The dragged item fades once the browser has its image.
+    window.addEventListener('dragstart', event => {
+        const element = elementOf(event.target);
+        if (!element?.closest('.fb-draggable')) return;
+        const owner = element === armed ? armed : element.closest('.fb-drag-handle')?.closest('.fb-draggable');
+        if (!armed || owner !== armed) {
+            event.stopPropagation();
+            return;
+        }
+
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData(dragData, '');
+        const dragged = armed;
+        requestAnimationFrame(() => {
+            if (dragged === armed) dragged.classList.add('fb-dragging');
+        });
+    }, true);
+
+    // A zone lets the dragged item in, unless its preview refused it there (fb-drop-refused):
+    // the browser then shows a refusal and fires no drop.
+    function enterZone(event) {
+        const zone = elementOf(event.target)?.closest('.fb-drop-zone');
+        if (!zone || zone.classList.contains('fb-drop-refused')) return;
+
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+    }
+
+    document.addEventListener('dragenter', enterZone);
+    document.addEventListener('dragover', enterZone);
+
+    // The drop belongs to the components: the browser must not open what was dropped.
+    document.addEventListener('drop', event => {
+        if (elementOf(event.target)?.closest('.fb-drop-zone'))
+            event.preventDefault();
+    });
+
 })(window.FractalBlazor);
