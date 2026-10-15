@@ -73,6 +73,9 @@
 .fb-slider {
     --fb-slider-thumb: 1.125rem;
     --fb-slider-thickness: 0.25rem;
+    /* The thickness in whole pixels: 0.25rem is 3.5px at a 14px root, which the browser
+       would smear over three to five rows, differently on each slider of a page. */
+    --fb-slider-line: round(var(--fb-slider-thickness), 1px);
     --fb-slider-gap: 0.375rem;
     /* The bubble keeps the colors of the slider, read here before it redirects them. */
     --fb-slider-bubble-bg: var(--fb-fg-default);
@@ -99,13 +102,13 @@
     cursor: pointer;
 }
 
+/* Centered without a transform, so that the browser snaps the line to the pixel grid. */
 .fb-slider-track,
 .fb-slider-fill {
     position: absolute;
-    top: 50%;
-    height: var(--fb-slider-thickness);
-    border-radius: var(--fb-slider-thickness);
-    transform: translateY(-50%);
+    top: calc(50% - var(--fb-slider-line) / 2);
+    height: var(--fb-slider-line);
+    border-radius: var(--fb-slider-line);
 }
 
 .fb-slider-track {
@@ -132,10 +135,10 @@
 .fb-slider-dots .fb-slider-tick::before {
     content: "";
     position: absolute;
-    left: calc(var(--fb-slider-thickness) * -1);
-    top: calc(var(--fb-slider-thickness) * -1);
-    width: calc(var(--fb-slider-thickness) * 2);
-    height: calc(var(--fb-slider-thickness) * 2);
+    left: calc(var(--fb-slider-line) * -1);
+    top: calc(var(--fb-slider-line) * -1);
+    width: calc(var(--fb-slider-line) * 2);
+    height: calc(var(--fb-slider-line) * 2);
     border-radius: 50%;
     background: var(--fb-frame-strong);
 }
@@ -302,10 +305,9 @@
 .fb-slider-vertical .fb-slider-track,
 .fb-slider-vertical .fb-slider-fill {
     top: auto;
-    left: 50%;
-    width: var(--fb-slider-thickness);
+    left: calc(50% - var(--fb-slider-line) / 2);
+    width: var(--fb-slider-line);
     height: auto;
-    transform: translateX(-50%);
 }
 
 .fb-slider-vertical .fb-slider-track {
