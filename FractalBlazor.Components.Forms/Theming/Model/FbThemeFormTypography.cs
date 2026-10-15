@@ -1,11 +1,35 @@
 namespace FractalBlazor.Components.Forms.Theming.Model;
 
+/// <summary>
+/// The typography of a theme: the families, the base size and the line height, the scale of
+/// the sizes and the weights. Each text size has its own family, the text one unless the
+/// theme gives another (<see cref="TextFont"/>).
+/// </summary>
 public sealed class FbThemeFormTypography
 {
+    /// <summary>
+    /// The family of a size that follows the text family: a CSS reference, so that a theme
+    /// that changes the text family changes every size that keeps it.
+    /// </summary>
+    public const string TextFont = "var(--fb-txt-font-family)";
+
     // -------- Typo
     public string? TextFontFamily { get; init; }
 
     public string? CodeFontFamily { get; init; }
+
+    // -------- Families by size
+    public string? ExtraSmallFontFamily { get; init; }
+
+    public string? SmallFontFamily { get; init; }
+
+    public string? MediumFontFamily { get; init; }
+
+    public string? LargeFontFamily { get; init; }
+
+    public string? ExtraLargeFontFamily { get; init; }
+
+    public string? ExtraExtraLargeFontFamily { get; init; }
 
     public string? FontSizeBase { get; init; }
 
@@ -37,6 +61,12 @@ public sealed class FbThemeFormTypography
     {
         TextFontFamily = "'text-font',system-ui,-apple-system,sans-serif",
         CodeFontFamily = "'code-font',monospace",
+        ExtraSmallFontFamily = TextFont,
+        SmallFontFamily = TextFont,
+        MediumFontFamily = TextFont,
+        LargeFontFamily = TextFont,
+        ExtraLargeFontFamily = TextFont,
+        ExtraExtraLargeFontFamily = TextFont,
         FontSizeBase = "13px",
         LineHeight = "1.35",
         ExtraSmallCoef = "0.7",
@@ -55,6 +85,12 @@ public sealed class FbThemeFormTypography
     {
         TextFontFamily = "'text-font',system-ui,-apple-system,sans-serif",
         CodeFontFamily = "'code-font',monospace",
+        ExtraSmallFontFamily = TextFont,
+        SmallFontFamily = TextFont,
+        MediumFontFamily = TextFont,
+        LargeFontFamily = TextFont,
+        ExtraLargeFontFamily = TextFont,
+        ExtraExtraLargeFontFamily = TextFont,
         FontSizeBase = "14px",
         LineHeight = "1.5",
         ExtraSmallCoef = "0.7",
@@ -73,6 +109,12 @@ public sealed class FbThemeFormTypography
     {
         TextFontFamily = "'text-font',system-ui,-apple-system,sans-serif",
         CodeFontFamily = "'code-font',monospace",
+        ExtraSmallFontFamily = TextFont,
+        SmallFontFamily = TextFont,
+        MediumFontFamily = TextFont,
+        LargeFontFamily = TextFont,
+        ExtraLargeFontFamily = TextFont,
+        ExtraExtraLargeFontFamily = TextFont,
         FontSizeBase = "16px",
         LineHeight = "1.5",
         ExtraSmallCoef = "0.75",

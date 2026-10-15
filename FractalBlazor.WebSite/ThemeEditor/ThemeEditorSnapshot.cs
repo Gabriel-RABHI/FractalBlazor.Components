@@ -16,7 +16,9 @@ namespace FractalBlazor.WebSite.ThemeEditor
         string TextFontFamily, string CodeFontFamily, double FontSize, double LineHeight,
         double CoefXS, double CoefS, double CoefM, double CoefL, double CoefXL, double CoefXXL,
         double WeightThin, double WeightDefault, double WeightBold, double WeightExtraBold,
-        Dictionary<string, BranchSnapshot> Branches)
+        Dictionary<string, BranchSnapshot> Branches,
+        string? FontFamilyXS = null, string? FontFamilyS = null, string? FontFamilyM = null,
+        string? FontFamilyL = null, string? FontFamilyXL = null, string? FontFamilyXXL = null)
     {
         /// <summary>
         /// Bumped when the shape changes. Format 2 is the three-anchor gradient; a format 1

@@ -30,6 +30,12 @@ public static class FbThemeCssWriter
 
         Append(builder, "--fb-txt-font-family", theme.Typography.TextFontFamily);
         Append(builder, "--fb-code-font-family", theme.Typography.CodeFontFamily);
+        Append(builder, "--fb-txt-xs-font-family", theme.Typography.ExtraSmallFontFamily);
+        Append(builder, "--fb-txt-s-font-family", theme.Typography.SmallFontFamily);
+        Append(builder, "--fb-txt-m-font-family", theme.Typography.MediumFontFamily);
+        Append(builder, "--fb-txt-l-font-family", theme.Typography.LargeFontFamily);
+        Append(builder, "--fb-txt-xl-font-family", theme.Typography.ExtraLargeFontFamily);
+        Append(builder, "--fb-txt-xxl-font-family", theme.Typography.ExtraExtraLargeFontFamily);
         Append(builder, "--fb-txt-base-size", theme.Typography.FontSizeBase);
         Append(builder, "--fb-txt-base-weight", theme.Typography.DefaultWeight);
         Append(builder, "--fb-txt-base-line-height", theme.Typography.LineHeight);

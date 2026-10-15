@@ -126,6 +126,14 @@ public sealed class FbThemeFormTypography
 {
     public string? TextFontFamily { get; init; }
     public string? CodeFontFamily { get; init; }
+
+    public string? ExtraSmallFontFamily { get; init; }
+    public string? SmallFontFamily { get; init; }
+    public string? MediumFontFamily { get; init; }
+    public string? LargeFontFamily { get; init; }
+    public string? ExtraLargeFontFamily { get; init; }
+    public string? ExtraExtraLargeFontFamily { get; init; }
+
     public string? FontSizeBase { get; init; }
     public string? LineHeight { get; init; }
 
@@ -146,6 +154,19 @@ public sealed class FbThemeFormTypography
 Les textes n'ont pas d'ancres propres : `FbThemeFormTextVariantMix` place Subtle, Muted, Default et Highlight sur le dégradé de la variante, comme les filets.
 
 Les tailles de texte ne constituent pas un groupe séparé : elles font partie de `FbThemeFormTypography`. Les six tailles sont calculées à partir de `FontSizeBase` et des coefficients XS/S/M/L/XL/XXL.
+
+Chaque taille a aussi sa famille de police (`ExtraSmallFontFamily` … `ExtraExtraLargeFontFamily`), pour des titres dans une autre police que le texte par exemple. Les typographies prédéfinies les déclarent toutes à `FbThemeFormTypography.TextFont`, soit `var(--fb-txt-font-family)` : une référence CSS, si bien qu'un thème qui change `TextFontFamily` change aussi toutes les tailles qui la suivent. Une taille qu'aucun thème de la chaîne ne déclare suit de même la famille du texte. Le texte de la page (`html`, ou la `div` d'un `FbTheme` Scoped) est du texte moyen : il prend la famille de M ; un texte sans taille hérite de la famille de son parent, comme de sa taille.
+
+```csharp
+var titles = new FbThemeSetup("Titles", registry.Default)
+{
+    Typography = new FbThemeFormTypography
+    {
+        ExtraLargeFontFamily = "'Playfair Display',serif",
+        ExtraExtraLargeFontFamily = "'Playfair Display',serif"
+    }
+};
+```
 
 Toutes les propriétés sont nullable afin qu'un thème dérivé ne déclare que ses différences. `null` signifie « hériter ». Une chaîne vide ou composée d'espaces est invalide et doit être refusée par la validation.
 
@@ -495,6 +516,12 @@ La typographie, qui appartient à Main et n'est pas affectée par `FbVariant`, e
 ```css
 --fb-txt-font-family
 --fb-code-font-family
+--fb-txt-xs-font-family
+--fb-txt-s-font-family
+--fb-txt-m-font-family
+--fb-txt-l-font-family
+--fb-txt-xl-font-family
+--fb-txt-xxl-font-family
 --fb-txt-base-size
 --fb-txt-base-weight
 --fb-txt-base-line-height

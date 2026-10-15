@@ -477,8 +477,9 @@
     font-style: normal;
 }
 
+/* The text of the page is medium text: it takes the family of the M size. */
 html {
-    font-family: var(--fb-txt-font-family);
+    font-family: var(--fb-txt-m-font-family);
     font-size: var(--fb-txt-base-size);
     font-weight: var(--fb-txt-base-weight);
     color: var(--fb-fg-default);
@@ -486,7 +487,7 @@ html {
 
 /* A scoped FbTheme restates what html receives for the page theme. */
 .fb-theme {
-    font-family: var(--fb-txt-font-family);
+    font-family: var(--fb-txt-m-font-family);
     font-size: var(--fb-txt-base-size);
     font-weight: var(--fb-txt-base-weight);
     color: var(--fb-fg-default);
@@ -504,30 +505,36 @@ pre, code {
     line-height: var(--fb-txt-base-line-height);
 }
 
-/* 1. Scale */
+/* 1. Scale: each size has its own family, the text one unless the theme gives another. */
 .fb-t-xs {
     font-size: calc(var(--fb-txt-base-size) * var(--fb-txt-xs-coef));
+    font-family: var(--fb-txt-xs-font-family);
 }
 
 .fb-t-s {
     font-size: calc(var(--fb-txt-base-size) * var(--fb-txt-s-coef));
+    font-family: var(--fb-txt-s-font-family);
 }
 /* ~11px */
 .fb-t-m {
     font-size: calc(var(--fb-txt-base-size) * var(--fb-txt-m-coef));
+    font-family: var(--fb-txt-m-font-family);
 }
 /* ~13px */
 .fb-t-l {
     font-size: calc(var(--fb-txt-base-size) * var(--fb-txt-l-coef));
+    font-family: var(--fb-txt-l-font-family);
 }
 /* ~16px */
 .fb-t-xl {
     font-size: calc(var(--fb-txt-base-size) * var(--fb-txt-xl-coef));
+    font-family: var(--fb-txt-xl-font-family);
 }
 /* ~20px */
 
 .fb-t-xxl {
     font-size: calc(var(--fb-txt-base-size) * var(--fb-txt-xxl-coef));
+    font-family: var(--fb-txt-xxl-font-family);
 }
 
 /* 2. Weight */

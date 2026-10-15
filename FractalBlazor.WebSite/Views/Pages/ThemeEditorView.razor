@@ -82,6 +82,30 @@
                 </FbGridItem>
                 <FbGridItem>
                     <FbStack GM PL WBA WFL WRL>
+                        <FbText L B>Familles par taille</FbText>
+                        <FbText S Muted>Par défaut, chaque taille suit la police du texte : <FbText Code>var(--fb-txt-font-family)</FbText>.</FbText>
+                        <FbInputText TAction="FbSetValue<string>" Value="@Model.FontFamilyXS" ValueChanged="@(value => Model.FontFamilyXS = value)">
+                            <StartContent><FbRowItem Style="min-width:3rem"><FbText S Subtle>XS</FbText></FbRowItem></StartContent>
+                        </FbInputText>
+                        <FbInputText TAction="FbSetValue<string>" Value="@Model.FontFamilyS" ValueChanged="@(value => Model.FontFamilyS = value)">
+                            <StartContent><FbRowItem Style="min-width:3rem"><FbText S Subtle>S</FbText></FbRowItem></StartContent>
+                        </FbInputText>
+                        <FbInputText TAction="FbSetValue<string>" Value="@Model.FontFamilyM" ValueChanged="@(value => Model.FontFamilyM = value)">
+                            <StartContent><FbRowItem Style="min-width:3rem"><FbText S Subtle>M</FbText></FbRowItem></StartContent>
+                        </FbInputText>
+                        <FbInputText TAction="FbSetValue<string>" Value="@Model.FontFamilyL" ValueChanged="@(value => Model.FontFamilyL = value)">
+                            <StartContent><FbRowItem Style="min-width:3rem"><FbText S Subtle>L</FbText></FbRowItem></StartContent>
+                        </FbInputText>
+                        <FbInputText TAction="FbSetValue<string>" Value="@Model.FontFamilyXL" ValueChanged="@(value => Model.FontFamilyXL = value)">
+                            <StartContent><FbRowItem Style="min-width:3rem"><FbText S Subtle>XL</FbText></FbRowItem></StartContent>
+                        </FbInputText>
+                        <FbInputText TAction="FbSetValue<string>" Value="@Model.FontFamilyXXL" ValueChanged="@(value => Model.FontFamilyXXL = value)">
+                            <StartContent><FbRowItem Style="min-width:3rem"><FbText S Subtle>XXL</FbText></FbRowItem></StartContent>
+                        </FbInputText>
+                    </FbStack>
+                </FbGridItem>
+                <FbGridItem>
+                    <FbStack GM PL WBA WFL WRL>
                         <FbText L B>Échelle</FbText>
                         <ValueSlider Label="XS" Unit="" Min="0.5" Max="3" Step="0.05" @bind-Value="Model.CoefXS" />
                         <ValueSlider Label="S" Unit="" Min="0.5" Max="3" Step="0.05" @bind-Value="Model.CoefS" />

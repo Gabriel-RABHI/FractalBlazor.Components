@@ -104,6 +104,17 @@ namespace FractalBlazor.WebSite.ThemeEditor
         /// </summary>
         public string TextFontFamily { get => _textFont; set => SetCss(ref _textFont, value); }
         public string CodeFontFamily { get => _codeFont; set => SetCss(ref _codeFont, value); }
+
+        /// <summary>
+        /// The family of each text size: the text family by default
+        /// (<c>var(--fb-txt-font-family)</c>).
+        /// </summary>
+        public string FontFamilyXS { get => _fontXS; set => SetCss(ref _fontXS, value); }
+        public string FontFamilyS { get => _fontS; set => SetCss(ref _fontS, value); }
+        public string FontFamilyM { get => _fontM; set => SetCss(ref _fontM, value); }
+        public string FontFamilyL { get => _fontL; set => SetCss(ref _fontL, value); }
+        public string FontFamilyXL { get => _fontXL; set => SetCss(ref _fontXL, value); }
+        public string FontFamilyXXL { get => _fontXXL; set => SetCss(ref _fontXXL, value); }
         public double FontSize { get => _fontSize; set => Set(ref _fontSize, value); }
         public double LineHeight { get => _lineHeight; set => Set(ref _lineHeight, value); }
         public double CoefXS { get => _coefXS; set => Set(ref _coefXS, value); }
@@ -117,7 +128,7 @@ namespace FractalBlazor.WebSite.ThemeEditor
         public double WeightBold { get => _weightBold; set => Set(ref _weightBold, value); }
         public double WeightExtraBold { get => _weightExtraBold; set => Set(ref _weightExtraBold, value); }
 
-        private string _textFont = "", _codeFont = "";
+        private string _textFont = "", _codeFont = "", _fontXS = "", _fontS = "", _fontM = "", _fontL = "", _fontXL = "", _fontXXL = "";
         private double _fontSize, _lineHeight, _coefXS, _coefS, _coefM, _coefL, _coefXL, _coefXXL,
             _weightThin, _weightDefault, _weightBold, _weightExtraBold;
 
@@ -191,6 +202,12 @@ namespace FractalBlazor.WebSite.ThemeEditor
             var typography = _theme.Typography;
             _textFont = typography.TextFontFamily!;
             _codeFont = typography.CodeFontFamily!;
+            _fontXS = typography.ExtraSmallFontFamily!;
+            _fontS = typography.SmallFontFamily!;
+            _fontM = typography.MediumFontFamily!;
+            _fontL = typography.LargeFontFamily!;
+            _fontXL = typography.ExtraLargeFontFamily!;
+            _fontXXL = typography.ExtraExtraLargeFontFamily!;
             _fontSize = Px(typography.FontSizeBase);
             _lineHeight = Number(typography.LineHeight);
             _coefXS = Number(typography.ExtraSmallCoef);
@@ -228,7 +245,8 @@ namespace FractalBlazor.WebSite.ThemeEditor
             _textFont, _codeFont, _fontSize, _lineHeight,
             _coefXS, _coefS, _coefM, _coefL, _coefXL, _coefXXL,
             _weightThin, _weightDefault, _weightBold, _weightExtraBold,
-            _branches.ToDictionary(pair => pair.Key, pair => pair.Value.Capture()));
+            _branches.ToDictionary(pair => pair.Key, pair => pair.Value.Capture()),
+            _fontXS, _fontS, _fontM, _fontL, _fontXL, _fontXXL);
 
         /// <summary>
         /// Comes back to a saved state. Unknown branches and variants are skipped, and invalid
@@ -242,6 +260,13 @@ namespace FractalBlazor.WebSite.ThemeEditor
             _radiusS = saved.RadiusS; _radiusM = saved.RadiusM; _radiusL = saved.RadiusL; _radiusX = saved.RadiusX;
             SetCss(ref _textFont, saved.TextFontFamily ?? "");
             SetCss(ref _codeFont, saved.CodeFontFamily ?? "");
+            // A save made before the families by size has none: the sizes keep the default ones.
+            SetCss(ref _fontXS, saved.FontFamilyXS ?? "");
+            SetCss(ref _fontS, saved.FontFamilyS ?? "");
+            SetCss(ref _fontM, saved.FontFamilyM ?? "");
+            SetCss(ref _fontL, saved.FontFamilyL ?? "");
+            SetCss(ref _fontXL, saved.FontFamilyXL ?? "");
+            SetCss(ref _fontXXL, saved.FontFamilyXXL ?? "");
             _fontSize = saved.FontSize; _lineHeight = saved.LineHeight;
             _coefXS = saved.CoefXS; _coefS = saved.CoefS; _coefM = saved.CoefM;
             _coefL = saved.CoefL; _coefXL = saved.CoefXL; _coefXXL = saved.CoefXXL;
@@ -290,6 +315,12 @@ namespace FractalBlazor.WebSite.ThemeEditor
             AppendGroup(theme, ThemeIndent, "Typography", "FbThemeFormTypography",
                 Value("TextFontFamily", _textFont, typography.TextFontFamily),
                 Value("CodeFontFamily", _codeFont, typography.CodeFontFamily),
+                Value("ExtraSmallFontFamily", _fontXS, typography.ExtraSmallFontFamily),
+                Value("SmallFontFamily", _fontS, typography.SmallFontFamily),
+                Value("MediumFontFamily", _fontM, typography.MediumFontFamily),
+                Value("LargeFontFamily", _fontL, typography.LargeFontFamily),
+                Value("ExtraLargeFontFamily", _fontXL, typography.ExtraLargeFontFamily),
+                Value("ExtraExtraLargeFontFamily", _fontXXL, typography.ExtraExtraLargeFontFamily),
                 Value("FontSizeBase", CssPx(_fontSize), CssPx(Px(typography.FontSizeBase))),
                 Value("LineHeight", CssNumber(_lineHeight), CssNumber(Number(typography.LineHeight))),
                 Value("ExtraSmallCoef", CssNumber(_coefXS), CssNumber(Number(typography.ExtraSmallCoef))),
@@ -402,6 +433,12 @@ namespace FractalBlazor.WebSite.ThemeEditor
             {
                 TextFontFamily = _textFont,
                 CodeFontFamily = _codeFont,
+                ExtraSmallFontFamily = _fontXS,
+                SmallFontFamily = _fontS,
+                MediumFontFamily = _fontM,
+                LargeFontFamily = _fontL,
+                ExtraLargeFontFamily = _fontXL,
+                ExtraExtraLargeFontFamily = _fontXXL,
                 FontSizeBase = CssPx(_fontSize),
                 LineHeight = CssNumber(_lineHeight),
                 ExtraSmallCoef = CssNumber(_coefXS),

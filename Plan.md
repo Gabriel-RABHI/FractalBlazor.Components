@@ -267,6 +267,10 @@ Portage des fonctions de `TinyBlazor.DragAndDrop` (TinyBlazorComponents), adapt�
 
 - [x] **30.1 Une variante par couleur de la palette.** En plus des sept variantes fonctionnelles (`Standard`), chaque couleur de la palette de base est une variante (`Colors` : Red… Rose, puis les neutres Slate… Olive) ; `All` réunit les deux, dans l'ordre de `VariantOrder`. Les thèmes par défaut, Forms et Layout, les définissent : une couleur vive a le dégradé des variantes fonctionnelles (990, 500, 50), une neutre celui de Default (950, 500, 50). Leurs règles rejoignent celles des variantes fonctionnelles dans la feuille Layout (`FbThemeCssNames.StylesheetVariants`) : un thème n'écrit toujours que celles des variantes qu'il ajoute. La page des variantes montre les couleurs.
 
+## Phase 31 — Une famille de police par taille
+
+- [x] **31.1 Familles par taille.** `FbThemeFormTypography` gagne une famille par taille de texte (`ExtraSmallFontFamily` … `ExtraExtraLargeFontFamily`), écrite par le thème (`--fb-txt-xs-font-family` … `--fb-txt-xxl-font-family`) et posée par chaque classe de taille (`fb-t-xs` … `fb-t-xxl`). Par défaut, chaque taille suit la famille du texte par une référence CSS (`FbThemeFormTypography.TextFont`) ; le texte de la page prend la famille de M. L'éditeur de thème règle les six familles, les sauvegarde et les exporte.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :
