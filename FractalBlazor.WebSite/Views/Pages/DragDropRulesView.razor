@@ -1,0 +1,225 @@
+@* The rules of a drag and drop area: which receivers accept the dragged item, what a drop
+   on each zone would do, how a receiver splits its surface, and how the signs look. *@
+@attribute [ViewFor<ViewSelector>(typeof(DragDropRulesPage), ViewSelector.Viewer)]
+
+<FbStack NoFlex GX JVS>
+    <FbText L Muted>
+        Les règles d’une zone appartiennent à son état. Elles s’appuient sur les identifiants que
+        l’on donne à chaque élément (<FbText Code>DragId</FbText>) et à chaque receveur
+        (<FbText Code>DropId</FbText>) : des chaînes, des valeurs, ou les objets d’état eux-mêmes.
+    </FbText>
+
+    <DocSection Title="Le contrat">
+        <FbText M Muted>
+            L’état qui reçoit les dépôts implémente <FbText Code>IFbDragAndDropRules</FbText>, défini
+            dans FractalBlazor.Components.Common : les états n’ont besoin d’aucun composant.
+        </FbText>
+        <CodeBlock Code="@ContractCode" />
+        <FbText M Muted>
+            L’aperçu est un <FbText Code>FbDropFeedback</FbText>. Les deux premières valeurs refusent le
+            dépôt, les autres donnent la place que prendrait l’élément ; le curseur du navigateur suit.
+        </FbText>
+        <FbStack NoFlex Joined WGL WRL JVS>
+            <FbRow NoFlex GM PHM PVS WBA JVC>
+                <FbRow Flex="1"><FbText S B>Valeur</FbText></FbRow>
+                <FbRow Flex="3"><FbText S B>Signe sur le receveur</FbText></FbRow>
+            </FbRow>
+            @foreach (var (value, sign) in Feedbacks)
+            {
+                <FbRow NoFlex GM PHM PVS JVC>
+                    <FbRow Flex="1"><FbText S Code>@value</FbText></FbRow>
+                    <FbRow Flex="3"><FbText S>@sign</FbText></FbRow>
+                </FbRow>
+            }
+        </FbStack>
+    </DocSection>
+
+    <DocSection Title="Compatibilité">
+        <FbText M Muted>
+            Au début du glissement, la zone demande à <FbText Code>Accepts</FbText>, pour chaque
+            receveur, s’il peut prendre l’élément. Ceux qui l’acceptent l’indiquent tout de suite ; les
+            autres restent en dehors du glissement. Ici, seul le premier élément convient au receveur.
+        </FbText>
+        <DocExample Code="@CompatibilityCode">
+            <FbDragAndDropMaster Handler="Item.Compatibility">
+                <FbStack NoFlex GM JVS>
+                    <FbRow NoFlex MultiLine GM JVSt>
+                        @Draggable(CompatibilityDemoState.Compatible)
+                        @Draggable(CompatibilityDemoState.Incompatible)
+                    </FbRow>
+                    <FbDraggableReceiver DropId="@CompatibilityDemoState.Receiver" PL WBS WFM WFD WRM>
+                        <FbText S B>@CompatibilityDemoState.Receiver</FbText>
+                    </FbDraggableReceiver>
+                </FbStack>
+            </FbDragAndDropMaster>
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Compatibility" Selector="ViewSelector.Summary" />
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Aperçu du dépôt">
+        <FbText M Muted>
+            Quand l’élément entre dans une zone, la zone demande à <FbText Code>Preview</FbText> ce que
+            ferait un dépôt. Ici, chaque élément demande sa propre place, quelle que soit la zone. Un
+            dépôt refusé n’envoie rien à l’état.
+        </FbText>
+        <DocExample Code="@PreviewCode">
+            <FbDragAndDropMaster Handler="Item.Preview">
+                <FbStack NoFlex GM JVS>
+                    <FbRow NoFlex MultiLine GM JVSt>
+                        @foreach (var (name, _) in PreviewDemoState.Items)
+                        {
+                            @Draggable(name)
+                        }
+                    </FbRow>
+                    <FbDraggableReceiver DropId="@PreviewDemoState.Receiver" PL WBS WFM WFD WRM>
+                        <FbText S B>@PreviewDemoState.Receiver</FbText>
+                    </FbDraggableReceiver>
+                </FbStack>
+            </FbDragAndDropMaster>
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Preview" Selector="ViewSelector.Summary" />
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Découpages">
+        <FbText M Muted>
+            Un receveur découpe sa surface en zones, par <FbText Code>Split</FbText> ou par un flag
+            <FbText Code>Z*</FbText> dont les lettres nomment les zones : <FbText Code>T</FbText>
+            haut, <FbText Code>C</FbText> centre, <FbText Code>B</FbText> bas, <FbText Code>L</FbText>
+            gauche, <FbText Code>R</FbText> droite. Les bandes de gauche et de droite prennent un
+            cinquième de la largeur. Par défaut, le receveur a trois zones :
+            <FbText Code>ZTCB</FbText>.
+        </FbText>
+        <DocExample Code="@SplitCode">
+            <FbDragAndDropMaster Handler="Item.Splits">
+                <FbStack NoFlex GM JVS>
+                    <FbRow NoFlex>
+                        @Draggable(SplitDemoState.Item)
+                    </FbRow>
+                    <FbGridContainer Columns="1" ColumnsS="2" ColumnsM="3" GM>
+                        @foreach (var (split, flag, zones) in Splits)
+                        {
+                            <FbGridItem>
+                                <FbDraggableReceiver DropId="@flag" Split="@split" PL WBS WFM WFD WRM>
+                                    <FbStack NoFlex GS JHS JVS MinHeight="4.5rem">
+                                        <FbText S B Code>@flag</FbText>
+                                        <FbText XS Muted>@zones</FbText>
+                                    </FbStack>
+                                </FbDraggableReceiver>
+                            </FbGridItem>
+                        }
+                    </FbGridContainer>
+                </FbStack>
+            </FbDragAndDropMaster>
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Splits" Selector="ViewSelector.Summary" />
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Apparence">
+        <FbText M Muted>
+            Les signes sont tracés par la feuille de style, avec les couleurs d’une variante du thème :
+            <FbText Code>DropVariant</FbText> pour un dépôt accepté (<FbText Code>Selected</FbText> par
+            défaut) et <FbText Code>ForbiddenVariant</FbText> pour un refus (<FbText Code>Error</FbText>).
+            Un receveur qui accepte l’élément porte un contour en tirets ; la place du dépôt s’affiche en
+            barre sur un côté, ou en cadre plein au centre.
+        </FbText>
+        <DocExample Code="@VariantCode">
+            <FbDragAndDropMaster Handler="Item.Preview" DropVariant="@FbThemeVariants.Success" ForbiddenVariant="@FbThemeVariants.Warning">
+                <FbStack NoFlex GM JVS>
+                    <FbRow NoFlex MultiLine GM JVSt>
+                        @Draggable(PreviewDemoState.Items[0].Name)
+                        @Draggable(PreviewDemoState.Items[1].Name)
+                    </FbRow>
+                    <FbDraggableReceiver DropId="@PreviewDemoState.Receiver" PL WBS WFM WFD WRM>
+                        <FbText S B>@PreviewDemoState.Receiver</FbText>
+                    </FbDraggableReceiver>
+                </FbStack>
+            </FbDragAndDropMaster>
+        </DocExample>
+    </DocSection>
+</FbStack>
+
+@code {
+    [Parameter]
+    public DragDropRulesPage Item { get; set; } = default!;
+
+    private static readonly (string Value, string Sign)[] Feedbacks =
+    [
+        ("None", "Refusé, sans signe : le receveur reste en attente."),
+        ("Forbidden", "Refusé : cadre pointillé, dans la variante de refus."),
+        ("Top, Bottom", "Inséré au-dessus ou au-dessous : une barre sur ce côté."),
+        ("Left, Right", "Inséré à gauche ou à droite : une barre sur ce côté."),
+        ("Center", "Mis dedans : un cadre plein.")
+    ];
+
+    private static readonly (FbDropSplit Split, string Flag, string Zones)[] Splits =
+    [
+        (FbDropSplit.Center, "ZC", "Centre"),
+        (FbDropSplit.TopBottom, "ZTB", "Haut, bas"),
+        (FbDropSplit.TopCenterBottom, "ZTCB", "Haut, centre, bas (par défaut)"),
+        (FbDropSplit.LeftTopCenterBottomRight, "ZLTCBR", "Gauche, haut, centre, bas, droite"),
+        (FbDropSplit.LeftTopBottomRight, "ZLTBR", "Gauche, haut, bas, droite"),
+        (FbDropSplit.LeftCenterRight, "ZLCR", "Gauche, centre, droite"),
+        (FbDropSplit.LeftRight, "ZLR", "Gauche, droite")
+    ];
+
+    private static RenderFragment Draggable(string name) =>
+        @<FbDraggable DragId="@name" PM WBA WRM>
+            <FbDraggableHandle>
+                <FbRow NoFlex GS JVC>
+                    <FbIcon Icon="@FbMaterialIcons.DragIndicator" S Muted />
+                    <FbText S>@name</FbText>
+                </FbRow>
+            </FbDraggableHandle>
+        </FbDraggable>;
+
+    private const string ContractCode = """
+        public interface IFbDragAndDropRules
+        {
+            // Asked for every receiver when a drag starts.
+            bool Accepts(object dragId, object dropId);
+
+            // Asked when the dragged item enters a zone of a receiver.
+            FbDropFeedback Preview(object dragId, object dropId, FbDropZone zone);
+        }
+
+        // Sent to Handle when the item is released on a zone that accepts it.
+        public sealed record FbDrop(object DragId, object DropId, FbDropZone Zone, FbDropFeedback Feedback) : IStateAction;
+        """;
+
+    private const string CompatibilityCode = """
+        <FbDragAndDropMaster Handler="Item.Compatibility">
+            <FbDraggable DragId="@("Élément compatible")">…</FbDraggable>
+            <FbDraggable DragId="@("Élément incompatible")">…</FbDraggable>
+            <FbDraggableReceiver DropId="@("Receveur")">…</FbDraggableReceiver>
+        </FbDragAndDropMaster>
+
+        public bool Accepts(object dragId, object dropId) => Equals(dragId, "Élément compatible");
+        """;
+
+    private const string PreviewCode = """
+        public FbDropFeedback Preview(object dragId, object dropId, FbDropZone zone) => dragId switch
+        {
+            "Au centre" => FbDropFeedback.Center,
+            "Interdit" => FbDropFeedback.Forbidden,
+            "À droite" => FbDropFeedback.Right,
+            _ => FbDropFeedback.Top
+        };
+        """;
+
+    private const string SplitCode = """
+        <FbDraggableReceiver DropId="@("ZC")" ZC>…</FbDraggableReceiver>
+        <FbDraggableReceiver DropId="@("ZTB")" ZTB>…</FbDraggableReceiver>
+        <FbDraggableReceiver DropId="@("ZLR")" Split="FbDropSplit.LeftRight">…</FbDraggableReceiver>
+
+        public FbDropFeedback Preview(object dragId, object dropId, FbDropZone zone)
+            => FbDrop.NaturalFeedback(zone);
+        """;
+
+    private const string VariantCode = """
+        <FbDragAndDropMaster Handler="Item.Preview"
+                             DropVariant="@FbThemeVariants.Success"
+                             ForbiddenVariant="@FbThemeVariants.Warning">
+            …
+        </FbDragAndDropMaster>
+        """;
+}

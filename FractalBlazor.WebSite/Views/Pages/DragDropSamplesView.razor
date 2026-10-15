@@ -1,0 +1,86 @@
+@* Two samples of drag and drop: a list reordered in a column and in a row, and a kanban
+   board of nested tasks. Each one is the view of its state. *@
+@attribute [ViewFor<ViewSelector>(typeof(DragDropSamplesPage), ViewSelector.Viewer)]
+
+<FbStack NoFlex GX JVS>
+    <FbText L Muted>
+        Deux usages courants, entièrement pilotés par leur état : les composants envoient les dépôts,
+        l’état réordonne ses listes et notifie, et seules les vues concernées se redessinent.
+    </FbText>
+
+    <DocSection Title="Réordonner une liste">
+        <FbText M Muted>
+            Chaque élément est à la fois déplaçable et receveur. En colonne, il se découpe en deux
+            moitiés, haut et bas (<FbText Code>ZTB</FbText>) ; en ligne, gauche et droite
+            (<FbText Code>ZLR</FbText>). Déposé sur la première moitié d’un autre, l’élément passe
+            avant lui ; sur la seconde, après. Les deux listes montrent le même état.
+        </FbText>
+        <DocExample Code="@ListCode">
+            <FbDynamicView TSelector="ViewSelector" Item="Item.List" Selector="ViewSelector.Viewer" />
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Kanban">
+        <FbText M Muted>
+            Les listes se déplacent entre elles (<FbText Code>ZLCR</FbText>). Une tâche va dans une
+            liste, au-dessus, au-dessous ou à l’intérieur d’une autre tâche
+            (<FbText Code>ZTCB</FbText>), mais jamais dans ses propres sous-tâches. Une tâche avec
+            des sous-tâches est faite quand elles le sont toutes ; chaque liste suit sa progression.
+            Chaque liste et chaque tâche est un état : cocher une tâche ne redessine qu’elle et ses
+            ancêtres.
+        </FbText>
+        <FbStack NoFlex PL WFL WRL JVS>
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Board" Selector="ViewSelector.Viewer" />
+        </FbStack>
+        <CodeBlock Code="@BoardCode" />
+    </DocSection>
+</FbStack>
+
+@code {
+    [Parameter]
+    public DragDropSamplesPage Item { get; set; } = default!;
+
+    private const string ListCode = """
+        <FbDragAndDropMaster Handler="Item">
+            @foreach (var item in Item.Items)
+            {
+                <FbDraggable @key="item" DragId="@item">
+                    <FbDraggableHandle>
+                        <FbDraggableReceiver DropId="@item" ZTB PM WBA WRM>…</FbDraggableReceiver>
+                    </FbDraggableHandle>
+                </FbDraggable>
+            }
+        </FbDragAndDropMaster>
+
+        public void Handle(FbDrop drop)
+        {
+            _items.Remove(dragged);
+            var index = _items.IndexOf(target);
+            _items.Insert(drop.Feedback is FbDropFeedback.Bottom or FbDropFeedback.Right ? index + 1 : index, dragged);
+            NotifyStateChanged();
+        }
+        """;
+
+    private const string BoardCode = """
+        public bool Accepts(object dragId, object dropId) => (dragId, dropId) switch
+        {
+            (KanbanColumnState column, KanbanColumnState target) => column != target,
+            (KanbanTaskState, KanbanColumnState) => true,
+            (KanbanTaskState task, KanbanTaskState target) => task != target && !task.Contains(target),
+            _ => false
+        };
+
+        public FbDropFeedback Preview(object dragId, object dropId, FbDropZone zone) => (dragId, dropId) switch
+        {
+            (KanbanColumnState, KanbanColumnState) => zone == FbDropZone.Left ? FbDropFeedback.Left : FbDropFeedback.Right,
+            (KanbanTaskState, KanbanColumnState) => FbDropFeedback.Center,
+            (KanbanTaskState, KanbanTaskState) => zone switch
+            {
+                FbDropZone.Top => FbDropFeedback.Top,
+                FbDropZone.Bottom => FbDropFeedback.Bottom,
+                _ => FbDropFeedback.Center
+            },
+            _ => FbDropFeedback.None
+        };
+        """;
+}

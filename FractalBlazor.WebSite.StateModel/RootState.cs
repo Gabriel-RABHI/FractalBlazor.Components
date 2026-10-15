@@ -48,6 +48,14 @@ namespace FractalBlazor.WebSite.StateModel
                         new MenuGroupState(section, MenuItemIntent.Inputs),
                         new MenuGroupState(section, MenuItemIntent.Selectors)
                     ]),
+                    new SectionState(Navigation, MenuItemIntent.DragAndDrop, section =>
+                    [
+                        new PageLinkState(section, MenuItemIntent.DragDropBasics,
+                            new DragDropBasicsPage(new DragDropDemoState(), new DragDropDemoState(), new DragDropDemoState(), new DragDropDemoState(), new DragDropDemoState())),
+                        new PageLinkState(section, MenuItemIntent.DragDropRules,
+                            new DragDropRulesPage(new CompatibilityDemoState(), new PreviewDemoState(), new SplitDemoState())),
+                        new PageLinkState(section, MenuItemIntent.DragDropSamples, new DragDropSamplesPage(new ReorderListState(), new KanbanBoardState()))
+                    ]),
                     new SectionState(Navigation, MenuItemIntent.Compositions, new FormsPage(new ContactState())),
                     new SectionState(Navigation, MenuItemIntent.Advanced, new PendingPage()),
                     new SectionState(Navigation, MenuItemIntent.BuildingBlocks, section =>
@@ -149,6 +157,18 @@ namespace FractalBlazor.WebSite.StateModel
 
         [Display(Name = "Selectors")]
         Selectors,
+
+        [Display(Name = "Drag & Drop")]
+        DragAndDrop,
+
+        [Display(Name = "Basics")]
+        DragDropBasics,
+
+        [Display(Name = "Rules & Zones")]
+        DragDropRules,
+
+        [Display(Name = "Samples")]
+        DragDropSamples,
 
         [Display(Name = "Compositions")]
         Compositions,

@@ -25,7 +25,7 @@ public sealed class NavigationTests
     public void The_top_menu_follows_the_tree()
     {
         Assert.Equal(
-            [MenuItemIntent.QuickStart, MenuItemIntent.Components, MenuItemIntent.Compositions,
+            [MenuItemIntent.QuickStart, MenuItemIntent.Components, MenuItemIntent.DragAndDrop, MenuItemIntent.Compositions,
              MenuItemIntent.Advanced, MenuItemIntent.BuildingBlocks, MenuItemIntent.Pricing],
             _root.Header.Sections.Select(s => s.Intent));
         Assert.Equal(

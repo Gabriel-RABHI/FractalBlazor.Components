@@ -1,0 +1,57 @@
+@* A list reordered by drag and drop, shown as a column and as a row. Each item is both a
+   draggable and a receiver: dropped on the first half of another item, it goes before it. *@
+@attribute [ViewFor<ViewSelector>(typeof(ReorderListState), ViewSelector.Viewer)]
+
+<FbDragAndDropMaster Handler="Item">
+    <FbStack NoFlex GM JVS>
+        <FbText S B Muted>En colonne</FbText>
+        <FbStack NoFlex GS JVS>
+            @foreach (var item in Item.Items)
+            {
+                <FbDraggable @key="item" DragId="@item">
+                    <FbDraggableHandle>
+                        <FbVariant Variant="@Variant(item.Tone)">
+                            <FbDraggableReceiver DropId="@item" ZTB PM WBA WRM>
+                                @Label(item)
+                            </FbDraggableReceiver>
+                        </FbVariant>
+                    </FbDraggableHandle>
+                </FbDraggable>
+            }
+        </FbStack>
+        <FbText S B Muted>En ligne</FbText>
+        <FbRow NoFlex MultiLine GS JVSt>
+            @foreach (var item in Item.Items)
+            {
+                <FbDraggable @key="item" DragId="@item">
+                    <FbDraggableHandle>
+                        <FbVariant Variant="@Variant(item.Tone)">
+                            <FbDraggableReceiver DropId="@item" ZLR PM WBA WRM>
+                                @Label(item)
+                            </FbDraggableReceiver>
+                        </FbVariant>
+                    </FbDraggableHandle>
+                </FbDraggable>
+            }
+        </FbRow>
+    </FbStack>
+</FbDragAndDropMaster>
+
+@code {
+    [Parameter]
+    public ReorderListState Item { get; set; } = default!;
+
+    private static string Variant(ItemTone tone) => tone switch
+    {
+        ItemTone.Blue => FbThemeVariants.Info,
+        ItemTone.Green => FbThemeVariants.Success,
+        ItemTone.Orange => FbThemeVariants.Warning,
+        _ => FbThemeVariants.Selected
+    };
+
+    private static RenderFragment Label(ReorderItem item) =>
+        @<FbRow NoFlex GS JVC>
+            <FbIcon Icon="@FbMaterialIcons.DragIndicator" S Muted />
+            <FbText S>@item.Name</FbText>
+        </FbRow>;
+}

@@ -35,6 +35,21 @@ namespace FractalBlazor.WebSite.StateModel
     public sealed record DrawerPage(DrawerDemoState Drawer);
 
     /// <summary>
+    /// The basics of drag and drop, with the state of each demo.
+    /// </summary>
+    public sealed record DragDropBasicsPage(DragDropDemoState Master, DragDropDemoState Handles, DragDropDemoState Info, DragDropDemoState Receiver, DragDropDemoState Nested);
+
+    /// <summary>
+    /// The rules of an area: compatibility, preview, splits.
+    /// </summary>
+    public sealed record DragDropRulesPage(CompatibilityDemoState Compatibility, PreviewDemoState Preview, SplitDemoState Splits);
+
+    /// <summary>
+    /// A reordered list and a kanban board.
+    /// </summary>
+    public sealed record DragDropSamplesPage(ReorderListState List, KanbanBoardState Board);
+
+    /// <summary>
     /// The contact form, under Compositions. The page owns its state, which survives
     /// navigation.
     /// </summary>

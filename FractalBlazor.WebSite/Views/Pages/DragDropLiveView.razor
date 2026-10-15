@@ -1,0 +1,19 @@
+@* The live content of a basics demo: a button and a field inside the items and the receivers
+   show that a drag and drop decoration leaves its content working. *@
+@attribute [ViewFor<ViewSelector>(typeof(DragDropDemoState), ViewSelector.Viewer)]
+
+<FbRow NoFlex MultiLine GS JVC>
+    <FbButton S KS Handler="Item" Action="@Click">
+        <FbText S>Cliquer (@Item.Clicks)</FbText>
+    </FbButton>
+    <FbRowItem Style="width:9rem">
+        <FbInputText TAction="DragDropDemoState.SetNote" Handler="Item" Value="@Item.Note" Immediate Placeholder="Note" />
+    </FbRowItem>
+</FbRow>
+
+@code {
+    private static readonly DragDropDemoState.Click Click = new();
+
+    [Parameter]
+    public DragDropDemoState Item { get; set; } = default!;
+}

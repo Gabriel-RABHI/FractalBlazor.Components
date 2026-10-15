@@ -1,0 +1,43 @@
+@* What a drag and drop demo received: the last preview its rules gave, and the last drop.
+   A view of its own: it alone follows the demo state, the area does not render again. *@
+@attribute [ViewFor<ViewSelector>(typeof(DropLogState), ViewSelector.Summary)]
+
+<FbStack NoFlex GS JVS>
+    @if (Item.LastPreview is { } preview)
+    {
+        <FbRow NoFlex MultiLine GS JVC>
+            <FbIcon Icon="@FbMaterialIcons.Visibility" S Muted />
+            <FbText S Muted>Dernier aperçu :</FbText>
+            <FbText S Code>@preview.DragId</FbText>
+            <FbText S Muted>sur</FbText>
+            <FbText S Code>@preview.DropId</FbText>
+            <FbText S Muted>zone</FbText>
+            <FbText S Code>@preview.Zone</FbText>
+            <FbIcon Icon="@FbMaterialIcons.ArrowForward" S Subtle />
+            <FbText S Code>@preview.Feedback</FbText>
+        </FbRow>
+    }
+    <FbRow NoFlex MultiLine GS JVC>
+        <FbIcon Icon="@FbMaterialIcons.Inbox" S Muted />
+        @if (Item.LastDrop is { } drop)
+        {
+            <FbText S Muted>Dépôt n° @Item.DropCount :</FbText>
+            <FbText S Code>@drop.DragId</FbText>
+            <FbText S Muted>sur</FbText>
+            <FbText S Code>@drop.DropId</FbText>
+            <FbText S Muted>zone</FbText>
+            <FbText S Code>@drop.Zone</FbText>
+            <FbText S Muted>placement</FbText>
+            <FbText S Code>@drop.Feedback</FbText>
+        }
+        else
+        {
+            <FbText S Muted>Aucun dépôt pour l’instant.</FbText>
+        }
+    </FbRow>
+</FbStack>
+
+@code {
+    [Parameter]
+    public DropLogState Item { get; set; } = default!;
+}

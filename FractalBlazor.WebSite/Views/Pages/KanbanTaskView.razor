@@ -1,0 +1,68 @@
+@* A task of the board: a draggable that is also a receiver, split into top, center and
+   bottom. Its title is its handle; its subtasks are views of their own states, nested
+   draggables and receivers. *@
+@attribute [ViewFor<ViewSelector>(typeof(KanbanTaskState), ViewSelector.Viewer)]
+
+<FbDraggable DragId="@Item">
+    <FbDraggableReceiver DropId="@Item" ZTCB PS WBS WFL WRM>
+        <FbStack NoFlex GS JVS>
+            @if (Item.Editing)
+            {
+                <FbRow NoFlex GS JVC>
+                    <FbDraggableHandle>
+                        <FbIcon Icon="@FbMaterialIcons.DragIndicator" S Muted />
+                    </FbDraggableHandle>
+                    <FbRow MinWidth="0"><FbInputText TAction="KanbanNode.SetTitle" Handler="Item" Value="@Item.Title" Immediate /></FbRow>
+                    <FbButton WFN PS Handler="Item" Action="@ToggleEdit" Title="Valider">
+                        <FbIcon Icon="@FbMaterialIcons.Check" S />
+                    </FbButton>
+                </FbRow>
+                <FbInputText TAction="KanbanTaskState.SetDetails" Handler="Item" Value="@Item.Details" Immediate Placeholder="Détails" />
+            }
+            else
+            {
+                <FbRow NoFlex GS JVS>
+                    <FbButton WFN PS D="@Item.HasSubTasks" Handler="Item" Action="@ToggleDone"
+                              Title="@(Item.Done ? "Marquer à faire" : "Marquer faite")">
+                        <FbIcon Icon="@(Item.Done ? FbMaterialIcons.CheckBox : FbMaterialIcons.CheckBoxOutlineBlank)" S
+                                Variant="@(Item.Done ? FbThemeVariants.Success : null)" />
+                    </FbButton>
+                    <FbDraggableHandle>
+                        <FbStack GS JVS PVS MinWidth="0">
+                            <FbText S B Muted="@Item.Done">@Item.Title</FbText>
+                            @if (Item.Details.Length > 0)
+                            {
+                                <FbText XS Muted>@Item.Details</FbText>
+                            }
+                        </FbStack>
+                    </FbDraggableHandle>
+                    <FbButton WFN PS Handler="Item" Action="@ToggleEdit" Title="Modifier">
+                        <FbIcon Icon="@FbMaterialIcons.Edit" S Muted />
+                    </FbButton>
+                    <FbButton WFN PS Handler="Item" Action="@Delete" Title="Supprimer la tâche">
+                        <FbIcon Icon="@FbMaterialIcons.Delete" S Muted />
+                    </FbButton>
+                </FbRow>
+            }
+            @if (Item.HasSubTasks)
+            {
+                <KanbanProgress Done="@Item.DoneCount" Total="@Item.LeafCount" />
+                <FbStack NoFlex GS JVS PLM>
+                    @foreach (var task in Item.Tasks)
+                    {
+                        <FbDynamicView @key="task" TSelector="ViewSelector" Item="task" Selector="ViewSelector.Viewer" />
+                    }
+                </FbStack>
+            }
+        </FbStack>
+    </FbDraggableReceiver>
+</FbDraggable>
+
+@code {
+    private static readonly KanbanNode.ToggleEdit ToggleEdit = new();
+    private static readonly KanbanTaskState.ToggleDone ToggleDone = new();
+    private static readonly KanbanTaskState.Delete Delete = new();
+
+    [Parameter]
+    public KanbanTaskState Item { get; set; } = default!;
+}

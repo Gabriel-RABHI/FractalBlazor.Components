@@ -25,6 +25,9 @@ namespace FractalBlazor.WebSite.Views
             MenuItemIntent.Drawer => FbMaterialIcons.MenuOpen,
             MenuItemIntent.DropDown => FbMaterialIcons.ArrowDropDownCircle,
             MenuItemIntent.Updatable => FbMaterialIcons.Sync,
+            MenuItemIntent.DragDropBasics => FbMaterialIcons.OpenWith,
+            MenuItemIntent.DragDropRules => FbMaterialIcons.Rule,
+            MenuItemIntent.DragDropSamples => FbMaterialIcons.ViewKanban,
             MenuItemIntent.Templates => FbMaterialIcons.Dashboard,
             _ => FbMaterialIcons.Circle
         };

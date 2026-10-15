@@ -1,0 +1,23 @@
+@* The kanban board: one drag and drop area for its columns and their tasks. Each column is
+   rendered by its own view, which follows its own state. *@
+@attribute [ViewFor<ViewSelector>(typeof(KanbanBoardState), ViewSelector.Viewer)]
+
+<FbDragAndDropMaster Handler="Item">
+    <FbRow NoFlex Scrollable GM PBM JVS>
+        @foreach (var column in Item.Columns)
+        {
+            <FbDynamicView @key="column" TSelector="ViewSelector" Item="column" Selector="ViewSelector.Viewer" />
+        }
+        <FbButton S KT Handler="Item" Action="@AddColumn">
+            <FbIcon Icon="@FbMaterialIcons.Add" S />
+            <FbText S NW>Nouvelle liste</FbText>
+        </FbButton>
+    </FbRow>
+</FbDragAndDropMaster>
+
+@code {
+    private static readonly KanbanBoardState.AddColumn AddColumn = new();
+
+    [Parameter]
+    public KanbanBoardState Item { get; set; } = default!;
+}

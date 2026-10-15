@@ -1,0 +1,313 @@
+@* The basics of drag and drop: the four components, how to set them up, where they belong,
+   and how they nest. Each demo area sends its drops to its own state, whose log is a view of
+   its own. *@
+@attribute [ViewFor<ViewSelector>(typeof(DragDropBasicsPage), ViewSelector.Viewer)]
+
+<FbStack NoFlex GX JVS>
+    <FbText L Muted>
+        Le glisser-déposer repose sur deux rôles : des éléments que l’on déplace, et des receveurs
+        où on les dépose. Pendant le glissement, les règles de l’état disent quels receveurs
+        acceptent l’élément et ce qu’un dépôt ferait sur chaque zone ; au dépôt, l’état reçoit
+        une action et se met à jour.
+    </FbText>
+
+    <DocSection Title="Les composants">
+        <FbRow NoFlex MultiLine GM JVSt>
+            @foreach (var (icon, name, text) in Components)
+            {
+                <FbStack GS PL WBA WRL MinWidth="15rem" JVS>
+                    <FbIcon Icon="@icon" L Highlight />
+                    <FbText M B>@name</FbText>
+                    <FbText S Muted>@text</FbText>
+                </FbStack>
+            }
+        </FbRow>
+    </DocSection>
+
+    <DocSection Title="Mise en place">
+        <FbText M Muted>
+            Les composants font partie de FractalBlazor.Components.Forms : la feuille de style et le
+            script de Layout, que l’application charge déjà, suffisent. Il reste l’espace de noms,
+            dans <FbText Code>_Imports.razor</FbText> :
+        </FbText>
+        <CodeBlock Code="@ImportCode" />
+        <FbText M Muted>
+            L’état qui gère la zone reçoit les dépôts par sa méthode <FbText Code>Handle(FbDrop)</FbText>.
+            S’il implémente aussi <FbText Code>IFbDragAndDropRules</FbText>, il décide quels receveurs
+            acceptent l’élément et ce que ferait un dépôt sur chaque zone ; sinon, tout receveur
+            accepte, et chaque zone propose sa place naturelle.
+        </FbText>
+        <CodeBlock Code="@StateCode" />
+    </DocSection>
+
+    <DocSection Title="Imbrications">
+        <FbText M Muted>
+            Chaque composant vérifie sa place : un élément ou un receveur hors d’une zone, une poignée
+            hors d’un élément, un élément sans <FbText Code>DragId</FbText> ou un receveur sans
+            <FbText Code>DropId</FbText> le disent au-dessus de leur contenu, qui reste affiché. Dans
+            une zone, un élément sans poignée ne se saisit pas : c’est la façon d’en bloquer un.
+        </FbText>
+        <DocExample Code="@NestingCode">
+            <FbDraggable DragId="@("Élément")" PM WBA WRM>
+                <FbDraggableHandle><FbText S>Un élément hors d’une zone</FbText></FbDraggableHandle>
+            </FbDraggable>
+            <FbDraggableHandle><FbText S>Une poignée hors d’un élément</FbText></FbDraggableHandle>
+            <FbDraggableReceiver DropId="@("Receveur")" PM WBS WFM WFD WRM>
+                <FbText S>Un receveur hors d’une zone</FbText>
+            </FbDraggableReceiver>
+            <FbDragAndDropMaster>
+                <FbDraggable DragId="@("Élément")" PM WBA WRM>
+                    <FbText S>Un élément sans poignée : il ne bouge pas.</FbText>
+                </FbDraggable>
+            </FbDragAndDropMaster>
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Une zone, un élément, un receveur">
+        <FbText M Muted>
+            Saisissez l’élément et déposez-le sur le receveur. Sans règles, le receveur accepte, et le
+            dépôt arrive à l’état sous la forme d’une action <FbText Code>FbDrop</FbText>. Le contenu
+            reste vivant : le bouton et le champ fonctionnent, dans l’élément comme dans le receveur.
+        </FbText>
+        <DocExample Code="@MasterCode">
+            <FbDragAndDropMaster Handler="Item.Master">
+                <FbStack NoFlex GM JVS>
+                    <FbDraggable DragId="@("Élément")" PM WBA WRM>
+                        <FbDraggableHandle>
+                            <FbStack NoFlex GS JVS>
+                                <FbText S B>Élément</FbText>
+                                <FbDynamicView TSelector="ViewSelector" Item="Item.Master" Selector="ViewSelector.Viewer" />
+                            </FbStack>
+                        </FbDraggableHandle>
+                    </FbDraggable>
+                    <FbDraggableReceiver DropId="@("Receveur")" PM WBS WFM WFD WRM>
+                        <FbStack NoFlex GS JVS>
+                            <FbText S B>Receveur</FbText>
+                            <FbDynamicView TSelector="ViewSelector" Item="Item.Master" Selector="ViewSelector.Viewer" />
+                        </FbStack>
+                    </FbDraggableReceiver>
+                </FbStack>
+            </FbDragAndDropMaster>
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Master" Selector="ViewSelector.Summary" />
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Plusieurs poignées">
+        <FbText M Muted>
+            Un élément peut avoir plusieurs poignées, et seules elles le saisissent : ici l’icône et le
+            texte de droite. Le reste de son contenu se comporte normalement : le texte du champ se
+            sélectionne sans déplacer l’élément.
+        </FbText>
+        <DocExample Code="@HandlesCode">
+            <FbDragAndDropMaster Handler="Item.Handles">
+                <FbStack NoFlex GM JVS>
+                    <FbDraggable DragId="@("Élément")" PM WBA WRM>
+                        <FbRow NoFlex MultiLine GM JVC>
+                            <FbDraggableHandle>
+                                <FbIcon Icon="@FbMaterialIcons.DragIndicator" M Muted />
+                            </FbDraggableHandle>
+                            <FbDynamicView TSelector="ViewSelector" Item="Item.Handles" Selector="ViewSelector.Viewer" />
+                            <FbDraggableHandle>
+                                <FbText S B>Saisir ici</FbText>
+                            </FbDraggableHandle>
+                        </FbRow>
+                    </FbDraggable>
+                    <FbDraggableReceiver DropId="@("Receveur")" PM WBS WFM WFD WRM>
+                        <FbText S B>Receveur</FbText>
+                    </FbDraggableReceiver>
+                </FbStack>
+            </FbDragAndDropMaster>
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Handles" Selector="ViewSelector.Summary" />
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Informations">
+        <FbText M Muted>
+            <FbText Code>ShowInfo</FbText> montre l’état du glissement : le nombre de receveurs de la
+            zone, l’élément saisi, le receveur survolé, et, sur chaque receveur, la zone survolée et
+            l’aperçu du dépôt. Utile pour mettre au point des règles.
+        </FbText>
+        <DocExample Code="@InfoCode">
+            <FbDragAndDropMaster Handler="Item.Info" ShowInfo>
+                <FbStack NoFlex GM JVS>
+                    <FbDraggable DragId="@("Élément")" PM WBA WRM>
+                        <FbDraggableHandle><FbText S B>Élément</FbText></FbDraggableHandle>
+                    </FbDraggable>
+                    <FbRow NoFlex GM JVSt>
+                        <FbDraggableReceiver DropId="@("Receveur 1")" Flex="1" PL WBS WFM WFD WRM>
+                            <FbText S B>Receveur 1</FbText>
+                        </FbDraggableReceiver>
+                        <FbDraggableReceiver DropId="@("Receveur 2")" ZLR Flex="1" PL WBS WFM WFD WRM>
+                            <FbText S B>Receveur 2</FbText>
+                        </FbDraggableReceiver>
+                    </FbRow>
+                </FbStack>
+            </FbDragAndDropMaster>
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Un receveur déplaçable">
+        <FbText M Muted>
+            Un élément peut être un receveur, et un receveur peut contenir un élément : chacun des deux
+            blocs se déplace, et chacun reçoit l’autre.
+        </FbText>
+        <DocExample Code="@ReceiverCode">
+            <FbDragAndDropMaster Handler="Item.Receiver">
+                <FbRow NoFlex MultiLine GM JVSt>
+                    <FbDraggable DragId="@("Bloc A")" Flex="1">
+                        <FbDraggableReceiver DropId="@("Bloc A")" PM WBA WRM>
+                            <FbDraggableHandle><FbText S B>Bloc A : un élément receveur</FbText></FbDraggableHandle>
+                        </FbDraggableReceiver>
+                    </FbDraggable>
+                    <FbDraggableReceiver DropId="@("Bloc B")" Flex="1" PM WBS WFM WFD WRM>
+                        <FbDraggable DragId="@("Bloc B")">
+                            <FbDraggableHandle><FbText S B>Bloc B : un receveur qui contient un élément</FbText></FbDraggableHandle>
+                        </FbDraggable>
+                    </FbDraggableReceiver>
+                </FbRow>
+            </FbDragAndDropMaster>
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Receiver" Selector="ViewSelector.Summary" />
+        </DocExample>
+    </DocSection>
+
+    <DocSection Title="Imbrication">
+        <FbText M Muted>
+            Les éléments et les receveurs s’imbriquent. Une poignée déplace l’élément le plus proche
+            autour d’elle, et le début du glissement ne remonte pas aux éléments qui l’entourent. Un
+            receveur intérieur passe devant celui qui le contient : sur le bloc intérieur, c’est lui
+            qui reçoit.
+        </FbText>
+        <DocExample Code="@NestedCode">
+            <FbDragAndDropMaster Handler="Item.Nested">
+                <FbRow NoFlex MultiLine GM JVS>
+                    <FbDraggable DragId="@("Extérieur")" Flex="1">
+                        <FbDraggableReceiver DropId="@("Extérieur")" PM WBA WRM>
+                            <FbStack NoFlex GM JVS>
+                                <FbDraggableHandle><FbText S B>Extérieur</FbText></FbDraggableHandle>
+                                <FbDraggable DragId="@("Intérieur")">
+                                    <FbDraggableReceiver DropId="@("Intérieur")" PM WBS WFM WRM>
+                                        <FbDraggableHandle><FbText S B>Intérieur</FbText></FbDraggableHandle>
+                                    </FbDraggableReceiver>
+                                </FbDraggable>
+                            </FbStack>
+                        </FbDraggableReceiver>
+                    </FbDraggable>
+                    <FbDraggableReceiver DropId="@("Receveur")" Flex="1" PL WBS WFM WFD WRM>
+                        <FbDraggable DragId="@("Voisin")" PM WBA WRM>
+                            <FbDraggableHandle><FbText S B>Voisin</FbText></FbDraggableHandle>
+                        </FbDraggable>
+                    </FbDraggableReceiver>
+                </FbRow>
+            </FbDragAndDropMaster>
+            <FbDynamicView TSelector="ViewSelector" Item="Item.Nested" Selector="ViewSelector.Summary" />
+        </DocExample>
+    </DocSection>
+</FbStack>
+
+@code {
+    [Parameter]
+    public DragDropBasicsPage Item { get; set; } = default!;
+
+    private static readonly (string Icon, string Name, string Text)[] Components =
+    [
+        (FbMaterialIcons.Layers, "FbDragAndDropMaster",
+            "La zone de glisser-déposer. Elle contient les autres composants et transmet les dépôts à son Handler. Une page peut en avoir plusieurs, chacune avec ses règles."),
+        (FbMaterialIcons.OpenWith, "FbDraggable",
+            "Un élément déplaçable, identifié par DragId : souvent l’objet d’état qu’il montre. Il décore son contenu sans le changer."),
+        (FbMaterialIcons.DragIndicator, "FbDraggableHandle",
+            "La poignée par laquelle on saisit l’élément. Sans poignée, l’élément ne bouge pas ; il peut en avoir plusieurs."),
+        (FbMaterialIcons.Inbox, "FbDraggableReceiver",
+            "Un receveur, identifié par DropId. Sa surface est découpée en zones : haut, centre, bas, gauche, droite.")
+    ];
+
+    private const string ImportCode = """
+        @using FractalBlazor.Components.Forms.Components.DragAndDrop
+        """;
+
+    private const string StateCode = """
+        public sealed class TasksState : ObservableState, IFbDragAndDropRules
+        {
+            public bool Accepts(object dragId, object dropId) => …;
+
+            public FbDropFeedback Preview(object dragId, object dropId, FbDropZone zone) => …;
+
+            public void Handle(FbDrop drop)
+            {
+                // drop.DragId, drop.DropId, drop.Zone, drop.Feedback
+                NotifyStateChanged();
+            }
+        }
+        """;
+
+    private const string NestingCode = """
+        <FbDraggable DragId="@("Élément")" PM WBA WRM>…</FbDraggable>
+        <FbDraggableHandle>…</FbDraggableHandle>
+        <FbDraggableReceiver DropId="@("Receveur")" PM WBS WFM WFD WRM>…</FbDraggableReceiver>
+
+        <FbDragAndDropMaster>
+            <FbDraggable DragId="@("Élément")" PM WBA WRM>
+                <FbText S>Un élément sans poignée : il ne bouge pas.</FbText>
+            </FbDraggable>
+        </FbDragAndDropMaster>
+        """;
+
+    private const string MasterCode = """
+        <FbDragAndDropMaster Handler="Item.Master">
+            <FbDraggable DragId="@("Élément")" PM WBA WRM>
+                <FbDraggableHandle>…</FbDraggableHandle>
+            </FbDraggable>
+            <FbDraggableReceiver DropId="@("Receveur")" PM WBS WFM WFD WRM>
+                …
+            </FbDraggableReceiver>
+        </FbDragAndDropMaster>
+        """;
+
+    private const string HandlesCode = """
+        <FbDraggable DragId="@("Élément")" PM WBA WRM>
+            <FbRow NoFlex MultiLine GM JVC>
+                <FbDraggableHandle>
+                    <FbIcon Icon="@FbMaterialIcons.DragIndicator" M Muted />
+                </FbDraggableHandle>
+                …
+                <FbDraggableHandle>
+                    <FbText S B>Saisir ici</FbText>
+                </FbDraggableHandle>
+            </FbRow>
+        </FbDraggable>
+        """;
+
+    private const string InfoCode = """
+        <FbDragAndDropMaster Handler="Item.Info" ShowInfo>
+            …
+            <FbDraggableReceiver DropId="@("Receveur 1")" Flex="1" PL WBS WFM WFD WRM>…</FbDraggableReceiver>
+            <FbDraggableReceiver DropId="@("Receveur 2")" ZLR Flex="1" PL WBS WFM WFD WRM>…</FbDraggableReceiver>
+        </FbDragAndDropMaster>
+        """;
+
+    private const string ReceiverCode = """
+        <FbDraggable DragId="@("Bloc A")" Flex="1">
+            <FbDraggableReceiver DropId="@("Bloc A")" PM WBA WRM>
+                <FbDraggableHandle>…</FbDraggableHandle>
+            </FbDraggableReceiver>
+        </FbDraggable>
+
+        <FbDraggableReceiver DropId="@("Bloc B")" Flex="1" PM WBS WFM WFD WRM>
+            <FbDraggable DragId="@("Bloc B")">
+                <FbDraggableHandle>…</FbDraggableHandle>
+            </FbDraggable>
+        </FbDraggableReceiver>
+        """;
+
+    private const string NestedCode = """
+        <FbDraggable DragId="@("Extérieur")" Flex="1">
+            <FbDraggableReceiver DropId="@("Extérieur")" PM WBA WRM>
+                <FbDraggableHandle>…</FbDraggableHandle>
+                <FbDraggable DragId="@("Intérieur")">
+                    <FbDraggableReceiver DropId="@("Intérieur")" PM WBS WFM WRM>
+                        <FbDraggableHandle>…</FbDraggableHandle>
+                    </FbDraggableReceiver>
+                </FbDraggable>
+            </FbDraggableReceiver>
+        </FbDraggable>
+        """;
+}

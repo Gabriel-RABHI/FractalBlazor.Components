@@ -259,7 +259,7 @@ Portage des fonctions de `TinyBlazor.DragAndDrop` (TinyBlazorComponents), adapt�
 - **Découpage.** `FbDropSplit` garde les sept découpages, posés par une grille CSS ; des flags `Z*` les écrivent (`ZTB`, `ZTCB`, `ZLR`…).
 
 - [x] **29.1 Composants.** Contrats dans `Common` (`FbDropZone`, `FbDropFeedback`, `IFbDragAndDropRules`, `FbDrop`) ; `FbDragAndDropMaster`, `FbDraggable`, `FbDraggableHandle`, `FbDraggableReceiver` dans `Forms/Components/DragAndDrop`, avec la couche de zones ; écouteurs du script Layout ; règles de la feuille Forms ; tests.
-- [ ] **29.2 Site.** Une section « Drag & Drop » : principes (imbrications, poignées, informations, receveur déplaçable, imbrication), règles (compatibilité, placements, découpages), exemples (liste réordonnable, kanban). Les états des démos sont testés dans `FractalBlazor.WebSite.StateModel.Tests`.
+- [x] **29.2 Site.** Une section « Drag & Drop » : principes (imbrications, poignées, informations, receveur déplaçable, imbrication), règles (compatibilité, placements, découpages), exemples (liste réordonnable, kanban). Les états des démos sont testés dans `FractalBlazor.WebSite.StateModel.Tests`.
 
 ## Critères de fin
 
