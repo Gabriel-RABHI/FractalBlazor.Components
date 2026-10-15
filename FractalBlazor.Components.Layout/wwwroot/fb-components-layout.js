@@ -236,9 +236,9 @@ window.FractalBlazor = window.FractalBlazor || {};
 
     //------ Keyboard navigation ------//
 
-    // Elements marked data-fb-nav-keys handle navigation keys in .NET (FbSelect): the
-    // browser must not also scroll the page with them.
-    const navigationKeys = ['ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown', ' '];
+    // Elements marked data-fb-nav-keys handle navigation keys in .NET (FbSelect, FbTabs, the
+    // thumbs of a slider): the browser must not also scroll the page with them.
+    const navigationKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown', ' '];
     document.addEventListener('keydown', event => {
         if (navigationKeys.includes(event.key) && event.target.closest && event.target.closest('[data-fb-nav-keys]'))
             event.preventDefault();
@@ -300,6 +300,196 @@ window.FractalBlazor = window.FractalBlazor || {};
         window.removeEventListener('scroll', align, true);
         window.removeEventListener('resize', align);
         dropdowns.delete(dropdownId);
+    };
+
+    //------ Slider (FbSlider, FbRangeSlider) ------//
+
+    /**
+     * Follows the drags of a slider. A press on the track takes the nearest thumb, a press on
+     * a thumb takes it; while the pointer moves, the thumb is placed at once on the rail
+     * (--fb-slider-drag-from or -to), rounded to the step and kept on its side of the other
+     * thumb, and .NET receives the value with `OnSlide`. Once the release is handled, the
+     * rail lets the position the state rendered show again. The scale hides the labels that
+     * would overlap, again whenever the slider is resized. Returns a handle whose `dispose()`
+     * stops following.
+     */
+    fb.initSlider = function (element, dotnet) {
+        if (!element) return { dispose: () => { } };
+
+        let drag = null;
+        const number = name => parseFloat(element.dataset[name]);
+        const thumbs = () => element.querySelectorAll('.fb-slider-thumb');
+        const rail = () => element.querySelector('.fb-slider-rail');
+
+        function decimals(step) {
+            const text = String(step);
+            const point = text.indexOf('.');
+            return point < 0 ? 0 : Math.min(text.length - point - 1, 10);
+        }
+
+        function valueAt(event) {
+            const box = rail().getBoundingClientRect();
+            const vertical = element.classList.contains('fb-slider-vertical');
+            const length = vertical ? box.height : box.width;
+            let ratio = length > 0
+                ? (vertical ? box.bottom - event.clientY : event.clientX - box.left) / length
+                : 0;
+            ratio = Math.min(1, Math.max(0, ratio));
+
+            const min = number('min'), max = number('max'), step = number('step');
+            let value = min + ratio * (max - min);
+            if (step > 0)
+                value = min + Math.round((value - min) / step) * step;
+            value = +value.toFixed(decimals(step));
+            return Math.min(Math.max(value, Math.min(min, max)), Math.max(min, max));
+        }
+
+        // A thumb of a range stays on its side of the other one.
+        function bounded(index, value) {
+            const all = thumbs();
+            if (all.length < 2) return value;
+            const other = parseFloat(all[1 - index].getAttribute('aria-valuenow'));
+            return index === 0 ? Math.min(value, other) : Math.max(value, other);
+        }
+
+        function place(index, value) {
+            const min = number('min'), max = number('max');
+            const percent = max > min ? (value - min) / (max - min) * 100 : 0;
+            const thumb = thumbs()[index];
+            rail().style.setProperty('--fb-slider-drag-' + thumb.dataset.position, percent + '%');
+        }
+
+        // The thumb a press takes: the one pressed, or the nearest. Two thumbs on one value
+        // wait for the first move: towards the start, the first one goes; otherwise the second.
+        function chosen(event, value) {
+            const all = thumbs();
+            if (all.length < 2) return 0;
+            const start = parseFloat(all[0].getAttribute('aria-valuenow'));
+            const end = parseFloat(all[1].getAttribute('aria-valuenow'));
+            if (start === end) return value === start ? null : value < start ? 0 : 1;
+            const own = event.target.closest('.fb-slider-thumb');
+            if (own) return [...all].indexOf(own);
+            return Math.abs(value - start) <= Math.abs(value - end) ? 0 : 1;
+        }
+
+        function take(index) {
+            drag.index = index;
+            const thumb = thumbs()[index];
+            thumb.classList.add('fb-slider-active');
+            thumb.focus({ preventScroll: true });
+        }
+
+        function move(event) {
+            if (!drag || event.pointerId !== drag.pointerId) return;
+            const at = valueAt(event);
+            if (drag.index === null) {
+                if (at === drag.overlap) return;
+                take(at < drag.overlap ? 0 : 1);
+            }
+            const value = bounded(drag.index, at);
+            if (value === drag.value) return;
+            drag.value = value;
+            place(drag.index, value);
+            dotnet.invokeMethodAsync('OnSlide', drag.index, value, false);
+        }
+
+        function down(event) {
+            if (event.button !== 0 || drag || element.classList.contains('fb-slider-disabled')) return;
+            const at = valueAt(event);
+            const index = chosen(event, at);
+            drag = { index: null, pointerId: event.pointerId, value: null, overlap: at };
+            try {
+                element.setPointerCapture(event.pointerId);
+            } catch {
+                // A pointer the browser no longer tracks: the drag follows the element only.
+            }
+            element.classList.add('fb-slider-sliding');
+            if (index !== null) take(index);
+            else thumbs()[1].focus({ preventScroll: true });
+            event.preventDefault();
+            move(event);
+        }
+
+        function up(event) {
+            if (!drag || event.pointerId !== drag.pointerId) return;
+            const { index, value } = drag;
+            drag = null;
+            element.classList.remove('fb-slider-sliding');
+            if (index === null) return;
+            thumbs()[index]?.classList.remove('fb-slider-active');
+            const release = () => {
+                const position = thumbs()[index]?.dataset.position;
+                if (position && !drag) rail().style.removeProperty('--fb-slider-drag-' + position);
+            };
+            if (value === null) return release();
+            dotnet.invokeMethodAsync('OnSlide', index, value, true).then(release, release);
+        }
+
+        // Whether two labels of the scale, the first one lower, leave a gap between them.
+        function apart(lower, higher, vertical) {
+            const gap = 6;
+            return vertical ? lower.top >= higher.bottom + gap : higher.left >= lower.right + gap;
+        }
+
+        // The scale keeps one label in two, three... when they would overlap: the first label
+        // always, the last one in place of the one before it. Labels keep their layout while
+        // hidden, so they can be measured again when the slider grows.
+        function fit() {
+            const labels = [...element.querySelectorAll('.fb-slider-tick > .fb-slider-label')];
+            if (labels.length < 2) return;
+            const vertical = element.classList.contains('fb-slider-vertical');
+            const boxes = labels.map(label => label.getBoundingClientRect());
+            const last = labels.length - 1;
+            const kept = stride => {
+                const indexes = [];
+                for (let i = 0; i <= last; i += stride) indexes.push(i);
+                if (indexes[indexes.length - 1] !== last) {
+                    if (indexes.length > 1) indexes.pop();
+                    indexes.push(last);
+                }
+                return indexes;
+            };
+            let shown = [0];
+            for (let stride = 1; stride <= last; stride++) {
+                const indexes = kept(stride);
+                if (indexes.every((index, n) => n === 0 || apart(boxes[indexes[n - 1]], boxes[index], vertical))) {
+                    shown = indexes;
+                    break;
+                }
+            }
+            labels.forEach((label, i) => label.style.visibility = shown.includes(i) ? '' : 'hidden');
+        }
+
+        let fitting = 0;
+        const refit = () => {
+            cancelAnimationFrame(fitting);
+            fitting = requestAnimationFrame(fit);
+        };
+        const resized = new ResizeObserver(refit);
+        resized.observe(element);
+        const changed = new MutationObserver(mutations => {
+            const parent = node => node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
+            if (mutations.some(m => parent(m.target)?.closest('.fb-slider-tick') || m.target.classList?.contains('fb-slider-rail')))
+                refit();
+        });
+        changed.observe(element, { childList: true, subtree: true, characterData: true });
+        document.fonts?.ready.then(refit);
+
+        element.addEventListener('pointerdown', down);
+        element.addEventListener('pointermove', move);
+        element.addEventListener('pointerup', up);
+        element.addEventListener('pointercancel', up);
+        return {
+            dispose: () => {
+                cancelAnimationFrame(fitting);
+                resized.disconnect();
+                changed.disconnect();
+                element.removeEventListener('pointerdown', down);
+                element.removeEventListener('pointermove', move);
+                element.removeEventListener('pointerup', up);
+                element.removeEventListener('pointercancel', up);
+            }
+        };
     };
 
     //------ Drag and drop (FbDraggable, FbDraggableHandle, FbDraggableReceiver) ------//

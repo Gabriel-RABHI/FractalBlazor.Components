@@ -130,6 +130,24 @@ internal sealed class FlagGrammar
             ],
             "FbDraggableReceiver");
         grammar.Add([Word("D", "Disabled", "Behavior")], "FbInputBase");
+        grammar.Add(
+            [
+                Word("Vertical", "The track runs from bottom to top", "Orientation"),
+                Word("Mirror", "Labels on the other side", "Placement"),
+                Prefix("T", "Ticks", "Ticks",
+                [
+                    Word("D", "Dots on the track", "Ticks"),
+                    Word("L", "Labels", "Ticks")
+                ]),
+                Prefix("E", "Ends", "Ends", [Word("L", "Labels", "Ends")]),
+                Prefix("V", "Value", "Value",
+                [
+                    Word("L", "Label beside the thumb", "Value"),
+                    Word("T", "Tooltip while it moves", "Value")
+                ]),
+                Word("Immediate", "Sends the value while the thumb moves", "Behavior")
+            ],
+            "FbSliderBase");
         grammar.Add([Word("Immediate", "Sends each keystroke", "Behavior")], "FbFieldBase");
         return grammar;
     }

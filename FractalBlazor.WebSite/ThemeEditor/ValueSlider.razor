@@ -2,15 +2,14 @@
    thumb moves and shown with its unit. *@
 @using System.Globalization
 
-<FbInputRange TValue="double" TAction="FbSetValue<double>" Value="Value" ValueChanged="ValueChanged"
-              Min="Min" Max="Max" Step="Step" Immediate>
-    <StartContent>
-        <FbRowItem Style="min-width:6.5rem"><FbText S Subtle>@Label</FbText></FbRowItem>
-    </StartContent>
-    <EndContent>
-        <FbRowItem Style="min-width:4.5rem;justify-content:flex-end"><FbText S>@(Value.ToString("0.####", CultureInfo.InvariantCulture) + Unit)</FbText></FbRowItem>
-    </EndContent>
-</FbInputRange>
+<FbRow NoFlex GM JVC>
+    <FbRowItem Style="min-width:6.5rem"><FbText S Subtle>@Label</FbText></FbRowItem>
+    <FbRow MinWidth="0">
+        <FbSlider TValue="double" TAction="FbSetValue<double>" Value="Value" ValueChanged="ValueChanged"
+                  Min="Min" Max="Max" Step="Step" Title="@Label" Immediate />
+    </FbRow>
+    <FbRowItem Style="min-width:4.5rem;justify-content:flex-end"><FbText S>@(Value.ToString("0.####", CultureInfo.InvariantCulture) + Unit)</FbText></FbRowItem>
+</FbRow>
 
 @code {
     [Parameter, EditorRequired]

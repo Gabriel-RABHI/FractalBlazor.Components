@@ -40,7 +40,7 @@
 }
 
 /**********************************************************************************/
-/* COLOR AND RANGE */
+/* COLOR */
 .fb-control-input[type=color] {
     appearance: none;
     padding: 0;
@@ -62,9 +62,315 @@
     border-radius: var(--fb-radius-s);
 }
 
-.fb-control-input[type=range] {
-    accent-color: var(--fb-control-accent);
+/**********************************************************************************/
+/* SLIDER */
+/* A track drawn by the library. The root places the thumbs with --fb-slider-from and
+   --fb-slider-to (percent of the track); during a drag, the script places the dragged one
+   on the rail (--fb-slider-drag-from, --fb-slider-drag-to), which wins until it lets the
+   rendered position show again. Every element is placed along the track by --fb-slider-at.
+   The labels sit on the scale side (below, or on the right when vertical), the values on
+   the other side; Mirror exchanges them. */
+.fb-slider {
+    --fb-slider-thumb: 1.125rem;
+    --fb-slider-thickness: 0.25rem;
+    --fb-slider-gap: 0.375rem;
+    /* The bubble keeps the colors of the slider, read here before it redirects them. */
+    --fb-slider-bubble-bg: var(--fb-fg-default);
+    --fb-slider-bubble-fg: var(--fb-current-bg);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    /* Room for the values above the track and for the scale below it. */
+    padding: var(--fb-slider-values-space, 0) calc(var(--fb-slider-thumb) / 2) var(--fb-slider-scale-space, 0);
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.fb-slider-rail {
+    --fb-slider-a: var(--fb-slider-drag-from, var(--fb-slider-from));
+    --fb-slider-b: var(--fb-slider-drag-to, var(--fb-slider-to));
+    position: relative;
+    height: var(--fb-slider-thumb);
     cursor: pointer;
+}
+
+.fb-slider-track,
+.fb-slider-fill {
+    position: absolute;
+    top: 50%;
+    height: var(--fb-slider-thickness);
+    border-radius: var(--fb-slider-thickness);
+    transform: translateY(-50%);
+}
+
+.fb-slider-track {
+    left: 0;
+    right: 0;
+    background: var(--fb-frame-medium);
+}
+
+.fb-slider-fill {
+    left: var(--fb-slider-a);
+    right: calc(100% - var(--fb-slider-b));
+    background: var(--fb-control-accent);
+}
+
+/* Ticks: zero-size anchors on the track, which carry a dot and a label. */
+.fb-slider-tick {
+    position: absolute;
+    top: 50%;
+    left: var(--fb-slider-at);
+    width: 0;
+    height: 0;
+}
+
+.fb-slider-dots .fb-slider-tick::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--fb-slider-thickness) * -1);
+    top: calc(var(--fb-slider-thickness) * -1);
+    width: calc(var(--fb-slider-thickness) * 2);
+    height: calc(var(--fb-slider-thickness) * 2);
+    border-radius: 50%;
+    background: var(--fb-frame-strong);
+}
+
+.fb-slider-dots .fb-slider-tick-in::before {
+    background: var(--fb-control-accent);
+}
+
+/* Labels and values: muted texts of the theme (their FbText reads --fb-fg-default). */
+.fb-slider-label,
+.fb-slider-value {
+    --fb-fg-default: var(--fb-fg-muted);
+    position: absolute;
+    left: 0;
+    font-size: 0.85em;
+    line-height: 1.2;
+    white-space: nowrap;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.fb-slider-label {
+    top: calc(var(--fb-slider-thumb) / 2 + var(--fb-slider-gap));
+}
+
+/* The labels at the ends stay above the track instead of overflowing the slider. */
+.fb-slider-tick-start .fb-slider-label {
+    left: calc(var(--fb-slider-thumb) / -2);
+    transform: none;
+}
+
+.fb-slider-tick-end .fb-slider-label {
+    left: auto;
+    right: calc(var(--fb-slider-thumb) / -2);
+    transform: none;
+}
+
+.fb-slider-value {
+    left: 50%;
+    bottom: calc(100% + var(--fb-slider-gap));
+}
+
+.fb-slider-scale {
+    --fb-slider-scale-space: 1.5em;
+}
+
+.fb-slider-values {
+    --fb-slider-values-space: 1.5em;
+}
+
+.fb-slider-mirror {
+    padding: var(--fb-slider-scale-space, 0) calc(var(--fb-slider-thumb) / 2) var(--fb-slider-values-space, 0);
+}
+
+.fb-slider-mirror .fb-slider-label {
+    top: auto;
+    bottom: calc(var(--fb-slider-thumb) / 2 + var(--fb-slider-gap));
+}
+
+.fb-slider-mirror .fb-slider-value {
+    bottom: auto;
+    top: calc(100% + var(--fb-slider-gap));
+}
+
+/* Thumbs: a disk of the accent, ringed by the background so that it stands off the track. */
+.fb-slider-thumb {
+    position: absolute;
+    top: 50%;
+    left: var(--fb-slider-at);
+    box-sizing: border-box;
+    width: var(--fb-slider-thumb);
+    height: var(--fb-slider-thumb);
+    border: 2px solid var(--fb-current-bg);
+    border-radius: 50%;
+    background: var(--fb-control-accent);
+    transform: translate(-50%, -50%);
+    cursor: grab;
+    outline: none;
+    transition: box-shadow 0.15s ease-in-out;
+}
+
+.fb-slider-thumb-from {
+    --fb-slider-at: var(--fb-slider-a);
+}
+
+.fb-slider-thumb-to {
+    --fb-slider-at: var(--fb-slider-b);
+}
+
+.fb-slider-thumb:hover,
+.fb-slider-thumb.fb-slider-active {
+    box-shadow: 0 0 0 0.3rem color-mix(in oklab, var(--fb-control-accent) 25%, transparent);
+}
+
+.fb-slider-thumb.fb-slider-active {
+    cursor: grabbing;
+}
+
+.fb-slider-thumb:focus-visible {
+    outline: 2px solid var(--fb-control-accent);
+    outline-offset: 2px;
+}
+
+/* The bubble: the value over the thumb, in the reversed colors, while it moves, is hovered
+   or has the focus. */
+.fb-slider-bubble {
+    --fb-fg-default: var(--fb-slider-bubble-fg);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + var(--fb-slider-gap));
+    z-index: 2;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--fb-radius-s);
+    background: var(--fb-slider-bubble-bg);
+    font-size: 0.85em;
+    font-weight: var(--fb-txt-b-weight);
+    white-space: nowrap;
+    transform: translateX(-50%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease-in-out;
+}
+
+.fb-slider-thumb:hover .fb-slider-bubble,
+.fb-slider-thumb:focus-visible .fb-slider-bubble,
+.fb-slider-thumb.fb-slider-active .fb-slider-bubble {
+    opacity: 1;
+}
+
+.fb-slider-mirror .fb-slider-bubble {
+    bottom: auto;
+    top: calc(100% + var(--fb-slider-gap));
+}
+
+/* Vertical: the track runs from bottom to top; the labels go on the right, the values on
+   the left. */
+.fb-slider-vertical {
+    display: inline-flex;
+    flex-direction: row;
+    width: auto;
+    height: 100%;
+    min-height: 12rem;
+    padding: calc(var(--fb-slider-thumb) / 2) var(--fb-slider-scale-space, 0) calc(var(--fb-slider-thumb) / 2) var(--fb-slider-values-space, 0);
+}
+
+.fb-slider-vertical.fb-slider-mirror {
+    padding: calc(var(--fb-slider-thumb) / 2) var(--fb-slider-values-space, 0) calc(var(--fb-slider-thumb) / 2) var(--fb-slider-scale-space, 0);
+}
+
+/* Beside a vertical track, the labels take their width. */
+.fb-slider-vertical.fb-slider-scale {
+    --fb-slider-scale-space: 3.5em;
+}
+
+.fb-slider-vertical.fb-slider-values {
+    --fb-slider-values-space: 3.5em;
+}
+
+.fb-slider-vertical .fb-slider-rail {
+    width: var(--fb-slider-thumb);
+    height: auto;
+}
+
+.fb-slider-vertical .fb-slider-track,
+.fb-slider-vertical .fb-slider-fill {
+    top: auto;
+    left: 50%;
+    width: var(--fb-slider-thickness);
+    height: auto;
+    transform: translateX(-50%);
+}
+
+.fb-slider-vertical .fb-slider-track {
+    top: 0;
+    bottom: 0;
+}
+
+.fb-slider-vertical .fb-slider-fill {
+    bottom: var(--fb-slider-a);
+    top: calc(100% - var(--fb-slider-b));
+}
+
+.fb-slider-vertical .fb-slider-tick {
+    top: auto;
+    left: 50%;
+    bottom: var(--fb-slider-at);
+}
+
+.fb-slider-vertical .fb-slider-label,
+.fb-slider-vertical .fb-slider-tick-start .fb-slider-label,
+.fb-slider-vertical .fb-slider-tick-end .fb-slider-label {
+    top: 0;
+    bottom: auto;
+    right: auto;
+    left: calc(var(--fb-slider-thumb) / 2 + var(--fb-slider-gap));
+    transform: translateY(-50%);
+}
+
+.fb-slider-vertical .fb-slider-value,
+.fb-slider-vertical .fb-slider-bubble {
+    top: 50%;
+    bottom: auto;
+    left: auto;
+    right: calc(100% + var(--fb-slider-gap));
+    transform: translateY(-50%);
+}
+
+.fb-slider-vertical .fb-slider-thumb {
+    top: auto;
+    left: 50%;
+    bottom: var(--fb-slider-at);
+    transform: translate(-50%, 50%);
+}
+
+.fb-slider-vertical.fb-slider-mirror .fb-slider-label,
+.fb-slider-vertical.fb-slider-mirror .fb-slider-tick-start .fb-slider-label,
+.fb-slider-vertical.fb-slider-mirror .fb-slider-tick-end .fb-slider-label {
+    left: auto;
+    right: calc(var(--fb-slider-thumb) / 2 + var(--fb-slider-gap));
+}
+
+.fb-slider-vertical.fb-slider-mirror .fb-slider-value,
+.fb-slider-vertical.fb-slider-mirror .fb-slider-bubble {
+    right: auto;
+    left: calc(100% + var(--fb-slider-gap));
+}
+
+/* Disabled: the Disabled variant colors it; nothing can be grabbed. */
+.fb-slider-disabled .fb-slider-rail,
+.fb-slider-disabled .fb-slider-thumb {
+    cursor: not-allowed;
+}
+
+.fb-slider-disabled .fb-slider-thumb:hover {
+    box-shadow: none;
 }
 
 /**********************************************************************************/

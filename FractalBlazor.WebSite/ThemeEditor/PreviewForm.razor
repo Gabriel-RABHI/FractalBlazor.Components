@@ -30,10 +30,13 @@
                 <FbSelect TValue="string" TAction="FbSetValue<string>" @bind-Value="_plan" Items="Plans">
                     <StartContent><FbText Subtle>Formule</FbText></StartContent>
                 </FbSelect>
-                <FbInputRange TValue="int" TAction="FbSetValue<int>" @bind-Value="_budget" Min="0" Max="1000" Step="50" Immediate>
-                    <StartContent><FbText Subtle>Budget</FbText></StartContent>
-                    <EndContent><FbText>@_budget €</FbText></EndContent>
-                </FbInputRange>
+                <FbRow NoFlex GM JVC>
+                    <FbText Subtle>Budget</FbText>
+                    <FbRow MinWidth="0">
+                        <FbSlider TValue="int" TAction="FbSetValue<int>" @bind-Value="_budget" Min="0" Max="1000" Step="50" Title="Budget" Immediate />
+                    </FbRow>
+                    <FbText>@_budget €</FbText>
+                </FbRow>
                 <FbCheckbox TAction="FbSetValue<bool>" @bind-Value="_terms"><FbText S>J’accepte les conditions</FbText></FbCheckbox>
                 <FbSwitch TAction="FbSetValue<bool>" @bind-Value="_notifications"><FbText S>Notifications</FbText></FbSwitch>
                 <FbRow GS JHE>

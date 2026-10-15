@@ -275,6 +275,13 @@ Portage des fonctions de `TinyBlazor.DragAndDrop` (TinyBlazorComponents), adapt�
 
 - [x] **32.1 Colonne de lecture.** Le contenu de la zone centrale (titre et page) tient dans une colonne de 72rem au plus, centrée dans la zone ; la barre de défilement reste au bord de la zone. `FbRow` et `FbStack` gagnent `MaxWidth`, à côté de `MinWidth`, `MinHeight` et `MaxHeight`.
 
+## Phase 33 — Slider natif
+
+`FbInputRange`, posé sur le `<input type="range">` du navigateur, ne savait ni deux valeurs, ni la verticale, ni les graduations. Il est remplacé par un slider dessiné par la bibliothèque.
+
+- [x] **33.1 FbSlider et FbRangeSlider.** Une valeur (`FbSlider`) ou deux (`FbRangeSlider`, valeur `FbRange<T>` de `Common`), horizontal ou `Vertical`, pour tout type numérique : `Min`, `Max`, `Step`, `Ticks` (intervalle des graduations). Flags : `TD` (points des graduations), `TL` (libellés des graduations), `EL` (libellés des bornes), `VL` (valeurs près des curseurs), `VT` (valeur en bulle pendant le glissement, au survol et au focus), `Mirror` (libellés de l'autre côté), `Immediate` (envoie la valeur pendant le glissement), `D`. Les libellés sont rendus par `FbDynamicView` : la valeur, son `Format`, ou l'élément que `LabelOf` en tire (une date, une heure…). Clavier : flèches, Page précédente / suivante, Début / Fin ; rôle ARIA `slider`. Le glissement est suivi par le script Layout, qui déplace le curseur sans attendre .NET et lui envoie la valeur arrondie au pas ; quand la place manque, il ne garde qu'un libellé de graduation sur deux, sur trois… `FbInputRange` disparaît ; l'éditeur de thème et le formulaire d'aperçu passent au slider.
+- [ ] **33.2 Page Slider.** Sous Components > Inputs, une page montre les usages des images de référence : graduations libellées, dates, plage horaire avec bulle, verticaux, points et valeurs.
+
 ## Critères de fin
 
 La bibliothèque est considérée finalisée quand :
