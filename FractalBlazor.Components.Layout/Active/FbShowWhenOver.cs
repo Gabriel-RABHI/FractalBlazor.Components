@@ -163,7 +163,7 @@ namespace FractalBlazor.Components.Layout
             }
         }
 
-        /// <summary>
+        /// <summary>F
         /// Explicit visibility
         /// </summary>
         [Parameter]

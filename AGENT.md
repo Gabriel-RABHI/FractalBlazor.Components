@@ -2,6 +2,11 @@
 
 Rules for any agent (or person) changing this repository. They come before convenience: a change
 that breaks one of them is wrong, even if it works.
+
+## Files
+
+Look at the files in `Specifications` directory, and `Specifications/Backlog` content for work-list.
+
 ## Where things live
 
 | Project                                           | Role                                                                                                                                                                                                                                                     |

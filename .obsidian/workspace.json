@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "FractalBlazor.Components.Forms/Components/Inputs/SPECS-Inputs-FR.md",
+                "file": "Specifications/Backlog/SPEC-001.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "SPECS-Inputs-FR"
+              "title": "SPEC-001"
             }
           }
         ]
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "FractalBlazor.Components.Forms/Components/Inputs/SPECS-Inputs-FR.md",
+                "file": "Specifications/Backlog/SPEC-001.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "FractalBlazor.Components.Forms/Components/Inputs/SPECS-Inputs-FR.md",
+                "file": "Specifications/Backlog/SPEC-001.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -161,7 +161,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "FractalBlazor.Components.Forms/Components/Inputs/SPECS-Inputs-FR.md",
+                "file": "Specifications/Backlog/SPEC-001.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -190,22 +190,30 @@
   },
   "active": "9cab1e1f4e8a2586",
   "lastOpenFiles": [
+    "Pasted image 20261016120348.png",
+    "Pasted image 20261016115459.png",
+    "AGENT.md",
+    "Specifications/Backlog/SPEC-001.md",
+    "Documentation/Sources/tw-color-palette.png",
+    "Specifications/Backlog",
+    "Documentation/Sources/tw-color-palette-mono.png",
+    "Specifications/Conception.md",
+    "FractalBlazor.Components.Forms/Components/Inputs/SPECS-Inputs-FR.md",
+    "Specifications",
+    "Plan.md",
+    "Specifications/Theming.md",
+    "Conception",
+    "README.md",
+    "$null",
     "FractalBlazor.WebSite/obj/Debug/net10.0/staticwebassets.upToDateCheck.txt",
     "FractalBlazor.Components.Forms/obj/Debug/net10.0/staticwebassets.upToDateCheck.txt",
-    "FractalBlazor.WebSite.ClientSide/obj/Debug/net10.0/tmp-webcil/bdc65278a2dd4980aac064d3812471ee",
-    "FractalBlazor.WebSite.ClientSide/bin/Debug/net10.0/wwwroot/_framework/FractalBlazor.WebSite.qndl7xi5xq.wasm",
-    "FractalBlazor.WebSite.ClientSide/bin/Debug/net10.0/wwwroot/_framework/FractalBlazor.WebSite.ClientSide.wn9seayz37.pdb",
-    "FractalBlazor.WebSite.ClientSide/bin/Debug/net10.0/wwwroot/_framework/FractalBlazor.WebSite.ClientSide.sfzvdd6725.wasm",
-    "FractalBlazor.WebSite.ClientSide/bin/Debug/net10.0/wwwroot/_framework/FractalBlazor.WebSite.n26oc0bich.pdb",
-    "FractalBlazor.WebSite.ClientSide/obj/Debug/net10.0/compressed/ici7i2veod-{0}-z168loc6rf-z168loc6rf.gz",
-    "FractalBlazor.WebSite.ClientSide/obj/Debug/net10.0/compressed/ftsiqso2rg-{0}-xjy9jftn2f-xjy9jftn2f.gz",
-    "FractalBlazor.WebSite.ClientSide/obj/Debug/net10.0/compressed/6x82230exy-{0}-wn9seayz37-wn9seayz37.gz",
-    "FractalBlazor.WebSite.ClientSide/obj/Debug/net10.0/compressed/4rbv3g5n65-{0}-sfzvdd6725-sfzvdd6725.gz",
-    "AGENT.md",
+    "FractalBlazor.Components.Layout/obj/Debug/net10.0/FractalB.EC31E0C9.Up2Date",
+    "FractalBlazor.Components.Layout/obj/Debug/net10.0/staticwebassets.upToDateCheck.txt",
+    "FractalBlazor.WebSite.ClientSide/obj/Debug/net10.0/tmp-webcil/43a1bce2236746bdb553dd024c4f937a",
+    "FractalBlazor.WebSite.ClientSide/bin/Debug/net10.0/wwwroot/_framework/FractalBlazor.WebSite.ClientSide.3rlb9who4k.wasm.gz",
     "FractalBlazor.Components.Forms/README.md",
     "FractalBlazor.Components.Forms/Compositions/README.md",
     "FractalBlazor.Components.Forms/Components/README.md",
-    "FractalBlazor.Components.Forms/Components/Sans titre.md",
-    "FractalBlazor.Components.Forms/Components/Inputs/SPECS-Inputs-FR.md"
+    "FractalBlazor.Components.Forms/Components/Sans titre.md"
   ]
 }
